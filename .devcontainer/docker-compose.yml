@@ -1,11 +1,11 @@
 version: "3.5"
 
-name: "movietvapp"
+name: "framerate"
 services:
-    movietvapp:
+    framerate:
         image: app:latest
         build: .
-        container_name: movietvapp
+        container_name: framerate
         volumes:
             - ..:/workspace
             - ~/.npmrc:/home/node/.npmrc

@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/typescript-node
 {
-    "name": "Movie/TV App FrontEnd",
+    "name": "Framerate",
     "dockerComposeFile": "docker-compose.yml",
     // Configure tool-specific properties.
     "customizations": {
@@ -9,18 +9,13 @@
         "vscode": {
             // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
+                "biomejs.biome",
                 "expo.vscode-expo-tools",
-                "dbaeumer.vscode-eslint",
-                "editorconfig.editorconfig",
-                "esbenp.prettier-vscode",
                 "msjsdiag.vscode-react-native"
-            ],
-            "settings": {
-                "eslint.alwaysShowStatus": true
-            }
+            ]
         }
     },
     "remoteUser": "node",
     "workspaceFolder": "/workspace",
-    "service": "movietvapp"
+    "service": "framerate"
 }

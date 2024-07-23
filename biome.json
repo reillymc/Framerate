@@ -1,0 +1,93 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "organizeImports": {
+        "enabled": true
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "complexity": {
+                "noExcessiveCognitiveComplexity": {
+                    "level": "warn",
+                    "options": {
+                        "maxAllowedComplexity": 15
+                    }
+                },
+                "useSimplifiedLogicExpression": {
+                    "level": "warn"
+                }
+            },
+            "correctness": {
+                "useHookAtTopLevel": {
+                    "level": "error"
+                },
+                "noConstantMathMinMaxClamp": {
+                    "level": "warn"
+                },
+                "noUnusedImports": {
+                    "level": "warn"
+                }
+            },
+            "performance": {
+                "noReExportAll": {
+                    "level": "warn"
+                }
+            },
+            "style": {
+                "noNamespaceImport": {
+                    "level": "warn"
+                },
+                "noNegationElse": {
+                    "level": "warn"
+                },
+                "useCollapsedElseIf": {
+                    "level": "warn"
+                },
+                "useFragmentSyntax": {
+                    "level": "warn"
+                },
+                "useNamingConvention": {
+                    "level": "warn",
+                    "options": {
+                        "strictCase": true,
+                        "requireAscii": true
+                    }
+                },
+                "noDefaultExport": {
+                    "level": "warn"
+                }
+            },
+            "suspicious": {
+                "useAwait": {
+                    "level": "warn"
+                },
+                "noEmptyBlockStatements": {
+                    "level": "warn"
+                }
+            }
+        }
+    },
+    "files": {
+        "ignore": ["*.d.ts", ".expo"]
+    },
+    "overrides": [
+        {
+            "include": ["app/**"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "noDefaultExport": {
+                            "level": "off"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
