@@ -1,8 +1,7 @@
-import { TmdbImage } from "@/components";
-import { useSearch } from "@/hooks";
+import { SectionHeading, TmdbImage } from "@/components";
+import { usePopularMovies, usePopularShows, useSearch } from "@/hooks";
 import { useReviews } from "@/modules/review";
 import {
-    Icon,
     ListItem,
     ListItemRow,
     Text,
@@ -11,7 +10,7 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
 import { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 export default function HomeScreen() {
     const { data: reviews } = useReviews();
@@ -19,6 +18,8 @@ export default function HomeScreen() {
     const styles = useThemedStyles(createStyles, {});
     const [searchValue, setSearchValue] = useState("");
     const { data: results } = useSearch({ searchValue });
+    const { data: popularMovies } = usePopularMovies();
+    const { data: popularShows } = usePopularShows();
 
     return (
         <>
@@ -61,27 +62,89 @@ export default function HomeScreen() {
                     contentInsetAdjustmentBehavior="automatic"
                     ListHeaderComponent={
                         <>
-                            <Text variant="title">Watch List</Text>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    gap: 6,
-                                    alignItems: "baseline",
-                                }}
-                            >
-                                <Text variant="title">Recently Reviewed</Text>
-                                <Icon
-                                    iconName="chevron-right"
-                                    set="octicons"
-                                    size={24}
-                                />
-                            </View>
-                        </>
-                    }
-                    ListFooterComponent={
-                        <>
-                            <Text variant="title">New Movies</Text>
-                            <Text variant="title">New TV</Text>
+                            <SectionHeading title="Watchlist" />
+                            <SectionHeading title="New Movies" />
+                            <FlatList
+                                data={popularMovies}
+                                horizontal
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        key={item.mediaId}
+                                        style={styles.reviewCard}
+                                        heading={item.title}
+                                        avatar={
+                                            <TmdbImage
+                                                type="poster"
+                                                path={item.poster}
+                                                style={{
+                                                    width: 80,
+                                                    height: "100%",
+                                                }}
+                                            />
+                                        }
+                                        contentRows={[
+                                            <ListItemRow
+                                                key="details"
+                                                contentItems={[
+                                                    <Text key="date">
+                                                        {item.popularity}
+                                                    </Text>,
+                                                ]}
+                                            />,
+                                        ]}
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: "movie",
+                                                params: {
+                                                    mediaId: item.mediaId,
+                                                },
+                                            })
+                                        }
+                                    />
+                                )}
+                            />
+                            <SectionHeading title="New Shows" />
+                            <FlatList
+                                data={popularShows}
+                                horizontal
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        key={item.mediaId}
+                                        style={styles.reviewCard}
+                                        heading={item.title}
+                                        avatar={
+                                            <TmdbImage
+                                                type="poster"
+                                                path={item.poster}
+                                                style={{
+                                                    width: 80,
+                                                    height: "100%",
+                                                }}
+                                            />
+                                        }
+                                        contentRows={[
+                                            <ListItemRow
+                                                key="details"
+                                                contentItems={[
+                                                    <Text key="date">
+                                                        {item.popularity}
+                                                    </Text>,
+                                                ]}
+                                            />,
+                                        ]}
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: "show",
+                                                params: {
+                                                    mediaId: item.mediaId,
+                                                },
+                                            })
+                                        }
+                                    />
+                                )}
+                            />
+
+                            <SectionHeading title="Recently Reviewed" />
                         </>
                     }
                     data={reviews}
