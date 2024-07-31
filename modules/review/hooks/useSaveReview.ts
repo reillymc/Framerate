@@ -20,6 +20,12 @@ export const useSaveReview = () => {
                 queryKey: ["reviews", params.mediaId],
                 exact: true,
             });
+            if (params.reviewId) {
+                await queryClient.invalidateQueries({
+                    queryKey: ["review", params.reviewId],
+                    exact: true,
+                });
+            }
         },
         onError: console.warn,
     });

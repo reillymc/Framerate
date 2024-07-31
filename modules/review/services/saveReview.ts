@@ -20,7 +20,7 @@ type SaveReview = (params: SaveReviewParams) => Promise<null>;
 export const saveReview: SaveReview = async (review) => {
     try {
         const options = {
-            method: "POST",
+            method: review.reviewId ? "PUT" : "POST",
             body: JSON.stringify(review),
             headers: {
                 "Content-Type": "application/json",
@@ -28,7 +28,12 @@ export const saveReview: SaveReview = async (review) => {
             },
         };
 
-        const response = await fetch(API.reviews.postReview, options);
+        const response = await fetch(
+            review.reviewId
+                ? API.reviews.putReview(review.reviewId)
+                : API.reviews.postReview,
+            options,
+        );
 
         const json = await response.json();
         return json;

@@ -5,6 +5,7 @@ export interface ReviewSummary {
     userId: string;
     mediaId: number;
     mediaTitle: string;
+    mediaType: string;
     mediaPosterUri: string;
     mediaReleaseYear: number;
     date: string;

@@ -164,7 +164,7 @@ function RootLayoutNavigator() {
             <Stack.Screen name="review" />
             <Stack.Screen
                 name="editReview"
-                options={{ presentation: "modal" }}
+                options={{ presentation: "fullScreenModal" }}
             />
             <Stack.Screen name="search" options={{ presentation: "modal" }} />
             <Stack.Screen name="movie" />

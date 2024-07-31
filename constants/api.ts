@@ -9,6 +9,7 @@ export const API = {
                 : `${BASE_URL}/reviews`,
         getReview: (id: string) => `${BASE_URL}/reviews/${id}`,
         postReview: `${BASE_URL}/reviews`,
+        putReview: (reviewId: string) => `${BASE_URL}/reviews/${reviewId}`,
     },
 };
 

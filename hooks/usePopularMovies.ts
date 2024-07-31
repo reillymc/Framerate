@@ -1,6 +1,6 @@
 import { TMDB_API_KEY } from "@/constants/api";
 import { useQuery } from "@tanstack/react-query";
-import { addDays, subDays } from "date-fns";
+import { addWeeks, subWeeks } from "date-fns";
 
 export interface SearchResponse {
     page: number;
@@ -43,9 +43,9 @@ const getTmdbPopularMovies: GetTmdbPopularMovies = async () => {
         },
     };
 
-    const minDate = subDays(new Date(), 5);
+    const minDate = subWeeks(new Date(), 4);
 
-    const maxDate = addDays(new Date(), 10);
+    const maxDate = addWeeks(new Date(), 1);
 
     try {
         const response = await fetch(

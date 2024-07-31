@@ -20,14 +20,14 @@ import {
 } from "@/modules/review";
 
 const Edit: React.FC = () => {
-    const { review: reviewId, mediaId } = useGlobalSearchParams<{
-        review: string;
+    const { reviewId, mediaId } = useGlobalSearchParams<{
+        reviewId: string;
         mediaId: string;
     }>();
 
     const { data: review } = useReview(reviewId);
     const { data: movie } = useMovieDetails({
-        mediaId: Number.parseInt(mediaId ?? "", 10),
+        mediaId: mediaId ? Number.parseInt(mediaId ?? "", 10) : review?.mediaId,
     });
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
@@ -68,6 +68,8 @@ const Edit: React.FC = () => {
         if (!(movie && rating)) return;
 
         saveReview({
+            ...review,
+            reviewId,
             reviewTitle,
             date,
             mediaId: Number(movie.mediaId),
@@ -105,6 +107,7 @@ const Edit: React.FC = () => {
             />
             <StatusBar barStyle="light-content" animated={true} />
             <ScrollView
+                scrollEnabled={false}
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
@@ -113,6 +116,8 @@ const Edit: React.FC = () => {
                     style={styles.rating}
                     rating={rating ?? 0}
                     enableHalfStar
+                    maxStars={10}
+                    starSize={26}
                     onChange={setRating}
                     enableSwiping
                     animationConfig={{
