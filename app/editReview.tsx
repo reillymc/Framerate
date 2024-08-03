@@ -35,11 +35,8 @@ const Edit: React.FC = () => {
     const styles = useThemedStyles(createStyles, {});
     const theme = useTheme();
 
-    const [reviewTitle, setReviewTitle] = React.useState(
-        review?.reviewTitle ?? "",
-    );
     const [date, setDate] = React.useState(
-        review?.date ?? new Date().toISOString(),
+        review?.date ?? new Date().toISOString().split("T")[0],
     );
     const [rating, setRating] = React.useState(
         ratingToStars(review?.rating ?? 0),
@@ -49,19 +46,13 @@ const Edit: React.FC = () => {
     );
 
     useEffect(() => {
-        setReviewTitle(review?.reviewTitle ?? "");
-        setDate(review?.date ?? new Date().toISOString());
+        setDate(review?.date ?? new Date().toISOString().split("T")[0]);
         setRating(ratingToStars(review?.rating ?? 0));
         setReviewDescription(review?.reviewDescription ?? "");
     }, [review]);
 
-    const resetFields = () => {
-        setReviewTitle("");
-    };
-
     const handleClose = () => {
         router.back();
-        resetFields();
     };
 
     const handleSave = () => {
@@ -70,7 +61,6 @@ const Edit: React.FC = () => {
         saveReview({
             ...review,
             reviewId,
-            reviewTitle,
             date,
             mediaId: Number(movie.mediaId),
             mediaPosterUri: movie.poster ?? "",
@@ -127,20 +117,18 @@ const Edit: React.FC = () => {
                 />
 
                 <TextInput
-                    label="Review date"
+                    label="Watch date"
                     value={date}
+                    style={styles.input}
                     onChangeText={setDate}
                 />
                 <TextInput
-                    label="Review title"
-                    value={reviewTitle}
-                    onChangeText={setReviewTitle}
-                />
-
-                <TextInput
-                    label="Review description"
+                    label="Review"
                     value={reviewDescription}
                     onChangeText={setReviewDescription}
+                    multiline
+                    numberOfLines={3}
+                    style={styles.reviewInput}
                 />
             </ScrollView>
         </>
@@ -149,10 +137,7 @@ const Edit: React.FC = () => {
 
 export default Edit;
 
-const createStyles = ({
-    theme: { color, padding },
-    styles: { baseInput },
-}: ThemedStyles) =>
+const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         headerAction: {
             marginHorizontal: padding.navigationActionHorizontal,
@@ -162,31 +147,16 @@ const createStyles = ({
             paddingTop: padding.pageTop,
             paddingBottom: padding.large,
         },
-        bookDisplay: {
-            flexDirection: "row",
-            gap: padding.large,
-            marginBottom: padding.tiny,
-            alignItems: "center",
-        },
-        bookContainer: {
-            transform: [{ scale: 0.8 }, { translateX: -20 }],
-        },
-        detailsInputContainer: {
-            position: "absolute",
-            right: 0,
-            width: "56%",
-        },
-        formElement: {
+        input: {
             marginBottom: padding.regular,
         },
-        deleteLeaveButton: {
-            backgroundColor: color.background,
-            paddingBottom: padding.large,
-            paddingTop: padding.small,
+        reviewInput: {
+            minHeight: 80,
         },
         rating: {
             flex: 1,
             height: 64,
             alignSelf: "center",
+            marginBottom: padding.regular,
         },
     });

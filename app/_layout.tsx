@@ -54,12 +54,12 @@ export default function RootLayout() {
                     bold800: "dosisBold",
                 },
                 size: {
-                    tiny: scaleFont(12, 0.9, fontScale),
-                    small: scaleFont(14, 0.88, fontScale),
-                    regular: scaleFont(16, 0.86, fontScale),
-                    large: scaleFont(20, 0.84, fontScale),
-                    xLarge: scaleFont(24, 0.82, fontScale),
-                    xxLarge: scaleFont(32, 0.8, fontScale),
+                    tiny: scaleFont(14, 0.9, fontScale),
+                    small: scaleFont(16, 0.88, fontScale),
+                    regular: scaleFont(20, 0.86, fontScale),
+                    large: scaleFont(24, 0.84, fontScale),
+                    xLarge: scaleFont(28, 0.82, fontScale),
+                    xxLarge: scaleFont(36, 0.8, fontScale),
                 },
             },
             padding: {
@@ -68,6 +68,10 @@ export default function RootLayout() {
                     Platform.OS === "web"
                         ? DefaultTheme.padding.pageHorizontal
                         : undefined,
+                pageHorizontal: 20,
+            },
+            color: {
+                border: "#d0d0d0",
             },
         }),
         [fontScale],
@@ -168,6 +172,7 @@ function RootLayoutNavigator() {
             />
             <Stack.Screen name="search" options={{ presentation: "modal" }} />
             <Stack.Screen name="movie" />
+            <Stack.Screen name="watchlist" />
             <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
     );

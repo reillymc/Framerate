@@ -22,8 +22,6 @@ type GetReviews = (
 ) => Promise<ReviewSummary[] | undefined>;
 
 export const getReviews: GetReviews = async ({ mediaId }) => {
-    console.log(API.reviews.getReviews(mediaId));
-
     try {
         const response = await fetch(API.reviews.getReviews(mediaId));
         const json = await response.json();

@@ -11,6 +11,24 @@ export const API = {
         postReview: `${BASE_URL}/reviews`,
         putReview: (reviewId: string) => `${BASE_URL}/reviews/${reviewId}`,
     },
+    watchlists: {
+        getWatchlists: `${BASE_URL}/watchlists`,
+        getWatchlist: (mediaType: string) =>
+            `${BASE_URL}/watchlists/${mediaType}`,
+        postWatchlist: `${BASE_URL}/watchlists`,
+        putWatchlist: (watchlistId: string) =>
+            `${BASE_URL}/watchlists/${watchlistId}`,
+    },
+    watchlistEntries: {
+        getWatchlistEntries: (mediaType: string) =>
+            `${BASE_URL}/watchlists/${mediaType}/entries`,
+        getWatchlistEntry: (mediaType: string, mediaId: number) =>
+            `${BASE_URL}/watchlists/${mediaType}/entries/${mediaId}`,
+        postWatchlistEntry: (mediaType: string) =>
+            `${BASE_URL}/watchlists/${mediaType}/entries`,
+        deleteWatchlistEntry: (mediaType: string, mediaId: number) =>
+            `${BASE_URL}/watchlists/${mediaType}/entries/${mediaId}`,
+    },
 };
 
 export { TMDB_API_KEY };

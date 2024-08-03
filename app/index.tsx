@@ -1,25 +1,39 @@
 import { SectionHeading, TmdbImage } from "@/components";
-import { usePopularMovies, usePopularShows, useSearch } from "@/hooks";
+import { Poster } from "@/components/poster";
+import { MediaType } from "@/constants/mediaTypes";
+import { usePopularMovies, useSearch } from "@/hooks";
 import { useReviews } from "@/modules/review";
 import {
     ListItem,
     ListItemRow,
     Text,
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
 import { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import {
+    FlatList,
+    Pressable,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from "react-native";
 
 export default function HomeScreen() {
     const { data: reviews } = useReviews();
 
     const styles = useThemedStyles(createStyles, {});
+    const { theme } = useTheme();
+    const { width } = useWindowDimensions();
     const [searchValue, setSearchValue] = useState("");
     const { data: results } = useSearch({ searchValue });
     const { data: popularMovies } = usePopularMovies();
-    const { data: popularShows } = usePopularShows();
+
+    const posterItemWidth =
+        (width - theme.padding.pageHorizontal * 2) * (2 / 3) +
+        theme.padding.pageHorizontal / 2;
 
     return (
         <>
@@ -29,9 +43,11 @@ export default function HomeScreen() {
                     headerSearchBarOptions: {
                         onChangeText: ({ nativeEvent }) =>
                             setSearchValue(nativeEvent.text),
-                        placeholder: "Search for a movie or show",
+                        placeholder: "Search movies",
                         hideWhenScrolling: false,
                         hideNavigationBar: false,
+                        barTintColor: theme.color.inputBackground,
+                        tintColor: theme.color.primary,
                     },
                 }}
             />
@@ -55,43 +71,55 @@ export default function HomeScreen() {
                     keyExtractor={(item) => item.mediaId.toString()}
                     contentInsetAdjustmentBehavior="always"
                     keyboardShouldPersistTaps="handled"
-                    contentContainerStyle={styles.list}
+                    contentContainerStyle={styles.pageElement}
                 />
             ) : (
                 <FlatList
                     contentInsetAdjustmentBehavior="automatic"
                     ListHeaderComponent={
                         <>
-                            <SectionHeading title="Watchlist" />
-                            <SectionHeading title="New Movies" />
+                            <Pressable
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "watchlist",
+                                        params: { mediaType: MediaType.Movie },
+                                    })
+                                }
+                                style={[
+                                    {
+                                        borderRadius: 16,
+                                        height: 140,
+                                        marginHorizontal:
+                                            theme.padding.pageHorizontal * 3,
+                                        marginBottom: theme.padding.large,
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    },
+                                ]}
+                            >
+                                <Text variant="label">Watchlist</Text>
+                            </Pressable>
+                            <SectionHeading
+                                title="New Movies"
+                                style={styles.pageElement}
+                                onPress={() => null}
+                            />
                             <FlatList
                                 data={popularMovies}
                                 horizontal
+                                contentContainerStyle={[
+                                    styles.pageElement,
+                                    { height: posterItemWidth * (3 / 2) + 60 },
+                                ]}
+                                snapToAlignment="start"
+                                decelerationRate={"fast"}
+                                snapToInterval={posterItemWidth}
                                 renderItem={({ item }) => (
-                                    <ListItem
+                                    <Poster
                                         key={item.mediaId}
-                                        style={styles.reviewCard}
                                         heading={item.title}
-                                        avatar={
-                                            <TmdbImage
-                                                type="poster"
-                                                path={item.poster}
-                                                style={{
-                                                    width: 80,
-                                                    height: "100%",
-                                                }}
-                                            />
-                                        }
-                                        contentRows={[
-                                            <ListItemRow
-                                                key="details"
-                                                contentItems={[
-                                                    <Text key="date">
-                                                        {item.popularity}
-                                                    </Text>,
-                                                ]}
-                                            />,
-                                        ]}
+                                        imageUri={item.poster}
                                         onPress={() =>
                                             router.push({
                                                 pathname: "movie",
@@ -103,51 +131,16 @@ export default function HomeScreen() {
                                     />
                                 )}
                             />
-                            <SectionHeading title="New Shows" />
-                            <FlatList
-                                data={popularShows}
-                                horizontal
-                                renderItem={({ item }) => (
-                                    <ListItem
-                                        key={item.mediaId}
-                                        style={styles.reviewCard}
-                                        heading={item.title}
-                                        avatar={
-                                            <TmdbImage
-                                                type="poster"
-                                                path={item.poster}
-                                                style={{
-                                                    width: 80,
-                                                    height: "100%",
-                                                }}
-                                            />
-                                        }
-                                        contentRows={[
-                                            <ListItemRow
-                                                key="details"
-                                                contentItems={[
-                                                    <Text key="date">
-                                                        {item.popularity}
-                                                    </Text>,
-                                                ]}
-                                            />,
-                                        ]}
-                                        onPress={() =>
-                                            router.push({
-                                                pathname: "show",
-                                                params: {
-                                                    mediaId: item.mediaId,
-                                                },
-                                            })
-                                        }
-                                    />
-                                )}
+                            <SectionHeading
+                                title="Recently Reviewed"
+                                style={styles.pageElement}
                             />
-
-                            <SectionHeading title="Recently Reviewed" />
                         </>
                     }
                     data={reviews}
+                    CellRendererComponent={({ children }) => (
+                        <View style={styles.pageElement}>{children}</View>
+                    )}
                     renderItem={({ item }) => (
                         <ListItem
                             key={item.reviewId}
@@ -178,19 +171,15 @@ export default function HomeScreen() {
                             }
                         />
                     )}
-                    contentContainerStyle={styles.list}
                 />
             )}
         </>
     );
 }
 
-const createStyles = ({
-    theme: { color, padding },
-    styles: { baseInput },
-}: ThemedStyles) =>
+const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
-        list: {
+        pageElement: {
             paddingHorizontal: padding.pageHorizontal,
         },
         reviewCard: {

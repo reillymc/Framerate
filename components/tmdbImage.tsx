@@ -18,8 +18,8 @@ export const TmdbImage: React.FunctionComponent<TmdbImageProps> = ({
             style={[
                 type === "poster"
                     ? {
-                          height: 750,
-                          width: 500,
+                          height: 75,
+                          width: 50,
                       }
                     : {
                           height: 250,

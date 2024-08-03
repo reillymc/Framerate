@@ -2,7 +2,7 @@ import { TMDB_API_KEY } from "@/constants/api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { SearchItem } from "./useSearch";
 
-type UseRecipesParams = { mediaId?: number };
+type SearhParams = { mediaId?: number };
 
 export interface MovieResponse {
     adult: boolean;
@@ -62,6 +62,7 @@ type Movie = {
     backdrop?: string;
     year?: number;
     type: "movie";
+    releaseDate?: Date;
     overview?: string;
     tagline?: string;
     imdbId?: string;
@@ -70,7 +71,7 @@ type Movie = {
 
 const IsMovie = (item: SearchItem): item is Movie => item.type === "movie";
 
-type SearchTmdb = (params: UseRecipesParams) => Promise<Movie | undefined>;
+type SearchTmdb = (params: SearhParams) => Promise<Movie | undefined>;
 
 const getTmdbMovieDetails: SearchTmdb = async ({ mediaId }) => {
     const options = {
@@ -96,6 +97,9 @@ const getTmdbMovieDetails: SearchTmdb = async ({ mediaId }) => {
             year: json.release_date
                 ? new Date(json.release_date ?? "").getFullYear()
                 : undefined,
+            releaseDate: json.release_date
+                ? new Date(json.release_date)
+                : undefined,
             overview: json.overview,
             type: "movie",
             backdrop: json.backdrop_path,
@@ -109,7 +113,7 @@ const getTmdbMovieDetails: SearchTmdb = async ({ mediaId }) => {
     }
 };
 
-export const useMovieDetails = ({ mediaId }: UseRecipesParams) => {
+export const useMovieDetails = ({ mediaId }: SearhParams) => {
     const queryClient = useQueryClient();
 
     return useQuery({

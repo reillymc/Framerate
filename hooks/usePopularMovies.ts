@@ -55,7 +55,6 @@ const getTmdbPopularMovies: GetTmdbPopularMovies = async () => {
         );
 
         const json = (await response.json()) as SearchResponse;
-        console.log(json);
 
         return json.results.map((result) => ({
             mediaId: result.id,
