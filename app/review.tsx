@@ -18,11 +18,13 @@ const Review: FC = () => {
 
     const { data: review } = useReview(reviewId);
 
+    const rating = ratingToStars(review?.rating ?? 0);
+
     return (
         <>
             <Stack.Screen
                 options={{
-                    title: review?.date ?? "...",
+                    title: `${rating} Star${rating !== 1 ? "s" : ""}`,
                     headerRight: () => (
                         <IconActionV2
                             iconName="pencil"
@@ -42,7 +44,7 @@ const Review: FC = () => {
                 contentContainerStyle={styles.container}
             >
                 <StarRatingDisplay
-                    rating={ratingToStars(review?.rating ?? 0)}
+                    rating={rating}
                     enableHalfStar
                     maxStars={10}
                     starSize={26}

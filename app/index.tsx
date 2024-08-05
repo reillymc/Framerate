@@ -58,7 +58,7 @@ export default function HomeScreen() {
                     renderItem={({ item }) => (
                         <ListItem
                             header={
-                                <Text>{`${item.title} (${item.year})`}</Text>
+                                <Text>{`${item.title} (${item.year ?? "unknown"})`}</Text>
                             }
                             onPress={() =>
                                 router.push({
@@ -156,11 +156,17 @@ export default function HomeScreen() {
                             contentRows={[
                                 <ListItemRow
                                     key="details"
-                                    contentItems={[
-                                        <Text key="date">
-                                            {new Date(item.date).toDateString()}
-                                        </Text>,
-                                    ]}
+                                    contentItems={
+                                        item.date
+                                            ? [
+                                                  <Text key="date">
+                                                      {new Date(
+                                                          item.date,
+                                                      ).toDateString()}
+                                                  </Text>,
+                                              ]
+                                            : undefined
+                                    }
                                 />,
                             ]}
                             onPress={() =>

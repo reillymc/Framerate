@@ -1,15 +1,7 @@
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { ScrollView, StatusBar, StyleSheet } from "react-native";
-
-import {
-    Action,
-    TextInput,
-    type ThemedStyles,
-    useTheme,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import StarRating from "react-native-star-rating-widget";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
 
 import { useMovieDetails } from "@/hooks";
 import {
@@ -18,6 +10,17 @@ import {
     useReview,
     useSaveReview,
 } from "@/modules/review";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import {
+    Action,
+    Text,
+    TextInput,
+    type ThemedStyles,
+    ToggleInput,
+    useTheme,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+import StarRating from "react-native-star-rating-widget";
 
 const Edit: React.FC = () => {
     const { reviewId, mediaId } = useGlobalSearchParams<{
@@ -35,18 +38,18 @@ const Edit: React.FC = () => {
     const styles = useThemedStyles(createStyles, {});
     const theme = useTheme();
 
-    const [date, setDate] = React.useState(
-        review?.date ?? new Date().toISOString().split("T")[0],
+    const [date, setDate] = useState(
+        review?.date ? new Date(review.date) : new Date(),
     );
-    const [rating, setRating] = React.useState(
-        ratingToStars(review?.rating ?? 0),
-    );
-    const [reviewDescription, setReviewDescription] = React.useState(
+    const [rating, setRating] = useState(ratingToStars(review?.rating ?? 0));
+    const [reviewDescription, setReviewDescription] = useState(
         review?.reviewDescription ?? "",
     );
 
+    const [includeDate, setUnknownDate] = useState(true);
+
     useEffect(() => {
-        setDate(review?.date ?? new Date().toISOString().split("T")[0]);
+        setDate(review?.date ? new Date(review.date) : new Date());
         setRating(ratingToStars(review?.rating ?? 0));
         setReviewDescription(review?.reviewDescription ?? "");
     }, [review]);
@@ -61,7 +64,7 @@ const Edit: React.FC = () => {
         saveReview({
             ...review,
             reviewId,
-            date,
+            date: includeDate ? date.toISOString().split("T")[0] : undefined,
             mediaId: Number(movie.mediaId),
             mediaPosterUri: movie.poster ?? "",
             mediaReleaseYear: movie.year ?? 0,
@@ -78,7 +81,7 @@ const Edit: React.FC = () => {
         <>
             <Stack.Screen
                 options={{
-                    title: `${reviewId ? "Edit" : "Add"} Review`,
+                    title: `${rating} Star${rating !== 1 ? "s" : ""}`,
                     headerLeft: () => (
                         <Action
                             label="Close"
@@ -115,19 +118,51 @@ const Edit: React.FC = () => {
                         scale: 1,
                     }}
                 />
-
-                <TextInput
-                    label="Watch date"
-                    value={date}
-                    style={styles.input}
-                    onChangeText={setDate}
-                />
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                    }}
+                >
+                    <ToggleInput
+                        value={includeDate}
+                        size="small"
+                        variant="secondary"
+                        onChange={setUnknownDate}
+                    />
+                    {includeDate ? (
+                        <DateTimePicker
+                            value={date}
+                            mode="date"
+                            style={{ height: 40, width: 120 }}
+                            disabled={!includeDate}
+                            maximumDate={new Date()}
+                            onChange={(_, newDate) =>
+                                newDate && setDate(newDate)
+                            }
+                        />
+                    ) : (
+                        <View
+                            style={{
+                                height: 40,
+                                width: 120,
+                                paddingLeft: 12,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text variant="caption">No Date</Text>
+                        </View>
+                    )}
+                </View>
                 <TextInput
                     label="Review"
                     value={reviewDescription}
                     onChangeText={setReviewDescription}
                     multiline
                     numberOfLines={3}
+                    containerStyle={styles.reviewInputContainer}
                     style={styles.reviewInput}
                 />
             </ScrollView>
@@ -150,12 +185,14 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         input: {
             marginBottom: padding.regular,
         },
+        reviewInputContainer: {
+            marginTop: -20,
+        },
         reviewInput: {
             minHeight: 80,
         },
         rating: {
             flex: 1,
-            height: 64,
             alignSelf: "center",
             marginBottom: padding.regular,
         },

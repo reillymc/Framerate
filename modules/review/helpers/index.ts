@@ -1,1 +1,4 @@
-export { ratingToStars, starsToRating } from "./ratingConverter";
+export {
+    ratingToStars,
+    starsToRating,
+} from "./ratingConverter";

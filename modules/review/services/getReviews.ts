@@ -8,7 +8,7 @@ export interface ReviewSummary {
     mediaType: string;
     mediaPosterUri: string;
     mediaReleaseYear: number;
-    date: string;
+    date?: string;
     rating: number;
     reviewTitle?: string;
 }

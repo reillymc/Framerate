@@ -57,6 +57,7 @@ export default function RootLayout() {
                     tiny: scaleFont(14, 0.9, fontScale),
                     small: scaleFont(16, 0.88, fontScale),
                     regular: scaleFont(20, 0.86, fontScale),
+                    emphasised: scaleFont(22, 0.84, fontScale),
                     large: scaleFont(24, 0.84, fontScale),
                     xLarge: scaleFont(28, 0.82, fontScale),
                     xxLarge: scaleFont(36, 0.8, fontScale),

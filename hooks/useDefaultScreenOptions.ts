@@ -20,12 +20,12 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
                 backgroundColor: theme.color.background,
             },
             headerBackTitleStyle: {
-                fontFamily: theme.font.familyWeight.bold800,
-                fontSize: theme.font.size.regular,
+                fontFamily: theme.font.familyWeight.bold600,
+                fontSize: theme.font.size.small,
             },
             headerTintColor: theme.color.secondary,
             headerTitleStyle: {
-                fontFamily: theme.font.familyWeight.bold600,
+                fontFamily: theme.font.familyWeight.bold800,
                 color: theme.color.textPrimary,
             },
             contentStyle: {

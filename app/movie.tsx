@@ -2,6 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 import {
+    Button,
     IconActionV2,
     ListItem,
     ListItemRow,
@@ -20,6 +21,7 @@ import {
     useSaveWatchlistEntry,
     useWatchlistEntry,
 } from "@/modules/watchlistEntry";
+import { openURL } from "expo-linking";
 
 const Movie: React.FC = () => {
     const { mediaId: mediaIdParam } = useLocalSearchParams<{
@@ -70,7 +72,7 @@ const Movie: React.FC = () => {
                 </Text>
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
-                    <Text variant="body">{movie?.year}</Text>
+                    <Text variant="bodyEmphasized"> - {movie?.year}</Text>
                     <View
                         style={{
                             flexDirection: "row",
@@ -82,10 +84,11 @@ const Movie: React.FC = () => {
                             style={{
                                 backgroundColor: theme.color.primary,
                                 borderRadius: 40,
-                                padding: 8,
+                                paddingLeft: 6,
+                                paddingVertical: 8,
                                 flexDirection: "row",
                                 alignItems: "center",
-                                width: "49%",
+                                width: "51%",
                             }}
                             onPress={() => {
                                 if (watchlistEntry) {
@@ -123,7 +126,7 @@ const Movie: React.FC = () => {
                                 variant="label"
                                 style={{
                                     color: "white",
-                                    marginLeft: theme.padding.small / 2,
+                                    marginLeft: 1,
                                 }}
                             >
                                 {watchlistEntry
@@ -135,7 +138,8 @@ const Movie: React.FC = () => {
                             style={{
                                 backgroundColor: theme.color.primary,
                                 borderRadius: 40,
-                                padding: 8,
+                                paddingLeft: 6,
+                                paddingVertical: 8,
                                 flexDirection: "row",
                                 alignItems: "center",
                                 width: "44%",
@@ -161,7 +165,7 @@ const Movie: React.FC = () => {
                                 variant="label"
                                 style={{
                                     color: "white",
-                                    marginLeft: theme.padding.small / 2,
+                                    marginLeft: 1,
                                 }}
                             >
                                 Add a Review
@@ -182,13 +186,17 @@ const Movie: React.FC = () => {
                                 contentRows={[
                                     <ListItemRow
                                         key="details"
-                                        contentItems={[
-                                            <Text key="date">
-                                                {new Date(
-                                                    item.date,
-                                                ).toDateString()}
-                                            </Text>,
-                                        ]}
+                                        contentItems={
+                                            item.date
+                                                ? [
+                                                      <Text key="date">
+                                                          {new Date(
+                                                              item.date,
+                                                          ).toDateString()}
+                                                      </Text>,
+                                                  ]
+                                                : undefined
+                                        }
                                     />,
                                 ]}
                                 onPress={() =>
@@ -202,6 +210,15 @@ const Movie: React.FC = () => {
                         contentContainerStyle={styles.list}
                     />
                 </View>
+
+                <Button
+                    label="IMDB"
+                    variant="flat"
+                    size="small"
+                    onPress={() =>
+                        openURL(`https://www.imdb.com/title/${movie?.imdbId}/`)
+                    }
+                />
             </ParallaxScrollView>
         </>
     );

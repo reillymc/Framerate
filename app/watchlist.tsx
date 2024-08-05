@@ -128,38 +128,44 @@ const Watchlist: FC = () => {
                     </View>
                 )}
                 stickySectionHeadersEnabled
-                renderItem={({ item }) => (
-                    <Pressable
-                        style={{
-                            flexDirection: "row",
-                            gap: 8,
-                            marginTop: theme.padding.regular,
-                        }}
-                        onPress={() =>
-                            router.push({
-                                pathname: "movie",
-                                params: { mediaId: item.mediaId },
-                            })
-                        }
-                    >
-                        <TmdbImage
-                            path={item.mediaPosterUri}
-                            type="poster"
-                            style={{ borderRadius: 8 }}
-                        />
-                        <View>
-                            <Text variant="heading">{item.mediaTitle}</Text>
-                            <Text variant="body">
-                                {new Date(
-                                    item.mediaReleaseDate,
-                                ).toLocaleDateString("en-AU", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                })}
-                            </Text>
-                        </View>
-                    </Pressable>
-                )}
+                renderItem={({ item, section }) => {
+                    const isOlder = section.titleYear === "Older";
+                    return (
+                        <Pressable
+                            style={{
+                                flexDirection: "row",
+                                gap: 8,
+                                marginTop: theme.padding.regular,
+                            }}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "movie",
+                                    params: { mediaId: item.mediaId },
+                                })
+                            }
+                        >
+                            <TmdbImage
+                                path={item.mediaPosterUri}
+                                type="poster"
+                                style={{ borderRadius: 8 }}
+                            />
+                            <View style={{ flexShrink: 1 }}>
+                                <Text variant="heading" numberOfLines={2}>
+                                    {item.mediaTitle}
+                                </Text>
+                                <Text variant="body">
+                                    {new Date(
+                                        item.mediaReleaseDate,
+                                    ).toLocaleDateString("en-AU", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: isOlder ? "numeric" : undefined,
+                                    })}
+                                </Text>
+                            </View>
+                        </Pressable>
+                    );
+                }}
                 renderSectionFooter={() => (
                     <View
                         style={{
