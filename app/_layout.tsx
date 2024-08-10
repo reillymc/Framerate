@@ -7,6 +7,7 @@ import {
     type DeepPartial,
     DefaultTheme,
     MergeTheme,
+    PortalProvider,
     type Theme,
     ThemeProvider,
     createDefaultStyles,
@@ -18,6 +19,7 @@ import { Stack } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { DevToolsBubble } from "react-native-react-query-devtools";
 import "react-native-reanimated";
 
@@ -73,6 +75,7 @@ export default function RootLayout() {
             },
             color: {
                 border: "#d0d0d0",
+                primary: "gold",
             },
         }),
         [fontScale],
@@ -147,12 +150,16 @@ export default function RootLayout() {
                     theme={theme}
                     styles={createDefaultStyles(theme)}
                 >
-                    <StatusBar
-                        barStyle="default"
-                        animated={true}
-                        translucent={true}
-                    />
-                    <RootLayoutNavigator />
+                    <GestureHandlerRootView>
+                        <PortalProvider>
+                            <StatusBar
+                                barStyle="default"
+                                animated={true}
+                                translucent={true}
+                            />
+                            <RootLayoutNavigator />
+                        </PortalProvider>
+                    </GestureHandlerRootView>
                 </ThemeProvider>
             </RnThemeProvider>
             <DevToolsBubble />

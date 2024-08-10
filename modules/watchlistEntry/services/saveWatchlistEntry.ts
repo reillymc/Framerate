@@ -14,25 +14,22 @@ type SaveWatchlistEntry = (params: SaveWatchlistEntryParams) => Promise<null>;
 export const saveWatchlistEntry: SaveWatchlistEntry = async (
     watchlistEntry,
 ) => {
-    try {
-        const options = {
-            method: "POST",
-            body: JSON.stringify(watchlistEntry),
-            headers: {
-                "Content-Type": "application/json",
-                accept: "application/json",
-            },
-        };
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 3000); // abort after 3 seconds
+    const options = {
+        method: "POST",
+        body: JSON.stringify(watchlistEntry),
+        headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+        },
+        signal: controller.signal,
+    };
 
-        const response = await fetch(
-            API.watchlistEntries.postWatchlistEntry(watchlistEntry.mediaType),
-            options,
-        );
+    const response = await fetch(
+        API.watchlistEntries.postWatchlistEntry(watchlistEntry.mediaType),
+        options,
+    );
 
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
+    return response.json();
 };

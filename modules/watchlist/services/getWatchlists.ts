@@ -14,11 +14,7 @@ type GetWatchlists = (
 ) => Promise<Watchlist[] | undefined>;
 
 export const getWatchlists: GetWatchlists = async () => {
-    try {
-        const response = await fetch(API.watchlists.getWatchlists);
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-    }
+    const response = await fetch(API.watchlists.getWatchlists);
+    const json = await response.json();
+    return json;
 };

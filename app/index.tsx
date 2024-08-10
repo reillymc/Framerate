@@ -3,6 +3,8 @@ import { Poster } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
 import { useReviews } from "@/modules/review";
+import { WatchlistSummary } from "@/modules/watchlist/components/watchlistSummary";
+import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     ListItem,
     ListItemRow,
@@ -12,14 +14,8 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
-import { useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import { useMemo, useState } from "react";
+import { FlatList, StyleSheet, View, useWindowDimensions } from "react-native";
 
 export default function HomeScreen() {
     const { data: reviews } = useReviews();
@@ -30,16 +26,28 @@ export default function HomeScreen() {
     const [searchValue, setSearchValue] = useState("");
     const { data: results } = useSearch({ searchValue });
     const { data: popularMovies } = usePopularMovies();
+    const { data: watchlistEntries } = useWatchlistEntries("movie");
 
     const posterItemWidth =
         (width - theme.padding.pageHorizontal * 2) * (2 / 3) +
         theme.padding.pageHorizontal / 2;
 
+    const filteredPopularMovies = useMemo(
+        () =>
+            popularMovies?.filter(
+                (movie) =>
+                    !watchlistEntries?.some(
+                        ({ mediaId }) => mediaId === movie.mediaId,
+                    ),
+            ),
+        [popularMovies, watchlistEntries],
+    );
+
     return (
         <>
             <Stack.Screen
                 options={{
-                    title: "My Reviews",
+                    title: "Movies",
                     headerSearchBarOptions: {
                         onChangeText: ({ nativeEvent }) =>
                             setSearchValue(nativeEvent.text),
@@ -78,42 +86,43 @@ export default function HomeScreen() {
                     contentInsetAdjustmentBehavior="automatic"
                     ListHeaderComponent={
                         <>
-                            <Pressable
+                            <SectionHeading
+                                title="Watchlist"
+                                style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
                                         pathname: "watchlist",
                                         params: { mediaType: MediaType.Movie },
                                     })
                                 }
-                                style={[
-                                    {
-                                        borderRadius: 16,
-                                        height: 140,
-                                        marginHorizontal:
-                                            theme.padding.pageHorizontal * 3,
-                                        marginBottom: theme.padding.large,
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    },
-                                ]}
-                            >
-                                <Text variant="label">Watchlist</Text>
-                            </Pressable>
+                            />
+                            <WatchlistSummary
+                                watchlistEntries={watchlistEntries ?? []}
+                                onPressBook={(item) =>
+                                    router.push({
+                                        pathname: "movie",
+                                        params: {
+                                            mediaId: item.mediaId,
+                                            mediaTitle: item.mediaTitle,
+                                            mediaPosterUri: item.mediaPosterUri,
+                                        },
+                                    })
+                                }
+                            />
                             <SectionHeading
                                 title="New Movies"
                                 style={styles.pageElement}
-                                onPress={() => null}
                             />
                             <FlatList
-                                data={popularMovies}
+                                data={filteredPopularMovies}
                                 horizontal
                                 contentContainerStyle={[
                                     styles.pageElement,
                                     { height: posterItemWidth * (3 / 2) + 60 },
                                 ]}
                                 snapToAlignment="start"
-                                decelerationRate={"fast"}
+                                showsHorizontalScrollIndicator={false}
+                                decelerationRate="fast"
                                 snapToInterval={posterItemWidth}
                                 renderItem={({ item }) => (
                                     <Poster
@@ -125,6 +134,8 @@ export default function HomeScreen() {
                                                 pathname: "movie",
                                                 params: {
                                                     mediaId: item.mediaId,
+                                                    mediaTitle: item.title,
+                                                    mediaPosterUri: item.poster,
                                                 },
                                             })
                                         }
@@ -132,7 +143,7 @@ export default function HomeScreen() {
                                 )}
                             />
                             <SectionHeading
-                                title="Recently Reviewed"
+                                title="Recent Reviews"
                                 style={styles.pageElement}
                             />
                         </>
@@ -172,7 +183,11 @@ export default function HomeScreen() {
                             onPress={() =>
                                 router.push({
                                     pathname: "movie",
-                                    params: { mediaId: item.mediaId },
+                                    params: {
+                                        mediaId: item.mediaId,
+                                        mediaTitle: item.mediaTitle,
+                                        mediaPosterUri: item.mediaPosterUri,
+                                    },
                                 })
                             }
                         />

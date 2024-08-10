@@ -3,6 +3,7 @@ import {
     WatchlistEntriesService,
     type WatchlistEntrySummary,
 } from "../services";
+import { WatchlistEntryKeys } from "./keys";
 
 export const useWatchlistEntry = (
     mediaType: string | undefined,
@@ -10,7 +11,7 @@ export const useWatchlistEntry = (
 ) => {
     const queryClient = useQueryClient();
     return useQuery({
-        queryKey: ["watchlistEntries", mediaType, mediaId],
+        queryKey: WatchlistEntryKeys.listEntry(mediaType, mediaId),
         enabled: !!mediaType && !!mediaId,
         queryFn: () =>
             WatchlistEntriesService.getWatchlistEntry({
@@ -21,10 +22,9 @@ export const useWatchlistEntry = (
             }),
         placeholderData: () =>
             queryClient
-                .getQueryData<WatchlistEntrySummary[]>([
-                    "watchlistEntries",
-                    mediaType,
-                ])
-                ?.find((d) => d.mediaType === mediaType),
+                .getQueryData<WatchlistEntrySummary[]>(
+                    WatchlistEntryKeys.listEntries(mediaType),
+                )
+                ?.find((d) => d.mediaId === mediaId),
     });
 };

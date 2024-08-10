@@ -2,13 +2,13 @@ import { API } from "@/constants/api";
 
 export interface WatchlistEntryDetails {
     watchlistId: string;
-    userId: string;
     mediaId: number;
+    imdbId?: string;
+    userId: string;
     mediaType: string;
-    name: string;
     mediaTitle: string;
     mediaPosterUri?: string;
-    mediaReleaseDate: string;
+    mediaReleaseDate?: string;
 }
 
 type GetWatchlistEntryParams = {
@@ -24,14 +24,9 @@ export const getWatchlistEntry: GetWatchlistEntry = async ({
     mediaType,
     mediaId,
 }) => {
-    try {
-        const response = await fetch(
-            API.watchlistEntries.getWatchlistEntry(mediaType, mediaId),
-        );
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.warn(error);
-        return null;
-    }
+    const response = await fetch(
+        API.watchlistEntries.getWatchlistEntry(mediaType, mediaId),
+    );
+    const json = await response.json();
+    return json;
 };

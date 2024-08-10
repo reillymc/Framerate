@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 6,
         alignItems: "baseline",
+        paddingVertical: 8,
     },
 });
 

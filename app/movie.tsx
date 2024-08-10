@@ -24,8 +24,14 @@ import {
 import { openURL } from "expo-linking";
 
 const Movie: React.FC = () => {
-    const { mediaId: mediaIdParam } = useLocalSearchParams<{
+    const {
+        mediaId: mediaIdParam,
+        mediaTitle,
+        mediaPosterUri,
+    } = useLocalSearchParams<{
         mediaId: string;
+        mediaTitle?: string;
+        mediaPosterUri?: string;
     }>();
 
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
@@ -49,7 +55,7 @@ const Movie: React.FC = () => {
 
     return (
         <>
-            <Stack.Screen options={{ title: movie?.title }} />
+            <Stack.Screen options={{ title: movie?.title ?? mediaTitle }} />
             <ParallaxScrollView
                 headerImage={
                     <TmdbImage type="backdrop" path={movie?.backdrop} />
@@ -60,7 +66,7 @@ const Movie: React.FC = () => {
             >
                 <TmdbImage
                     type="poster"
-                    path={movie?.poster}
+                    path={movie?.poster ?? mediaPosterUri}
                     style={styles.floatingPoster}
                 />
                 <Text
