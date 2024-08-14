@@ -1,8 +1,14 @@
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
-import type React from "react";
-import { useEffect, useState } from "react";
-import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
+import { type FC, useEffect, useRef, useState } from "react";
+import {
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    View,
+    type TextInput as rnTextInput,
+} from "react-native";
 
+import { placeholderUserId } from "@/constants/placeholderUser";
 import { useMovieDetails } from "@/hooks";
 import {
     ratingToStars,
@@ -10,19 +16,25 @@ import {
     useReview,
     useSaveReview,
 } from "@/modules/review";
+
+import { useUser, useUsers } from "@/modules/user";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     Action,
+    DropdownInput,
+    SelectionInput,
     Text,
     TextInput,
     type ThemedStyles,
     ToggleInput,
+    Undefined,
+    type ValueItem,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import StarRating from "react-native-star-rating-widget";
 
-const Edit: React.FC = () => {
+const Edit: FC = () => {
     const { reviewId, mediaId } = useGlobalSearchParams<{
         reviewId: string;
         mediaId: string;
@@ -34,9 +46,15 @@ const Edit: React.FC = () => {
     });
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
+    const { data: users = [] } = useUsers();
+    const { data: user } = useUser(placeholderUserId);
+
+    const filteredUsers = users.filter(
+        ({ userId }) => userId !== placeholderUserId,
+    );
 
     const styles = useThemedStyles(createStyles, {});
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const [date, setDate] = useState(
         review?.date ? new Date(review.date) : new Date(),
@@ -46,7 +64,19 @@ const Edit: React.FC = () => {
         review?.reviewDescription ?? "",
     );
 
-    const [includeDate, setUnknownDate] = useState(true);
+    const [includeDate, setIncludeDate] = useState(
+        review ? !!review.date : true,
+    );
+    const [venue, setVenue] = useState(review?.venue);
+    const dropdownRef = useRef<rnTextInput>(null);
+    const [company, setCompany] = useState<ValueItem[]>(
+        review?.company
+            ?.map((user) => ({
+                value: user.userId,
+                label: `${user.firstName} ${user.lastName}`,
+            }))
+            .filter(Undefined) ?? [],
+    );
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
@@ -71,8 +101,10 @@ const Edit: React.FC = () => {
             mediaTitle: movie.title,
             imdbId: movie.imdbId,
             mediaType: movie.type,
+            venue,
             rating: starsToRating(rating),
             reviewDescription,
+            company: company.map(({ value }) => ({ userId: value })),
         });
         handleClose();
     };
@@ -129,7 +161,7 @@ const Edit: React.FC = () => {
                         value={includeDate}
                         size="small"
                         variant="secondary"
-                        onChange={setUnknownDate}
+                        onChange={setIncludeDate}
                     />
                     {includeDate ? (
                         <DateTimePicker
@@ -141,6 +173,13 @@ const Edit: React.FC = () => {
                             onChange={(_, newDate) =>
                                 newDate && setDate(newDate)
                             }
+                            accentColor={theme.color.primary}
+                            hitSlop={{
+                                top: 20,
+                                right: 20,
+                                bottom: 20,
+                                left: 20,
+                            }}
                         />
                     ) : (
                         <View
@@ -162,8 +201,41 @@ const Edit: React.FC = () => {
                     onChangeText={setReviewDescription}
                     multiline
                     numberOfLines={3}
-                    containerStyle={styles.reviewInputContainer}
+                    containerStyle={[styles.input, styles.reviewInputContainer]}
                     style={styles.reviewInput}
+                />
+                <DropdownInput
+                    ref={dropdownRef}
+                    label="Venue"
+                    minimumSearchLength={0}
+                    value={venue}
+                    onChangeText={setVenue}
+                    maxSuggestionCount={3}
+                    onSelect={(e) => {
+                        setVenue(e?.value ?? "");
+                        if (e?.value) {
+                            dropdownRef.current?.blur();
+                        }
+                    }}
+                    style={styles.input}
+                    clearButtonMode="while-editing"
+                    items={user?.configuration.venues.knownVenueNames.map(
+                        (venue) => ({
+                            value: venue,
+                            label: venue,
+                        }),
+                    )}
+                />
+                <SelectionInput
+                    label="Company"
+                    selectionMode="multi"
+                    selection={company}
+                    items={filteredUsers.map((user) => ({
+                        value: user.userId,
+                        label: `${user.firstName} ${user.lastName}`,
+                    }))}
+                    onChange={setCompany}
+                    style={styles.input}
                 />
             </ScrollView>
         </>
@@ -194,6 +266,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         rating: {
             flex: 1,
             alignSelf: "center",
-            marginBottom: padding.regular,
+            marginBottom: padding.large,
         },
     });

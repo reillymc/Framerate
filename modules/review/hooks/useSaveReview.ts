@@ -7,25 +7,10 @@ export const useSaveReview = () => {
     return useMutation<Awaited<null>, unknown, SaveReviewParams, unknown>({
         mutationKey: ["reviews", "save"],
         mutationFn: ReviewsService.saveReview,
-        onSuccess: async (_response, params) => {
-            await queryClient.invalidateQueries({
-                queryKey: ["reviews", params.reviewId],
-                exact: true,
-            });
+        onSuccess: async (_response) => {
             await queryClient.invalidateQueries({
                 queryKey: ["reviews"],
-                exact: true,
             });
-            await queryClient.invalidateQueries({
-                queryKey: ["reviews", params.mediaId],
-                exact: true,
-            });
-            if (params.reviewId) {
-                await queryClient.invalidateQueries({
-                    queryKey: ["review", params.reviewId],
-                    exact: true,
-                });
-            }
         },
         onError: console.warn,
     });

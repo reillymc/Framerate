@@ -20,15 +20,23 @@ export const SectionHeading: FC<SectionHeadingProps> = ({
 }) => (
     <Pressable style={[styles.container, style]} onPress={onPress}>
         <Text variant="title">{title}</Text>
-        {onPress && <Icon iconName="chevron-right" set="octicons" size={24} />}
+        {onPress && (
+            <Icon
+                iconName="chevron-right"
+                set="octicons"
+                size={24}
+                style={{ paddingTop: 2 }}
+                color="gray"
+            />
+        )}
     </Pressable>
 );
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        gap: 6,
-        alignItems: "baseline",
+        gap: 8,
+        alignItems: "center",
         paddingVertical: 8,
     },
 });

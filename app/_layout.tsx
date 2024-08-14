@@ -17,11 +17,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
-import { useEffect, useMemo } from "react";
+import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { DevToolsBubble } from "react-native-react-query-devtools";
 import "react-native-reanimated";
+
+let DevToolsBubble: FC | undefined = undefined;
+if (__DEV__) {
+    const pp = require("react-native-react-query-devtools");
+    DevToolsBubble = pp.DevToolsBubble;
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 preventAutoHideAsync();
@@ -162,7 +167,7 @@ export default function RootLayout() {
                     </GestureHandlerRootView>
                 </ThemeProvider>
             </RnThemeProvider>
-            <DevToolsBubble />
+            {__DEV__ && DevToolsBubble && <DevToolsBubble />}
         </QueryClientProvider>
     );
 }
@@ -181,6 +186,7 @@ function RootLayoutNavigator() {
             <Stack.Screen name="search" options={{ presentation: "modal" }} />
             <Stack.Screen name="movie" />
             <Stack.Screen name="watchlist" />
+            <Stack.Screen name="profile" options={{ presentation: "modal" }} />
             <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
     );

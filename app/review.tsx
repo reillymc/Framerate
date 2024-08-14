@@ -45,12 +45,26 @@ const Review: FC = () => {
             >
                 <StarRatingDisplay
                     rating={rating}
+                    style={{ justifyContent: "center" }}
                     enableHalfStar
                     maxStars={10}
-                    starSize={26}
+                    starSize={18}
                 />
                 <Text>{review?.reviewTitle}</Text>
                 <Text>{review?.reviewDescription}</Text>
+                <Text>{review?.date}</Text>
+                {review?.venue && <Text>Venue: {review?.venue}</Text>}
+                {!!review?.company?.length && (
+                    <Text>
+                        {"Watched with: "}
+                        {review?.company
+                            ?.map(
+                                ({ firstName, lastName }) =>
+                                    `${firstName} ${lastName}`,
+                            )
+                            .join(", ")}
+                    </Text>
+                )}
             </ScrollView>
         </>
     );

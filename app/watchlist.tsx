@@ -132,7 +132,7 @@ const Watchlist: FC = () => {
     return (
         <>
             <Stack.Screen options={{ title: watchlist?.name ?? "..." }} />
-            {!isLoading && sectionData.length && (
+            {!isLoading && !!sectionData.length && (
                 <SectionList
                     sections={sectionData}
                     ref={listRef}
@@ -164,6 +164,8 @@ const Watchlist: FC = () => {
                                 alignItems: "flex-end",
                                 height: SECTION_HEADER_HEIGHT,
                                 paddingHorizontal: theme.padding.pageHorizontal,
+                                borderBottomWidth: 1,
+                                borderBottomColor: theme.color.border,
                             }}
                         >
                             <Text

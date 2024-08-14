@@ -13,6 +13,9 @@ export type SaveReviewParams = {
     reviewTitle?: string;
     reviewDescription?: string;
     venue?: string;
+    company?: Array<{
+        userId: string;
+    }>;
 };
 
 type SaveReview = (params: SaveReviewParams) => Promise<null>;

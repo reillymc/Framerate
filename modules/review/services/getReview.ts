@@ -14,6 +14,11 @@ export interface ReviewDetails {
     reviewTitle?: string;
     reviewDescription?: string;
     venue?: string;
+    company?: Array<{
+        userId: string;
+        firstName: string;
+        lastName: string;
+    }>;
 }
 
 type GetReviewParams = {

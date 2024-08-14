@@ -29,6 +29,12 @@ export const API = {
         deleteWatchlistEntry: (mediaType: string, mediaId: number) =>
             `${BASE_URL}/watchlists/${mediaType}/entries/${mediaId}`,
     },
+    users: {
+        getUser: (userId: string) => `${BASE_URL}/users/${userId}`,
+        getUsers: () => `${BASE_URL}/users`,
+        postUser: () => `${BASE_URL}/users`,
+        putUser: (userId: string) => `${BASE_URL}/users/${userId}`,
+    },
 };
 
 export { TMDB_API_KEY };

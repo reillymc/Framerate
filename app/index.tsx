@@ -6,6 +6,7 @@ import { useReviews } from "@/modules/review";
 import { WatchlistSummary } from "@/modules/watchlist/components/watchlistSummary";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
+    IconActionV2,
     ListItem,
     ListItemRow,
     Text,
@@ -57,6 +58,12 @@ export default function HomeScreen() {
                         barTintColor: theme.color.inputBackground,
                         tintColor: theme.color.primary,
                     },
+                    headerRight: () => (
+                        <IconActionV2
+                            iconName="person"
+                            onPress={() => router.push({ pathname: "profile" })}
+                        />
+                    ),
                 }}
             />
             {searchValue ? (
@@ -98,7 +105,7 @@ export default function HomeScreen() {
                             />
                             <WatchlistSummary
                                 watchlistEntries={watchlistEntries ?? []}
-                                onPressBook={(item) =>
+                                onPressEntry={(item) =>
                                     router.push({
                                         pathname: "movie",
                                         params: {
