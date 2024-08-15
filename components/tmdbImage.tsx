@@ -1,5 +1,6 @@
+import { Image, type ImageStyle } from "expo-image";
 import type React from "react";
-import { Image, type ImageStyle, type StyleProp } from "react-native";
+import type { StyleProp } from "react-native";
 
 type TmdbImageProps = {
     type: "poster" | "backdrop";
@@ -14,7 +15,7 @@ export const TmdbImage: React.FunctionComponent<TmdbImageProps> = ({
 }) => {
     return (
         <Image
-            src={`https://image.tmdb.org/t/p/${type === "poster" ? "w500" : "w780"}${path}`}
+            source={`https://image.tmdb.org/t/p/${type === "poster" ? "w500" : "w780"}${path}`}
             style={[
                 type === "poster"
                     ? {
@@ -22,7 +23,7 @@ export const TmdbImage: React.FunctionComponent<TmdbImageProps> = ({
                           width: 50,
                       }
                     : {
-                          height: 250,
+                          height: 300,
                           width: "100%",
                       },
                 style,

@@ -30,7 +30,7 @@ const Review: FC = () => {
                             iconName="pencil"
                             onPress={() =>
                                 router.push({
-                                    pathname: "editReview",
+                                    pathname: "/editReview",
                                     params: { reviewId },
                                 })
                             }
@@ -50,21 +50,37 @@ const Review: FC = () => {
                     maxStars={10}
                     starSize={18}
                 />
-                <Text>{review?.reviewTitle}</Text>
-                <Text>{review?.reviewDescription}</Text>
-                <Text>{review?.date}</Text>
-                {!!review?.venue && <Text>Venue: {review?.venue}</Text>}
-                {!!review?.company?.length && (
-                    <Text>
-                        {"Watched with: "}
-                        {review?.company
-                            ?.map(
-                                ({ firstName, lastName }) =>
-                                    `${firstName} ${lastName}`,
-                            )
-                            .join(", ")}
-                    </Text>
-                )}
+                {!!review?.reviewTitle && <Text>{review?.reviewTitle}</Text>}
+                <Text style={styles.informationSection}>
+                    {review?.reviewDescription}
+                </Text>
+                <Text
+                    variant="bodyEmphasized"
+                    style={styles.informationSection}
+                >
+                    <Text variant="body">Watched on </Text>
+                    {review?.date}
+                    {!!review?.venue && (
+                        <>
+                            <Text variant="body"> at </Text>
+                            {review?.venue}
+                        </>
+                    )}
+                    {review?.company?.length ? (
+                        <Text variant="body"> with:</Text>
+                    ) : (
+                        "."
+                    )}
+                </Text>
+                {!!review?.company?.length &&
+                    review?.company?.map(({ firstName, lastName }) => (
+                        <Text
+                            key={`${firstName} ${lastName}`}
+                            variant="bodyEmphasized"
+                        >
+                            {`    - ${firstName} ${lastName}`}
+                        </Text>
+                    ))}
             </ScrollView>
         </>
     );
@@ -76,6 +92,9 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
             paddingBottom: padding.large,
+        },
+        informationSection: {
+            marginTop: padding.large,
         },
     });
 

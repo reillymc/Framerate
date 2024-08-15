@@ -61,7 +61,9 @@ export default function HomeScreen() {
                     headerRight: () => (
                         <IconActionV2
                             iconName="person"
-                            onPress={() => router.push({ pathname: "profile" })}
+                            onPress={() =>
+                                router.push({ pathname: "/profile" })
+                            }
                         />
                     ),
                 }}
@@ -77,7 +79,7 @@ export default function HomeScreen() {
                             }
                             onPress={() =>
                                 router.push({
-                                    pathname: "movie",
+                                    pathname: "/movie",
                                     params: { mediaId: item.mediaId },
                                 })
                             }
@@ -98,7 +100,7 @@ export default function HomeScreen() {
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
-                                        pathname: "watchlist",
+                                        pathname: "/watchlist",
                                         params: { mediaType: MediaType.Movie },
                                     })
                                 }
@@ -107,7 +109,7 @@ export default function HomeScreen() {
                                 watchlistEntries={watchlistEntries ?? []}
                                 onPressEntry={(item) =>
                                     router.push({
-                                        pathname: "movie",
+                                        pathname: "/movie",
                                         params: {
                                             mediaId: item.mediaId,
                                             mediaTitle: item.mediaTitle,
@@ -117,7 +119,7 @@ export default function HomeScreen() {
                                 }
                             />
                             <SectionHeading
-                                title="New Movies"
+                                title="Popular"
                                 style={styles.pageElement}
                             />
                             <FlatList
@@ -138,7 +140,7 @@ export default function HomeScreen() {
                                         imageUri={item.poster}
                                         onPress={() =>
                                             router.push({
-                                                pathname: "movie",
+                                                pathname: "/movie",
                                                 params: {
                                                     mediaId: item.mediaId,
                                                     mediaTitle: item.title,
@@ -150,7 +152,7 @@ export default function HomeScreen() {
                                 )}
                             />
                             <SectionHeading
-                                title="Recent Reviews"
+                                title="My Reviews"
                                 style={styles.pageElement}
                             />
                         </>
@@ -189,7 +191,7 @@ export default function HomeScreen() {
                             ]}
                             onPress={() =>
                                 router.push({
-                                    pathname: "movie",
+                                    pathname: "/movie",
                                     params: {
                                         mediaId: item.mediaId,
                                         mediaTitle: item.mediaTitle,

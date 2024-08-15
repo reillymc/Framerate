@@ -17,7 +17,12 @@ import {
     useSaveReview,
 } from "@/modules/review";
 
+import { MediaType } from "@/constants/mediaTypes";
 import { useUser, useUsers } from "@/modules/user";
+import {
+    useDeleteWatchlistEntry,
+    useWatchlistEntry,
+} from "@/modules/watchlistEntry";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     Action,
@@ -35,19 +40,24 @@ import {
 import StarRating from "react-native-star-rating-widget";
 
 const Edit: FC = () => {
-    const { reviewId, mediaId } = useGlobalSearchParams<{
+    const { reviewId, mediaId: mediaIdParam } = useGlobalSearchParams<{
         reviewId: string;
         mediaId: string;
     }>();
 
+    const mediaId = mediaIdParam
+        ? Number.parseInt(mediaIdParam ?? "", 10)
+        : undefined;
+
     const { data: review } = useReview(reviewId);
     const { data: movie } = useMovieDetails({
-        mediaId: mediaId ? Number.parseInt(mediaId ?? "", 10) : review?.mediaId,
+        mediaId: mediaId ? mediaId : review?.mediaId,
     });
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
     const { data: users = [] } = useUsers();
     const { data: user } = useUser(placeholderUserId);
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     const filteredUsers = users.filter(
         ({ userId }) => userId !== placeholderUserId,
@@ -67,6 +77,7 @@ const Edit: FC = () => {
     const [includeDate, setIncludeDate] = useState(
         review ? !!review.date : true,
     );
+    const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
     const [venue, setVenue] = useState(review?.venue);
     const dropdownRef = useRef<rnTextInput>(null);
     const [company, setCompany] = useState<ValueItem[]>(
@@ -76,6 +87,11 @@ const Edit: FC = () => {
                 label: `${user.firstName} ${user.lastName}`,
             }))
             .filter(Undefined) ?? [],
+    );
+
+    const { data: watchlistEntry } = useWatchlistEntry(
+        MediaType.Movie,
+        mediaId,
     );
 
     useEffect(() => {
@@ -95,7 +111,7 @@ const Edit: FC = () => {
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
-            mediaId: Number(movie.mediaId),
+            mediaId: movie.mediaId,
             mediaPosterUri: movie.poster ?? "",
             mediaReleaseYear: movie.year ?? 0,
             mediaTitle: movie.title,
@@ -106,6 +122,13 @@ const Edit: FC = () => {
             reviewDescription,
             company: company.map(({ value }) => ({ userId: value })),
         });
+
+        if (watchlistEntry && clearWatchlistEntry && !reviewId) {
+            deleteWatchlistEntry({
+                mediaId: movie.mediaId,
+                mediaType: MediaType.Movie,
+            });
+        }
         handleClose();
     };
 
@@ -237,6 +260,18 @@ const Edit: FC = () => {
                     onChange={setCompany}
                     style={styles.input}
                 />
+                {!!watchlistEntry && !reviewId && (
+                    <ToggleInput
+                        label="Mark as watched"
+                        value={clearWatchlistEntry}
+                        onChange={setClearWatchlistEntry}
+                        helpText={`${movie?.title} is currently in your watchlist. ${
+                            clearWatchlistEntry
+                                ? "It will be removed when this review is created."
+                                : "It will remain there after this review is created."
+                        }`}
+                    />
+                )}
             </ScrollView>
         </>
     );
