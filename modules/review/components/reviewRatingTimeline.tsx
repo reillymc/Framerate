@@ -142,7 +142,7 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                 }}
                 domainPadding={theme.padding.regular}
                 xKey="date"
-                domain={{ y: [0, 105] }}
+                domain={{ y: [0, 114] }}
                 yKeys={["rating", "filteredRatings"]}
                 renderOutside={({ chartBounds }) => (
                     <>
@@ -252,7 +252,7 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     const end = useDerivedValue(() =>
         vec(
             xPosition.value,
-            top + 1.5 * fontSizeRegular + topOffset + fontSizeBold,
+            top + 1.5 * fontSizeRegular + topOffset + 1.5 * fontSizeBold + 2,
         ),
     );
 
@@ -282,13 +282,20 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
         () => xPosition.value - activeDateWidth.value / 2,
     );
 
-    const { theme } = useTheme();
+    const radius = useDerivedValue(() => (filteredValue.value ? 6 : 0));
 
     return (
         <>
             <SkiaLine p1={start} p2={end} color={lineColor} strokeWidth={1} />
 
-            <Circle cx={xPosition} cy={yPosition} r={6} color={lineColor} />
+            {radius && (
+                <Circle
+                    cx={xPosition}
+                    cy={yPosition}
+                    r={radius}
+                    color={lineColor}
+                />
+            )}
 
             <SkiaText
                 color={textColor}

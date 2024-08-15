@@ -1,6 +1,6 @@
 import { placeholderUserId } from "@/constants/placeholderUser";
 import { useSaveUser, useUser, useUsers } from "@/modules/user";
-import { ParseConfiguration } from "@/modules/user/models";
+import { ParseConfiguration } from "@/modules/user";
 import {
     Action,
     Button,

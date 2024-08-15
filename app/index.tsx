@@ -3,7 +3,7 @@ import { Poster } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
 import { useReviews } from "@/modules/review";
-import { WatchlistSummary } from "@/modules/watchlist/components/watchlistSummary";
+import { WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     IconActionV2,
