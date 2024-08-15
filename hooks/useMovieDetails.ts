@@ -122,12 +122,6 @@ export const useMovieDetails = ({ mediaId }: SearhParams) => {
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
         queryFn: () => getTmdbMovieDetails({ mediaId }),
         // placeholderData: () => {
-        // 	console.log(
-        // 		queryClient.getQueriesData<SearchItem[]>({
-        // 			exact: false,
-        // 		}),
-        // 	);
-
         // 	return queryClient
         // 		.getQueriesData<SearchItem[]>({ queryKey: ["search"], exact: false })
         // 		?.flatMap(([_, items = []]) => items)

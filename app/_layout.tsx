@@ -1,3 +1,4 @@
+import { fonts } from "@/assets/fonts";
 import { useColorScheme, useDefaultScreenOptions } from "@/hooks";
 import {
     type Theme as RnTheme,
@@ -37,12 +38,7 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
     const { fontScale } = useWindowDimensions();
 
-    const [loaded] = useFonts({
-        dosisLight: require("../assets/fonts/Dosis-Light.ttf"),
-        dosis: require("../assets/fonts/Dosis-Regular.ttf"),
-        dosisBold: require("../assets/fonts/Dosis-Bold.ttf"),
-        dosisSemiBold: require("../assets/fonts/Dosis-SemiBold.ttf"),
-    });
+    const [loaded] = useFonts(fonts);
 
     useEffect(() => {
         if (loaded) {
@@ -78,10 +74,6 @@ export default function RootLayout() {
                         : undefined,
                 pageHorizontal: 20,
             },
-            color: {
-                border: "#d0d0d0",
-                primary: "gold",
-            },
         }),
         [fontScale],
     );
@@ -90,10 +82,11 @@ export default function RootLayout() {
         () =>
             MergeTheme(baseTheme, {
                 color: {
-                    primary: "#ff465a",
-                    primaryHighlight: "#ff6d7d",
+                    primary: "gold",
+                    primaryHighlight: "goldenrod",
                     textOnSecondary: "#F4EDEA",
                     textOnPrimary: "#fff",
+                    border: "#d0d0d0",
                 },
             }),
         [baseTheme],
@@ -109,16 +102,18 @@ export default function RootLayout() {
                     backgroundHighlight: "#20252a",
                     foreground: "#1a1818",
                     backgroundOverlay: "#242424",
-                    border: "#20252a",
+                    border: "#444",
                     inputBackground: "#141210",
                     inputBackgroundDisabled: "#1a1818",
                     inputText: "#fff",
                     shadow: "#000",
                     secondary: "#edd9c5",
                     secondaryHighlight: "#c1b1a1",
+                    primaryHighlight: "goldenrod",
                     textOnSecondary: "#12263A",
                     textOnPrimary: "#fff",
                     primaryDisabled: "#ff7e8c",
+                    primary: "gold",
                 },
             }),
         [baseTheme],

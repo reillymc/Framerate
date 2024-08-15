@@ -15,7 +15,11 @@ import {
 import { ParallaxScrollView, TmdbImage } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovieDetails } from "@/hooks";
-import { ratingToStars, useReviews } from "@/modules/review";
+import {
+    ReviewRatingTimeline,
+    ratingToStars,
+    useReviews,
+} from "@/modules/review";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
@@ -179,44 +183,50 @@ const Movie: React.FC = () => {
                         </Pressable>
                     </View>
 
-                    <Text variant="title">Reviews</Text>
-                    <FlatList
-                        contentInsetAdjustmentBehavior="automatic"
-                        scrollEnabled={false}
-                        data={reviews}
-                        renderItem={({ item }) => (
-                            <ListItem
-                                key={item.reviewId}
-                                style={styles.reviewCard}
-                                heading={`${ratingToStars(item.rating)} Stars`}
-                                contentRows={[
-                                    <ListItemRow
-                                        key="details"
-                                        contentItems={
-                                            item.date
-                                                ? [
-                                                      <Text key="date">
-                                                          {new Date(
-                                                              item.date,
-                                                          ).toDateString()}
-                                                      </Text>,
-                                                  ]
-                                                : undefined
+                    {!!reviews?.length && reviews.length > 1 && (
+                        <>
+                            <Text variant="title">Reviews</Text>
+                            <ReviewRatingTimeline reviews={reviews} />
+                            <FlatList
+                                contentInsetAdjustmentBehavior="automatic"
+                                scrollEnabled={false}
+                                data={reviews}
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        key={item.reviewId}
+                                        style={styles.reviewCard}
+                                        heading={`${ratingToStars(item.rating)} Stars`}
+                                        contentRows={[
+                                            <ListItemRow
+                                                key="details"
+                                                contentItems={
+                                                    item.date
+                                                        ? [
+                                                              <Text key="date">
+                                                                  {new Date(
+                                                                      item.date,
+                                                                  ).toDateString()}
+                                                              </Text>,
+                                                          ]
+                                                        : undefined
+                                                }
+                                            />,
+                                        ]}
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: "review",
+                                                params: {
+                                                    reviewId: item.reviewId,
+                                                },
+                                            })
                                         }
-                                    />,
-                                ]}
-                                onPress={() =>
-                                    router.push({
-                                        pathname: "review",
-                                        params: { reviewId: item.reviewId },
-                                    })
-                                }
+                                    />
+                                )}
+                                contentContainerStyle={styles.list}
                             />
-                        )}
-                        contentContainerStyle={styles.list}
-                    />
+                        </>
+                    )}
                 </View>
-
                 <Button
                     label="IMDB"
                     variant="flat"

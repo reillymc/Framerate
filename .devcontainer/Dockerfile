@@ -4,4 +4,4 @@ WORKDIR /home/node/workspace
 
 # RUN chown node:node /home/node/workspace -R
 
-RUN npm install -g eslint typescript expo-cli
+RUN npm install -g eslint typescript

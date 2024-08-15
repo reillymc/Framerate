@@ -53,7 +53,7 @@ const Review: FC = () => {
                 <Text>{review?.reviewTitle}</Text>
                 <Text>{review?.reviewDescription}</Text>
                 <Text>{review?.date}</Text>
-                {review?.venue && <Text>Venue: {review?.venue}</Text>}
+                {!!review?.venue && <Text>Venue: {review?.venue}</Text>}
                 {!!review?.company?.length && (
                     <Text>
                         {"Watched with: "}
