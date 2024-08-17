@@ -1,18 +1,8 @@
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Redirect } from "expo-router";
+import { StyleSheet } from "react-native";
 
 export default function NotFoundScreen() {
-    return (
-        <>
-            <Stack.Screen options={{ title: "Oops!" }} />
-            <View style={styles.container}>
-                <Text>This screen doesn't exist.</Text>
-                <Link href="/" style={styles.link}>
-                    <Text>Go to home screen!</Text>
-                </Link>
-            </View>
-        </>
-    );
+    return <Redirect href="/(tabs)/movies/" />;
 }
 
 const styles = StyleSheet.create({

@@ -195,7 +195,7 @@ const Watchlist: FC = () => {
                                 }}
                                 onPress={() =>
                                     router.push({
-                                        pathname: "movie",
+                                        pathname: "/movies/movie",
                                         params: {
                                             mediaId: item.mediaId,
                                             mediaTitle: item.mediaTitle,

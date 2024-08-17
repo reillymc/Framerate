@@ -4,3 +4,4 @@ export { SectionHeading } from "./sectionHeading";
 export { ImdbButton } from "./imdbButton";
 export { TmdbButton } from "./tmdbButton";
 export { VidSrcButton } from "./vidSrcButton";
+export { CustomTabBar } from "./customTabBar";

@@ -79,7 +79,7 @@ export default function HomeScreen() {
                             }
                             onPress={() =>
                                 router.push({
-                                    pathname: "/movie",
+                                    pathname: "/movies/movie",
                                     params: { mediaId: item.mediaId },
                                 })
                             }
@@ -100,7 +100,7 @@ export default function HomeScreen() {
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
-                                        pathname: "/watchlist",
+                                        pathname: "/movies/watchlist",
                                         params: { mediaType: MediaType.Movie },
                                     })
                                 }
@@ -109,7 +109,7 @@ export default function HomeScreen() {
                                 watchlistEntries={watchlistEntries ?? []}
                                 onPressEntry={(item) =>
                                     router.push({
-                                        pathname: "/movie",
+                                        pathname: "/movies/movie",
                                         params: {
                                             mediaId: item.mediaId,
                                             mediaTitle: item.mediaTitle,
@@ -140,7 +140,7 @@ export default function HomeScreen() {
                                         imageUri={item.poster}
                                         onPress={() =>
                                             router.push({
-                                                pathname: "/movie",
+                                                pathname: "/movies/movie",
                                                 params: {
                                                     mediaId: item.mediaId,
                                                     mediaTitle: item.title,
@@ -191,7 +191,7 @@ export default function HomeScreen() {
                             ]}
                             onPress={() =>
                                 router.push({
-                                    pathname: "/movie",
+                                    pathname: "/movies/movie",
                                     params: {
                                         mediaId: item.mediaId,
                                         mediaTitle: item.mediaTitle,

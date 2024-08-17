@@ -30,7 +30,7 @@ const Review: FC = () => {
                             iconName="pencil"
                             onPress={() =>
                                 router.push({
-                                    pathname: "/editReview",
+                                    pathname: "/movies/editReview",
                                     params: { reviewId },
                                 })
                             }
@@ -58,8 +58,13 @@ const Review: FC = () => {
                     variant="bodyEmphasized"
                     style={styles.informationSection}
                 >
-                    <Text variant="body">Watched on </Text>
-                    {review?.date}
+                    <Text variant="body">Watched </Text>
+                    {review?.date && (
+                        <>
+                            <Text variant="body">on </Text>
+                            {review.date}
+                        </>
+                    )}
                     {!!review?.venue && (
                         <>
                             <Text variant="body"> at </Text>

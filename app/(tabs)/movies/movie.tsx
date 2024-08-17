@@ -103,12 +103,14 @@ const Movie: React.FC = () => {
                         Release Date: {movie?.releaseDate?.toLocaleDateString()}
                     </Text>
 
-                    {!!reviews?.length && reviews.length > 1 && (
+                    {!!reviews?.length && (
                         <>
                             <Text variant="title" style={styles.section}>
                                 Reviews
                             </Text>
-                            <ReviewRatingTimeline reviews={reviews} />
+                            {reviews.length > 1 && (
+                                <ReviewRatingTimeline reviews={reviews} />
+                            )}
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
@@ -136,7 +138,7 @@ const Movie: React.FC = () => {
                                         ]}
                                         onPress={() =>
                                             router.push({
-                                                pathname: "/review",
+                                                pathname: "/movies/review",
                                                 params: {
                                                     reviewId: item.reviewId,
                                                 },
@@ -164,13 +166,13 @@ const Movie: React.FC = () => {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: 100,
+                    height: 120,
                 }}
             >
-                <Rect x={0} y={0} width={width} height={100}>
+                <Rect x={0} y={0} width={width} height={120}>
                     <LinearGradient
                         start={vec(width, 0)}
-                        end={vec(width, 100 - bottom)}
+                        end={vec(width, 90 - bottom)}
                         colors={[
                             scheme === "light"
                                 ? `${theme.color.background}00`
@@ -260,7 +262,7 @@ const Movie: React.FC = () => {
                     }}
                     onPress={() =>
                         router.push({
-                            pathname: "/editReview",
+                            pathname: "/movies/editReview",
                             params: { mediaId },
                         })
                     }

@@ -25,8 +25,8 @@ import "react-native-reanimated";
 
 let DevToolsBubble: FC | undefined = undefined;
 if (__DEV__) {
-    const pp = require("react-native-react-query-devtools");
-    DevToolsBubble = pp.DevToolsBubble;
+    DevToolsBubble =
+        require("react-native-react-query-devtools").DevToolsBubble;
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -172,16 +172,8 @@ function RootLayoutNavigator() {
     const screenOptions = useDefaultScreenOptions();
 
     return (
-        <Stack screenOptions={screenOptions}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="review" />
-            <Stack.Screen
-                name="editReview"
-                options={{ presentation: "fullScreenModal" }}
-            />
-            <Stack.Screen name="search" options={{ presentation: "modal" }} />
-            <Stack.Screen name="movie" />
-            <Stack.Screen name="watchlist" />
+        <Stack screenOptions={screenOptions} initialRouteName="(tabs)">
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ presentation: "modal" }} />
             <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>

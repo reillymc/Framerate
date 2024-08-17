@@ -1,0 +1,21 @@
+import { useDefaultScreenOptions } from "@/hooks";
+import { Stack } from "expo-router";
+import type { FC } from "react";
+
+const MoviesStack: FC = () => {
+    const screenOptions = useDefaultScreenOptions();
+
+    return (
+        <Stack screenOptions={screenOptions}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="movie" />
+            <Stack.Screen name="watchlist" />
+            <Stack.Screen
+                name="editReview"
+                options={{ presentation: "fullScreenModal" }}
+            />
+        </Stack>
+    );
+};
+
+export default MoviesStack;
