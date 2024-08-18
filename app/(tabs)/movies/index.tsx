@@ -1,14 +1,13 @@
-import { SectionHeading, TmdbImage } from "@/components";
+import { SectionHeading } from "@/components";
 import { Poster } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
-import { useReviews } from "@/modules/review";
+import { ReviewSummaryCard, useReviews } from "@/modules/review";
 import { WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     IconActionV2,
     ListItem,
-    ListItemRow,
     Text,
     type ThemedStyles,
     useTheme,
@@ -154,6 +153,11 @@ export default function HomeScreen() {
                             <SectionHeading
                                 title="My Reviews"
                                 style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/movies/reviews",
+                                    })
+                                }
                             />
                         </>
                     }
@@ -162,33 +166,9 @@ export default function HomeScreen() {
                         <View style={styles.pageElement}>{children}</View>
                     )}
                     renderItem={({ item }) => (
-                        <ListItem
+                        <ReviewSummaryCard
                             key={item.reviewId}
-                            style={styles.reviewCard}
-                            heading={`${item.mediaTitle} (${item.mediaReleaseYear})`}
-                            avatar={
-                                <TmdbImage
-                                    type="poster"
-                                    path={item.mediaPosterUri}
-                                    style={{ width: 80, height: "100%" }}
-                                />
-                            }
-                            contentRows={[
-                                <ListItemRow
-                                    key="details"
-                                    contentItems={
-                                        item.date
-                                            ? [
-                                                  <Text key="date">
-                                                      {new Date(
-                                                          item.date,
-                                                      ).toDateString()}
-                                                  </Text>,
-                                              ]
-                                            : undefined
-                                    }
-                                />,
-                            ]}
+                            review={item}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",
@@ -197,6 +177,12 @@ export default function HomeScreen() {
                                         mediaTitle: item.mediaTitle,
                                         mediaPosterUri: item.mediaPosterUri,
                                     },
+                                })
+                            }
+                            onPressMore={() =>
+                                router.push({
+                                    pathname: "/movies/review",
+                                    params: { reviewId: item.reviewId },
                                 })
                             }
                         />

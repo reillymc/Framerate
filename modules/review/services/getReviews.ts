@@ -10,7 +10,7 @@ export interface ReviewSummary {
     mediaReleaseYear: number;
     date?: string;
     rating: number;
-    reviewTitle?: string;
+    reviewDescription?: string;
 }
 
 type GetReviewParams = {

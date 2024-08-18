@@ -88,6 +88,7 @@ export default function RootLayout() {
                     textOnPrimary: "#fff",
                     border: "#d0d0d0",
                     shadow: "#000",
+                    textSecondary: "#CCC",
                 },
             }),
         [baseTheme],
@@ -98,7 +99,7 @@ export default function RootLayout() {
             MergeTheme(baseTheme, {
                 color: {
                     textPrimary: "#fff",
-                    textSecondary: "#999",
+                    textSecondary: "#737167",
                     background: "#000",
                     backgroundHighlight: "#20252a",
                     foreground: "#1a1818",
