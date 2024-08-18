@@ -70,6 +70,14 @@ const Movie: React.FC = () => {
     const { data: reviews } = useReviews(mediaId);
     const { theme } = useTheme();
 
+    const releaseDate = movie?.releaseDate
+        ? new Date(movie.releaseDate).toLocaleString("default", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+          })
+        : undefined;
+
     const styles = useThemedStyles(createStyles, {});
 
     return (
@@ -99,9 +107,11 @@ const Movie: React.FC = () => {
                 </View>
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
-                    <Text variant="bodyEmphasized" style={styles.section}>
-                        Release Date: {movie?.releaseDate?.toLocaleDateString()}
-                    </Text>
+                    {releaseDate && (
+                        <Text variant="bodyEmphasized" style={styles.section}>
+                            {`Release Date: ${releaseDate}`}
+                        </Text>
+                    )}
 
                     {!!reviews?.length && (
                         <>
@@ -205,8 +215,10 @@ const Movie: React.FC = () => {
                             mediaTitle: movie.title,
                             imdbId: movie.imdbId,
                             mediaReleaseDate: movie.releaseDate
-                                ?.toISOString()
-                                .split("T")[0],
+                                ? new Date(movie.releaseDate)
+                                      ?.toISOString()
+                                      .split("T")[0]
+                                : undefined,
                             mediaPosterUri: movie.poster,
                         });
                     }}

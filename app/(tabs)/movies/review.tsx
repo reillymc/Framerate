@@ -78,12 +78,9 @@ const Review: FC = () => {
                     )}
                 </Text>
                 {!!review?.company?.length &&
-                    review?.company?.map(({ firstName, lastName }) => (
-                        <Text
-                            key={`${firstName} ${lastName}`}
-                            variant="bodyEmphasized"
-                        >
-                            {`    - ${firstName} ${lastName}`}
+                    review?.company?.map(({ userId, firstName, lastName }) => (
+                        <Text key={userId} variant="bodyEmphasized">
+                            {`    - ${firstName ?? "..."} ${lastName ?? "..."}`}
                         </Text>
                     ))}
             </ScrollView>

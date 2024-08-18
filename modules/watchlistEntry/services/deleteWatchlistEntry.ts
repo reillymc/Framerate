@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export type DeleteWatchlistEntryParams = {
     mediaId: number;
@@ -9,28 +10,10 @@ type DeleteWatchlistEntry = (
     params: DeleteWatchlistEntryParams,
 ) => Promise<null>;
 
-export const deleteWatchlistEntry: DeleteWatchlistEntry = async ({
+export const deleteWatchlistEntry: DeleteWatchlistEntry = ({
     mediaId,
     mediaType,
-}) => {
-    try {
-        const options = {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "application/json",
-            },
-        };
-
-        const response = await fetch(
-            API.watchlistEntries.deleteWatchlistEntry(mediaType, mediaId),
-            options,
-        );
-
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
+}) =>
+    ExecuteRequest(
+        FRAMERATE_API.watchlistEntries.deleteWatchlistEntry(mediaType, mediaId),
+    );

@@ -1,10 +1,11 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export interface ReviewDetails {
     reviewId: string;
     userId: string;
     mediaId: number;
-    imdbId?: number;
+    imdbId?: string;
     mediaType: string;
     mediaTitle: string;
     mediaPosterUri?: string;
@@ -16,8 +17,8 @@ export interface ReviewDetails {
     venue?: string;
     company?: Array<{
         userId: string;
-        firstName: string;
-        lastName: string;
+        firstName?: string;
+        lastName?: string;
     }>;
 }
 
@@ -29,13 +30,5 @@ type GetReview = (
     params: GetReviewParams,
 ) => Promise<ReviewDetails | undefined>;
 
-export const getReview: GetReview = async ({ reviewId }) => {
-    try {
-        const response = await fetch(API.reviews.getReview(reviewId));
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return;
-    }
-};
+export const getReview: GetReview = ({ reviewId }) =>
+    ExecuteRequest(FRAMERATE_API.reviews.getReview(reviewId));

@@ -43,32 +43,33 @@ const getTmdbPopularMovies: GetTmdbPopularMovies = async () => {
         },
     };
 
+    console.debug("TMDB FETCH: Popular Movies");
+
     const minDate = subWeeks(new Date(), 4);
 
     const maxDate = addWeeks(new Date(), 1);
 
-    try {
-        const response = await fetch(
-            // "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&region=AU&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=${minDate}&release_date.lte=${maxDate}`,
-            options,
-        );
+    const response = await fetch(
+        // "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
+        `https://api.themoviedb.org/3/discover/movie?include_adult=false&region=AU&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=${minDate}&release_date.lte=${maxDate}`,
+        options,
+    );
 
-        const json = (await response.json()) as SearchResponse;
-
-        return json.results.map((result) => ({
-            mediaId: result.id,
-            title: result.title ?? result.name ?? "",
-            poster: result.poster_path,
-
-            overview: result.overview,
-            popularity: result.popularity,
-            type: "movie",
-        }));
-    } catch (error) {
-        console.error(error);
-        return;
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
     }
+
+    const json = (await response.json()) as SearchResponse;
+
+    return json.results.map((result) => ({
+        mediaId: result.id,
+        title: result.title ?? result.name ?? "",
+        poster: result.poster_path,
+
+        overview: result.overview,
+        popularity: result.popularity,
+        type: "movie",
+    }));
 };
 
 export const usePopularMovies = () => {

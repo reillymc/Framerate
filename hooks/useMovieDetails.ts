@@ -1,5 +1,5 @@
 import { TMDB_API_KEY } from "@/constants/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { SearchItem } from "./useSearch";
 
 type SearhParams = { mediaId?: number };
@@ -62,7 +62,7 @@ type Movie = {
     backdrop?: string;
     year?: number;
     type: "movie";
-    releaseDate?: Date;
+    releaseDate?: string;
     overview?: string;
     tagline?: string;
     imdbId?: string;
@@ -83,50 +83,40 @@ const getTmdbMovieDetails: SearchTmdb = async ({ mediaId }) => {
         },
     };
 
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${mediaId}?language=en-AU`,
-            options,
-        );
+    console.debug("TMDB FETCH: Movie Details -", mediaId);
 
-        const json = (await response.json()) as MovieResponse;
-        return {
-            mediaId: json.id,
-            title: json.title,
-            poster: json.poster_path,
-            year: json.release_date
-                ? new Date(json.release_date ?? "").getFullYear()
-                : undefined,
-            releaseDate: json.release_date
-                ? new Date(json.release_date)
-                : undefined,
-            overview: json.overview,
-            type: "movie",
-            backdrop: json.backdrop_path,
-            imdbId: json.imdb_id,
-            tagline: json.tagline,
-            runtime: json.runtime,
-        };
-    } catch (error) {
-        console.error(error);
-        return;
+    const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${mediaId}?language=en-AU`,
+        options,
+    );
+
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
     }
+
+    const json = (await response.json()) as MovieResponse;
+    return {
+        mediaId: json.id,
+        title: json.title,
+        poster: json.poster_path,
+        year: json.release_date
+            ? new Date(json.release_date ?? "").getFullYear()
+            : undefined,
+        releaseDate: json.release_date,
+        overview: json.overview,
+        type: "movie",
+        backdrop: json.backdrop_path,
+        imdbId: json.imdb_id,
+        tagline: json.tagline,
+        runtime: json.runtime,
+    };
 };
 
 export const useMovieDetails = ({ mediaId }: SearhParams) => {
-    const queryClient = useQueryClient();
-
     return useQuery({
         queryKey: ["movie", mediaId],
         enabled: !!mediaId,
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
         queryFn: () => getTmdbMovieDetails({ mediaId }),
-        // placeholderData: () => {
-        // 	return queryClient
-        // 		.getQueriesData<SearchItem[]>({ queryKey: ["search"], exact: false })
-        // 		?.flatMap(([_, items = []]) => items)
-        // 		.filter(IsMovie)
-        // 		.find((item) => item.mediaId === mediaId && item.type === "movie");
-        // },
     });
 };

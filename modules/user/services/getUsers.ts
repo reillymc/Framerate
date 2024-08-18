@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export interface UserSummary {
     userId: string;
@@ -8,8 +9,5 @@ export interface UserSummary {
 
 type GetUsers = () => Promise<UserSummary[] | undefined>;
 
-export const getUsers: GetUsers = async () => {
-    const response = await fetch(API.users.getUsers());
-    const json = await response.json();
-    return json;
-};
+export const getUsers: GetUsers = () =>
+    ExecuteRequest(FRAMERATE_API.users.getUsers());

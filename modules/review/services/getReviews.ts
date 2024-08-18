@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export interface ReviewSummary {
     reviewId: string;
@@ -21,12 +22,5 @@ type GetReviews = (
     params: GetReviewParams,
 ) => Promise<ReviewSummary[] | undefined>;
 
-export const getReviews: GetReviews = async ({ mediaId }) => {
-    try {
-        const response = await fetch(API.reviews.getReviews(mediaId));
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-    }
-};
+export const getReviews: GetReviews = async ({ mediaId }) =>
+    ExecuteRequest(FRAMERATE_API.reviews.getReviews(mediaId));

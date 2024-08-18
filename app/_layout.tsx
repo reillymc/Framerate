@@ -1,5 +1,8 @@
+import "react-native-reanimated";
 import { fonts } from "@/assets/fonts";
 import { useColorScheme, useDefaultScreenOptions } from "@/hooks";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 import {
     type Theme as RnTheme,
     ThemeProvider as RnThemeProvider,
@@ -14,14 +17,15 @@ import {
     createDefaultStyles,
     scaleFont,
 } from "@reillymc/react-native-components";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { QueryClient, onlineManager } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "react-native-reanimated";
 
 let DevToolsBubble: FC | undefined = undefined;
 if (__DEV__) {
@@ -32,7 +36,22 @@ if (__DEV__) {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 15,
+            gcTime: 1000 * 60 * 60 * 24, // 24 hours
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+        },
+    },
+});
+
+const persister = createAsyncStoragePersister({
+    storage: AsyncStorage,
+    throttleTime: 3000,
+});
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -45,6 +64,13 @@ export default function RootLayout() {
             hideAsync();
         }
     }, [loaded]);
+
+    useEffect(() => {
+        return NetInfo.addEventListener((state) => {
+            const status = !!state.isConnected;
+            onlineManager.setOnline(status);
+        });
+    }, []);
 
     const baseTheme: DeepPartial<Theme> = useMemo(
         () => ({
@@ -146,7 +172,11 @@ export default function RootLayout() {
     }
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={{ persister }}
+            onSuccess={() => queryClient.resumePausedMutations()}
+        >
             <RnThemeProvider value={navigationTheme}>
                 <ThemeProvider
                     theme={theme}
@@ -165,7 +195,7 @@ export default function RootLayout() {
                 </ThemeProvider>
             </RnThemeProvider>
             {__DEV__ && DevToolsBubble && <DevToolsBubble />}
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
     );
 }
 

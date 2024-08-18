@@ -1,5 +1,6 @@
-import { API } from "@/constants/api";
-import { type Configuration, ParseConfiguration } from "../models";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
+import type { Configuration } from "../models";
 
 export interface UserDetails {
     userId: string;
@@ -15,11 +16,8 @@ type GetUserParams = {
 
 type GetUser = (params: GetUserParams) => Promise<UserDetails | undefined>;
 
-export const getUser: GetUser = async ({ userId }) => {
-    const response = await fetch(API.users.getUser(userId));
-    const json = await response.json();
-    return {
-        ...json,
-        configuration: ParseConfiguration(json.configuration),
-    };
-};
+export const getUser: GetUser = ({ userId }) =>
+    ExecuteRequest(FRAMERATE_API.users.getUser(userId), undefined, (data) => ({
+        ...data,
+        configuration: JSON.parse(data.configuration),
+    }));

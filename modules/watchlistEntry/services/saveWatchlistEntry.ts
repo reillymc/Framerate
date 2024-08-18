@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export type SaveWatchlistEntryParams = {
     mediaId: number;
@@ -11,25 +12,10 @@ export type SaveWatchlistEntryParams = {
 
 type SaveWatchlistEntry = (params: SaveWatchlistEntryParams) => Promise<null>;
 
-export const saveWatchlistEntry: SaveWatchlistEntry = async (
-    watchlistEntry,
-) => {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 3000); // abort after 3 seconds
-    const options = {
-        method: "POST",
-        body: JSON.stringify(watchlistEntry),
-        headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-        },
-        signal: controller.signal,
-    };
-
-    const response = await fetch(
-        API.watchlistEntries.postWatchlistEntry(watchlistEntry.mediaType),
-        options,
+export const saveWatchlistEntry: SaveWatchlistEntry = (watchlistEntry) =>
+    ExecuteRequest(
+        FRAMERATE_API.watchlistEntries.postWatchlistEntry(
+            watchlistEntry.mediaType,
+        ),
+        watchlistEntry,
     );
-
-    return response.json();
-};

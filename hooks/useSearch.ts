@@ -56,34 +56,34 @@ const searchTmdb: SearchTmdb = async ({ searchValue }) => {
         },
     };
 
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/search/multi?query=${searchValue}&language=en-AU&page=1`,
-            options,
-        );
+    console.debug("TMDB FETCH: Search Movies - ", searchValue);
 
-        const json = (await response.json()) as SearchResponse;
-        return json.results
-            .filter(({ media_type }) => ["tv", "movie"].includes(media_type))
-            .map((result) => ({
-                mediaId: result.id,
-                title: result.title ?? result.name ?? "",
-                poster: result.poster_path,
-                year:
-                    result.release_date || result.first_air_date
-                        ? new Date(
-                              result.release_date ??
-                                  result.first_air_date ??
-                                  "",
-                          ).getFullYear()
-                        : undefined,
-                overview: result.overview,
-                type: result.media_type === "movie" ? "movie" : "tv",
-            }));
-    } catch (error) {
-        console.error(error);
-        return;
+    const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?query=${searchValue}&language=en-AU&page=1`,
+        options,
+    );
+
+    const json = (await response.json()) as SearchResponse;
+
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
     }
+
+    return json.results
+        .filter(({ media_type }) => ["tv", "movie"].includes(media_type))
+        .map((result) => ({
+            mediaId: result.id,
+            title: result.title ?? result.name ?? "",
+            poster: result.poster_path,
+            year:
+                result.release_date || result.first_air_date
+                    ? new Date(
+                          result.release_date ?? result.first_air_date ?? "",
+                      ).getFullYear()
+                    : undefined,
+            overview: result.overview,
+            type: result.media_type === "movie" ? "movie" : "tv",
+        }));
 };
 
 export const useSearch = ({ searchValue: searchParam }: UseRecipesParams) => {

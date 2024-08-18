@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export type SaveWatchlistParams = {
     watchlistId?: string;
@@ -8,28 +9,8 @@ export type SaveWatchlistParams = {
 
 type SaveWatchlist = (params: SaveWatchlistParams) => Promise<null>;
 
-export const saveWatchlist: SaveWatchlist = async (watchlist) => {
-    try {
-        const options = {
-            method: watchlist.watchlistId ? "PUT" : "POST",
-            body: JSON.stringify(watchlist),
-            headers: {
-                "Content-Type": "application/json",
-                accept: "application/json",
-            },
-        };
-
-        const response = await fetch(
-            watchlist.watchlistId
-                ? API.watchlists.putWatchlist(watchlist.watchlistId)
-                : API.watchlists.postWatchlist,
-            options,
-        );
-
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
+export const saveWatchlist: SaveWatchlist = (watchlist) =>
+    ExecuteRequest(
+        FRAMERATE_API.watchlists.saveWatchlist(watchlist.watchlistId),
+        watchlist,
+    );

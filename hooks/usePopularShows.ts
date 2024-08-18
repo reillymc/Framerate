@@ -49,30 +49,31 @@ const getTmdbPopularShows: GetTmdbPopularShows = async () => {
         },
     };
 
+    console.debug("TMDB FETCH: Popular Shows");
+
     const minDate = subMonths(new Date(), 2);
 
     const maxDate = addWeeks(new Date(), 1);
 
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&air_date.lte=${maxDate}&air_date.gte=${minDate}&timezone=Australia/Brisbane`,
-            options,
-        );
+    const response = await fetch(
+        `https://api.themoviedb.org/3/discover/tv?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&air_date.lte=${maxDate}&air_date.gte=${minDate}&timezone=Australia/Brisbane`,
+        options,
+    );
 
-        const json = (await response.json()) as SearchResponse;
-
-        return json.results.map((result) => ({
-            mediaId: result.id,
-            title: result.name,
-            poster: result.poster_path,
-            overview: result.overview,
-            popularity: result.popularity,
-            type: "tv",
-        }));
-    } catch (error) {
-        console.error(error);
-        return;
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
     }
+
+    const json = (await response.json()) as SearchResponse;
+
+    return json.results.map((result) => ({
+        mediaId: result.id,
+        title: result.name,
+        poster: result.poster_path,
+        overview: result.overview,
+        popularity: result.popularity,
+        type: "tv",
+    }));
 };
 
 export const usePopularShows = () => {

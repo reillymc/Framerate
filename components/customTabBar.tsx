@@ -48,7 +48,9 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                     const label =
                         typeof options.tabBarLabel === "string"
                             ? options.tabBarLabel
-                            : "";
+                            : undefined;
+
+                    if (!label) return null;
 
                     const isFocused = state.index === index;
 

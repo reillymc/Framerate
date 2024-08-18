@@ -1,4 +1,5 @@
-import { API } from "@/constants/api";
+import { FRAMERATE_API } from "@/constants/api";
+import { ExecuteRequest } from "@/helpers/framerateService";
 
 export interface Watchlist {
     watchlistId: string;
@@ -13,8 +14,5 @@ type GetWatchlists = (
     params: GetWatchlistParams,
 ) => Promise<Watchlist[] | undefined>;
 
-export const getWatchlists: GetWatchlists = async () => {
-    const response = await fetch(API.watchlists.getWatchlists);
-    const json = await response.json();
-    return json;
-};
+export const getWatchlists: GetWatchlists = () =>
+    ExecuteRequest(FRAMERATE_API.watchlists.getWatchlists());
