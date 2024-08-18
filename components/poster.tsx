@@ -44,27 +44,45 @@ export const Poster: React.FC<PosterProps> = ({
     });
     return (
         <Pressable onPress={onPress} style={[styles.pressableContainer, style]}>
-            <TmdbImage
-                path={imageUri}
-                type="poster"
-                style={{
-                    height,
-                    width,
-                    borderRadius: styles.pressableContainer.borderRadius,
-                }}
-            />
-            {!!heading && (
-                <View>
-                    <View style={styles.contentDecorator} />
-                    <View style={styles.contentContainer}>
-                        <Text
-                            variant={size === "large" ? "heading" : "label"}
-                            numberOfLines={2}
-                        >
-                            {heading}
-                        </Text>
-                    </View>
-                </View>
+            {({ pressed }) => (
+                <>
+                    <TmdbImage
+                        path={imageUri}
+                        type="poster"
+                        style={{
+                            height,
+                            width,
+                            borderRadius:
+                                styles.pressableContainer.borderRadius,
+                            opacity: pressed ? 0.8 : 1,
+                        }}
+                    />
+                    {!!heading && (
+                        <View>
+                            <View
+                                style={[
+                                    styles.contentDecorator,
+                                    pressed && { opacity: 0.5 },
+                                ]}
+                            />
+                            <View
+                                style={[
+                                    styles.contentContainer,
+                                    pressed && { opacity: 0.5 },
+                                ]}
+                            >
+                                <Text
+                                    variant={
+                                        size === "large" ? "heading" : "label"
+                                    }
+                                    numberOfLines={2}
+                                >
+                                    {heading}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+                </>
             )}
         </Pressable>
     );
@@ -120,6 +138,7 @@ const createStyles = (
             marginRight: removeMargin ? undefined : gap,
             borderRadius:
                 size === "small" ? border.radius.regular : border.radius.loose,
+            backgroundColor: color.background,
         },
         contentContainer: {
             paddingVertical: padding.small,

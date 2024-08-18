@@ -18,7 +18,14 @@ export const SectionHeading: FC<SectionHeadingProps> = ({
     onPress,
     style,
 }) => (
-    <Pressable style={[styles.container, style]} onPress={onPress}>
+    <Pressable
+        style={({ pressed }) => [
+            styles.container,
+            pressed && { opacity: 0.5 },
+            style,
+        ]}
+        onPress={onPress}
+    >
         <Text variant="title">{title}</Text>
         {onPress && (
             <Icon

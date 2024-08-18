@@ -42,7 +42,12 @@ type WatchlistSection = {
 const now = new Date();
 
 const Watchlist: FC = () => {
-    const { mediaType } = useLocalSearchParams<{ mediaType: string }>();
+    const { mediaType, date: rawDate } = useLocalSearchParams<{
+        mediaType: string;
+        date?: string;
+    }>();
+
+    const date = rawDate ? new Date(rawDate) : undefined;
 
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
@@ -118,7 +123,7 @@ const Watchlist: FC = () => {
 
         const closest = sectionData
             .toReversed()
-            .find(({ date }) => date >= now);
+            .find((section) => section.date >= (date ?? now));
 
         if (!closest) return;
 
@@ -127,7 +132,7 @@ const Watchlist: FC = () => {
             sectionIndex: sectionData.indexOf(closest),
             itemIndex: 0,
         });
-    }, [sectionData]);
+    }, [sectionData, date]);
 
     return (
         <>

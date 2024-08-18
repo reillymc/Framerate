@@ -8,7 +8,7 @@ import {
 } from "@reillymc/react-native-components";
 import { addWeeks, isWithinInterval, subWeeks } from "date-fns";
 import { type FC, useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { type StyleProp, StyleSheet, type ViewStyle } from "react-native";
 import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
@@ -19,11 +19,13 @@ import { WatchListEntrySummaryItem } from "./watchlistSummaryItem";
 
 interface WatchlistSummaryProps {
     watchlistEntries: WatchlistEntrySummary[];
+    style?: StyleProp<ViewStyle>;
     onPressEntry: (item: WatchlistEntrySummary) => void;
 }
 
 export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     watchlistEntries,
+    style,
     onPressEntry,
 }) => {
     const { width } = usePosterDimensions({ size: "small" });
@@ -54,6 +56,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
         <Animated.View
             entering={ZoomInLeft.springify().mass(0.55)}
             exiting={ZoomOutLeft.springify().mass(0.55)}
+            style={style}
         >
             <AnimatedFlatList
                 data={filteredItems}
@@ -83,7 +86,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                         />
                     );
                 }}
-                ListFooterComponent={<Animated.View style={{ width: 262 }} />}
+                ListFooterComponent={<Animated.View style={{ width: 50 }} />}
             />
         </Animated.View>
     );
@@ -95,6 +98,5 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
             paddingBottom: padding.large,
-            width: "50%",
         },
     });

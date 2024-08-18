@@ -166,7 +166,7 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                     </>
                 )}
             >
-                {({ points }) => (
+                {({ points, chartBounds }) => (
                     <>
                         <Line
                             points={points.rating}
@@ -189,7 +189,10 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                             ) : (
                                 <LinearGradient
                                     start={vec(0, 0)}
-                                    end={vec(width / 2, chartHeight)}
+                                    end={vec(
+                                        width / 2,
+                                        chartBounds.bottom - chartBounds.top,
+                                    )}
                                     colors={[
                                         theme.color.primary,
                                         theme.color.primaryHighlight,
@@ -207,7 +210,10 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                         >
                             <LinearGradient
                                 start={vec(0, 0)}
-                                end={vec(0, chartHeight)}
+                                end={vec(
+                                    0,
+                                    chartBounds.bottom - chartBounds.top,
+                                )}
                                 colors={[
                                     theme.color.primary,
                                     theme.color.primaryHighlight,

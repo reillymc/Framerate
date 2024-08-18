@@ -1,2 +1,2 @@
 export { useWatchlist, useSaveWatchlist } from "./hooks";
-export { WatchlistSummary } from "./components";
+export { WatchlistSummary, WatchlistEntriesChart } from "./components";

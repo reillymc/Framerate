@@ -3,7 +3,7 @@ import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
 import { ReviewSummaryCard, useReviews } from "@/modules/review";
-import { WatchlistSummary } from "@/modules/watchlist";
+import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     IconActionV2,
@@ -25,10 +25,11 @@ export default function HomeScreen() {
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
         size: "large",
     });
+
     const [searchValue, setSearchValue] = useState("");
     const { data: results } = useSearch({ searchValue });
     const { data: popularMovies } = usePopularMovies();
-    const { data: watchlistEntries } = useWatchlistEntries("movie");
+    const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
 
     const filteredPopularMovies = useMemo(
         () =>
@@ -102,19 +103,39 @@ export default function HomeScreen() {
                                     })
                                 }
                             />
-                            <WatchlistSummary
-                                watchlistEntries={watchlistEntries ?? []}
-                                onPressEntry={(item) =>
-                                    router.push({
-                                        pathname: "/movies/movie",
-                                        params: {
-                                            mediaId: item.mediaId,
-                                            mediaTitle: item.mediaTitle,
-                                            mediaPosterUri: item.mediaPosterUri,
-                                        },
-                                    })
-                                }
-                            />
+                            <View style={styles.watchlistSectionContainer}>
+                                <WatchlistSummary
+                                    watchlistEntries={watchlistEntries}
+                                    style={styles.watchlistSectionItem}
+                                    onPressEntry={(item) =>
+                                        router.push({
+                                            pathname: "/movies/movie",
+                                            params: {
+                                                mediaId: item.mediaId,
+                                                mediaTitle: item.mediaTitle,
+                                                mediaPosterUri:
+                                                    item.mediaPosterUri,
+                                            },
+                                        })
+                                    }
+                                />
+                                <WatchlistEntriesChart
+                                    style={[
+                                        styles.watchlistSectionItem,
+                                        styles.watchlistChart,
+                                    ]}
+                                    entries={watchlistEntries}
+                                    onPressDate={(date) =>
+                                        router.navigate({
+                                            pathname: "/movies/watchlist",
+                                            params: {
+                                                mediaType: MediaType.Movie,
+                                                date: date.toISOString(),
+                                            },
+                                        })
+                                    }
+                                />
+                            </View>
                             <SectionHeading
                                 title="Popular"
                                 style={styles.pageElement}
@@ -201,6 +222,17 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         pageElement: {
             paddingHorizontal: padding.pageHorizontal,
+        },
+        watchlistSectionContainer: {
+            flexDirection: "row",
+        },
+        watchlistSectionItem: {
+            width: "46%",
+        },
+        watchlistChart: {
+            flex: 1,
+            height: 168,
+            marginRight: padding.pageHorizontal,
         },
         moviesList: {
             marginBottom: padding.large,
