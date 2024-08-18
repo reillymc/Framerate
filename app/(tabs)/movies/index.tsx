@@ -1,5 +1,5 @@
 import { SectionHeading } from "@/components";
-import { Poster } from "@/components/poster";
+import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
 import { ReviewSummaryCard, useReviews } from "@/modules/review";
@@ -15,22 +15,20 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
 import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, View, useWindowDimensions } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
     const { data: reviews } = useReviews();
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
-    const { width } = useWindowDimensions();
+    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+        size: "large",
+    });
     const [searchValue, setSearchValue] = useState("");
     const { data: results } = useSearch({ searchValue });
     const { data: popularMovies } = usePopularMovies();
     const { data: watchlistEntries } = useWatchlistEntries("movie");
-
-    const posterItemWidth =
-        (width - theme.padding.pageHorizontal * 2) * (2 / 3) +
-        theme.padding.pageHorizontal / 2;
 
     const filteredPopularMovies = useMemo(
         () =>
@@ -120,23 +118,29 @@ export default function HomeScreen() {
                             <SectionHeading
                                 title="Popular"
                                 style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/movies/browse",
+                                    })
+                                }
                             />
                             <FlatList
                                 data={filteredPopularMovies}
                                 horizontal
                                 contentContainerStyle={[
                                     styles.pageElement,
-                                    { height: posterItemWidth * (3 / 2) + 60 },
+                                    styles.moviesList,
                                 ]}
                                 snapToAlignment="start"
                                 showsHorizontalScrollIndicator={false}
                                 decelerationRate="fast"
-                                snapToInterval={posterItemWidth}
+                                snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => (
                                     <Poster
                                         key={item.mediaId}
                                         heading={item.title}
                                         imageUri={item.poster}
+                                        size="large"
                                         onPress={() =>
                                             router.push({
                                                 pathname: "/movies/movie",
@@ -198,7 +202,7 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         pageElement: {
             paddingHorizontal: padding.pageHorizontal,
         },
-        reviewCard: {
-            height: 120,
+        moviesList: {
+            marginBottom: padding.large,
         },
     });

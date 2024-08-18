@@ -1,19 +1,19 @@
+import { usePosterDimensions } from "@/components";
 import { AnimatedFlatList } from "@/components/animatedFlatList";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import {
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { addWeeks, isWithinInterval, subWeeks } from "date-fns";
-import type React from "react";
-import { useMemo } from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { type FC, useMemo } from "react";
+import { StyleSheet } from "react-native";
 import Animated, {
-    Layout,
     useAnimatedScrollHandler,
     useSharedValue,
-    ZoomInRight,
-    ZoomOutRight,
+    ZoomInLeft,
+    ZoomOutLeft,
 } from "react-native-reanimated";
 import { WatchListEntrySummaryItem } from "./watchlistSummaryItem";
 
@@ -22,16 +22,16 @@ interface WatchlistSummaryProps {
     onPressEntry: (item: WatchlistEntrySummary) => void;
 }
 
-const watchlistEntryItemWidth = 100;
-const watchlistEntryItemHeight = 150;
+export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
+    watchlistEntries,
+    onPressEntry,
+}) => {
+    const { width } = usePosterDimensions({ size: "small" });
 
-export const WatchlistSummary: React.FunctionComponent<
-    WatchlistSummaryProps
-> = ({ watchlistEntries, onPressEntry }) => {
-    const { width } = useWindowDimensions();
+    const { theme } = useTheme();
 
     const scrollValue = useSharedValue(0);
-    const styles = useThemedStyles(createStyles, { width });
+    const styles = useThemedStyles(createStyles, {});
 
     const handler = useAnimatedScrollHandler((event) => {
         scrollValue.value = event.contentOffset.x;
@@ -52,9 +52,8 @@ export const WatchlistSummary: React.FunctionComponent<
 
     return (
         <Animated.View
-            entering={ZoomInRight.springify().mass(0.55)}
-            layout={Layout}
-            exiting={ZoomOutRight.springify().mass(0.55)}
+            entering={ZoomInLeft.springify().mass(0.55)}
+            exiting={ZoomOutLeft.springify().mass(0.55)}
         >
             <AnimatedFlatList
                 data={filteredItems}
@@ -62,15 +61,17 @@ export const WatchlistSummary: React.FunctionComponent<
                 showsHorizontalScrollIndicator={false}
                 style={styles.list}
                 onScroll={handler}
-                snapToInterval={watchlistEntryItemWidth}
+                snapToInterval={width}
                 snapToAlignment="start"
                 scrollEventThrottle={16}
                 decelerationRate={0}
-                keyExtractor={(item) => item.mediaId}
+                keyExtractor={({ mediaId }) => mediaId}
                 cellStyle={({ index }) => ({
                     zIndex: filteredItems.length - index,
                 })}
-                contentContainerStyle={{ paddingLeft: 200 }}
+                contentContainerStyle={{
+                    paddingLeft: theme.padding.pageHorizontal,
+                }}
                 renderItem={({ item, index }) => {
                     return (
                         <WatchListEntrySummaryItem
@@ -78,12 +79,11 @@ export const WatchlistSummary: React.FunctionComponent<
                             index={index}
                             key={item.mediaId}
                             scrollValue={scrollValue}
-                            width={watchlistEntryItemWidth}
-                            height={watchlistEntryItemHeight}
                             onPress={() => onPressEntry(item)}
                         />
                     );
                 }}
+                ListFooterComponent={<Animated.View style={{ width: 262 }} />}
             />
         </Animated.View>
     );
@@ -95,5 +95,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
             paddingBottom: padding.large,
+            width: "50%",
         },
     });

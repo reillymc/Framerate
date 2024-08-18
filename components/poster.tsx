@@ -11,79 +11,115 @@ import {
 import {
     Text,
     type ThemedStyles,
-    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { useMemo } from "react";
 import { TmdbImage } from "./tmdbImage";
 
-export interface PosterProps {
+interface PosterProps {
     imageUri?: string;
     heading?: string;
-    /**
-     * Supports:
-     * - `<PosterRow/>`
-     * - `<PosterRow/>[]`
-     */
-    contentRows?: Array<React.ReactNode>;
-
+    removeMargin?: boolean;
     style?: StyleProp<ViewStyle>;
+    size?: "small" | "medium" | "large";
     onPress?: () => void;
 }
 
 export const Poster: React.FC<PosterProps> = ({
     heading,
-    contentRows = [],
     style,
     imageUri,
+    removeMargin = false,
+    size = "large",
     onPress,
 }) => {
-    const filteredRows = contentRows.filter(Undefined);
+    const { height, width, gap } = usePosterDimensions({ size });
 
-    const { width } = useWindowDimensions();
-    const { theme } = useTheme();
-
-    const itemWidth = (width - theme.padding.pageHorizontal * 2) * (2 / 3);
-
-    const styles = useThemedStyles(createStyles, { itemWidth });
+    const styles = useThemedStyles(createStyles, {
+        width,
+        size,
+        gap,
+        removeMargin,
+    });
     return (
         <Pressable onPress={onPress} style={[styles.pressableContainer, style]}>
             <TmdbImage
                 path={imageUri}
                 type="poster"
                 style={{
-                    height: itemWidth * (3 / 2),
-                    width: itemWidth,
+                    height,
+                    width,
                     borderRadius: styles.pressableContainer.borderRadius,
                 }}
             />
-            <View>
-                <View style={styles.contentDecorator} />
-                <View style={styles.contentContainer}>
-                    {!!heading && (
-                        <Text variant="heading" numberOfLines={2}>
+            {!!heading && (
+                <View>
+                    <View style={styles.contentDecorator} />
+                    <View style={styles.contentContainer}>
+                        <Text
+                            variant={size === "large" ? "heading" : "label"}
+                            numberOfLines={2}
+                        >
                             {heading}
                         </Text>
-                    )}
-                    {filteredRows}
+                    </View>
                 </View>
-            </View>
+            )}
         </Pressable>
     );
 };
 
-Poster.displayName = "Poster";
+type UsePosterDimensionsParams = (
+    params: Pick<Required<PosterProps>, "size">,
+) => { width: number; height: number; gap: number };
+
+export const usePosterDimensions: UsePosterDimensionsParams = ({ size }) => {
+    const { width } = useWindowDimensions();
+    const { theme } = useTheme();
+
+    const itemWidth = useMemo(() => {
+        switch (size) {
+            case "large":
+                return (width - theme.padding.pageHorizontal * 2) * (2 / 3);
+            case "medium":
+                return (
+                    (width -
+                        theme.padding.pageHorizontal * 2 -
+                        theme.padding.pageHorizontal / 2) *
+                    (1 / 2)
+                );
+            case "small":
+                return (width - theme.padding.pageHorizontal * 3) * (1 / 3);
+        }
+    }, [size, width, theme.padding.pageHorizontal]);
+
+    return {
+        width: itemWidth,
+        height: itemWidth * (3 / 2),
+        gap: theme.padding.pageHorizontal / 2,
+    };
+};
 
 const createStyles = (
-    { styles: { listItem }, theme: { padding, color } }: ThemedStyles,
-    { itemWidth }: { itemWidth: number },
-) => {
-    const styles = StyleSheet.create({
+    { styles: { listItem }, theme: { padding, color, border } }: ThemedStyles,
+    {
+        width,
+        size,
+        removeMargin,
+        gap,
+    }: { width: number; gap: number } & Pick<
+        Required<PosterProps>,
+        "size" | "removeMargin"
+    >,
+) =>
+    StyleSheet.create({
         pressableContainer: {
             marginBottom: listItem.spacingMargin,
-            width: itemWidth,
-            marginRight: padding.pageHorizontal / 2,
-            borderRadius: listItem.borderRadius,
+            width,
+            marginRight: removeMargin ? undefined : gap,
+            borderRadius:
+                size === "small" ? border.radius.regular : border.radius.loose,
         },
         contentContainer: {
             paddingVertical: padding.small,
@@ -102,24 +138,3 @@ const createStyles = (
             flexDirection: "row",
         },
     });
-    return styles;
-};
-
-export interface PosterRowProps {
-    contentItems?: Array<React.ReactNode> | React.ReactNode;
-}
-
-export const PosterRow: React.FC<PosterRowProps> = ({ contentItems }) => {
-    const styles = useThemedStyles(createStyles, {});
-
-    const items = Array.isArray(contentItems) ? contentItems : [contentItems];
-    return (
-        <View style={styles.contentItem}>
-            {items.map((item, index) => (
-                <View key={index.toString()} style={styles.contentItem}>
-                    {item}
-                </View>
-            ))}
-        </View>
-    );
-};

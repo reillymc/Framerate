@@ -5,3 +5,4 @@ export { ImdbButton } from "./imdbButton";
 export { TmdbButton } from "./tmdbButton";
 export { VidSrcButton } from "./vidSrcButton";
 export { CustomTabBar } from "./customTabBar";
+export { Poster, usePosterDimensions } from "./poster";

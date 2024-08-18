@@ -1,4 +1,5 @@
-import { ReviewSummaryCard, useReviews } from "@/modules/review";
+import { Poster } from "@/components/poster";
+import { usePopularMovies } from "@/hooks";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -7,8 +8,8 @@ import { Stack, router } from "expo-router";
 import type { FC } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-const Reviews: FC = () => {
-    const { data: reviews } = useReviews();
+const Browse: FC = () => {
+    const { data: movies } = usePopularMovies();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -16,35 +17,32 @@ const Reviews: FC = () => {
         <>
             <Stack.Screen
                 options={{
-                    title: "My Reviews",
+                    title: "Popular Movies",
                 }}
             />
             <FlatList
-                data={reviews}
+                data={movies}
                 contentInsetAdjustmentBehavior="automatic"
+                contentContainerStyle={styles.list}
                 CellRendererComponent={({ children }) => (
                     <View style={styles.pageElement}>{children}</View>
                 )}
-                contentContainerStyle={styles.list}
-                keyExtractor={({ reviewId }) => reviewId}
+                numColumns={2}
+                keyExtractor={(item) => item.mediaId.toString()}
                 renderItem={({ item }) => (
-                    <ReviewSummaryCard
-                        key={item.reviewId}
-                        review={item}
+                    <Poster
+                        key={item.mediaId}
+                        heading={item.title}
+                        size="medium"
+                        imageUri={item.poster}
                         onPress={() =>
                             router.push({
                                 pathname: "/movies/movie",
                                 params: {
                                     mediaId: item.mediaId,
-                                    mediaTitle: item.mediaTitle,
-                                    mediaPosterUri: item.mediaPosterUri,
+                                    mediaTitle: item.title,
+                                    mediaPosterUri: item.poster,
                                 },
-                            })
-                        }
-                        onPressMore={() =>
-                            router.push({
-                                pathname: "/movies/review",
-                                params: { reviewId: item.reviewId },
                             })
                         }
                     />
@@ -54,7 +52,7 @@ const Reviews: FC = () => {
     );
 };
 
-export default Reviews;
+export default Browse;
 
 const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
