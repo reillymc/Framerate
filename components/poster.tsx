@@ -22,7 +22,7 @@ interface PosterProps {
     heading?: string;
     removeMargin?: boolean;
     style?: StyleProp<ViewStyle>;
-    size?: "small" | "medium" | "large";
+    size?: "tiny" | "small" | "medium" | "large";
     onPress?: () => void;
 }
 
@@ -43,7 +43,11 @@ export const Poster: React.FC<PosterProps> = ({
         removeMargin,
     });
     return (
-        <Pressable onPress={onPress} style={[styles.pressableContainer, style]}>
+        <Pressable
+            onPress={onPress}
+            disabled={!onPress}
+            style={[styles.pressableContainer, style]}
+        >
             {({ pressed }) => (
                 <>
                     <TmdbImage
@@ -109,6 +113,8 @@ export const usePosterDimensions: UsePosterDimensionsParams = ({ size }) => {
                 );
             case "small":
                 return (width - theme.padding.pageHorizontal * 3) * (1 / 3);
+            case "tiny":
+                return (width - theme.padding.pageHorizontal * 4) * (1 / 6);
         }
     }, [size, width, theme.padding.pageHorizontal]);
 
@@ -133,11 +139,12 @@ const createStyles = (
 ) =>
     StyleSheet.create({
         pressableContainer: {
-            marginBottom: listItem.spacingMargin,
+            marginBottom: removeMargin ? undefined : listItem.spacingMargin,
             width,
             marginRight: removeMargin ? undefined : gap,
-            borderRadius:
-                size === "small" ? border.radius.regular : border.radius.loose,
+            borderRadius: ["small", "tiny"].includes(size)
+                ? border.radius.regular
+                : border.radius.loose,
             backgroundColor: color.background,
         },
         contentContainer: {

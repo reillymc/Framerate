@@ -1,4 +1,4 @@
-import { TmdbImage } from "@/components";
+import { Poster } from "@/components";
 import {
     Action,
     Text,
@@ -28,10 +28,10 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.topContainer}>
-                <TmdbImage
-                    type="poster"
-                    path={review.mediaPosterUri}
-                    style={styles.poster}
+                <Poster
+                    imageUri={review.mediaPosterUri}
+                    size="tiny"
+                    removeMargin
                 />
                 <View style={styles.headingContainer}>
                     <View style={styles.headingTitleContainer}>
@@ -124,19 +124,15 @@ const createStyles = ({
         },
         headingContainer: {
             flex: 1,
-            marginLeft: padding.small,
             gap: padding.small,
+            marginLeft: padding.small,
+            marginRight: padding.tiny,
         },
         headingTitleContainer: {
             flexDirection: "row",
             alignItems: "flex-start",
             justifyContent: "space-between",
             gap: padding.small,
-        },
-        poster: {
-            width: 48,
-            height: 72,
-            borderRadius: border.radius.regular,
         },
         title: {
             // TODO a 'compact' options in RNC that excludes the LINE_HEIGHT_MODIFIER
@@ -149,7 +145,6 @@ const createStyles = ({
         },
         stars: {
             marginHorizontal: -1,
-            // backgroundColor: "lightgreen",
             flexDirection: "row",
             justifyContent: "space-between",
         },

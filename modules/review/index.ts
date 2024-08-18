@@ -1,3 +1,7 @@
 export { useReview, useReviews, useSaveReview } from "./hooks";
 export { ratingToStars, starsToRating } from "./helpers";
-export { ReviewRatingTimeline, ReviewSummaryCard } from "./components";
+export {
+    ReviewRatingTimeline,
+    ReviewSummaryCard,
+    ReviewDetailsCard,
+} from "./components";

@@ -1,4 +1,4 @@
-import { SectionHeading } from "@/components";
+import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearch } from "@/hooks";
@@ -7,8 +7,6 @@ import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     IconActionV2,
-    ListItem,
-    Text,
     type ThemedStyles,
     useTheme,
     useThemedStyles,
@@ -52,7 +50,6 @@ export default function HomeScreen() {
                             setSearchValue(nativeEvent.text),
                         placeholder: "Search movies",
                         hideWhenScrolling: false,
-                        hideNavigationBar: false,
                         barTintColor: theme.color.inputBackground,
                         tintColor: theme.color.primary,
                     },
@@ -71,14 +68,18 @@ export default function HomeScreen() {
                     data={results}
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => (
-                        <ListItem
-                            header={
-                                <Text>{`${item.title} (${item.year ?? "unknown"})`}</Text>
-                            }
+                        <PosterCard
+                            title={item.title}
+                            releaseDate={item.year?.toString() ?? "Unknown"}
+                            imageUri={item.poster}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",
-                                    params: { mediaId: item.mediaId },
+                                    params: {
+                                        mediaId: item.mediaId,
+                                        mediaTitle: item.title,
+                                        mediaPosterUri: item.poster,
+                                    },
                                 })
                             }
                         />
@@ -86,7 +87,6 @@ export default function HomeScreen() {
                     keyExtractor={(item) => item.mediaId.toString()}
                     contentInsetAdjustmentBehavior="always"
                     keyboardShouldPersistTaps="handled"
-                    contentContainerStyle={styles.pageElement}
                 />
             ) : (
                 <FlatList

@@ -88,7 +88,7 @@ export default function RootLayout() {
                     textOnPrimary: "#fff",
                     border: "#d0d0d0",
                     shadow: "#000",
-                    textSecondary: "#CCC",
+                    textSecondary: "#BBB",
                 },
             }),
         [baseTheme],

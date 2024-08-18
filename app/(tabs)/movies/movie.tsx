@@ -10,8 +10,6 @@ import {
 
 import {
     IconActionV2,
-    ListItem,
-    ListItemRow,
     Text,
     type ThemedStyles,
     useTheme,
@@ -21,6 +19,7 @@ import {
 import {
     ImdbButton,
     ParallaxScrollView,
+    Poster,
     TmdbButton,
     TmdbImage,
     VidSrcButton,
@@ -28,8 +27,8 @@ import {
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovieDetails } from "@/hooks";
 import {
+    ReviewDetailsCard,
     ReviewRatingTimeline,
-    ratingToStars,
     useReviews,
 } from "@/modules/review";
 import {
@@ -86,10 +85,11 @@ const Movie: React.FC = () => {
                 scrollIndicatorInsets={{ top: 330, bottom: 50 }}
             >
                 <View style={styles.floatingPosterContainer}>
-                    <TmdbImage
+                    <Poster
                         style={styles.floatingPoster}
-                        type="poster"
-                        path={movie?.poster ?? mediaPosterUri}
+                        size="small"
+                        removeMargin
+                        imageUri={movie?.poster ?? mediaPosterUri}
                     />
                 </View>
                 <View style={styles.floatingTagline}>
@@ -116,26 +116,9 @@ const Movie: React.FC = () => {
                                 scrollEnabled={false}
                                 data={reviews}
                                 renderItem={({ item }) => (
-                                    <ListItem
+                                    <ReviewDetailsCard
                                         key={item.reviewId}
-                                        style={styles.reviewCard}
-                                        heading={`${ratingToStars(item.rating)} Stars`}
-                                        contentRows={[
-                                            <ListItemRow
-                                                key="details"
-                                                contentItems={
-                                                    item.date
-                                                        ? [
-                                                              <Text key="date">
-                                                                  {new Date(
-                                                                      item.date,
-                                                                  ).toDateString()}
-                                                              </Text>,
-                                                          ]
-                                                        : undefined
-                                                }
-                                            />,
-                                        ]}
+                                        review={item}
                                         onPress={() =>
                                             router.push({
                                                 pathname: "/movies/review",
@@ -305,8 +288,8 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         },
         floatingPosterContainer: {
             position: "absolute",
-            top: -100,
-            left: padding.pageHorizontal,
+            top: -95,
+            left: padding.pageHorizontal + padding.small,
             shadowColor: color.shadow,
             shadowOffset: {
                 width: 0,
@@ -316,8 +299,6 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingPoster: {
-            width: 125,
-            height: 187.5,
             borderRadius: 8,
             overflow: "hidden",
         },
@@ -342,8 +323,5 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             justifyContent: "center",
             flexDirection: "row",
             gap: padding.regular,
-        },
-        reviewCard: {
-            height: 120,
         },
     });

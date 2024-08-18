@@ -1,4 +1,4 @@
-import { TmdbImage } from "@/components";
+import { PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useWatchlist } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
@@ -13,13 +13,7 @@ import { lastDayOfMonth, subMonths } from "date-fns";
 import { BlurView } from "expo-blur";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef } from "react";
-import {
-    Pressable,
-    SectionList,
-    StyleSheet,
-    View,
-    useColorScheme,
-} from "react-native";
+import { SectionList, StyleSheet, View, useColorScheme } from "react-native";
 
 const HEADER_HEIGHT = 96;
 const ITEM_HEIGHT = 92;
@@ -186,55 +180,37 @@ const Watchlist: FC = () => {
                         </BlurView>
                     )}
                     stickySectionHeadersEnabled
-                    renderItem={({ item, section }) => {
-                        const isOlder = section.yearTitle === "Older";
-                        return (
-                            <Pressable
-                                style={{
-                                    height: ITEM_HEIGHT,
-                                    paddingTop: theme.padding.regular,
-                                    flexDirection: "row",
-                                    gap: 8,
-                                    paddingHorizontal:
-                                        theme.padding.pageHorizontal,
-                                }}
-                                onPress={() =>
-                                    router.push({
-                                        pathname: "/movies/movie",
-                                        params: {
-                                            mediaId: item.mediaId,
-                                            mediaTitle: item.mediaTitle,
-                                            mediaPosterUri: item.mediaPosterUri,
-                                        },
-                                    })
-                                }
-                            >
-                                <TmdbImage
-                                    path={item.mediaPosterUri}
-                                    type="poster"
-                                    style={{ borderRadius: 8 }}
-                                />
-                                <View style={{ flexShrink: 1 }}>
-                                    <Text variant="heading" numberOfLines={2}>
-                                        {item.mediaTitle}
-                                    </Text>
-                                    {item.mediaReleaseDate && (
-                                        <Text variant="body">
-                                            {new Date(
-                                                item.mediaReleaseDate,
-                                            ).toLocaleDateString("en-AU", {
-                                                day: "2-digit",
-                                                month: "2-digit",
-                                                year: isOlder
-                                                    ? "numeric"
-                                                    : undefined,
-                                            })}
-                                        </Text>
-                                    )}
-                                </View>
-                            </Pressable>
-                        );
-                    }}
+                    renderItem={({ item, section }) => (
+                        <PosterCard
+                            title={item.mediaTitle}
+                            imageUri={item.mediaPosterUri}
+                            releaseDate={
+                                item.mediaReleaseDate
+                                    ? new Date(
+                                          item.mediaReleaseDate,
+                                      ).toLocaleDateString("en-AU", {
+                                          day: "2-digit",
+                                          month: "2-digit",
+                                          year:
+                                              section.yearTitle === "Older"
+                                                  ? "numeric"
+                                                  : undefined,
+                                      })
+                                    : undefined
+                            }
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/movies/movie",
+                                    params: {
+                                        mediaId: item.mediaId,
+                                        mediaTitle: item.mediaTitle,
+                                        mediaPosterUri: item.mediaPosterUri,
+                                    },
+                                })
+                            }
+                            height={ITEM_HEIGHT}
+                        />
+                    )}
                     renderSectionFooter={() => (
                         <View style={{ height: SECTION_FOOTER_HEIGHT }} />
                     )}

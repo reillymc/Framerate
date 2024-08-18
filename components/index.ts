@@ -6,3 +6,4 @@ export { TmdbButton } from "./tmdbButton";
 export { VidSrcButton } from "./vidSrcButton";
 export { CustomTabBar } from "./customTabBar";
 export { Poster, usePosterDimensions } from "./poster";
+export { PosterCard } from "./posterCard";
