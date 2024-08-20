@@ -6,8 +6,8 @@ export interface MovieDetails {
     id: number;
     imdbId: string;
     title: string;
-    posterPath: string;
-    backdropPath: string;
+    posterPath?: string;
+    backdropPath?: string;
     releaseDate: string;
     overview: string;
     tagline: string;

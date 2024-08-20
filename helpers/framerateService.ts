@@ -14,7 +14,7 @@ export const ExecuteRequest = async (
 
     const options = {
         method,
-        body: JSON.stringify(body),
+        body: body ? JSON.stringify(body) : undefined,
         headers: {
             "Content-Type": "application/json",
             accept: "application/json",

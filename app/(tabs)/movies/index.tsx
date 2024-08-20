@@ -1,7 +1,7 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
-import { usePopularMovies, useSearch } from "@/hooks";
+import { usePopularMovies, useSearchMovies } from "@/modules/movie";
 import { ReviewSummaryCard, useReviews } from "@/modules/review";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
@@ -25,7 +25,7 @@ export default function HomeScreen() {
     });
 
     const [searchValue, setSearchValue] = useState("");
-    const { data: results } = useSearch({ searchValue });
+    const { data: results } = useSearchMovies(searchValue);
     const { data: popularMovies } = usePopularMovies();
     const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
 
@@ -34,7 +34,7 @@ export default function HomeScreen() {
             popularMovies?.filter(
                 (movie) =>
                     !watchlistEntries?.some(
-                        ({ mediaId }) => mediaId === movie.mediaId,
+                        ({ mediaId }) => mediaId === movie.id,
                     ),
             ),
         [popularMovies, watchlistEntries],
@@ -70,21 +70,27 @@ export default function HomeScreen() {
                     renderItem={({ item }) => (
                         <PosterCard
                             title={item.title}
-                            releaseDate={item.year?.toString() ?? "Unknown"}
-                            imageUri={item.poster}
+                            releaseDate={
+                                item.releaseDate
+                                    ? new Date(item.releaseDate)
+                                          .getFullYear()
+                                          .toString()
+                                    : "Unknown"
+                            }
+                            imageUri={item.posterPath}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",
                                     params: {
-                                        mediaId: item.mediaId,
+                                        mediaId: item.id,
                                         mediaTitle: item.title,
-                                        mediaPosterUri: item.poster,
+                                        mediaPosterUri: item.posterPath,
                                     },
                                 })
                             }
                         />
                     )}
-                    keyExtractor={(item) => item.mediaId.toString()}
+                    keyExtractor={(item) => item.id.toString()}
                     contentInsetAdjustmentBehavior="always"
                     keyboardShouldPersistTaps="handled"
                 />
@@ -158,17 +164,18 @@ export default function HomeScreen() {
                                 snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => (
                                     <Poster
-                                        key={item.mediaId}
+                                        key={item.id}
                                         heading={item.title}
-                                        imageUri={item.poster}
+                                        imageUri={item.posterPath}
                                         size="large"
                                         onPress={() =>
                                             router.push({
                                                 pathname: "/movies/movie",
                                                 params: {
-                                                    mediaId: item.mediaId,
+                                                    mediaId: item.id,
                                                     mediaTitle: item.title,
-                                                    mediaPosterUri: item.poster,
+                                                    mediaPosterUri:
+                                                        item.posterPath,
                                                 },
                                             })
                                         }
@@ -227,7 +234,7 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             flexDirection: "row",
         },
         watchlistSectionItem: {
-            width: "46%",
+            width: "50%",
         },
         watchlistChart: {
             flex: 1,

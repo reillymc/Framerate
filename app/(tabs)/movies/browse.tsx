@@ -1,5 +1,5 @@
 import { Poster } from "@/components/poster";
-import { usePopularMovies } from "@/hooks";
+import { usePopularMovies } from "@/modules/movie";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -28,20 +28,20 @@ const Browse: FC = () => {
                     <View style={styles.pageElement}>{children}</View>
                 )}
                 numColumns={2}
-                keyExtractor={(item) => item.mediaId.toString()}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                     <Poster
-                        key={item.mediaId}
+                        key={item.id}
                         heading={item.title}
                         size="medium"
-                        imageUri={item.poster}
+                        imageUri={item.posterPath}
                         onPress={() =>
                             router.push({
                                 pathname: "/movies/movie",
                                 params: {
-                                    mediaId: item.mediaId,
+                                    mediaId: item.id,
                                     mediaTitle: item.title,
-                                    mediaPosterUri: item.poster,
+                                    mediaPosterUri: item.posterPath,
                                 },
                             })
                         }

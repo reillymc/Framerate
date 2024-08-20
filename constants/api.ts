@@ -1,5 +1,3 @@
-const TMDB_API_KEY = process.env.EXPO_PUBLIC_TMDB_API_KEY;
-
 export type ApiDefinition = {
     method: "GET" | "POST" | "PUT" | "DELETE";
     endpoint: string;
@@ -15,7 +13,15 @@ export const FRAMERATE_API = {
     movies: {
         getMovie: (movieId: number) => ({
             method: "GET",
-            endpoint: `movies/${movieId}`,
+            endpoint: `movies/details/${movieId}`,
+        }),
+        getPopularMovies: () => ({
+            method: "GET",
+            endpoint: "movies/popular",
+        }),
+        searchMovies: (query: string) => ({
+            method: "GET",
+            endpoint: `movies/search?query=${query}`,
         }),
     },
     reviews: {
@@ -79,5 +85,3 @@ export const FRAMERATE_API = {
         }),
     },
 } satisfies Api;
-
-export { TMDB_API_KEY };
