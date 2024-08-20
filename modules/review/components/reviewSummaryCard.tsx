@@ -25,6 +25,10 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     const styles = useThemedStyles(createStyles, {});
     const rating = ratingToStars(review?.rating ?? 0);
 
+    const releaseYear = review?.mediaReleaseDate
+        ? new Date(review.mediaReleaseDate).getFullYear()
+        : null;
+
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.topContainer}>
@@ -43,7 +47,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             {review.mediaTitle}
                         </Text>
                         <Text key="date" variant="label" style={styles.date}>
-                            {review.mediaReleaseYear}
+                            {releaseYear}
                         </Text>
                     </View>
                     <StarRatingDisplay

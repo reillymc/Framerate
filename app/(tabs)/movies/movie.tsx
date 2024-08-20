@@ -207,17 +207,10 @@ const Movie: React.FC = () => {
                         }
 
                         if (!movie) return;
+
                         saveWatchlistEntry({
                             mediaId,
                             mediaType: MediaType.Movie,
-                            mediaTitle: movie.title,
-                            imdbId: movie.imdbId,
-                            mediaReleaseDate: movie.releaseDate
-                                ? new Date(movie.releaseDate)
-                                      ?.toISOString()
-                                      .split("T")[0]
-                                : undefined,
-                            mediaPosterUri: movie.posterPath,
                         });
                     }}
                 >

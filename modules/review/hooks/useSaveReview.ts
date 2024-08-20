@@ -44,9 +44,6 @@ export const useSaveReview = () => {
                     ...params,
                     reviewId,
                     userId: placeholderUserId,
-                    mediaReleaseYear: movieDetails?.releaseDate
-                        ? new Date(movieDetails?.releaseDate).getFullYear()
-                        : new Date().getFullYear(),
                     mediaTitle: movieDetails?.title ?? "",
                 } satisfies ReviewDetails,
             );

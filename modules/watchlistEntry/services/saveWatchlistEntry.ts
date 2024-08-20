@@ -4,10 +4,6 @@ import { ExecuteRequest } from "@/helpers/framerateService";
 export type SaveWatchlistEntryParams = {
     mediaId: number;
     mediaType: string;
-    imdbId: string | undefined;
-    mediaTitle: string;
-    mediaPosterUri: string | undefined;
-    mediaReleaseDate: string | undefined;
 };
 
 type SaveWatchlistEntry = (params: SaveWatchlistEntryParams) => Promise<null>;
