@@ -25,7 +25,7 @@ import {
     VidSrcButton,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
-import { useMovieDetails } from "@/hooks";
+import { useMovie } from "@/modules/movie";
 import {
     ReviewDetailsCard,
     ReviewRatingTimeline,
@@ -55,9 +55,7 @@ const Movie: React.FC = () => {
     const { width } = useWindowDimensions();
     const scheme = useColorScheme();
 
-    const { data: movie } = useMovieDetails({
-        mediaId,
-    });
+    const { data: movie } = useMovie(mediaId);
 
     const { data: watchlistEntry } = useWatchlistEntry(
         MediaType.Movie,
@@ -85,7 +83,7 @@ const Movie: React.FC = () => {
             <Stack.Screen options={{ title: movie?.title ?? mediaTitle }} />
             <ParallaxScrollView
                 headerImage={
-                    <TmdbImage type="backdrop" path={movie?.backdrop} />
+                    <TmdbImage type="backdrop" path={movie?.backdropPath} />
                 }
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
@@ -97,7 +95,7 @@ const Movie: React.FC = () => {
                         style={styles.floatingPoster}
                         size="small"
                         removeMargin
-                        imageUri={movie?.poster ?? mediaPosterUri}
+                        imageUri={movie?.posterPath ?? mediaPosterUri}
                     />
                 </View>
                 <View style={styles.floatingTagline}>
@@ -146,7 +144,7 @@ const Movie: React.FC = () => {
                 </View>
                 <View style={styles.linksContainer}>
                     <TmdbButton
-                        tmdbId={movie?.mediaId}
+                        tmdbId={movie?.id}
                         mediaType={MediaType.Movie}
                     />
                     <ImdbButton imdbId={movie?.imdbId} />
@@ -219,7 +217,7 @@ const Movie: React.FC = () => {
                                       ?.toISOString()
                                       .split("T")[0]
                                 : undefined,
-                            mediaPosterUri: movie.poster,
+                            mediaPosterUri: movie.posterPath,
                         });
                     }}
                 >

@@ -4,11 +4,7 @@ import { ExecuteRequest } from "@/helpers/framerateService";
 export type SaveReviewParams = {
     reviewId?: string;
     mediaId: number;
-    imdbId?: string;
     mediaType: string;
-    mediaTitle: string;
-    mediaPosterUri: string;
-    mediaReleaseYear: number;
     date?: string;
     rating: number;
     reviewTitle?: string;

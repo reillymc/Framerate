@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { placeholderUserId } from "@/constants/placeholderUser";
-import { useMovieDetails } from "@/hooks";
 import {
     ratingToStars,
     starsToRating,
@@ -18,6 +17,7 @@ import {
 } from "@/modules/review";
 
 import { MediaType } from "@/constants/mediaTypes";
+import { useMovie } from "@/modules/movie";
 import { useUser, useUsers } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
@@ -50,9 +50,7 @@ const Edit: FC = () => {
         : undefined;
 
     const { data: review } = useReview(reviewId);
-    const { data: movie } = useMovieDetails({
-        mediaId: mediaId ? mediaId : review?.mediaId,
-    });
+    const { data: movie } = useMovie(mediaId ? mediaId : review?.mediaId);
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
     const { data: users = [] } = useUsers();
@@ -105,18 +103,14 @@ const Edit: FC = () => {
     };
 
     const handleSave = () => {
-        if (!(movie && rating)) return;
+        if (!(rating && mediaId)) return;
 
         saveReview({
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
-            mediaId: movie.mediaId,
-            mediaPosterUri: movie.poster ?? "",
-            mediaReleaseYear: movie.year ?? 0,
-            mediaTitle: movie.title,
-            imdbId: movie.imdbId,
-            mediaType: movie.type,
+            mediaId: mediaId,
+            mediaType: "movie",
             venue,
             rating: starsToRating(rating),
             reviewDescription,
@@ -125,7 +119,7 @@ const Edit: FC = () => {
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
             deleteWatchlistEntry({
-                mediaId: movie.mediaId,
+                mediaId,
                 mediaType: MediaType.Movie,
             });
         }

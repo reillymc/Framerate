@@ -12,6 +12,12 @@ type Api = {
 };
 
 export const FRAMERATE_API = {
+    movies: {
+        getMovie: (movieId: number) => ({
+            method: "GET",
+            endpoint: `movies/${movieId}`,
+        }),
+    },
     reviews: {
         getReviews: (mediaId?: number) => ({
             method: "GET",

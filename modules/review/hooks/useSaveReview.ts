@@ -1,4 +1,6 @@
 import { placeholderUserId } from "@/constants/placeholderUser";
+import { MovieKeys } from "@/modules/movie/hooks/keys";
+import type { MovieDetails } from "@/modules/movie/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     type ReviewDetails,
@@ -30,13 +32,22 @@ export const useSaveReview = () => {
                 ReviewKeys.details(reviewId),
             );
 
+            const movieDetails = queryClient.getQueryData<MovieDetails>(
+                MovieKeys.details(params.mediaId),
+            );
+
             // Optimistically update to the new value
             queryClient.setQueryData<ReviewDetails>(
                 ReviewKeys.details(reviewId),
                 {
+                    ...movieDetails,
                     ...params,
                     reviewId,
                     userId: placeholderUserId,
+                    mediaReleaseYear: movieDetails?.releaseDate
+                        ? new Date(movieDetails?.releaseDate).getFullYear()
+                        : new Date().getFullYear(),
+                    mediaTitle: movieDetails?.title ?? "",
                 } satisfies ReviewDetails,
             );
 
