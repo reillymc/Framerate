@@ -9,6 +9,17 @@ type Api = {
     };
 };
 
+const recordToParams = (record?: Record<string, string | number>) => {
+    if (!record) return "";
+
+    const query = Object.entries(record)
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+
+    return `?${query}`;
+};
+
 export const FRAMERATE_API = {
     movies: {
         getMovie: (movieId: number) => ({
@@ -25,9 +36,22 @@ export const FRAMERATE_API = {
         }),
     },
     reviews: {
-        getReviews: (mediaId?: number) => ({
+        getReviews: (
+            mediaId?: number,
+            params?: {
+                orderBy?: string;
+                sort?: string;
+                page?: number;
+                pageSize?: number;
+                ratingMin?: number;
+                ratingMax?: number;
+                atVenue?: string;
+            },
+        ) => ({
             method: "GET",
-            endpoint: mediaId ? `reviews/media/${mediaId}` : "reviews",
+            endpoint: mediaId
+                ? `reviews/media/${mediaId}`
+                : `reviews${recordToParams(params)}`,
         }),
         getReview: (id: string) => ({
             method: "GET",

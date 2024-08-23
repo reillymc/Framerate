@@ -13,6 +13,7 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useRef, useState } from "react";
 import {
@@ -27,6 +28,8 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 const Profile: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
+
+    const queryClient = useQueryClient();
 
     const { data: user } = useUser(placeholderUserId);
     const { mutate: saveUser } = useSaveUser();
@@ -315,8 +318,17 @@ const Profile: FC = () => {
                             label="Change Password"
                             variant="flat"
                             size="small"
+                            contentAlign="left"
                             disabled
-                            style={styles.changePasswordButton}
+                            style={styles.flatButton}
+                        />
+                        <Button
+                            label="Clear cache"
+                            variant="flat"
+                            contentAlign="left"
+                            size="small"
+                            onPress={() => queryClient.clear()}
+                            style={styles.flatButton}
                         />
                         <Button
                             label="Log Out"
@@ -376,8 +388,9 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             backgroundColor: color.inputBackground,
             paddingRight: padding.regular,
         },
-        changePasswordButton: {
-            marginTop: 20,
+        flatButton: {
+            marginTop: padding.large,
+            marginBottom: padding.regular,
         },
         logOutButton: {
             marginTop: 40,

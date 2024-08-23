@@ -103,13 +103,15 @@ const Edit: FC = () => {
     };
 
     const handleSave = () => {
-        if (!(rating && mediaId)) return;
+        const mediaIdValue = mediaId ?? review?.mediaId;
+
+        if (!(rating && mediaIdValue)) return;
 
         saveReview({
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
-            mediaId: mediaId,
+            mediaId: mediaIdValue,
             mediaType: "movie",
             venue,
             rating: starsToRating(rating),
@@ -119,7 +121,7 @@ const Edit: FC = () => {
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
             deleteWatchlistEntry({
-                mediaId,
+                mediaId: mediaIdValue,
                 mediaType: MediaType.Movie,
             });
         }

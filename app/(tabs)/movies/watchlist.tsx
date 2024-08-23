@@ -50,7 +50,12 @@ const Watchlist: FC = () => {
     const scheme = useColorScheme();
 
     const { data: watchlist } = useWatchlist(mediaType);
-    const { data: entries = [], isLoading } = useWatchlistEntries(mediaType);
+    const {
+        data: entries = [],
+        isLoading,
+        refetch,
+        isRefetching,
+    } = useWatchlistEntries(mediaType);
 
     const sectionData = useMemo(() => {
         const sections = Object.values(
@@ -135,6 +140,8 @@ const Watchlist: FC = () => {
                 <SectionList
                     sections={sectionData}
                     ref={listRef}
+                    refreshing={false}
+                    onRefresh={refetch}
                     onScrollToIndexFailed={(info) => {
                         const wait = new Promise((resolve) =>
                             setTimeout(resolve, 100),

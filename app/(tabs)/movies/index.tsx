@@ -2,12 +2,13 @@ import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearchMovies } from "@/modules/movie";
-import { ReviewSummaryCard, useReviews } from "@/modules/review";
+import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
     IconActionV2,
     type ThemedStyles,
+    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -16,7 +17,7 @@ import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
-    const { data: reviews } = useReviews();
+    const { data: reviews } = useInfiniteReviews({ page: 1 });
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
@@ -38,6 +39,11 @@ export default function HomeScreen() {
                     ),
             ),
         [popularMovies, watchlistEntries],
+    );
+
+    const reviewList = useMemo(
+        () => reviews?.pages.flat().filter(Undefined) ?? [],
+        [reviews],
     );
 
     return (
@@ -124,6 +130,14 @@ export default function HomeScreen() {
                                             },
                                         })
                                     }
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/movies/watchlist",
+                                            params: {
+                                                mediaType: MediaType.Movie,
+                                            },
+                                        })
+                                    }
                                 />
                                 <WatchlistEntriesChart
                                     style={[
@@ -193,7 +207,7 @@ export default function HomeScreen() {
                             />
                         </>
                     }
-                    data={reviews}
+                    data={reviewList}
                     CellRendererComponent={({ children }) => (
                         <View style={styles.pageElement}>{children}</View>
                     )}

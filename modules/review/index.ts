@@ -1,4 +1,9 @@
-export { useReview, useReviews, useSaveReview } from "./hooks";
+export {
+    useReview,
+    useReviews,
+    useSaveReview,
+    useInfiniteReviews,
+} from "./hooks";
 export { ratingToStars, starsToRating } from "./helpers";
 export {
     ReviewRatingTimeline,

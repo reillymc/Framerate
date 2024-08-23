@@ -2,13 +2,19 @@ import { usePosterDimensions } from "@/components";
 import { AnimatedFlatList } from "@/components/animatedFlatList";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import {
+    Text,
     type ThemedStyles,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { addWeeks, isWithinInterval, subWeeks } from "date-fns";
 import { type FC, useMemo } from "react";
-import { type StyleProp, StyleSheet, type ViewStyle } from "react-native";
+import {
+    Pressable,
+    type StyleProp,
+    StyleSheet,
+    type ViewStyle,
+} from "react-native";
 import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
@@ -21,12 +27,14 @@ interface WatchlistSummaryProps {
     watchlistEntries: WatchlistEntrySummary[];
     style?: StyleProp<ViewStyle>;
     onPressEntry: (item: WatchlistEntrySummary) => void;
+    onPress: () => void;
 }
 
 export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     watchlistEntries,
     style,
     onPressEntry,
+    onPress,
 }) => {
     const { width } = usePosterDimensions({ size: "small" });
 
@@ -46,7 +54,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                     item.mediaReleaseDate &&
                     isWithinInterval(new Date(item.mediaReleaseDate), {
                         start: subWeeks(new Date(), 6),
-                        end: addWeeks(new Date(), 1),
+                        end: addWeeks(new Date(), 4),
                     }),
             ),
         [watchlistEntries],
@@ -87,6 +95,18 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                     );
                 }}
                 ListFooterComponent={<Animated.View style={{ width: 50 }} />}
+                ListEmptyComponent={
+                    <Pressable
+                        style={styles.placeholderContainer}
+                        onPress={onPress}
+                    >
+                        <Text variant="caption">No upcoming releases</Text>
+                        <Text variant="caption">
+                            {`${watchlistEntries.length} movie${watchlistEntries.length === 1 ? "" : "s"} on watchlist`}
+                        </Text>
+                    </Pressable>
+                }
+                scrollEnabled={filteredItems.length > 0}
             />
         </Animated.View>
     );
@@ -98,5 +118,12 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
             paddingBottom: padding.large,
+        },
+        placeholderContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: padding.large,
+            gap: padding.regular,
         },
     });

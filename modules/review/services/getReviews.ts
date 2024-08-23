@@ -14,13 +14,21 @@ export interface ReviewSummary {
     reviewDescription?: string;
 }
 
-type GetReviewParams = {
+export type GetReviewParams = {
     mediaId?: number;
+    orderBy?: "rating" | "date" | "mediaTitle";
+    sort?: "asc" | "desc";
+    page?: number;
+    pageSize?: number;
+    ratingMin?: number;
+    ratingMax?: number;
+    atVenue?: string;
+    withCompany?: string;
 };
 
 type GetReviews = (
     params: GetReviewParams,
 ) => Promise<ReviewSummary[] | undefined>;
 
-export const getReviews: GetReviews = async ({ mediaId }) =>
-    ExecuteRequest(FRAMERATE_API.reviews.getReviews(mediaId));
+export const getReviews: GetReviews = async ({ mediaId, ...params }) =>
+    ExecuteRequest(FRAMERATE_API.reviews.getReviews(mediaId, params));
