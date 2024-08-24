@@ -194,6 +194,7 @@ const Watchlist: FC = () => {
                         <PosterCard
                             heading={item.mediaTitle}
                             imageUri={item.mediaPosterUri}
+                            onWatchlist
                             releaseDate={
                                 item.mediaReleaseDate
                                     ? new Date(
@@ -218,7 +219,7 @@ const Watchlist: FC = () => {
                                     },
                                 })
                             }
-                            onRemoveFromWatchlist={() =>
+                            onToggleWatchlist={() =>
                                 deleteWatchlistEntry({
                                     mediaId: item.mediaId,
                                     mediaType,

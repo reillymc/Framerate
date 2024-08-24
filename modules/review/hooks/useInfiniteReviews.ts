@@ -5,7 +5,7 @@ import { ReviewKeys } from "./keys";
 
 export const useInfiniteReviews = (params: GetReviewParams) => {
     return useInfiniteQuery({
-        queryKey: ReviewKeys.list(params),
+        queryKey: ReviewKeys.infiniteList(params),
         queryFn: ({ pageParam = 1 }) =>
             ReviewsService.getReviews({ ...params, page: pageParam }),
         initialPageParam: 1,

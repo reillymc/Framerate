@@ -8,7 +8,8 @@ interface PosterCardProps
     releaseDate?: string;
     imageUri?: string;
     height?: number;
-    onRemoveFromWatchlist?: () => void;
+    onWatchlist?: boolean;
+    onToggleWatchlist?: () => void;
 }
 
 export const PosterCard: FC<PosterCardProps> = ({
@@ -16,9 +17,10 @@ export const PosterCard: FC<PosterCardProps> = ({
     releaseDate,
     imageUri,
     height,
+    onWatchlist,
     onPress,
     onAddReview,
-    onRemoveFromWatchlist,
+    onToggleWatchlist,
 }) => {
     const { theme } = useTheme();
 
@@ -35,9 +37,9 @@ export const PosterCard: FC<PosterCardProps> = ({
             <Poster
                 imageUri={imageUri}
                 size="tiny"
-                onWatchlist
+                onWatchlist={onWatchlist}
                 onAddReview={onAddReview}
-                onToggleWatchlist={onRemoveFromWatchlist}
+                onToggleWatchlist={onToggleWatchlist}
             />
             <View style={{ flexShrink: 1 }}>
                 <Text variant="heading" numberOfLines={2}>

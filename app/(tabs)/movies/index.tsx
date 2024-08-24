@@ -12,6 +12,7 @@ import {
 import {
     IconAction,
     IconActionV2,
+    Text,
     type ThemedStyles,
     Undefined,
     useTheme,
@@ -80,29 +81,57 @@ export default function HomeScreen() {
                 <FlatList
                     data={results}
                     keyboardDismissMode="on-drag"
-                    renderItem={({ item }) => (
-                        <PosterCard
-                            heading={item.title}
-                            releaseDate={
-                                item.releaseDate
-                                    ? new Date(item.releaseDate)
-                                          .getFullYear()
-                                          .toString()
-                                    : "Unknown"
-                            }
-                            imageUri={item.posterPath}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/movies/movie",
-                                    params: {
-                                        mediaId: item.id,
-                                        mediaTitle: item.title,
-                                        mediaPosterUri: item.posterPath,
-                                    },
-                                })
-                            }
-                        />
-                    )}
+                    renderItem={({ item }) => {
+                        const onWatchlist = watchlistEntries.some(
+                            ({ mediaId }) => mediaId === item.id,
+                        );
+
+                        return (
+                            <PosterCard
+                                heading={item.title}
+                                releaseDate={
+                                    item.releaseDate
+                                        ? new Date(item.releaseDate)
+                                              .getFullYear()
+                                              .toString()
+                                        : "Unknown"
+                                }
+                                imageUri={item.posterPath}
+                                onWatchlist={onWatchlist}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/movie",
+                                        params: {
+                                            mediaId: item.id,
+                                            mediaTitle: item.title,
+                                            mediaPosterUri: item.posterPath,
+                                        },
+                                    })
+                                }
+                                onAddReview={() =>
+                                    router.push({
+                                        pathname: "/movies/editReview",
+                                        params: {
+                                            mediaId: item.id,
+                                            mediaTitle: item.title,
+                                            mediaPosterUri: item.posterPath,
+                                        },
+                                    })
+                                }
+                                onToggleWatchlist={() =>
+                                    onWatchlist
+                                        ? deleteWatchlistEntry({
+                                              mediaId: item.id,
+                                              mediaType: "movie",
+                                          })
+                                        : saveWatchlistEntry({
+                                              mediaId: item.id,
+                                              mediaType: "movie",
+                                          })
+                                }
+                            />
+                        );
+                    }}
                     keyExtractor={(item) => item.id.toString()}
                     contentInsetAdjustmentBehavior="always"
                     keyboardShouldPersistTaps="handled"
@@ -300,19 +329,27 @@ export default function HomeScreen() {
                             }
                         />
                     )}
+                    ListEmptyComponent={
+                        <Text style={styles.reviewsEmptyMessage}>
+                            Nothing here yet. To save a review, search or pick a
+                            movie then 'Add Review'
+                        </Text>
+                    }
                     ListFooterComponent={
-                        <IconAction
-                            containerStyle={styles.reviewFooter}
-                            iconName="right"
-                            labelPosition="left"
-                            size="small"
-                            label="All"
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/reviews",
-                                })
-                            }
-                        />
+                        reviewList.length ? (
+                            <IconAction
+                                containerStyle={styles.reviewFooter}
+                                iconName="right"
+                                labelPosition="left"
+                                size="small"
+                                label="All"
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/movies/reviews",
+                                    })
+                                }
+                            />
+                        ) : null
                     }
                 />
             )}
@@ -345,5 +382,9 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             alignSelf: "flex-end",
             paddingHorizontal: padding.pageHorizontal,
             marginBottom: padding.large,
+        },
+        reviewsEmptyMessage: {
+            paddingHorizontal: padding.pageHorizontal,
+            marginBottom: 64,
         },
     });

@@ -36,6 +36,7 @@ export const getItemLayout =
         getSectionSeparatorHeight = 0,
         getListHeaderHeight = 0,
     }: GetItemLayoutParams<T>) =>
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: helper function from external source
     (data: SectionListData<T>[] | null, index: number): GetItemLayoutShape => {
         if (!data?.length) {
             return { length: 0, offset: 0, index };

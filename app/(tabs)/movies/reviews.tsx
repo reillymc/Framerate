@@ -18,6 +18,9 @@ import { Stack, router } from "expo-router";
 import { type FC, useMemo, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 
+type Order = "rating" | "date" | "mediaTitle" | "mediaReleaseDate";
+type Sort = "asc" | "desc";
+
 const Reviews: FC = () => {
     const [panel, setPanel] = useState<"venue" | "rating" | "company">();
     const [atVenue, setAtVenue] = useState<string | undefined>(undefined);
@@ -25,8 +28,8 @@ const Reviews: FC = () => {
     const [withCompany, setWithCompany] = useState<string | undefined>(
         undefined,
     );
-    const [orderBy, setOrderBy] = useState<"rating" | "date" | "title">("date");
-    const [sort, setSort] = useState<"asc" | "desc">("desc");
+    const [orderBy, setOrderBy] = useState<Order>("date");
+    const [sort, setSort] = useState<Sort>("desc");
 
     const {
         data: reviews,
@@ -70,21 +73,31 @@ const Reviews: FC = () => {
                                 menuItems: [
                                     {
                                         actionKey: "date",
-                                        actionTitle: "Date",
+                                        actionTitle: "Review Date",
                                         menuState:
                                             orderBy === "date" ? "on" : "off",
                                     },
                                     {
                                         actionKey: "rating",
-                                        actionTitle: "Rating",
+                                        actionTitle: "Review Rating",
                                         menuState:
                                             orderBy === "rating" ? "on" : "off",
                                     },
                                     {
-                                        actionKey: "title",
-                                        actionTitle: "Title",
+                                        actionKey: "mediaTitle",
+                                        actionTitle: "Movie Title",
                                         menuState:
-                                            orderBy === "title" ? "on" : "off",
+                                            orderBy === "mediaTitle"
+                                                ? "on"
+                                                : "off",
+                                    },
+                                    {
+                                        actionKey: "mediaReleaseDate",
+                                        actionTitle: "Movie Release Date",
+                                        menuState:
+                                            orderBy === "mediaReleaseDate"
+                                                ? "on"
+                                                : "off",
                                     },
                                     {
                                         type: "menu",
@@ -114,21 +127,25 @@ const Reviews: FC = () => {
                                 ],
                             }}
                             onPressMenuItem={({ nativeEvent }) => {
-                                if (nativeEvent.actionKey === "rating") {
-                                    setOrderBy("rating");
-                                }
-                                if (nativeEvent.actionKey === "title") {
-                                    setOrderBy("title");
-                                }
-                                if (nativeEvent.actionKey === "date") {
-                                    setOrderBy("date");
+                                if (
+                                    [
+                                        "rating",
+                                        "mediaTitle",
+                                        "date",
+                                        "mediaReleaseDate",
+                                    ].includes(nativeEvent.actionKey)
+                                ) {
+                                    setOrderBy(nativeEvent.actionKey as Order);
+                                    return;
                                 }
 
-                                if (nativeEvent.actionKey === "asc") {
-                                    setSort("asc");
-                                }
-                                if (nativeEvent.actionKey === "desc") {
-                                    setSort("desc");
+                                if (
+                                    ["asc", "desc"].includes(
+                                        nativeEvent.actionKey,
+                                    )
+                                ) {
+                                    setSort(nativeEvent.actionKey as Sort);
+                                    return;
                                 }
                             }}
                             style={styles.sortIcon}
@@ -280,10 +297,12 @@ const Reviews: FC = () => {
                 selectionMode="single"
                 show={panel === "company"}
                 label="Company"
-                items={users.map(({ userId, firstName, lastName }) => ({
-                    label: `${firstName} ${lastName}`,
-                    value: userId,
-                }))}
+                items={users
+                    .filter(({ userId }) => userId !== user?.userId)
+                    .map(({ userId, firstName, lastName }) => ({
+                        label: `${firstName} ${lastName}`,
+                        value: userId,
+                    }))}
                 selection={
                     withCompany
                         ? {
