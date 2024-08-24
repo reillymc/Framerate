@@ -25,6 +25,8 @@ import {
 } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
+import { version } from "@/package.json";
+
 const Profile: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
@@ -309,35 +311,54 @@ const Profile: FC = () => {
                             />
                         </View>
                     </CollapsibleContainer>
+                    <Animated.View layout={LinearTransition}>
+                        <Text variant="title">Account</Text>
+                        <View style={styles.sectionContainer}>
+                            <Button
+                                label="Change Password"
+                                variant="flat"
+                                size="small"
+                                contentAlign="left"
+                                disabled
+                                style={styles.actionButton}
+                            />
+                            <Button
+                                label="Log Out"
+                                variant="flat"
+                                contentAlign="left"
+                                size="small"
+                                disabled
+                                style={styles.actionButton}
+                                onPress={router.back}
+                            />
+                        </View>
+                    </Animated.View>
                     <Animated.View
                         layout={LinearTransition}
                         style={styles.sectionElement}
                     >
-                        <Text variant="title">Account</Text>
-                        <Button
-                            label="Change Password"
-                            variant="flat"
-                            size="small"
-                            contentAlign="left"
-                            disabled
-                            style={styles.flatButton}
-                        />
-                        <Button
-                            label="Clear cache"
-                            variant="flat"
-                            contentAlign="left"
-                            size="small"
-                            onPress={() => queryClient.clear()}
-                            style={styles.flatButton}
-                        />
-                        <Button
-                            label="Log Out"
-                            variant="primary"
-                            size="small"
-                            disabled
-                            style={styles.logOutButton}
-                            onPress={router.back}
-                        />
+                        <Text variant="title">Framerate</Text>
+                        <View style={styles.sectionContainer}>
+                            <Button
+                                label="Credits"
+                                variant="flat"
+                                size="small"
+                                contentAlign="left"
+                                style={styles.actionButton}
+                                onPress={() => router.push("/credits")}
+                            />
+                            <Button
+                                label="Clear cache"
+                                variant="flat"
+                                contentAlign="left"
+                                size="small"
+                                style={styles.actionButton}
+                                onPress={() => queryClient.clear()}
+                            />
+                            <Text variant="caption" style={styles.actionButton}>
+                                Client Version: {version}
+                            </Text>
+                        </View>
                     </Animated.View>
                 </ScrollView>
             ) : null}
@@ -364,6 +385,9 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             borderRadius: border.radius.loose,
             overflow: "hidden",
         },
+        sectionContainer: {
+            marginLeft: padding.regular,
+        },
         listItem: {
             paddingVertical: padding.regular,
             borderBottomWidth: 1,
@@ -388,13 +412,9 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             backgroundColor: color.inputBackground,
             paddingRight: padding.regular,
         },
-        flatButton: {
+        actionButton: {
             marginTop: padding.large,
             marginBottom: padding.regular,
-        },
-        logOutButton: {
-            marginTop: 40,
-            marginBottom: 200,
         },
     });
 

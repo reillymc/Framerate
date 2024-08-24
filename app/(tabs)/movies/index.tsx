@@ -333,11 +333,12 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         },
         watchlistChart: {
             flex: 1,
-            height: 168,
+            height: 171,
+            paddingTop: padding.tiny,
             marginRight: padding.pageHorizontal,
         },
         moviesList: {
-            marginBottom: padding.large,
+            marginBottom: padding.small,
             paddingTop: padding.tiny,
         },
         reviewFooter: {

@@ -5,23 +5,27 @@ import { Pressable } from "react-native";
 import Svg, { G, Path, Defs, LinearGradient, Stop } from "react-native-svg";
 
 interface TmdbButtonProps {
-    tmdbId: number | undefined;
-    mediaType: MediaType;
+    tmdbId?: number;
+    mediaType?: MediaType;
+    width?: number;
 }
 
 export const TmdbButton: React.FunctionComponent<TmdbButtonProps> = ({
     tmdbId,
     mediaType,
+    width = 64,
 }) => {
     return (
         <Pressable
             onPress={() =>
                 openURL(
-                    `https://www.themoviedb.org/${mediaType === "movie" ? "movie" : "tv"}/${tmdbId}/`,
+                    tmdbId && mediaType
+                        ? `https://www.themoviedb.org/${mediaType === "movie" ? "movie" : "tv"}/${tmdbId}/`
+                        : "https://www.themoviedb.org/",
                 )
             }
         >
-            <Svg viewBox="0 0 190.24 81.52" width={64} height={32}>
+            <Svg viewBox="0 0 190.24 81.52" width={width} height={32}>
                 <Defs>
                     <LinearGradient
                         id="linear-gradient"

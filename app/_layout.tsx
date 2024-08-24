@@ -206,6 +206,7 @@ function RootLayoutNavigator() {
         <Stack screenOptions={screenOptions} initialRouteName="(tabs)">
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ presentation: "modal" }} />
+            <Stack.Screen name="credits" options={{ presentation: "modal" }} />
             <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
     );
