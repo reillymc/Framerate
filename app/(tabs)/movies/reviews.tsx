@@ -24,6 +24,9 @@ const Reviews: FC = () => {
     const [withCompany, setWithCompany] = useState<string | undefined>(
         undefined,
     );
+    const [orderBy, setOrderBy] = useState<"rating" | "date" | "title">("date");
+    const [sort, setSort] = useState<"asc" | "desc">("desc");
+
     const {
         data: reviews,
         refetch,
@@ -59,6 +62,72 @@ const Reviews: FC = () => {
                         <MenuIconButton
                             iconName="arrow-switch"
                             variant="secondary"
+                            menuConfig={{
+                                menuTitle: "Sort lists by",
+                                menuItems: [
+                                    {
+                                        actionKey: "rating",
+                                        actionTitle: "rating",
+                                        menuState:
+                                            orderBy === "rating" ? "on" : "off",
+                                    },
+                                    {
+                                        actionKey: "title",
+                                        actionTitle: "title",
+                                        menuState:
+                                            orderBy === "title" ? "on" : "off",
+                                    },
+                                    {
+                                        actionKey: "date",
+                                        actionTitle: "date",
+                                        menuState:
+                                            orderBy === "date" ? "on" : "off",
+                                    },
+                                    {
+                                        type: "menu",
+                                        menuTitle: "",
+                                        menuOptions: ["displayInline"],
+                                        menuItems: [
+                                            {
+                                                type: "action",
+                                                actionKey: "asc",
+                                                actionTitle: "Ascending",
+                                                menuState:
+                                                    sort === "asc"
+                                                        ? "on"
+                                                        : "off",
+                                            },
+                                            {
+                                                type: "action",
+                                                actionKey: "desc",
+                                                actionTitle: "Descending",
+                                                menuState:
+                                                    sort === "desc"
+                                                        ? "on"
+                                                        : "off",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            }}
+                            onPressMenuItem={({ nativeEvent }) => {
+                                if (nativeEvent.actionKey === "rating") {
+                                    setOrderBy("rating");
+                                }
+                                if (nativeEvent.actionKey === "title") {
+                                    setOrderBy("title");
+                                }
+                                if (nativeEvent.actionKey === "date") {
+                                    setOrderBy("date");
+                                }
+
+                                if (nativeEvent.actionKey === "asc") {
+                                    setSort("asc");
+                                }
+                                if (nativeEvent.actionKey === "desc") {
+                                    setSort("desc");
+                                }
+                            }}
                             style={styles.sortIcon}
                         />
                     ),
@@ -152,7 +221,7 @@ const Reviews: FC = () => {
                         : undefined
                 }
                 onChange={(value) => {
-                    setWithCompany(value?.value);
+                    setAtVenue(value?.value);
                 }}
                 onClose={() => {
                     if (panel !== "venue") return;
