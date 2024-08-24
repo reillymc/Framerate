@@ -117,7 +117,8 @@ const createStyles = ({
     StyleSheet.create({
         container: {
             flex: 1,
-            marginBottom: padding.regular,
+            marginTop: padding.tiny,
+            marginBottom: padding.small,
             backgroundColor: color.foreground,
             borderRadius: border.radius.loose,
             padding: padding.small,

@@ -4,8 +4,13 @@ import { MediaType } from "@/constants/mediaTypes";
 import { usePopularMovies, useSearchMovies } from "@/modules/movie";
 import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
-import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
+    useDeleteWatchlistEntry,
+    useSaveWatchlistEntry,
+    useWatchlistEntries,
+} from "@/modules/watchlistEntry";
+import {
+    IconAction,
     IconActionV2,
     type ThemedStyles,
     Undefined,
@@ -29,6 +34,8 @@ export default function HomeScreen() {
     const { data: results } = useSearchMovies(searchValue);
     const { data: popularMovies } = usePopularMovies();
     const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
+    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     const filteredPopularMovies = useMemo(
         () =>
@@ -75,7 +82,7 @@ export default function HomeScreen() {
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => (
                         <PosterCard
-                            title={item.title}
+                            heading={item.title}
                             releaseDate={
                                 item.releaseDate
                                     ? new Date(item.releaseDate)
@@ -138,6 +145,26 @@ export default function HomeScreen() {
                                             },
                                         })
                                     }
+                                    onAddReview={({
+                                        mediaId,
+                                        mediaTitle,
+                                        mediaPosterUri,
+                                    }) =>
+                                        router.push({
+                                            pathname: "/movies/editReview",
+                                            params: {
+                                                mediaId,
+                                                mediaTitle,
+                                                mediaPosterUri,
+                                            },
+                                        })
+                                    }
+                                    onRemoveFromWatchlist={({ mediaId }) =>
+                                        deleteWatchlistEntry({
+                                            mediaId,
+                                            mediaType: "movie",
+                                        })
+                                    }
                                 />
                                 <WatchlistEntriesChart
                                     style={[
@@ -176,25 +203,55 @@ export default function HomeScreen() {
                                 showsHorizontalScrollIndicator={false}
                                 decelerationRate="fast"
                                 snapToInterval={posterWidth + posterGap}
-                                renderItem={({ item }) => (
-                                    <Poster
-                                        key={item.id}
-                                        heading={item.title}
-                                        imageUri={item.posterPath}
-                                        size="large"
-                                        onPress={() =>
-                                            router.push({
-                                                pathname: "/movies/movie",
-                                                params: {
-                                                    mediaId: item.id,
-                                                    mediaTitle: item.title,
-                                                    mediaPosterUri:
-                                                        item.posterPath,
-                                                },
-                                            })
-                                        }
-                                    />
-                                )}
+                                renderItem={({ item }) => {
+                                    const onWatchlist = watchlistEntries.some(
+                                        ({ mediaId }) => mediaId === item.id,
+                                    );
+
+                                    return (
+                                        <Poster
+                                            key={item.id}
+                                            heading={item.title}
+                                            imageUri={item.posterPath}
+                                            size="large"
+                                            onWatchlist={onWatchlist}
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname: "/movies/movie",
+                                                    params: {
+                                                        mediaId: item.id,
+                                                        mediaTitle: item.title,
+                                                        mediaPosterUri:
+                                                            item.posterPath,
+                                                    },
+                                                })
+                                            }
+                                            onAddReview={() =>
+                                                router.push({
+                                                    pathname:
+                                                        "/movies/editReview",
+                                                    params: {
+                                                        mediaId: item.id,
+                                                        mediaTitle: item.title,
+                                                        mediaPosterUri:
+                                                            item.posterPath,
+                                                    },
+                                                })
+                                            }
+                                            onToggleWatchlist={() =>
+                                                onWatchlist
+                                                    ? deleteWatchlistEntry({
+                                                          mediaId: item.id,
+                                                          mediaType: "movie",
+                                                      })
+                                                    : saveWatchlistEntry({
+                                                          mediaId: item.id,
+                                                          mediaType: "movie",
+                                                      })
+                                            }
+                                        />
+                                    );
+                                }}
                             />
                             <SectionHeading
                                 title="My Reviews"
@@ -208,8 +265,18 @@ export default function HomeScreen() {
                         </>
                     }
                     data={reviewList}
-                    CellRendererComponent={({ children }) => (
-                        <View style={styles.pageElement}>{children}</View>
+                    CellRendererComponent={({
+                        children,
+                        cellKey,
+                        onLayout,
+                    }) => (
+                        <View
+                            key={cellKey}
+                            onLayout={onLayout}
+                            style={styles.pageElement}
+                        >
+                            {children}
+                        </View>
                     )}
                     renderItem={({ item }) => (
                         <ReviewSummaryCard
@@ -233,6 +300,20 @@ export default function HomeScreen() {
                             }
                         />
                     )}
+                    ListFooterComponent={
+                        <IconAction
+                            containerStyle={styles.reviewFooter}
+                            iconName="right"
+                            labelPosition="left"
+                            size="small"
+                            label="All"
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: "/movies/reviews",
+                                })
+                            }
+                        />
+                    }
                 />
             )}
         </>
@@ -256,6 +337,12 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             marginRight: padding.pageHorizontal,
         },
         moviesList: {
+            marginBottom: padding.large,
+            paddingTop: padding.tiny,
+        },
+        reviewFooter: {
+            alignSelf: "flex-end",
+            paddingHorizontal: padding.pageHorizontal,
             marginBottom: padding.large,
         },
     });

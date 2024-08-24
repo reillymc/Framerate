@@ -18,11 +18,10 @@ export const useSaveReview = () => {
         SaveReviewParams,
         { previousEntry?: ReviewDetails }
     >({
-        mutationKey: ReviewKeys.mutate,
         mutationFn: ReviewsService.saveReview,
-        onSuccess: async (_response) => {
+        onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: ReviewKeys.mutate,
+                queryKey: ReviewKeys.base,
             });
         },
         onMutate: ({ reviewId, ...params }) => {

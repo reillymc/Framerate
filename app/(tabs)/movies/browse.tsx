@@ -1,6 +1,11 @@
 import { Poster } from "@/components/poster";
 import { usePopularMovies } from "@/modules/movie";
 import {
+    useDeleteWatchlistEntry,
+    useSaveWatchlistEntry,
+    useWatchlistEntries,
+} from "@/modules/watchlistEntry";
+import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -10,6 +15,9 @@ import { FlatList, StyleSheet, View } from "react-native";
 
 const Browse: FC = () => {
     const { data: movies } = usePopularMovies();
+    const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
+    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -24,29 +32,63 @@ const Browse: FC = () => {
                 data={movies}
                 contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.list}
-                CellRendererComponent={({ children }) => (
-                    <View style={styles.pageElement}>{children}</View>
+                CellRendererComponent={({ children, cellKey, onLayout }) => (
+                    <View
+                        key={cellKey}
+                        onLayout={onLayout}
+                        style={styles.pageElement}
+                    >
+                        {children}
+                    </View>
                 )}
                 numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <Poster
-                        key={item.id}
-                        heading={item.title}
-                        size="medium"
-                        imageUri={item.posterPath}
-                        onPress={() =>
-                            router.push({
-                                pathname: "/movies/movie",
-                                params: {
-                                    mediaId: item.id,
-                                    mediaTitle: item.title,
-                                    mediaPosterUri: item.posterPath,
-                                },
-                            })
-                        }
-                    />
-                )}
+                renderItem={({ item }) => {
+                    const onWatchlist = watchlistEntries.some(
+                        ({ mediaId }) => mediaId === item.id,
+                    );
+
+                    return (
+                        <Poster
+                            key={item.id}
+                            heading={item.title}
+                            size="medium"
+                            imageUri={item.posterPath}
+                            onWatchlist={onWatchlist}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/movies/movie",
+                                    params: {
+                                        mediaId: item.id,
+                                        mediaTitle: item.title,
+                                        mediaPosterUri: item.posterPath,
+                                    },
+                                })
+                            }
+                            onAddReview={() =>
+                                router.push({
+                                    pathname: "/movies/editReview",
+                                    params: {
+                                        mediaId: item.id,
+                                        mediaTitle: item.title,
+                                        mediaPosterUri: item.posterPath,
+                                    },
+                                })
+                            }
+                            onToggleWatchlist={() =>
+                                onWatchlist
+                                    ? deleteWatchlistEntry({
+                                          mediaId: item.id,
+                                          mediaType: "movie",
+                                      })
+                                    : saveWatchlistEntry({
+                                          mediaId: item.id,
+                                          mediaType: "movie",
+                                      })
+                            }
+                        />
+                    );
+                }}
             />
         </>
     );

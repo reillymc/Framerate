@@ -9,6 +9,7 @@ import { useUser, useUsers } from "@/modules/user";
 import {
     SelectionPanel,
     Tag,
+    Text,
     type ThemedStyles,
     Undefined,
     useThemedStyles,
@@ -36,6 +37,8 @@ const Reviews: FC = () => {
         withCompany,
         ratingMax: rating,
         ratingMin: rating,
+        sort,
+        orderBy,
     });
     const { data: user } = useUser(placeholderUserId);
     // TODO: update with user configuration knownUsers when implemented
@@ -63,25 +66,25 @@ const Reviews: FC = () => {
                             iconName="arrow-switch"
                             variant="secondary"
                             menuConfig={{
-                                menuTitle: "Sort lists by",
+                                menuTitle: "Sort reviews by",
                                 menuItems: [
                                     {
+                                        actionKey: "date",
+                                        actionTitle: "Date",
+                                        menuState:
+                                            orderBy === "date" ? "on" : "off",
+                                    },
+                                    {
                                         actionKey: "rating",
-                                        actionTitle: "rating",
+                                        actionTitle: "Rating",
                                         menuState:
                                             orderBy === "rating" ? "on" : "off",
                                     },
                                     {
                                         actionKey: "title",
-                                        actionTitle: "title",
+                                        actionTitle: "Title",
                                         menuState:
                                             orderBy === "title" ? "on" : "off",
-                                    },
-                                    {
-                                        actionKey: "date",
-                                        actionTitle: "date",
-                                        menuState:
-                                            orderBy === "date" ? "on" : "off",
                                     },
                                     {
                                         type: "menu",
@@ -136,8 +139,14 @@ const Reviews: FC = () => {
             <FlatList
                 data={reviewList}
                 contentInsetAdjustmentBehavior="automatic"
-                CellRendererComponent={({ children }) => (
-                    <View style={styles.pageElement}>{children}</View>
+                CellRendererComponent={({ children, cellKey, onLayout }) => (
+                    <View
+                        key={cellKey}
+                        onLayout={onLayout}
+                        style={styles.pageElement}
+                    >
+                        {children}
+                    </View>
                 )}
                 onRefresh={refetch}
                 onEndReached={() => fetchNextPage()}
@@ -177,6 +186,17 @@ const Reviews: FC = () => {
                             variant="light"
                         />
                     </ScrollView>
+                }
+                ListFooterComponent={
+                    reviewList?.length ? (
+                        <Text style={styles.pageElement}>
+                            {reviewList?.length} reviews
+                            {rating && ` of ${getRatingLabel(rating)}`}
+                            {atVenue && ` at ${atVenue}`}
+                            {withCompany &&
+                                ` with ${selectedUser?.firstName} ${selectedUser?.lastName}`}
+                        </Text>
+                    ) : null
                 }
                 keyExtractor={({ reviewId }) => reviewId}
                 renderItem={({ item }) => (

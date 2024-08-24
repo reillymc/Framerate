@@ -140,7 +140,16 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                         frame: "transparent",
                     },
                 }}
-                domainPadding={theme.padding.regular}
+                domainPadding={{
+                    left: theme.padding.regular,
+                    right: theme.padding.regular,
+                }}
+                padding={{
+                    top: 0,
+                    left: 12,
+                    right: theme.padding.regular,
+                    bottom: 0,
+                }}
                 xKey="date"
                 domain={{ y: [0, 114] }}
                 yKeys={["rating", "filteredRatings"]}

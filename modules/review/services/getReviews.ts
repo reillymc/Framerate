@@ -16,7 +16,7 @@ export interface ReviewSummary {
 
 export type GetReviewParams = {
     mediaId?: number;
-    orderBy?: "rating" | "date" | "mediaTitle";
+    orderBy?: "rating" | "date" | "title";
     sort?: "asc" | "desc";
     page?: number;
     pageSize?: number;

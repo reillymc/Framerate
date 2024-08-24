@@ -27,6 +27,8 @@ interface WatchlistSummaryProps {
     watchlistEntries: WatchlistEntrySummary[];
     style?: StyleProp<ViewStyle>;
     onPressEntry: (item: WatchlistEntrySummary) => void;
+    onRemoveFromWatchlist: (item: WatchlistEntrySummary) => void;
+    onAddReview: (item: WatchlistEntrySummary) => void;
     onPress: () => void;
 }
 
@@ -35,6 +37,8 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     style,
     onPressEntry,
     onPress,
+    onAddReview,
+    onRemoveFromWatchlist,
 }) => {
     const { width } = usePosterDimensions({ size: "small" });
 
@@ -91,6 +95,10 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                             key={item.mediaId}
                             scrollValue={scrollValue}
                             onPress={() => onPressEntry(item)}
+                            onAddReview={() => onAddReview(item)}
+                            onRemoveFromWatchlist={() =>
+                                onRemoveFromWatchlist(item)
+                            }
                         />
                     );
                 }}
@@ -118,6 +126,7 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
             paddingBottom: padding.large,
+            paddingTop: padding.tiny,
         },
         placeholderContainer: {
             flex: 1,

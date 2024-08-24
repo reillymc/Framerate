@@ -11,19 +11,28 @@ import {
 import {
     Text,
     type ThemedStyles,
+    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { useMemo } from "react";
+import {
+    ContextMenuView,
+    type MenuConfig,
+    type MenuElementConfig,
+} from "react-native-ios-context-menu";
 import { TmdbImage } from "./tmdbImage";
 
-interface PosterProps {
+export interface PosterProps {
     imageUri?: string;
     heading?: string;
     removeMargin?: boolean;
     style?: StyleProp<ViewStyle>;
     size?: "tiny" | "small" | "medium" | "large";
+    onWatchlist?: boolean;
     onPress?: () => void;
+    onToggleWatchlist?: () => void;
+    onAddReview?: () => void;
 }
 
 export const Poster: React.FC<PosterProps> = ({
@@ -32,7 +41,10 @@ export const Poster: React.FC<PosterProps> = ({
     imageUri,
     removeMargin = false,
     size = "large",
+    onWatchlist,
     onPress,
+    onAddReview,
+    onToggleWatchlist,
 }) => {
     const { height, width, gap } = usePosterDimensions({ size });
 
@@ -42,25 +54,97 @@ export const Poster: React.FC<PosterProps> = ({
         gap,
         removeMargin,
     });
+    const { theme } = useTheme();
+
+    const watchlistAction: MenuElementConfig | undefined = useMemo(() => {
+        if (!onToggleWatchlist) return undefined;
+        return onWatchlist
+            ? {
+                  actionKey: "watchlist-remove",
+                  actionTitle: "Remove from Watchlist",
+                  icon: {
+                      type: "IMAGE_SYSTEM",
+                      imageValue: {
+                          systemName: "eye.slash",
+                      },
+                  },
+              }
+            : {
+                  actionKey: "watchlist-add",
+                  actionTitle: "Add to Watchlist",
+                  icon: {
+                      type: "IMAGE_SYSTEM",
+                      imageValue: {
+                          systemName: "eye",
+                      },
+                  },
+              };
+    }, [onWatchlist, onToggleWatchlist]);
+
     return (
         <Pressable
             onPress={onPress}
             disabled={!onPress}
-            style={[styles.pressableContainer, style]}
+            style={({ pressed }) => [
+                styles.pressableContainer,
+                style,
+                pressed && { backgroundColor: theme.color.background },
+            ]}
         >
             {({ pressed }) => (
                 <>
-                    <TmdbImage
-                        path={imageUri}
-                        type="poster"
-                        style={{
-                            height,
-                            width,
-                            borderRadius:
-                                styles.pressableContainer.borderRadius,
-                            opacity: pressed ? 0.8 : 1,
+                    <ContextMenuView
+                        isContextMenuEnabled={false}
+                        menuConfig={
+                            {
+                                menuTitle: "",
+                                menuItems: [
+                                    onAddReview
+                                        ? {
+                                              actionKey: "review",
+                                              actionTitle: "Add Review",
+                                              icon: {
+                                                  type: "IMAGE_SYSTEM",
+                                                  imageValue: {
+                                                      systemName: "pencil",
+                                                  },
+                                              },
+                                          }
+                                        : undefined,
+                                    watchlistAction,
+                                ].filter(Undefined),
+                            } as MenuConfig
+                        }
+                        onPressMenuItem={({ nativeEvent: { actionKey } }) => {
+                            switch (actionKey) {
+                                case "view":
+                                    onPress?.();
+                                    break;
+                                case "review":
+                                    onAddReview?.();
+                                    break;
+                                case "watchlist-add":
+                                    onToggleWatchlist?.();
+                                    break;
+                                case "watchlist-remove":
+                                    onToggleWatchlist?.();
+                                    break;
+                            }
                         }}
-                    />
+                        style={styles.contextMenu}
+                    >
+                        <TmdbImage
+                            path={imageUri}
+                            type="poster"
+                            style={{
+                                height,
+                                width,
+                                borderRadius:
+                                    styles.pressableContainer.borderRadius,
+                                opacity: pressed ? 0.85 : 1,
+                            }}
+                        />
+                    </ContextMenuView>
                     {!!heading && (
                         <View>
                             <View
@@ -145,7 +229,6 @@ const createStyles = (
             borderRadius: ["small", "tiny"].includes(size)
                 ? border.radius.regular
                 : border.radius.loose,
-            backgroundColor: color.background,
         },
         contentContainer: {
             paddingVertical: padding.small,
@@ -162,5 +245,10 @@ const createStyles = (
         },
         contentItem: {
             flexDirection: "row",
+        },
+        contextMenu: {
+            borderRadius: ["small", "tiny"].includes(size)
+                ? border.radius.regular
+                : border.radius.loose,
         },
     });

@@ -1,7 +1,10 @@
 import { PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useWatchlist } from "@/modules/watchlist";
-import { useWatchlistEntries } from "@/modules/watchlistEntry";
+import {
+    useDeleteWatchlistEntry,
+    useWatchlistEntries,
+} from "@/modules/watchlistEntry";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import {
     Text,
@@ -54,8 +57,8 @@ const Watchlist: FC = () => {
         data: entries = [],
         isLoading,
         refetch,
-        isRefetching,
     } = useWatchlistEntries(mediaType);
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     const sectionData = useMemo(() => {
         const sections = Object.values(
@@ -189,7 +192,7 @@ const Watchlist: FC = () => {
                     stickySectionHeadersEnabled
                     renderItem={({ item, section }) => (
                         <PosterCard
-                            title={item.mediaTitle}
+                            heading={item.mediaTitle}
                             imageUri={item.mediaPosterUri}
                             releaseDate={
                                 item.mediaReleaseDate
@@ -213,6 +216,12 @@ const Watchlist: FC = () => {
                                         mediaTitle: item.mediaTitle,
                                         mediaPosterUri: item.mediaPosterUri,
                                     },
+                                })
+                            }
+                            onRemoveFromWatchlist={() =>
+                                deleteWatchlistEntry({
+                                    mediaId: item.mediaId,
+                                    mediaType,
                                 })
                             }
                             height={ITEM_HEIGHT}

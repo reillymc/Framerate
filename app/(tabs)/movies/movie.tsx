@@ -2,6 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     FlatList,
     Pressable,
+    RefreshControl,
     StyleSheet,
     View,
     useColorScheme,
@@ -56,7 +57,7 @@ const Movie: React.FC = () => {
     const scheme = useColorScheme();
 
     const { data: movie } = useMovie(mediaId);
-
+    const { data: reviews, refetch } = useReviews(mediaId);
     const { data: watchlistEntry } = useWatchlistEntry(
         MediaType.Movie,
         mediaId,
@@ -65,7 +66,6 @@ const Movie: React.FC = () => {
     const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
 
     const router = useRouter();
-    const { data: reviews } = useReviews(mediaId);
     const { theme } = useTheme();
 
     const releaseDate = movie?.releaseDate
@@ -89,15 +89,16 @@ const Movie: React.FC = () => {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
                 scrollIndicatorInsets={{ top: 330, bottom: 50 }}
+                refreshControl={
+                    <RefreshControl refreshing={false} onRefresh={refetch} />
+                }
             >
-                <View style={styles.floatingPosterContainer}>
-                    <Poster
-                        style={styles.floatingPoster}
-                        size="small"
-                        removeMargin
-                        imageUri={movie?.posterPath ?? mediaPosterUri}
-                    />
-                </View>
+                <Poster
+                    style={styles.floatingPoster}
+                    size="small"
+                    removeMargin
+                    imageUri={movie?.posterPath ?? mediaPosterUri}
+                />
                 <View style={styles.floatingTagline}>
                     <Text variant="heading" numberOfLines={3}>
                         {movie?.tagline}
@@ -289,7 +290,7 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             backgroundColor: color.background,
             borderRadius: 16,
         },
-        floatingPosterContainer: {
+        floatingPoster: {
             position: "absolute",
             top: -95,
             left: padding.pageHorizontal + padding.small,
@@ -300,8 +301,6 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             },
             shadowOpacity: 0.5,
             shadowRadius: 5,
-        },
-        floatingPoster: {
             borderRadius: 8,
             overflow: "hidden",
         },

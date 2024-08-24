@@ -1,22 +1,24 @@
 import { Text, useTheme } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import { Pressable, View } from "react-native";
-import { Poster } from "./poster";
+import { Poster, type PosterProps } from "./poster";
 
-interface PosterCardProps {
-    title: string;
+interface PosterCardProps
+    extends Pick<PosterProps, "onAddReview" | "onPress" | "heading"> {
     releaseDate?: string;
     imageUri?: string;
     height?: number;
-    onPress: () => void;
+    onRemoveFromWatchlist?: () => void;
 }
 
 export const PosterCard: FC<PosterCardProps> = ({
-    title,
+    heading,
     releaseDate,
     imageUri,
     height,
     onPress,
+    onAddReview,
+    onRemoveFromWatchlist,
 }) => {
     const { theme } = useTheme();
 
@@ -30,10 +32,16 @@ export const PosterCard: FC<PosterCardProps> = ({
             }}
             onPress={onPress}
         >
-            <Poster imageUri={imageUri} size="tiny" />
+            <Poster
+                imageUri={imageUri}
+                size="tiny"
+                onWatchlist
+                onAddReview={onAddReview}
+                onToggleWatchlist={onRemoveFromWatchlist}
+            />
             <View style={{ flexShrink: 1 }}>
                 <Text variant="heading" numberOfLines={2}>
-                    {title}
+                    {heading}
                 </Text>
                 {releaseDate && <Text variant="body">{releaseDate}</Text>}
             </View>

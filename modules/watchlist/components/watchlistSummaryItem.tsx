@@ -1,8 +1,8 @@
 import { Platform } from "react-native";
 import Animated, {
+    type SharedValue,
     interpolate,
     useAnimatedStyle,
-    type SharedValue,
 } from "react-native-reanimated";
 
 import { Poster, usePosterDimensions } from "@/components/poster";
@@ -14,6 +14,8 @@ export interface WatchListEntrySummaryItemProps {
     index?: number;
     scrollValue?: SharedValue<number>;
     onPress?: () => void;
+    onAddReview?: () => void;
+    onRemoveFromWatchlist?: () => void;
 }
 
 export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
@@ -21,6 +23,8 @@ export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
     index,
     scrollValue,
     onPress,
+    onAddReview,
+    onRemoveFromWatchlist,
 }) => {
     const { width } = usePosterDimensions({ size: "small" });
 
@@ -64,7 +68,10 @@ export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
                 imageUri={item.mediaPosterUri}
                 size="small"
                 removeMargin
+                onWatchlist
                 onPress={onPress}
+                onAddReview={onAddReview}
+                onToggleWatchlist={onRemoveFromWatchlist}
             />
         </Animated.View>
     );
