@@ -301,8 +301,6 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             },
             shadowOpacity: 0.5,
             shadowRadius: 5,
-            borderRadius: 8,
-            overflow: "hidden",
         },
         floatingTagline: {
             left: padding.pageHorizontal + 125,

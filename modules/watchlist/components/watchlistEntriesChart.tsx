@@ -31,7 +31,7 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
 }) => {
     const font = useFont(fonts.dosisSemiBold, 12);
 
-    const { state, isActive } = useChartPressState({
+    const { state } = useChartPressState({
         x: 0,
         y: { count: 0, date: 0 },
     });
@@ -76,11 +76,11 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
     );
 
     useEffect(() => {
-        if (!(isActive && state.x.value.value)) return;
+        if (!state.x.value.value) return;
 
         const date = new Date(state.x.value.value);
         onPressDate?.(date);
-    }, [state.x.value.value, isActive, onPressDate]);
+    }, [state.x.value.value, onPressDate]);
 
     if (!(chartData.length && largestCount)) return null;
 

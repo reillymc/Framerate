@@ -8,29 +8,26 @@ import {
     Icon,
     Text,
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { addMonths, isWithinInterval, subMonths } from "date-fns";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
     type FlatList,
     Pressable,
-    type StyleProp,
     StyleSheet,
-    type ViewStyle,
+    useColorScheme,
 } from "react-native";
 import Animated, {
-    LinearTransition,
     useAnimatedScrollHandler,
     useSharedValue,
-    ZoomInLeft,
-    ZoomOutLeft,
 } from "react-native-reanimated";
 import { WatchListEntrySummaryItem } from "./watchlistSummaryItem";
 
 interface WatchlistSummaryProps {
     watchlistEntries: WatchlistEntrySummary[];
-    style?: StyleProp<ViewStyle>;
     onPressEntry: (item: WatchlistEntrySummary) => void;
     onRemoveFromWatchlist: (item: WatchlistEntrySummary) => void;
     onAddReview: (item: WatchlistEntrySummary) => void;
@@ -39,7 +36,6 @@ interface WatchlistSummaryProps {
 
 export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     watchlistEntries,
-    style,
     onPressEntry,
     onPress,
     onAddReview,
@@ -50,10 +46,12 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     const scrollValue = useSharedValue(0);
     const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<FlatList | null>(null);
+    const { theme } = useTheme();
 
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollValue.value = event.contentOffset.x;
     });
+    const scheme = useColorScheme();
 
     const filteredItems = useMemo(
         () =>
@@ -128,12 +126,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
         });
 
     return (
-        <Animated.View
-            entering={ZoomInLeft.springify().mass(0.55)}
-            exiting={ZoomOutLeft.springify().mass(0.55)}
-            layout={LinearTransition}
-            style={style}
-        >
+        <>
             <AnimatedFlatList
                 ref={listRef}
                 data={filteredItems}
@@ -181,7 +174,30 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                 }
                 scrollEnabled={filteredItems.length > 0}
             />
-        </Animated.View>
+            <Canvas
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    top: 0,
+                    right: 0,
+                    height,
+                    width: 16,
+                }}
+            >
+                <Rect x={0} y={0} width={16} height={height}>
+                    <LinearGradient
+                        start={vec(0, 0)}
+                        end={vec(12, 0)}
+                        colors={[
+                            scheme === "light"
+                                ? `${theme.color.background}00`
+                                : "transparent",
+                            theme.color.background,
+                        ]}
+                    />
+                </Rect>
+            </Canvas>
+        </>
     );
 };
 

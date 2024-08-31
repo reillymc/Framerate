@@ -1,1 +1,6 @@
-export { useMovie, usePopularMovies, useSearchMovies } from "./hooks";
+export {
+    useMovie,
+    usePopularMovies,
+    useSearchMovies,
+    useRecentSearches,
+} from "./hooks";

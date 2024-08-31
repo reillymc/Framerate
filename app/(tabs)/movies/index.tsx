@@ -1,7 +1,11 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { MediaType } from "@/constants/mediaTypes";
-import { usePopularMovies, useSearchMovies } from "@/modules/movie";
+import {
+    usePopularMovies,
+    useRecentSearches,
+    useSearchMovies,
+} from "@/modules/movie";
 import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import {
@@ -12,6 +16,8 @@ import {
 import {
     IconAction,
     IconActionV2,
+    SwipeAction,
+    SwipeView,
     Text,
     type ThemedStyles,
     Undefined,
@@ -19,10 +25,16 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
-import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { type FC, useCallback, useMemo, useRef, useState } from "react";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import Animated, {
+    LinearTransition,
+    ZoomInLeft,
+    ZoomOutLeft,
+} from "react-native-reanimated";
+import type { SearchBarCommands } from "react-native-screens";
 
-export default function HomeScreen() {
+const HomeScreen: FC = () => {
     const { data: reviews } = useInfiniteReviews({ page: 1 });
 
     const styles = useThemedStyles(createStyles, {});
@@ -31,12 +43,15 @@ export default function HomeScreen() {
         size: "large",
     });
 
+    const searchRef = useRef<SearchBarCommands>(null);
     const [searchValue, setSearchValue] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
     const { data: results } = useSearchMovies(searchValue);
     const { data: popularMovies } = usePopularMovies();
     const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
     const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
 
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
@@ -54,6 +69,18 @@ export default function HomeScreen() {
         );
     }, [popularMovies, watchlistEntries, reviewList]);
 
+    const handlePressDate = useCallback(
+        (date: Date) =>
+            router.navigate({
+                pathname: "/movies/watchlist",
+                params: {
+                    mediaType: MediaType.Movie,
+                    date: date.toISOString(),
+                },
+            }),
+        [],
+    );
+
     return (
         <>
             <Stack.Screen
@@ -66,6 +93,11 @@ export default function HomeScreen() {
                         hideWhenScrolling: false,
                         barTintColor: theme.color.inputBackground,
                         tintColor: theme.color.primary,
+                        onFocus: () => setIsSearching(true),
+                        onCancelButtonPress: () => setIsSearching(false),
+                        ref: searchRef,
+                        onSearchButtonPress: ({ nativeEvent }) =>
+                            addSearch({ searchValue: nativeEvent.text }),
                     },
                     headerRight: () => (
                         <IconActionV2
@@ -77,9 +109,10 @@ export default function HomeScreen() {
                     ),
                 }}
             />
-            {searchValue ? (
+            {isSearching && !!searchValue && (
                 <FlatList
                     data={results}
+                    contentContainerStyle={styles.searchList}
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => {
                         const onWatchlist = watchlistEntries.some(
@@ -98,7 +131,7 @@ export default function HomeScreen() {
                                 }
                                 imageUri={item.posterPath}
                                 onWatchlist={onWatchlist}
-                                onPress={() =>
+                                onPress={() => {
                                     router.push({
                                         pathname: "/movies/movie",
                                         params: {
@@ -106,8 +139,9 @@ export default function HomeScreen() {
                                             mediaTitle: item.title,
                                             mediaPosterUri: item.posterPath,
                                         },
-                                    })
-                                }
+                                    });
+                                    addSearch({ searchValue: item.title });
+                                }}
                                 onAddReview={() =>
                                     router.push({
                                         pathname: "/movies/editReview",
@@ -136,7 +170,48 @@ export default function HomeScreen() {
                     contentInsetAdjustmentBehavior="always"
                     keyboardShouldPersistTaps="handled"
                 />
-            ) : (
+            )}
+            {isSearching && !searchValue && (
+                <FlatList
+                    data={recentSearches}
+                    contentContainerStyle={styles.searchList}
+                    keyboardDismissMode="on-drag"
+                    renderItem={({ item, index }) => (
+                        <SwipeView
+                            rightActions={[
+                                <SwipeAction
+                                    key="delete"
+                                    variant="destructive"
+                                    iconName="close"
+                                    onPress={() => deleteSearch(index)}
+                                />,
+                            ]}
+                        >
+                            <Pressable
+                                onPress={() => {
+                                    searchRef.current?.setText(
+                                        item.searchValue,
+                                    );
+                                    setSearchValue(item.searchValue);
+                                    addSearch(item);
+                                }}
+                                style={[
+                                    styles.searchSuggestion,
+                                    index === recentSearches.length - 1 && {
+                                        borderBottomWidth: 0,
+                                    },
+                                ]}
+                            >
+                                <Text>{item.searchValue}</Text>
+                            </Pressable>
+                        </SwipeView>
+                    )}
+                    keyExtractor={(item) => item.searchValue}
+                    contentInsetAdjustmentBehavior="always"
+                    keyboardShouldPersistTaps="handled"
+                />
+            )}
+            {!isSearching && (
                 <FlatList
                     contentInsetAdjustmentBehavior="automatic"
                     ListHeaderComponent={
@@ -152,65 +227,63 @@ export default function HomeScreen() {
                                 }
                             />
                             <View style={styles.watchlistSectionContainer}>
-                                <WatchlistSummary
-                                    watchlistEntries={watchlistEntries}
+                                <Animated.View
+                                    entering={ZoomInLeft.springify().mass(0.55)}
+                                    exiting={ZoomOutLeft.springify().mass(0.55)}
+                                    layout={LinearTransition}
                                     style={styles.watchlistSectionItem}
-                                    onPressEntry={(item) =>
-                                        router.push({
-                                            pathname: "/movies/movie",
-                                            params: {
-                                                mediaId: item.mediaId,
-                                                mediaTitle: item.mediaTitle,
-                                                mediaPosterUri:
-                                                    item.mediaPosterUri,
-                                            },
-                                        })
-                                    }
-                                    onPress={(destination) =>
-                                        router.navigate({
-                                            pathname: "/movies/watchlist",
-                                            params: {
-                                                mediaType: MediaType.Movie,
-                                                destination,
-                                            },
-                                        })
-                                    }
-                                    onAddReview={({
-                                        mediaId,
-                                        mediaTitle,
-                                        mediaPosterUri,
-                                    }) =>
-                                        router.push({
-                                            pathname: "/movies/editReview",
-                                            params: {
-                                                mediaId,
-                                                mediaTitle,
-                                                mediaPosterUri,
-                                            },
-                                        })
-                                    }
-                                    onRemoveFromWatchlist={({ mediaId }) =>
-                                        deleteWatchlistEntry({
+                                >
+                                    <WatchlistSummary
+                                        watchlistEntries={watchlistEntries}
+                                        onPressEntry={(item) =>
+                                            router.push({
+                                                pathname: "/movies/movie",
+                                                params: {
+                                                    mediaId: item.mediaId,
+                                                    mediaTitle: item.mediaTitle,
+                                                    mediaPosterUri:
+                                                        item.mediaPosterUri,
+                                                },
+                                            })
+                                        }
+                                        onPress={(destination) =>
+                                            router.navigate({
+                                                pathname: "/movies/watchlist",
+                                                params: {
+                                                    mediaType: MediaType.Movie,
+                                                    destination,
+                                                },
+                                            })
+                                        }
+                                        onAddReview={({
                                             mediaId,
-                                            mediaType: "movie",
-                                        })
-                                    }
-                                />
+                                            mediaTitle,
+                                            mediaPosterUri,
+                                        }) =>
+                                            router.push({
+                                                pathname: "/movies/editReview",
+                                                params: {
+                                                    mediaId,
+                                                    mediaTitle,
+                                                    mediaPosterUri,
+                                                },
+                                            })
+                                        }
+                                        onRemoveFromWatchlist={({ mediaId }) =>
+                                            deleteWatchlistEntry({
+                                                mediaId,
+                                                mediaType: "movie",
+                                            })
+                                        }
+                                    />
+                                </Animated.View>
                                 <WatchlistEntriesChart
                                     style={[
                                         styles.watchlistSectionItem,
                                         styles.watchlistChart,
                                     ]}
                                     entries={watchlistEntries}
-                                    onPressDate={(date) =>
-                                        router.navigate({
-                                            pathname: "/movies/watchlist",
-                                            params: {
-                                                mediaType: MediaType.Movie,
-                                                date: date.toISOString(),
-                                            },
-                                        })
-                                    }
+                                    onPressDate={handlePressDate}
                                 />
                             </View>
                             <SectionHeading
@@ -356,9 +429,11 @@ export default function HomeScreen() {
             )}
         </>
     );
-}
+};
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+export default HomeScreen;
+
+const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
     StyleSheet.create({
         pageElement: {
             paddingHorizontal: padding.pageHorizontal,
@@ -387,5 +462,15 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         reviewsEmptyMessage: {
             paddingHorizontal: padding.pageHorizontal,
             marginBottom: 64,
+        },
+        searchList: {
+            paddingTop: padding.small,
+        },
+        searchSuggestion: {
+            marginLeft: padding.pageHorizontal,
+            paddingVertical: padding.regular,
+            borderBottomWidth: 1,
+            borderBottomColor: `${color.border}44`,
+            backgroundColor: color.background,
         },
     });
