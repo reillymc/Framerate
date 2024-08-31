@@ -3,6 +3,9 @@
     "organizeImports": {
         "enabled": true
     },
+    "files": {
+        "ignore": ["*.d.ts", ".expo"]
+    },
     "formatter": {
         "enabled": true,
         "indentStyle": "space",
@@ -19,39 +22,22 @@
                         "maxAllowedComplexity": 15
                     }
                 },
-                "useSimplifiedLogicExpression": {
-                    "level": "warn"
-                }
+                "useSimplifiedLogicExpression": "warn"
             },
             "correctness": {
-                "useHookAtTopLevel": {
-                    "level": "error"
-                },
-                "noConstantMathMinMaxClamp": {
-                    "level": "warn"
-                },
-                "noUnusedImports": {
-                    "level": "warn"
-                }
+                "useHookAtTopLevel": "error",
+                "noConstantMathMinMaxClamp": "warn",
+                "noUnusedImports": "warn",
+                "noUnusedVariables": "warn"
             },
             "performance": {
-                "noReExportAll": {
-                    "level": "warn"
-                }
+                "noReExportAll": "warn"
             },
             "style": {
-                "noNamespaceImport": {
-                    "level": "warn"
-                },
-                "noNegationElse": {
-                    "level": "warn"
-                },
-                "useCollapsedElseIf": {
-                    "level": "warn"
-                },
-                "useFragmentSyntax": {
-                    "level": "warn"
-                },
+                "noNamespaceImport": "warn",
+                "noNegationElse": "warn",
+                "useCollapsedElseIf": "warn",
+                "useFragmentSyntax": "warn",
                 "useNamingConvention": {
                     "level": "warn",
                     "options": {
@@ -59,22 +45,13 @@
                         "requireAscii": true
                     }
                 },
-                "noDefaultExport": {
-                    "level": "warn"
-                }
+                "noDefaultExport": "warn"
             },
             "suspicious": {
-                "useAwait": {
-                    "level": "warn"
-                },
-                "noEmptyBlockStatements": {
-                    "level": "warn"
-                }
+                "useAwait": "warn",
+                "noEmptyBlockStatements": "warn"
             }
         }
-    },
-    "files": {
-        "ignore": ["*.d.ts", ".expo"]
     },
     "overrides": [
         {

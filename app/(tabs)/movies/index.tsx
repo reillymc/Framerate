@@ -38,21 +38,21 @@ export default function HomeScreen() {
     const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
-    const filteredPopularMovies = useMemo(
-        () =>
-            popularMovies?.filter(
-                (movie) =>
-                    !watchlistEntries?.some(
-                        ({ mediaId }) => mediaId === movie.id,
-                    ),
-            ),
-        [popularMovies, watchlistEntries],
-    );
-
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
         [reviews],
     );
+
+    const filteredPopularMovies = useMemo(() => {
+        const excludedMediaIds = [
+            ...watchlistEntries.map(({ mediaId }) => mediaId),
+            ...reviewList.map(({ mediaId }) => mediaId),
+        ];
+
+        return popularMovies?.filter(
+            ({ id }) => !excludedMediaIds.includes(id),
+        );
+    }, [popularMovies, watchlistEntries, reviewList]);
 
     return (
         <>
@@ -166,11 +166,12 @@ export default function HomeScreen() {
                                             },
                                         })
                                     }
-                                    onPress={() =>
+                                    onPress={(destination) =>
                                         router.navigate({
                                             pathname: "/movies/watchlist",
                                             params: {
                                                 mediaType: MediaType.Movie,
+                                                destination,
                                             },
                                         })
                                     }

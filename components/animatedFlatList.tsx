@@ -49,13 +49,10 @@ export interface AnimatedFlatListProps<ItemT> extends FlatListProps<ItemT> {
     cellStyle?: (props: CellRendererProps<ItemT>) => StyleProps;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-type AnimatedFlatListFc<T = any> = React.FC<AnimatedFlatListProps<T>>;
-
 /**
  * Custom implementation of Animated.FlatList which supports CellRendererComponent styling.
  */
-export const AnimatedFlatList: AnimatedFlatListFc = forwardRef(
+export const AnimatedFlatList = forwardRef(
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     (props: AnimatedFlatListProps<any>, ref: ForwardedRef<FlatList>) => {
         const {

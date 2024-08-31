@@ -1,6 +1,6 @@
 import { PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
-import { useWatchlist } from "@/modules/watchlist";
+import { getGroupedEntries, useWatchlist } from "@/modules/watchlist";
 import {
     useDeleteWatchlistEntry,
     useWatchlistEntries,
@@ -9,10 +9,8 @@ import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import {
     Text,
     type ThemedStyles,
-    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { lastDayOfMonth, subMonths } from "date-fns";
 import { BlurView } from "expo-blur";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef } from "react";
@@ -29,26 +27,23 @@ const buildGetItemLayout = getItemLayout<WatchlistEntrySummary>({
     getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
 });
 
-type WatchlistSection = {
-    showMonth: boolean;
-    yearTitle?: string;
-    data: WatchlistEntrySummary[];
-    date: Date;
-};
-
 const now = new Date();
 
 const Watchlist: FC = () => {
-    const { mediaType, date: rawDate } = useLocalSearchParams<{
+    const {
+        mediaType,
+        date: rawDate,
+        destination,
+    } = useLocalSearchParams<{
         mediaType: string;
         date?: string;
+        destination?: "older";
     }>();
 
     const date = rawDate ? new Date(rawDate) : undefined;
 
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
-    const { theme } = useTheme();
     const listRef = useRef<SectionList<WatchlistEntrySummary> | null>(null);
     const scheme = useColorScheme();
 
@@ -60,81 +55,27 @@ const Watchlist: FC = () => {
     } = useWatchlistEntries(mediaType);
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
-    const sectionData = useMemo(() => {
-        const sections = Object.values(
-            entries.reduce<Record<string, WatchlistSection>>((acc, entry) => {
-                const date = new Date(entry.mediaReleaseDate ?? 0);
-                const month = date.toLocaleString("default", { month: "long" });
-                const year = date.getFullYear();
-                const key = `${month} ${year}`;
-
-                const olderCutOff = subMonths(now, 3);
-
-                if (date < olderCutOff) {
-                    if (acc.Older) {
-                        acc.Older.data.push(entry);
-                    } else {
-                        acc.Older = {
-                            yearTitle: "Older",
-                            showMonth: false,
-                            data: [entry],
-                            date: subMonths(new Date(), 1),
-                        };
-                    }
-                } else if (acc[key]) {
-                    acc[key].data.push(entry);
-                } else {
-                    acc[key] = {
-                        showMonth: true,
-                        yearTitle: year.toString(),
-                        date: new Date(
-                            year,
-                            date.getMonth(),
-                            lastDayOfMonth(date).getDate(),
-                        ),
-                        data: [entry],
-                    };
-                }
-
-                return acc;
-            }, {}),
-        );
-
-        const uniqueSections: WatchlistSection[] = [];
-        const processedYears = new Set<string>();
-
-        for (const section of sections) {
-            if (section.yearTitle) {
-                if (processedYears.has(section.yearTitle)) {
-                    const { yearTitle, ...rest } = section;
-                    uniqueSections.push(rest);
-                } else {
-                    processedYears.add(section.yearTitle);
-                    uniqueSections.push(section);
-                }
-            } else if (section.yearTitle === "Older") {
-                uniqueSections.push(section);
-            }
-        }
-
-        return uniqueSections;
-    }, [entries]);
+    const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!listRef.current) return;
 
-        const closest = sectionData
-            .toReversed()
-            .find((section) => section.date >= (date ?? now));
+        const sectionCount = sectionData.length - 1;
 
-        if (!closest) return;
+        const closest =
+            destination === "older"
+                ? sectionCount
+                : sectionCount -
+                  sectionData
+                      .toReversed()
+                      .findIndex((section) => section.date >= (date ?? now));
 
         listRef.current.scrollToLocation({
             animated: false,
-            sectionIndex: sectionData.indexOf(closest),
+            sectionIndex: closest > sectionCount ? 0 : closest,
             itemIndex: 0,
         });
-    }, [sectionData, date]);
+    }, [sectionData, date, destination]);
 
     return (
         <>
@@ -167,26 +108,12 @@ const Watchlist: FC = () => {
                                     ? "systemMaterialLight"
                                     : "systemMaterialDark"
                             }
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "flex-end",
-                                height: SECTION_HEADER_HEIGHT,
-                                paddingHorizontal: theme.padding.pageHorizontal,
-                                borderBottomWidth: 1,
-                                borderBottomColor: theme.color.border,
-                            }}
+                            style={styles.headerContainer}
                         >
-                            <Text
-                                variant="title"
-                                style={{ paddingTop: theme.padding.small }}
-                            >
-                                {section.showMonth &&
-                                    section.date.toLocaleString("default", {
-                                        month: "long",
-                                    })}
+                            <Text variant="title">{section.monthTitle}</Text>
+                            <Text variant="display" style={styles.yearHeading}>
+                                {section.yearTitle}
                             </Text>
-                            <Text variant="display">{section.yearTitle}</Text>
                         </BlurView>
                     )}
                     stickySectionHeadersEnabled
@@ -207,7 +134,7 @@ const Watchlist: FC = () => {
                                                   ? "numeric"
                                                   : undefined,
                                       })
-                                    : undefined
+                                    : "Unknown"
                             }
                             onPress={() =>
                                 router.push({
@@ -246,6 +173,18 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         container: {
             paddingBottom: padding.large,
             backgroundColor: color.background,
+        },
+        headerContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            height: SECTION_HEADER_HEIGHT,
+            paddingHorizontal: padding.pageHorizontal,
+            borderBottomWidth: 1,
+            borderBottomColor: color.border,
+        },
+        yearHeading: {
+            paddingBottom: 2,
         },
     });
 

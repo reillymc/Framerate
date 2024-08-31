@@ -1,5 +1,8 @@
 import { Platform } from "react-native";
 import Animated, {
+    FadeIn,
+    FadeOut,
+    LinearTransition,
     type SharedValue,
     interpolate,
     useAnimatedStyle,
@@ -9,8 +12,8 @@ import { Poster, usePosterDimensions } from "@/components/poster";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import type { FC } from "react";
 
-export interface WatchListEntrySummaryItemProps {
-    item: Partial<WatchlistEntrySummary>;
+export interface WatchListEntrySummaryItemProps
+    extends Pick<WatchlistEntrySummary, "mediaPosterUri"> {
     index?: number;
     scrollValue?: SharedValue<number>;
     onPress?: () => void;
@@ -19,7 +22,7 @@ export interface WatchListEntrySummaryItemProps {
 }
 
 export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
-    item,
+    mediaPosterUri,
     index,
     scrollValue,
     onPress,
@@ -47,13 +50,18 @@ export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
                 getOffset(index),
                 getOffset(index + 1),
             ],
-            [-560, -180, -85, 0, -10],
+            [-500, -180, -85, 0, -10],
         );
 
         const scale = interpolate(
             scrollValue.value,
-            [getOffset(index - 1), getOffset(index), getOffset(index + 1)],
-            [0.85, 1, 0.92],
+            [
+                getOffset(index - 10),
+                getOffset(index - 1),
+                getOffset(index),
+                getOffset(index + 1),
+            ],
+            [0, 0.85, 1, 0.92],
         );
 
         return {
@@ -63,9 +71,14 @@ export const WatchListEntrySummaryItem: FC<WatchListEntrySummaryItemProps> = ({
     });
 
     return (
-        <Animated.View key={item.mediaId} style={animatedStyle}>
+        <Animated.View
+            style={animatedStyle}
+            entering={FadeIn.springify().mass(0.55)}
+            exiting={FadeOut.springify().mass(0.55)}
+            layout={LinearTransition}
+        >
             <Poster
-                imageUri={item.mediaPosterUri}
+                imageUri={mediaPosterUri}
                 size="small"
                 removeMargin
                 onWatchlist

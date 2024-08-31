@@ -3,6 +3,7 @@ import {
     type DeleteWatchlistEntryParams,
     WatchlistEntriesService,
     type WatchlistEntryDetails,
+    type WatchlistEntrySummary,
 } from "../services";
 import { WatchlistEntryKeys } from "./keys";
 
@@ -13,7 +14,10 @@ export const useDeleteWatchlistEntry = () => {
         Awaited<null>,
         unknown,
         DeleteWatchlistEntryParams,
-        { previousEntry?: WatchlistEntryDetails }
+        {
+            previousEntries?: WatchlistEntrySummary[];
+            previousEntry?: WatchlistEntryDetails;
+        }
     >({
         mutationKey: WatchlistEntryKeys.mutate,
         mutationFn: WatchlistEntriesService.deleteWatchlistEntry,
@@ -24,6 +28,10 @@ export const useDeleteWatchlistEntry = () => {
         },
         onMutate: (params) => {
             // Snapshot the previous value
+            const previousEntries = queryClient.getQueryData<
+                WatchlistEntrySummary[]
+            >(WatchlistEntryKeys.listEntries(params.mediaType));
+
             const previousEntry =
                 queryClient.getQueryData<WatchlistEntryDetails>(
                     WatchlistEntryKeys.listEntry(
@@ -34,16 +42,28 @@ export const useDeleteWatchlistEntry = () => {
 
             // Optimistically delete the entry
             queryClient.setQueryData(
+                WatchlistEntryKeys.listEntries(params.mediaType),
+                previousEntries?.filter(
+                    ({ mediaId }) => mediaId !== params.mediaId,
+                ),
+            );
+
+            queryClient.setQueryData(
                 WatchlistEntryKeys.listEntry(params.mediaType, params.mediaId),
                 null,
             );
 
             // Return snapshot so we can rollback in case of failure
-            return { previousEntry };
+            return { previousEntries, previousEntry };
         },
         onError: (error, params, context) => {
             console.warn(error);
             if (!context) return;
+
+            queryClient.setQueryData<WatchlistEntrySummary[]>(
+                WatchlistEntryKeys.listEntries(params.mediaType),
+                context.previousEntries,
+            );
 
             queryClient.setQueryData<WatchlistEntryDetails>(
                 WatchlistEntryKeys.listEntry(params.mediaType, params.mediaId),

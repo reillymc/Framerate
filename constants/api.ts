@@ -55,7 +55,7 @@ export const FRAMERATE_API = {
         }),
         getReview: (id: string) => ({
             method: "GET",
-            endpoint: `reviews/${id}`,
+            endpoint: `reviews/review/${id}`,
         }),
         saveReview: (reviewId?: string) => ({
             method: reviewId ? "PUT" : "POST",
