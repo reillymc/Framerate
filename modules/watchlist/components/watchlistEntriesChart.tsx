@@ -12,6 +12,10 @@ import {
 import { type FC, useEffect, useMemo } from "react";
 import { type StyleProp, View, type ViewStyle } from "react-native";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
+import { WatchlistConstants } from "../constants";
+
+const totalMonthCount =
+    WatchlistConstants.monthsBack + WatchlistConstants.monthsAhead + 1;
 
 interface ChartData extends Record<string, unknown> {
     date: number;
@@ -38,7 +42,9 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
     const { theme } = useTheme();
 
     const chartData: ChartData[] = useMemo(() => {
-        const now = subMonths(new Date(), 1);
+        const firstMonth = startOfMonth(
+            subMonths(new Date(), WatchlistConstants.monthsBack),
+        );
 
         const transformedEntries = [...(entries ?? [])].map((review) => ({
             ...review,
@@ -47,18 +53,18 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
                 : undefined,
         }));
 
-        const months = Array.from({ length: 6 }).map((_, i) =>
-            addMonths(now, i),
-        );
+        const months = Array.from({
+            length: totalMonthCount,
+        }).map((_, i) => addMonths(firstMonth, i));
 
         const data = months.map((month) => {
             const monthStart = startOfMonth(month).getTime();
             const monthEnd = endOfMonth(month).getTime();
             const monthEntries = transformedEntries.filter(
-                (entry) =>
-                    entry.date &&
-                    entry.date.getTime() <= monthEnd &&
-                    entry.date.getTime() > monthStart,
+                ({ date }) =>
+                    date &&
+                    date.getTime() <= monthEnd &&
+                    date.getTime() > monthStart,
             );
 
             return {
@@ -71,14 +77,14 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
     }, [entries]);
 
     const largestCount = useMemo(
-        () => Math.max(...chartData.map((d) => d.count)),
+        () => Math.max(...chartData.map(({ count }) => count)),
         [chartData],
     );
 
     useEffect(() => {
         if (!state.x.value.value) return;
 
-        const date = new Date(state.x.value.value);
+        const date = addDays(new Date(state.x.value.value), 1);
         onPressDate?.(date);
     }, [state.x.value.value, onPressDate]);
 
@@ -107,20 +113,21 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
                     // biome-ignore lint/style/useNamingConvention: <explanation>
                     formatXLabel: (value) => {
                         if (!value) return "";
-                        const date = new Date(value);
-
-                        return addDays(date, 1).toLocaleString("default", {
+                        return new Date(value).toLocaleString("default", {
                             month: "short",
                         });
                     },
                     tickValues: {
-                        x: chartData.map((d) => d.date),
+                        x: chartData.map(({ date }) => date),
                         y: [0, largestCount],
                     },
                     labelOffset: 10,
                     lineColor: "transparent",
                 }}
-                domainPadding={{ left: 18, right: 18 }}
+                domainPadding={{
+                    left: theme.padding.regular,
+                    right: theme.padding.regular,
+                }}
                 xKey="date"
                 yKeys={["count"]}
             >
@@ -129,21 +136,23 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
                         points={points.count}
                         chartBounds={chartBounds}
                         color={theme.color.primary}
-                        opacity={0.75}
+                        opacity={0.7}
                         animate={{ type: "spring" }}
+                        barCount={totalMonthCount}
+                        innerPadding={0.1}
                         blendMode="color"
                         roundedCorners={{
-                            topLeft: 16,
-                            topRight: 16,
-                            bottomLeft: 16,
-                            bottomRight: 16,
+                            topLeft: theme.border.radius.loose,
+                            topRight: theme.border.radius.loose,
+                            bottomLeft: theme.border.radius.loose,
+                            bottomRight: theme.border.radius.loose,
                         }}
                     >
                         <LinearGradient
                             start={vec(0, chartBounds.bottom - chartBounds.top)}
                             end={vec(0, 0)}
                             colors={[
-                                `${theme.color.primaryHighlight}`,
+                                theme.color.primaryHighlight,
                                 theme.color.primary,
                             ]}
                         />

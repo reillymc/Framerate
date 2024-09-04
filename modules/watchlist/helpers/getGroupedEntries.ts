@@ -1,5 +1,6 @@
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
-import { addYears, lastDayOfMonth, subMonths } from "date-fns";
+import { addYears, lastDayOfMonth, startOfMonth, subMonths } from "date-fns";
+import { WatchlistConstants } from "../constants";
 
 type GroupedWatchlistEntries = {
     monthTitle?: string;
@@ -19,7 +20,10 @@ export const getGroupedEntries = (entries: WatchlistEntrySummary[]) => {
                 const year = date.getFullYear();
                 const key = `${month} ${year}`;
 
-                const olderCutOff = subMonths(now, 3);
+                const olderCutOff = startOfMonth(
+                    subMonths(now, WatchlistConstants.monthsBack),
+                );
+
                 if (!entry.mediaReleaseDate) {
                     if (acc.Future) {
                         acc.Future.data.push(entry);
@@ -37,7 +41,7 @@ export const getGroupedEntries = (entries: WatchlistEntrySummary[]) => {
                         acc.Older = {
                             yearTitle: "Older",
                             data: [entry],
-                            date: subMonths(new Date(), 3),
+                            date: olderCutOff,
                         };
                     }
                 } else if (acc[key]) {

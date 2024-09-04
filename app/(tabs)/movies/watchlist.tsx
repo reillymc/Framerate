@@ -58,7 +58,7 @@ const Watchlist: FC = () => {
     const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
 
     const scrollToCurrentSection = useCallback(() => {
-        if (!listRef.current) return;
+        if (!(listRef.current && sectionData.length)) return;
 
         const sectionCount = sectionData.length - 1;
 

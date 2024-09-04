@@ -12,7 +12,13 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
-import { addMonths, isWithinInterval, subMonths } from "date-fns";
+import {
+    addMonths,
+    endOfMonth,
+    isWithinInterval,
+    startOfMonth,
+    subMonths,
+} from "date-fns";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
     type FlatList,
@@ -24,6 +30,7 @@ import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
 } from "react-native-reanimated";
+import { WatchlistConstants } from "../constants";
 import { WatchListEntrySummaryItem } from "./watchlistSummaryItem";
 
 interface WatchlistSummaryProps {
@@ -53,23 +60,29 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     });
     const scheme = useColorScheme();
 
-    const filteredItems = useMemo(
-        () =>
-            watchlistEntries.filter(
-                (item) =>
-                    item.mediaReleaseDate &&
-                    isWithinInterval(new Date(item.mediaReleaseDate), {
-                        start: subMonths(new Date(), 2),
-                        end: addMonths(new Date(), 4),
-                    }),
+    const filteredItems = useMemo(() => {
+        const entriesInterval = {
+            start: startOfMonth(
+                subMonths(new Date(), WatchlistConstants.monthsBack),
             ),
-        [watchlistEntries],
-    );
+            end: endOfMonth(
+                addMonths(new Date(), WatchlistConstants.monthsAhead),
+            ),
+        };
 
-    const now = new Date();
+        return watchlistEntries.filter(
+            (item) =>
+                item.mediaReleaseDate &&
+                isWithinInterval(
+                    new Date(item.mediaReleaseDate),
+                    entriesInterval,
+                ),
+        );
+    }, [watchlistEntries]);
 
     const scrollToCurrentSection = useCallback(() => {
-        if (!listRef.current) return;
+        if (!(listRef.current && filteredItems.length)) return;
+        const now = new Date();
 
         const closest = filteredItems
             .toReversed()
@@ -85,7 +98,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
             animated: false,
             index: Math.max(0, index),
         });
-    }, [filteredItems, now]);
+    }, [filteredItems]);
 
     const keyExtractor: AnimatedFlatListProps<WatchlistEntrySummary>["keyExtractor"] =
         (item) => item.mediaId.toString();
