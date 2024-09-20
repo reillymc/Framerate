@@ -28,5 +28,6 @@ export const getWatchlistEntry: GetWatchlistEntry = ({
 }) =>
     ExecuteRequest(
         FRAMERATE_API.watchlistEntries.getWatchlistEntry(mediaType, mediaId),
-        { session },
+        // It is expected that a 404 error will be returned if the entry does not exist
+        { session, silenceWarnings: [404] },
     );

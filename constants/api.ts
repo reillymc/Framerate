@@ -26,7 +26,7 @@ export type FramerateService<
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention
     // biome-ignore lint/complexity/noBannedTypes: Default value
     TRequest extends Record<string, string | number | object> = {},
-> = (params: BaseRequestParams & TRequest) => Promise<TResponse | undefined>;
+> = (params: BaseRequestParams & TRequest) => Promise<TResponse | null>;
 
 const recordToParams = (record?: Record<string, string | number>) => {
     if (!record) return "";

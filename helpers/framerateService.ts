@@ -6,13 +6,14 @@ const LOG_CALLS = process.env.EXPO_PUBLIC_LOG_CALLS;
 type RequestOptions = {
     session: string | null;
     body?: Record<string, unknown>;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    silenceWarnings?: [404];
+    // biome-ignore lint/suspicious/noExplicitAny: unknown value
     processor?: (data: any) => any;
 };
 
 export const ExecuteRequest = async (
     { method, endpoint }: ApiDefinition,
-    { session, body, processor }: RequestOptions,
+    { session, body, silenceWarnings, processor }: RequestOptions,
 ) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 3000);
@@ -23,7 +24,7 @@ export const ExecuteRequest = async (
         headers: {
             "Content-Type": "application/json",
             accept: "application/json",
-            // biome-ignore lint/style/useNamingConvention: <explanation>
+            // biome-ignore lint/style/useNamingConvention: unknown value
             ...(session ? { Authorization: `Bearer ${session}` } : {}),
         },
         signal: controller.signal,
@@ -41,11 +42,15 @@ export const ExecuteRequest = async (
         try {
             const { message } = (await response.json()) as FramerateResponse;
 
+            if ((silenceWarnings as number[])?.includes(response.status)) {
+                return null;
+            }
+
             console.warn(message);
         } catch {
             console.warn("Network response was not ok");
         }
-        return;
+        return null;
     }
 
     try {
@@ -58,4 +63,5 @@ export const ExecuteRequest = async (
     } catch {
         console.warn("Response object was not ok");
     }
+    return null;
 };
