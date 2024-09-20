@@ -1,9 +1,8 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface ReviewSummary {
+export type ReviewSummary = {
     reviewId: string;
-    userId: string;
     mediaId: number;
     mediaTitle: string;
     mediaType: string;
@@ -12,9 +11,9 @@ export interface ReviewSummary {
     date?: string;
     rating: number;
     reviewDescription?: string;
-}
+};
 
-export type GetReviewParams = {
+export type GetReviewsRequest = {
     mediaId?: number;
     orderBy?: "rating" | "date" | "mediaTitle" | "mediaReleaseDate";
     sort?: "asc" | "desc";
@@ -26,9 +25,9 @@ export type GetReviewParams = {
     withCompany?: string;
 };
 
-type GetReviews = (
-    params: GetReviewParams,
-) => Promise<ReviewSummary[] | undefined>;
+type GetReviews = FramerateService<ReviewSummary[], GetReviewsRequest>;
 
-export const getReviews: GetReviews = async ({ mediaId, ...params }) =>
-    ExecuteRequest(FRAMERATE_API.reviews.getReviews(mediaId, params));
+export const getReviews: GetReviews = async ({ mediaId, session, ...params }) =>
+    ExecuteRequest(FRAMERATE_API.reviews.getReviews(mediaId, params), {
+        session,
+    });

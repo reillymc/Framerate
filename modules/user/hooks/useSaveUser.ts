@@ -1,6 +1,8 @@
+import { useSession } from "@/modules/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    type SaveUserParams,
+    type SaveUserRequest,
+    type SaveUserResponse,
     type UserDetails,
     type UserSummary,
     UsersService,
@@ -9,15 +11,16 @@ import { UserKeys } from "./keys";
 
 export const useSaveUser = () => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
 
     return useMutation<
-        Awaited<null>,
+        SaveUserResponse | undefined,
         unknown,
-        SaveUserParams,
+        SaveUserRequest,
         { previousUserDetails?: UserDetails; previousUsersList?: UserSummary[] }
     >({
         mutationKey: UserKeys.mutate,
-        mutationFn: UsersService.saveUser,
+        mutationFn: (params) => UsersService.saveUser({ session, ...params }),
         onError: (error, params, context) => {
             console.warn(error);
 

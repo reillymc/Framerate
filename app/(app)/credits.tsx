@@ -63,7 +63,7 @@ const Credits: FC = () => {
     );
 };
 
-const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
+const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingHorizontal: padding.pageHorizontal,

@@ -1,7 +1,7 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface MovieSearchResult {
+export type MovieSearchResult = {
     id: number;
     title: string;
     posterPath?: string;
@@ -9,15 +9,13 @@ export interface MovieSearchResult {
     releaseDate?: string;
     overview: string;
     popularity: number;
-}
+};
 
 type SearchMoviesParams = {
     query: string;
 };
 
-type SearchMovies = (
-    params: SearchMoviesParams,
-) => Promise<MovieSearchResult[] | undefined>;
+type SearchMovies = FramerateService<MovieSearchResult[], SearchMoviesParams>;
 
-export const searchMovies: SearchMovies = ({ query }) =>
-    ExecuteRequest(FRAMERATE_API.movies.searchMovies(query));
+export const searchMovies: SearchMovies = ({ query, session }) =>
+    ExecuteRequest(FRAMERATE_API.movies.searchMovies(query), { session });

@@ -10,6 +10,7 @@
         "test": "jest --watchAll",
         "build:ios": "expo prebuild --platform=ios",
         "lint": "biome lint",
+        "typecheck": "tsc --noEmit",
         "format": "biome format --write ."
     },
     "jest": {

@@ -9,5 +9,5 @@ export const ReviewsService = {
 };
 
 export { ReviewDetails } from "./getReview";
-export { ReviewSummary } from "./getReviews";
-export { SaveReviewParams } from "./saveReview";
+export { ReviewSummary, GetReviewsRequest } from "./getReviews";
+export { SaveReviewResponse, SaveReviewRequest } from "./saveReview";

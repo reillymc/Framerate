@@ -75,10 +75,7 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
     );
 };
 
-const createStyles = ({
-    theme: { padding, border, color, font },
-    styles: { text },
-}: ThemedStyles) =>
+const createStyles = ({ theme: { padding, color, font } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             flex: 1,

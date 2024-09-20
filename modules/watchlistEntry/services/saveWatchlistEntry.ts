@@ -1,17 +1,31 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export type SaveWatchlistEntryParams = {
+export type SaveWatchlistEntryRequest = {
     mediaId: number;
     mediaType: string;
 };
 
-type SaveWatchlistEntry = (params: SaveWatchlistEntryParams) => Promise<null>;
+export type SaveWatchlistEntryResponse = {
+    watchlistId: string;
+    mediaId: number;
+    imdbId: string;
+    mediaType: string;
+    mediaTitle?: string;
+    mediaPosterUri?: string;
+    mediaReleaseDate?: string;
+};
 
-export const saveWatchlistEntry: SaveWatchlistEntry = (watchlistEntry) =>
+type SaveWatchlistEntry = FramerateService<
+    SaveWatchlistEntryResponse,
+    SaveWatchlistEntryRequest
+>;
+
+export const saveWatchlistEntry: SaveWatchlistEntry = ({ session, ...body }) =>
     ExecuteRequest(
-        FRAMERATE_API.watchlistEntries.postWatchlistEntry(
-            watchlistEntry.mediaType,
-        ),
-        watchlistEntry,
+        FRAMERATE_API.watchlistEntries.postWatchlistEntry(body.mediaType),
+        {
+            session,
+            body,
+        },
     );

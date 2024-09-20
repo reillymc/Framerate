@@ -1,6 +1,8 @@
+import { useSession } from "@/modules/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    type DeleteWatchlistEntryParams,
+    type DeleteWatchlistEntryRequest,
+    type DeleteWatchlistEntryResponse,
     WatchlistEntriesService,
     type WatchlistEntryDetails,
     type WatchlistEntrySummary,
@@ -9,18 +11,23 @@ import { WatchlistEntryKeys } from "./keys";
 
 export const useDeleteWatchlistEntry = () => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
 
     return useMutation<
-        Awaited<null>,
+        DeleteWatchlistEntryResponse | undefined,
         unknown,
-        DeleteWatchlistEntryParams,
+        DeleteWatchlistEntryRequest,
         {
             previousEntries?: WatchlistEntrySummary[];
             previousEntry?: WatchlistEntryDetails;
         }
     >({
         mutationKey: WatchlistEntryKeys.mutate,
-        mutationFn: WatchlistEntriesService.deleteWatchlistEntry,
+        mutationFn: (params) =>
+            WatchlistEntriesService.deleteWatchlistEntry({
+                ...params,
+                session,
+            }),
         onSuccess: (_response, params) => {
             queryClient.invalidateQueries({
                 queryKey: WatchlistEntryKeys.listEntries(params.mediaType),

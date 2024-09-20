@@ -1,3 +1,4 @@
+import { useSession } from "@/modules/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     WatchlistEntriesService,
@@ -10,6 +11,8 @@ export const useWatchlistEntry = (
     mediaId: number | undefined,
 ) => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
+
     return useQuery({
         queryKey: WatchlistEntryKeys.listEntry(mediaType, mediaId),
         enabled: !!mediaType && !!mediaId,
@@ -19,6 +22,7 @@ export const useWatchlistEntry = (
                 mediaType: mediaType!,
                 // biome-ignore lint/style/noNonNullAssertion: mediaType is guaranteed to be defined by the enabled flag
                 mediaId: mediaId!,
+                session,
             }),
         placeholderData: () =>
             queryClient

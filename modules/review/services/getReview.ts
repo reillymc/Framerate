@@ -1,9 +1,8 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface ReviewDetails {
+export type ReviewDetails = {
     reviewId: string;
-    userId: string;
     mediaId: number;
     imdbId?: string;
     mediaType: string;
@@ -20,15 +19,13 @@ export interface ReviewDetails {
         firstName?: string;
         lastName?: string;
     }>;
-}
+};
 
 type GetReviewParams = {
     reviewId: string;
 };
 
-type GetReview = (
-    params: GetReviewParams,
-) => Promise<ReviewDetails | undefined>;
+type GetReview = FramerateService<ReviewDetails, GetReviewParams>;
 
-export const getReview: GetReview = ({ reviewId }) =>
-    ExecuteRequest(FRAMERATE_API.reviews.getReview(reviewId));
+export const getReview: GetReview = ({ reviewId, session }) =>
+    ExecuteRequest(FRAMERATE_API.reviews.getReview(reviewId), { session });

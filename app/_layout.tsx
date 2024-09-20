@@ -1,6 +1,7 @@
 import "react-native-reanimated";
 import { fonts } from "@/assets/fonts";
-import { useColorScheme, useDefaultScreenOptions } from "@/hooks";
+import { useColorScheme } from "@/hooks";
+import { SessionProvider } from "@/modules/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import {
@@ -21,7 +22,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { QueryClient, onlineManager } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
@@ -177,37 +178,27 @@ export default function RootLayout() {
             persistOptions={{ persister }}
             onSuccess={() => queryClient.resumePausedMutations()}
         >
-            <RnThemeProvider value={navigationTheme}>
-                <ThemeProvider
-                    theme={theme}
-                    styles={createDefaultStyles(theme)}
-                >
-                    <GestureHandlerRootView>
-                        <PortalProvider>
-                            <StatusBar
-                                barStyle="default"
-                                animated={true}
-                                translucent={true}
-                            />
-                            <RootLayoutNavigator />
-                        </PortalProvider>
-                    </GestureHandlerRootView>
-                </ThemeProvider>
-            </RnThemeProvider>
+            <SessionProvider>
+                <RnThemeProvider value={navigationTheme}>
+                    <ThemeProvider
+                        theme={theme}
+                        styles={createDefaultStyles(theme)}
+                    >
+                        <GestureHandlerRootView>
+                            <PortalProvider>
+                                <StatusBar
+                                    barStyle="default"
+                                    animated
+                                    translucent
+                                />
+                                <Slot />
+                            </PortalProvider>
+                        </GestureHandlerRootView>
+                    </ThemeProvider>
+                </RnThemeProvider>
+            </SessionProvider>
+
             {__DEV__ && DevToolsBubble && <DevToolsBubble />}
         </PersistQueryClientProvider>
-    );
-}
-
-function RootLayoutNavigator() {
-    const screenOptions = useDefaultScreenOptions();
-
-    return (
-        <Stack screenOptions={screenOptions} initialRouteName="(tabs)">
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="profile" options={{ presentation: "modal" }} />
-            <Stack.Screen name="credits" options={{ presentation: "modal" }} />
-            <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-        </Stack>
     );
 }

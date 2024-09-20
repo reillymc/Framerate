@@ -1,23 +1,26 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 import { type Configuration, ParseConfiguration } from "../models";
 
-export interface UserDetails {
+export type UserDetails = {
     userId: string;
     email: string;
     firstName?: string;
     lastName: string;
     configuration: Configuration;
-}
+};
 
 type GetUserParams = {
     userId: string;
 };
 
-type GetUser = (params: GetUserParams) => Promise<UserDetails | undefined>;
+type GetUser = FramerateService<UserDetails, GetUserParams>;
 
-export const getUser: GetUser = ({ userId }) =>
-    ExecuteRequest(FRAMERATE_API.users.getUser(userId), undefined, (data) => ({
-        ...data,
-        configuration: ParseConfiguration(data.configuration),
-    }));
+export const getUser: GetUser = ({ userId, session }) =>
+    ExecuteRequest(FRAMERATE_API.users.getUser(userId), {
+        session,
+        processor: (data) => ({
+            ...data,
+            configuration: ParseConfiguration(data.configuration),
+        }),
+    });

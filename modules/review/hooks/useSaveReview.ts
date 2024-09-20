@@ -1,24 +1,27 @@
-import { placeholderUserId } from "@/constants/placeholderUser";
+import { useSession } from "@/modules/auth";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
 import type { MovieDetails } from "@/modules/movie/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     type ReviewDetails,
     ReviewsService,
-    type SaveReviewParams,
+    type SaveReviewRequest,
+    type SaveReviewResponse,
 } from "../services";
 import { ReviewKeys } from "./keys";
 
 export const useSaveReview = () => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
 
     return useMutation<
-        Awaited<null>,
+        SaveReviewResponse | undefined,
         unknown,
-        SaveReviewParams,
+        SaveReviewRequest,
         { previousEntry?: ReviewDetails }
     >({
-        mutationFn: ReviewsService.saveReview,
+        mutationFn: (params) =>
+            ReviewsService.saveReview({ session, ...params }),
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: ReviewKeys.base,
@@ -42,7 +45,6 @@ export const useSaveReview = () => {
                     ...movieDetails,
                     ...params,
                     reviewId,
-                    userId: placeholderUserId,
                     mediaTitle: movieDetails?.title ?? "",
                 } satisfies ReviewDetails,
             );

@@ -1,13 +1,13 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface UserSummary {
+export type UserSummary = {
     userId: string;
     firstName: string;
     lastName: string;
-}
+};
 
-type GetUsers = () => Promise<UserSummary[] | undefined>;
+type GetUsers = FramerateService<UserSummary[]>;
 
-export const getUsers: GetUsers = () =>
-    ExecuteRequest(FRAMERATE_API.users.getUsers());
+export const getUsers: GetUsers = ({ session }) =>
+    ExecuteRequest(FRAMERATE_API.users.getUsers(), { session });

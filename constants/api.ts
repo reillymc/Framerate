@@ -9,10 +9,24 @@ type Api = {
     };
 };
 
+export type BaseRequestParams = {
+    session: string | null;
+};
+
 export type FramerateResponse = {
     message?: string;
     data?: unknown;
 };
+
+export type FramerateService<
+    // biome-ignore lint/style/useNamingConvention: Generic type naming convention
+    TResponse extends
+        | Record<string, string | number | object>
+        | Array<Record<string, string | number | undefined>>,
+    // biome-ignore lint/style/useNamingConvention: Generic type naming convention
+    // biome-ignore lint/complexity/noBannedTypes: Default value
+    TRequest extends Record<string, string | number | object> = {},
+> = (params: BaseRequestParams & TRequest) => Promise<TResponse | undefined>;
 
 const recordToParams = (record?: Record<string, string | number>) => {
     if (!record) return "";

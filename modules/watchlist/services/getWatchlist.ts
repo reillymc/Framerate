@@ -1,20 +1,19 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface WatchlistDetails {
+export type WatchlistDetails = {
     watchlistId: string;
-    userId: string;
     mediaType: string;
     name: string;
-}
+};
 
 type GetWatchlistParams = {
     mediaType: string;
 };
 
-type GetWatchlist = (
-    params: GetWatchlistParams,
-) => Promise<WatchlistDetails | undefined>;
+type GetWatchlist = FramerateService<WatchlistDetails, GetWatchlistParams>;
 
-export const getWatchlist: GetWatchlist = ({ mediaType }) =>
-    ExecuteRequest(FRAMERATE_API.watchlists.getWatchlist(mediaType));
+export const getWatchlist: GetWatchlist = ({ mediaType, session }) =>
+    ExecuteRequest(FRAMERATE_API.watchlists.getWatchlist(mediaType), {
+        session,
+    });

@@ -1,9 +1,10 @@
-import { placeholderUserId } from "@/constants/placeholderUser";
+import { useSession } from "@/modules/auth";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
 import type { MovieDetails, MovieSearchResult } from "@/modules/movie/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    type SaveWatchlistEntryParams,
+    type SaveWatchlistEntryRequest,
+    type SaveWatchlistEntryResponse,
     WatchlistEntriesService,
     type WatchlistEntryDetails,
     type WatchlistEntrySummary,
@@ -12,18 +13,20 @@ import { WatchlistEntryKeys } from "./keys";
 
 export const useSaveWatchlistEntry = () => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
 
     return useMutation<
-        Awaited<null>,
+        SaveWatchlistEntryResponse | undefined,
         unknown,
-        SaveWatchlistEntryParams,
+        SaveWatchlistEntryRequest,
         {
             previousEntries?: WatchlistEntrySummary[];
             previousEntry?: WatchlistEntryDetails;
         }
     >({
         mutationKey: WatchlistEntryKeys.mutate,
-        mutationFn: WatchlistEntriesService.saveWatchlistEntry,
+        mutationFn: (params) =>
+            WatchlistEntriesService.saveWatchlistEntry({ session, ...params }),
         onSuccess: (_response, params) => {
             queryClient.invalidateQueries({
                 queryKey: WatchlistEntryKeys.listEntries(params.mediaType),
@@ -63,7 +66,6 @@ export const useSaveWatchlistEntry = () => {
                     movieDetailsPopular?.releaseDate,
                 mediaPosterUri:
                     movieDetails?.posterPath ?? movieDetailsPopular?.posterPath,
-                userId: placeholderUserId,
                 watchlistId: params.mediaType,
             } satisfies WatchlistEntryDetails;
 

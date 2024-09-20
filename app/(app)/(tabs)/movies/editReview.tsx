@@ -8,7 +8,6 @@ import {
     type TextInput as rnTextInput,
 } from "react-native";
 
-import { placeholderUserId } from "@/constants/placeholderUser";
 import {
     ratingToStars,
     starsToRating,
@@ -17,6 +16,7 @@ import {
 } from "@/modules/review";
 
 import { MediaType } from "@/constants/mediaTypes";
+import { useSession } from "@/modules/auth";
 import { useMovie } from "@/modules/movie";
 import { useUser, useUsers } from "@/modules/user";
 import {
@@ -49,17 +49,17 @@ const Edit: FC = () => {
         ? Number.parseInt(mediaIdParam ?? "", 10)
         : undefined;
 
+    const { userId } = useSession();
+
     const { data: review } = useReview(reviewId);
     const { data: movie } = useMovie(mediaId ? mediaId : review?.mediaId);
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
     const { data: users = [] } = useUsers();
-    const { data: user } = useUser(placeholderUserId);
+    const { data: user } = useUser(userId);
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
-    const filteredUsers = users.filter(
-        ({ userId }) => userId !== placeholderUserId,
-    );
+    const filteredUsers = users.filter((user) => user.userId !== userId);
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();

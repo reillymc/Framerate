@@ -1,13 +1,18 @@
-import type { ApiDefinition } from "@/constants/api";
+import type { ApiDefinition, FramerateResponse } from "@/constants/api";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 const LOG_CALLS = process.env.EXPO_PUBLIC_LOG_CALLS;
 
+type RequestOptions = {
+    session: string | null;
+    body?: Record<string, unknown>;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    processor?: (data: any) => any;
+};
+
 export const ExecuteRequest = async (
     { method, endpoint }: ApiDefinition,
-    body?: Record<string, unknown>,
-    // biome-ignore lint/suspicious/noExplicitAny: generic processor function
-    processor?: (data: any) => any,
+    { session, body, processor }: RequestOptions,
 ) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 3000);
@@ -18,6 +23,8 @@ export const ExecuteRequest = async (
         headers: {
             "Content-Type": "application/json",
             accept: "application/json",
+            // biome-ignore lint/style/useNamingConvention: <explanation>
+            ...(session ? { Authorization: `Bearer ${session}` } : {}),
         },
         signal: controller.signal,
     };
@@ -31,12 +38,24 @@ export const ExecuteRequest = async (
     const response = await fetch(url, options);
 
     if (!response.ok) {
-        throw new Error("Network response was not ok");
+        try {
+            const { message } = (await response.json()) as FramerateResponse;
+
+            console.warn(message);
+        } catch {
+            console.warn("Network response was not ok");
+        }
+        return;
     }
 
-    const json = await response.json();
+    try {
+        const { data, message } = (await response.json()) as FramerateResponse;
+        if (message) console.warn(message);
 
-    if (processor) return processor(json);
+        if (processor) return processor(data);
 
-    return json;
+        return data;
+    } catch {
+        console.warn("Response object was not ok");
+    }
 };

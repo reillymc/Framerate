@@ -1,7 +1,7 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
-export interface MovieDetails {
+export type MovieDetails = {
     // TMDB ID
     id: number;
     imdbId: string;
@@ -13,13 +13,13 @@ export interface MovieDetails {
     tagline: string;
     popularity: number;
     runtime: number;
-}
+};
 
 type GetMovieParams = {
     id: number;
 };
 
-type GetMovie = (params: GetMovieParams) => Promise<MovieDetails | undefined>;
+type GetMovie = FramerateService<MovieDetails, GetMovieParams>;
 
-export const getMovie: GetMovie = ({ id }) =>
-    ExecuteRequest(FRAMERATE_API.movies.getMovie(id));
+export const getMovie: GetMovie = ({ id, session }) =>
+    ExecuteRequest(FRAMERATE_API.movies.getMovie(id), { session });

@@ -1,12 +1,24 @@
+import { useSession } from "@/modules/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type SaveWatchlistParams, WatchlistsService } from "../services";
+import {
+    type SaveWatchlistRequest,
+    type SaveWatchlistResponse,
+    WatchlistsService,
+} from "../services";
 
 export const useSaveWatchlist = () => {
     const queryClient = useQueryClient();
+    const { session } = useSession();
 
-    return useMutation<Awaited<null>, unknown, SaveWatchlistParams, unknown>({
+    return useMutation<
+        SaveWatchlistResponse | undefined,
+        unknown,
+        SaveWatchlistRequest,
+        unknown
+    >({
         mutationKey: ["watchlists", "save"],
-        mutationFn: WatchlistsService.saveWatchlist,
+        mutationFn: (params) =>
+            WatchlistsService.saveWatchlist({ session, ...params }),
         onSuccess: async (_response, params) => {
             await queryClient.invalidateQueries({
                 queryKey: ["watchlists", params.watchlistId],

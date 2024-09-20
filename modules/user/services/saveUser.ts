@@ -1,8 +1,19 @@
-import { FRAMERATE_API } from "@/constants/api";
+import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
-import type { Configuration } from "../models";
+import { type Configuration, ParseConfiguration } from "../models";
 
-export type SaveUserParams = {
+export type SaveUserResponse = {
+    userId: string;
+    email?: string;
+    firstName: string;
+    lastName: string;
+    avatarUri?: string;
+    dateCreated: Date;
+    permissionLevel: number;
+    configuration: Configuration;
+};
+
+export type SaveUserRequest = {
     userId?: string;
     firstName?: string;
     lastName?: string;
@@ -11,7 +22,14 @@ export type SaveUserParams = {
     configuration?: Configuration;
 };
 
-type SaveUser = (params: SaveUserParams) => Promise<null>;
+type SaveUser = FramerateService<SaveUserResponse, SaveUserRequest>;
 
-export const saveUser: SaveUser = (user) =>
-    ExecuteRequest(FRAMERATE_API.users.saveUser(user.userId), user);
+export const saveUser: SaveUser = ({ session, ...user }) =>
+    ExecuteRequest(FRAMERATE_API.users.saveUser(user.userId), {
+        session,
+        body: user,
+        processor: (data) => ({
+            ...data,
+            configuration: ParseConfiguration(data.configuration),
+        }),
+    });

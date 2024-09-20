@@ -1,5 +1,5 @@
 import { MenuIconButton } from "@/components";
-import { placeholderUserId } from "@/constants/placeholderUser";
+import { useSession } from "@/modules/auth";
 import {
     ReviewSummaryCard,
     ratingToStars,
@@ -43,7 +43,8 @@ const Reviews: FC = () => {
         sort,
         orderBy,
     });
-    const { data: user } = useUser(placeholderUserId);
+    const { userId } = useSession();
+    const { data: user } = useUser(userId);
     // TODO: update with user configuration knownUsers when implemented
     const { data: users = [] } = useUsers();
 

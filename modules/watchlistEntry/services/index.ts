@@ -12,5 +12,11 @@ export const WatchlistEntriesService = {
 
 export { WatchlistEntryDetails } from "./getWatchlistEntry";
 export { WatchlistEntrySummary } from "./getWatchlistEntries";
-export { SaveWatchlistEntryParams } from "./saveWatchlistEntry";
-export { DeleteWatchlistEntryParams } from "./deleteWatchlistEntry";
+export {
+    SaveWatchlistEntryRequest,
+    SaveWatchlistEntryResponse,
+} from "./saveWatchlistEntry";
+export {
+    DeleteWatchlistEntryRequest,
+    DeleteWatchlistEntryResponse,
+} from "./deleteWatchlistEntry";

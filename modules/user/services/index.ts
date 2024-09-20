@@ -9,5 +9,5 @@ export const UsersService = {
 };
 
 export { UserDetails } from "./getUser";
-export { SaveUserParams } from "./saveUser";
+export { SaveUserRequest, SaveUserResponse } from "./saveUser";
 export { UserSummary } from "./getUsers";
