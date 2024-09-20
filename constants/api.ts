@@ -9,6 +9,11 @@ type Api = {
     };
 };
 
+export type FramerateResponse = {
+    message?: string;
+    data?: unknown;
+};
+
 const recordToParams = (record?: Record<string, string | number>) => {
     if (!record) return "";
 
@@ -21,6 +26,12 @@ const recordToParams = (record?: Record<string, string | number>) => {
 };
 
 export const FRAMERATE_API = {
+    auth: {
+        login: () => ({
+            method: "POST",
+            endpoint: "auth/login",
+        }),
+    },
     movies: {
         getMovie: (movieId: number) => ({
             method: "GET",
