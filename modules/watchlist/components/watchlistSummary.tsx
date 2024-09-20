@@ -1,4 +1,4 @@
-import { usePosterDimensions } from "@/components";
+import { Fade, usePosterDimensions } from "@/components";
 import {
     AnimatedFlatList,
     type AnimatedFlatListProps,
@@ -8,10 +8,9 @@ import {
     Icon,
     Text,
     type ThemedStyles,
-    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
+import {} from "@shopify/react-native-skia";
 import {
     addMonths,
     endOfMonth,
@@ -20,12 +19,7 @@ import {
     subMonths,
 } from "date-fns";
 import { type FC, useCallback, useMemo, useRef } from "react";
-import {
-    type FlatList,
-    Pressable,
-    StyleSheet,
-    useColorScheme,
-} from "react-native";
+import { type FlatList, Pressable, StyleSheet } from "react-native";
 import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
@@ -53,12 +47,10 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
     const scrollValue = useSharedValue(0);
     const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<FlatList | null>(null);
-    const { theme } = useTheme();
 
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollValue.value = event.contentOffset.x;
     });
-    const scheme = useColorScheme();
 
     const filteredItems = useMemo(() => {
         const entriesInterval = {
@@ -187,29 +179,13 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                 }
                 scrollEnabled={filteredItems.length > 0}
             />
-            <Canvas
-                style={{
-                    position: "absolute",
-                    bottom: 0,
-                    top: 0,
-                    right: 0,
-                    height,
-                    width: 16,
-                }}
-            >
-                <Rect x={0} y={0} width={16} height={height}>
-                    <LinearGradient
-                        start={vec(0, 0)}
-                        end={vec(12, 0)}
-                        colors={[
-                            scheme === "light"
-                                ? `${theme.color.background}00`
-                                : "transparent",
-                            theme.color.background,
-                        ]}
-                    />
-                </Rect>
-            </Canvas>
+            <Fade
+                direction="vertical"
+                width={16}
+                height={height}
+                fadeOffset={12}
+                style={{ position: "absolute", bottom: 0, top: 0, right: 0 }}
+            />
         </>
     );
 };

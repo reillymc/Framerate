@@ -5,7 +5,6 @@ import {
     RefreshControl,
     StyleSheet,
     View,
-    useColorScheme,
     useWindowDimensions,
 } from "react-native";
 
@@ -18,6 +17,7 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
+    Fade,
     ImdbButton,
     ParallaxScrollView,
     Poster,
@@ -37,7 +37,6 @@ import {
     useSaveWatchlistEntry,
     useWatchlistEntry,
 } from "@/modules/watchlistEntry";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Movie: React.FC = () => {
@@ -54,7 +53,6 @@ const Movie: React.FC = () => {
     const { bottom } = useSafeAreaInsets();
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
     const { width } = useWindowDimensions();
-    const scheme = useColorScheme();
 
     const { data: movie } = useMovie(mediaId);
     const { data: reviews, refetch } = useReviews(mediaId);
@@ -152,28 +150,13 @@ const Movie: React.FC = () => {
                     <VidSrcButton imdbId={movie?.imdbId} />
                 </View>
             </ParallaxScrollView>
-            <Canvas
-                style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: 120,
-                }}
-            >
-                <Rect x={0} y={0} width={width} height={120}>
-                    <LinearGradient
-                        start={vec(width, 0)}
-                        end={vec(width, 90 - bottom)}
-                        colors={[
-                            scheme === "light"
-                                ? `${theme.color.background}00`
-                                : "transparent",
-                            theme.color.background,
-                        ]}
-                    />
-                </Rect>
-            </Canvas>
+            <Fade
+                direction="horizontal"
+                width={width}
+                height={120}
+                fadeOffset={90 - bottom}
+                style={styles.fade}
+            />
             <View
                 style={{
                     flexDirection: "row",
@@ -323,5 +306,11 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             justifyContent: "center",
             flexDirection: "row",
             gap: padding.regular,
+        },
+        fade: {
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
         },
     });

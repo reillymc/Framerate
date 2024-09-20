@@ -1,5 +1,6 @@
 import { PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
+import { useColorScheme } from "@/hooks";
 import { getGroupedEntries, useWatchlist } from "@/modules/watchlist";
 import {
     useDeleteWatchlistEntry,
@@ -14,7 +15,7 @@ import {
 import { BlurView } from "expo-blur";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef } from "react";
-import { SectionList, StyleSheet, View, useColorScheme } from "react-native";
+import { SectionList, StyleSheet, View } from "react-native";
 
 const HEADER_HEIGHT = 96;
 const ITEM_HEIGHT = 92;

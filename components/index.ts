@@ -8,3 +8,4 @@ export { CustomTabBar } from "./customTabBar";
 export { Poster, usePosterDimensions } from "./poster";
 export { PosterCard } from "./posterCard";
 export { MenuIconButton } from "./menuIconButton";
+export { Fade } from "./fade";
