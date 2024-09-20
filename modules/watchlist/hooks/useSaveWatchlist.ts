@@ -11,7 +11,7 @@ export const useSaveWatchlist = () => {
     const { session } = useSession();
 
     return useMutation<
-        SaveWatchlistResponse | undefined,
+        SaveWatchlistResponse | null,
         unknown,
         SaveWatchlistRequest,
         unknown

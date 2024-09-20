@@ -14,7 +14,7 @@ export const useDeleteWatchlistEntry = () => {
     const { session } = useSession();
 
     return useMutation<
-        DeleteWatchlistEntryResponse | undefined,
+        DeleteWatchlistEntryResponse | null,
         unknown,
         DeleteWatchlistEntryRequest,
         {

@@ -15,7 +15,7 @@ export const useSaveReview = () => {
     const { session } = useSession();
 
     return useMutation<
-        SaveReviewResponse | undefined,
+        SaveReviewResponse | null,
         unknown,
         SaveReviewRequest,
         { previousEntry?: ReviewDetails }

@@ -33,6 +33,7 @@ export interface PosterProps {
     onPress?: () => void;
     onToggleWatchlist?: () => void;
     onAddReview?: () => void;
+    onOpenReview?: () => void;
 }
 
 export const Poster: React.FC<PosterProps> = ({
@@ -44,6 +45,7 @@ export const Poster: React.FC<PosterProps> = ({
     onWatchlist,
     onPress,
     onAddReview,
+    onOpenReview,
     onToggleWatchlist,
 }) => {
     const { height, width, gap } = usePosterDimensions({ size });
@@ -101,12 +103,24 @@ export const Poster: React.FC<PosterProps> = ({
                                 menuItems: [
                                     onAddReview
                                         ? {
-                                              actionKey: "review",
+                                              actionKey: "add-review",
                                               actionTitle: "Add Review",
                                               icon: {
                                                   type: "IMAGE_SYSTEM",
                                                   imageValue: {
                                                       systemName: "pencil",
+                                                  },
+                                              },
+                                          }
+                                        : undefined,
+                                    onOpenReview
+                                        ? {
+                                              actionKey: "open-review",
+                                              actionTitle: "Open Review",
+                                              icon: {
+                                                  type: "IMAGE_SYSTEM",
+                                                  imageValue: {
+                                                      systemName: "book.fill",
                                                   },
                                               },
                                           }
@@ -120,8 +134,11 @@ export const Poster: React.FC<PosterProps> = ({
                                 case "view":
                                     onPress?.();
                                     break;
-                                case "review":
+                                case "add-review":
                                     onAddReview?.();
+                                    break;
+                                case "open-review":
+                                    onOpenReview?.();
                                     break;
                                 case "watchlist-add":
                                     onToggleWatchlist?.();

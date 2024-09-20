@@ -231,7 +231,7 @@ const Reviews: FC = () => {
                                 },
                             })
                         }
-                        onPressMore={() =>
+                        onOpenReview={() =>
                             router.push({
                                 pathname: "/movies/review",
                                 params: { reviewId: item.reviewId },

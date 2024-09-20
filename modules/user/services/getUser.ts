@@ -10,11 +10,11 @@ export type UserDetails = {
     configuration: Configuration;
 };
 
-type GetUserParams = {
+type GetUserRequest = {
     userId: string;
 };
 
-type GetUser = FramerateService<UserDetails, GetUserParams>;
+type GetUser = FramerateService<UserDetails, GetUserRequest>;
 
 export const getUser: GetUser = ({ userId, session }) =>
     ExecuteRequest(FRAMERATE_API.users.getUser(userId), {

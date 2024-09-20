@@ -14,13 +14,13 @@ import type { ReviewSummary } from "../services";
 interface ReviewSummaryCardProps {
     review: ReviewSummary;
     onPress: () => void;
-    onPressMore: () => void;
+    onOpenReview: () => void;
 }
 
 export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     review,
     onPress,
-    onPressMore,
+    onOpenReview,
 }) => {
     const styles = useThemedStyles(createStyles, {});
     const rating = ratingToStars(review?.rating ?? 0);
@@ -36,6 +36,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                     imageUri={review.mediaPosterUri}
                     size="tiny"
                     removeMargin
+                    onOpenReview={onOpenReview}
                 />
                 <View style={styles.headingContainer}>
                     <View style={styles.headingTitleContainer}>
@@ -101,7 +102,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
 
                 <Action
                     label="Read more..."
-                    onPress={onPressMore}
+                    onPress={onOpenReview}
                     variant="primary"
                     size="small"
                 />

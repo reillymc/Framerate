@@ -4,4 +4,4 @@ export const AuthService = {
     login,
 };
 
-export { LoginParams } from "./login";
+export { LoginRequest } from "./login";

@@ -21,11 +21,11 @@ export type ReviewDetails = {
     }>;
 };
 
-type GetReviewParams = {
+type GetReviewRequest = {
     reviewId: string;
 };
 
-type GetReview = FramerateService<ReviewDetails, GetReviewParams>;
+type GetReview = FramerateService<ReviewDetails, GetReviewRequest>;
 
 export const getReview: GetReview = ({ reviewId, session }) =>
     ExecuteRequest(FRAMERATE_API.reviews.getReview(reviewId), { session });

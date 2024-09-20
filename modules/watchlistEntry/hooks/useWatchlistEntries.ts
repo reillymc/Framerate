@@ -15,5 +15,6 @@ export const useWatchlistEntries = (mediaType: string | undefined) => {
                 mediaType: mediaType!,
                 session,
             }),
+        select: (data) => data ?? undefined,
     });
 };

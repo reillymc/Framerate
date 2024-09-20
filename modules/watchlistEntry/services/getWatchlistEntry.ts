@@ -11,14 +11,14 @@ export type WatchlistEntryDetails = {
     mediaReleaseDate?: string;
 };
 
-type GetWatchlistEntryParams = {
+type GetWatchlistEntryRequest = {
     mediaType: string;
     mediaId: number;
 };
 
 type GetWatchlistEntry = FramerateService<
     WatchlistEntryDetails,
-    GetWatchlistEntryParams
+    GetWatchlistEntryRequest
 >;
 
 export const getWatchlistEntry: GetWatchlistEntry = ({

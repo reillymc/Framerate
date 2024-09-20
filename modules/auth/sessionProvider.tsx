@@ -5,10 +5,10 @@ import {
     createContext,
     useContext,
 } from "react";
-import { AuthService, type LoginParams } from "./services";
+import { AuthService, type LoginRequest } from "./services";
 
 const SessionContext = createContext<{
-    signIn: (credentials: LoginParams) => void;
+    signIn: (credentials: LoginRequest) => void;
     signOut: () => void;
     session: string | null;
     userId: string | undefined;
@@ -32,7 +32,7 @@ export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <SessionContext.Provider
             value={{
-                signIn: (credentials: LoginParams) =>
+                signIn: (credentials: LoginRequest) =>
                     AuthService.login({ ...credentials, session: null }).then(
                         (response) => {
                             if (!response) return;

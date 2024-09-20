@@ -9,5 +9,6 @@ export const useUsers = () => {
     return useQuery({
         queryKey: UserKeys.list(),
         queryFn: () => UsersService.getUsers({ session }),
+        select: (data) => data ?? undefined,
     });
 };

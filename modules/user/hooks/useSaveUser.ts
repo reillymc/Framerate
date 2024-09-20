@@ -14,7 +14,7 @@ export const useSaveUser = () => {
     const { session } = useSession();
 
     return useMutation<
-        SaveUserResponse | undefined,
+        SaveUserResponse | null,
         unknown,
         SaveUserRequest,
         { previousUserDetails?: UserDetails; previousUsersList?: UserSummary[] }

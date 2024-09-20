@@ -15,11 +15,11 @@ export type MovieDetails = {
     runtime: number;
 };
 
-type GetMovieParams = {
+type GetMovieRequest = {
     id: number;
 };
 
-type GetMovie = FramerateService<MovieDetails, GetMovieParams>;
+type GetMovie = FramerateService<MovieDetails, GetMovieRequest>;
 
 export const getMovie: GetMovie = ({ id, session }) =>
     ExecuteRequest(FRAMERATE_API.movies.getMovie(id), { session });

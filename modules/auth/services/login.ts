@@ -6,12 +6,12 @@ type LoginResponse = {
     userId: string;
 };
 
-export type LoginParams = {
+export type LoginRequest = {
     email: string;
     password: string;
 };
 
-type Login = FramerateService<LoginResponse, LoginParams>;
+type Login = FramerateService<LoginResponse, LoginRequest>;
 
 export const login: Login = ({ session, ...body }) =>
     ExecuteRequest(FRAMERATE_API.auth.login(), { session, body });

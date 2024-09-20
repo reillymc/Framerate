@@ -27,6 +27,7 @@ export interface PosterProps {
     onPress?: () => void;
     onToggleWatchlist?: () => void;
     onAddReview?: () => void;
+    onOpenReview?: () => void;
 }
 
 export const Poster: React.FC<PosterProps> = ({

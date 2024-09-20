@@ -11,11 +11,11 @@ export type MovieSearchResult = {
     popularity: number;
 };
 
-type SearchMoviesParams = {
+type SearchMoviesRequest = {
     query: string;
 };
 
-type SearchMovies = FramerateService<MovieSearchResult[], SearchMoviesParams>;
+type SearchMovies = FramerateService<MovieSearchResult[], SearchMoviesRequest>;
 
 export const searchMovies: SearchMovies = ({ query, session }) =>
     ExecuteRequest(FRAMERATE_API.movies.searchMovies(query), { session });

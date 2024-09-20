@@ -7,11 +7,11 @@ export type WatchlistDetails = {
     name: string;
 };
 
-type GetWatchlistParams = {
+type GetWatchlistRequest = {
     mediaType: string;
 };
 
-type GetWatchlist = FramerateService<WatchlistDetails, GetWatchlistParams>;
+type GetWatchlist = FramerateService<WatchlistDetails, GetWatchlistRequest>;
 
 export const getWatchlist: GetWatchlist = ({ mediaType, session }) =>
     ExecuteRequest(FRAMERATE_API.watchlists.getWatchlist(mediaType), {
