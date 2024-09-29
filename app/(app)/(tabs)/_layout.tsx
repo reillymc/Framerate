@@ -23,12 +23,12 @@ const TabLayout: React.FC = () => {
                     tabBarLabel: "Movies",
                 }}
             />
-            {/* <Tabs.Screen
+            <Tabs.Screen
                 name="shows"
                 options={{
                     tabBarLabel: "Shows",
                 }}
-            /> */}
+            />
         </Tabs>
     );
 };

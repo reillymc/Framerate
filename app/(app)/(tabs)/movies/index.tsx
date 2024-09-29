@@ -34,7 +34,7 @@ import Animated, {
 } from "react-native-reanimated";
 import type { SearchBarCommands } from "react-native-screens";
 
-const HomeScreen: FC = () => {
+const Movies: FC = () => {
     const { data: reviews } = useInfiniteReviews({ page: 1 });
 
     const styles = useThemedStyles(createStyles, {});
@@ -431,7 +431,7 @@ const HomeScreen: FC = () => {
     );
 };
 
-export default HomeScreen;
+export default Movies;
 
 const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
     StyleSheet.create({

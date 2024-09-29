@@ -1,29 +1,18 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import {
-    FlatList,
-    Pressable,
-    RefreshControl,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 
 import {
-    IconActionV2,
     Text,
     type ThemedStyles,
-    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
 import {
-    Fade,
-    ImdbButton,
+    MediaFooterButtons,
+    MediaLinks,
     ParallaxScrollView,
     Poster,
-    TmdbButton,
     TmdbImage,
-    VidSrcButton,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
@@ -37,7 +26,6 @@ import {
     useSaveWatchlistEntry,
     useWatchlistEntry,
 } from "@/modules/watchlistEntry";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Movie: React.FC = () => {
     const {
@@ -50,9 +38,7 @@ const Movie: React.FC = () => {
         mediaPosterUri?: string;
     }>();
 
-    const { bottom } = useSafeAreaInsets();
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
-    const { width } = useWindowDimensions();
 
     const { data: movie } = useMovie(mediaId);
     const { data: reviews, refetch } = useReviews(mediaId);
@@ -64,7 +50,6 @@ const Movie: React.FC = () => {
     const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
 
     const router = useRouter();
-    const { theme } = useTheme();
 
     const releaseDate = movie?.releaseDate
         ? new Date(movie.releaseDate).toLocaleString("default", {
@@ -141,123 +126,37 @@ const Movie: React.FC = () => {
                         </>
                     )}
                 </View>
-                <View style={styles.linksContainer}>
-                    <TmdbButton
-                        tmdbId={movie?.id}
-                        mediaType={MediaType.Movie}
-                    />
-                    <ImdbButton imdbId={movie?.imdbId} />
-                    <VidSrcButton imdbId={movie?.imdbId} />
-                </View>
+                <MediaLinks
+                    mediaType={MediaType.Movie}
+                    tmdbId={movie?.id}
+                    imdbId={movie?.imdbId}
+                />
             </ParallaxScrollView>
-            <Fade
-                direction="horizontal"
-                width={width}
-                height={120}
-                fadeOffset={90 - bottom}
-                style={styles.fade}
-            />
-            <View
-                style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginVertical: theme.padding.large,
-                    position: "absolute",
-                    bottom: -bottom,
-                    paddingBottom: bottom + theme.padding.regular,
-                    left: 0,
-                    right: 0,
-                    paddingTop: theme.padding.regular,
-                    paddingHorizontal: theme.padding.pageHorizontal / 1.5,
-                }}
-            >
-                <Pressable
-                    style={{
-                        backgroundColor: theme.color.primary,
-                        borderRadius: 24,
-                        paddingLeft: 6,
-                        paddingVertical: 4,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        width: "51%",
-                    }}
-                    onPress={() => {
-                        if (watchlistEntry) {
-                            deleteWatchlistEntry({
-                                mediaId,
-                                mediaType: MediaType.Movie,
-                            });
-                            return;
-                        }
-
-                        if (!movie) return;
-
-                        saveWatchlistEntry({
+            <MediaFooterButtons
+                onWatchlist={!!watchlistEntry}
+                onAddReview={() =>
+                    router.push({
+                        pathname: "/movies/editReview",
+                        params: { mediaId },
+                    })
+                }
+                onToggleWatchlist={() => {
+                    if (watchlistEntry) {
+                        deleteWatchlistEntry({
                             mediaId,
                             mediaType: MediaType.Movie,
                         });
-                    }}
-                >
-                    <IconActionV2
-                        size="large"
-                        iconName={watchlistEntry ? "eye-closed" : "eye"}
-                        iconStyle={{
-                            color: "white",
-                        }}
-                        containerStyle={{
-                            backgroundColor: "transparent",
-                        }}
-                    />
-                    <Text
-                        variant="label"
-                        style={{
-                            color: "white",
-                            marginLeft: 1,
-                        }}
-                    >
-                        {watchlistEntry
-                            ? "Take off Watchlist"
-                            : "Save to Watchlist"}
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={{
-                        backgroundColor: theme.color.primary,
-                        borderRadius: 24,
-                        paddingLeft: 6,
-                        paddingVertical: 4,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        width: "44%",
-                    }}
-                    onPress={() =>
-                        router.push({
-                            pathname: "/movies/editReview",
-                            params: { mediaId },
-                        })
+                        return;
                     }
-                >
-                    <IconActionV2
-                        size="large"
-                        iconName="pencil"
-                        iconStyle={{
-                            color: "white",
-                        }}
-                        containerStyle={{
-                            backgroundColor: "transparent",
-                        }}
-                    />
-                    <Text
-                        variant="label"
-                        style={{
-                            color: "white",
-                            marginLeft: 1,
-                        }}
-                    >
-                        Add a Review
-                    </Text>
-                </Pressable>
-            </View>
+
+                    if (!movie) return;
+
+                    saveWatchlistEntry({
+                        mediaId,
+                        mediaType: MediaType.Movie,
+                    });
+                }}
+            />
         </>
     );
 };
@@ -300,17 +199,5 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         },
         section: {
             marginTop: padding.large,
-        },
-        linksContainer: {
-            marginTop: padding.large,
-            justifyContent: "center",
-            flexDirection: "row",
-            gap: padding.regular,
-        },
-        fade: {
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
         },
     });

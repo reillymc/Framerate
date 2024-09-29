@@ -4,5 +4,6 @@
         "quickfix.biome": "explicit",
         "source.organizeImports.biome": "explicit"
     },
-    "typescript.preferences.preferTypeOnlyAutoImports": true
+    "typescript.preferences.preferTypeOnlyAutoImports": true,
+    "cSpell.words": ["imdb", "tanstack", "tmdb"]
 }

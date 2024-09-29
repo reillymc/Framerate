@@ -84,7 +84,21 @@ export const FRAMERATE_API = {
         }),
         saveReview: (reviewId?: string) => ({
             method: reviewId ? "PUT" : "POST",
-            endpoint: reviewId ? `reviews/${reviewId}` : "reviews",
+            endpoint: reviewId ? `reviews/review/${reviewId}` : "reviews",
+        }),
+    },
+    shows: {
+        getShow: (showId: number) => ({
+            method: "GET",
+            endpoint: `shows/details/${showId}`,
+        }),
+        getPopularShows: () => ({
+            method: "GET",
+            endpoint: "shows/popular",
+        }),
+        searchShows: (query: string) => ({
+            method: "GET",
+            endpoint: `shows/search?query=${query}`,
         }),
     },
     users: {
