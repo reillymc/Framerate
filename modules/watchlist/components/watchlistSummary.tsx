@@ -15,6 +15,7 @@ import {
     endOfMonth,
     isWithinInterval,
     startOfMonth,
+    subDays,
     subMonths,
 } from "date-fns";
 import { type FC, useCallback, useMemo, useRef } from "react";
@@ -73,15 +74,12 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && filteredItems.length)) return;
-        const now = new Date();
-
-        const closest = filteredItems
-            .toReversed()
-            .findIndex(
-                (item) =>
-                    item.mediaReleaseDate &&
-                    new Date(item.mediaReleaseDate) >= now,
-            );
+        const closest = filteredItems.toReversed().findIndex(
+            (item) =>
+                item.mediaReleaseDate &&
+                // Allow time for current movie to be presented so that it is not immediately overtaken by the next release
+                new Date(item.mediaReleaseDate) >= subDays(new Date(), 7),
+        );
 
         const index = closest === -1 ? 0 : filteredItems.length - closest - 1;
 
@@ -188,7 +186,7 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                 scrollEnabled={filteredItems.length > 0}
             />
             <Fade
-                direction="vertical"
+                direction="left"
                 width={16}
                 height={height}
                 fadeOffset={12}

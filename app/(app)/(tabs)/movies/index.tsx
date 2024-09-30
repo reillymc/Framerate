@@ -156,11 +156,11 @@ const Movies: FC = () => {
                                     onWatchlist
                                         ? deleteWatchlistEntry({
                                               mediaId: item.id,
-                                              mediaType: "movie",
+                                              mediaType: MediaType.Movie,
                                           })
                                         : saveWatchlistEntry({
                                               mediaId: item.id,
-                                              mediaType: "movie",
+                                              mediaType: MediaType.Movie,
                                           })
                                 }
                             />

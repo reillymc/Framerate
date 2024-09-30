@@ -30,7 +30,7 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
     return (
         <>
             <Fade
-                direction="horizontal"
+                direction="up"
                 width={width}
                 height={120}
                 fadeOffset={90 - bottom}

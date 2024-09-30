@@ -1,15 +1,21 @@
-import { PosterCard } from "@/components";
+import { Fade, PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import {
     Text,
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
-import { SectionList, StyleSheet, View } from "react-native";
+import {
+    SectionList,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from "react-native";
 import { getGroupedEntries } from "../helpers";
 
 const HEADER_HEIGHT = 96;
@@ -43,6 +49,8 @@ export const SectionedWatchlist: FC<SectionedWatchlistProps> = ({
     const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<SectionList<WatchlistEntrySummary> | null>(null);
     const scheme = useColorScheme();
+    const { width } = useWindowDimensions();
+    const { theme } = useTheme();
 
     const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
 
@@ -85,13 +93,13 @@ export const SectionedWatchlist: FC<SectionedWatchlistProps> = ({
             getItemLayout={buildGetItemLayout}
             renderSectionHeader={({ section }) => (
                 <BlurView
-                    intensity={100}
+                    intensity={scheme === "light" ? 90 : 40}
                     tint={
                         scheme === "light"
                             ? "systemMaterialLight"
-                            : "systemMaterialDark"
+                            : "systemThickMaterialDark"
                     }
-                    style={styles.headerContainer}
+                    style={styles.sectionHeaderContainer}
                 >
                     <Text variant="title">{section.monthTitle}</Text>
                     <Text variant="display" style={styles.yearHeading}>
@@ -127,6 +135,42 @@ export const SectionedWatchlist: FC<SectionedWatchlistProps> = ({
             renderSectionFooter={() => (
                 <View style={{ height: SECTION_FOOTER_HEIGHT }} />
             )}
+            ListHeaderComponent={
+                <View style={styles.headerContainer}>
+                    <Text
+                        variant="body"
+                        style={styles.header}
+                    >{`${entries.length} items on watchlist`}</Text>
+                    <BlurView
+                        style={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: 45,
+                        }}
+                        intensity={scheme === "light" ? 90 : 40}
+                        tint={
+                            scheme === "light"
+                                ? "systemMaterialLight"
+                                : "systemThickMaterialDark"
+                        }
+                    />
+                    <Fade
+                        direction="down"
+                        fadeOffset={0}
+                        height={45}
+                        width={width}
+                        style={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                        }}
+                        color={theme.color.background}
+                    />
+                </View>
+            }
             keyExtractor={(item) => item.mediaId.toString()}
             contentInsetAdjustmentBehavior="automatic"
             contentInset={{ top: HEADER_HEIGHT }}
@@ -143,7 +187,7 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             paddingBottom: padding.large,
             backgroundColor: color.background,
         },
-        headerContainer: {
+        sectionHeaderContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-end",
@@ -154,5 +198,13 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         },
         yearHeading: {
             paddingBottom: 2,
+        },
+        headerContainer: {
+            marginTop: -HEADER_HEIGHT,
+            height: HEADER_HEIGHT,
+        },
+        header: {
+            paddingHorizontal: padding.pageHorizontal,
+            paddingTop: padding.large,
         },
     });
