@@ -64,6 +64,7 @@ export const FRAMERATE_API = {
         getReviews: (
             mediaId?: number,
             params?: {
+                mediaType: string;
                 orderBy?: string;
                 sort?: string;
                 page?: number;

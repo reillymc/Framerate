@@ -1,28 +1,39 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
+import { MediaType } from "@/constants/mediaTypes";
+import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
 import {
     usePopularShows,
     useRecentSearches,
     useSearchShows,
 } from "@/modules/show";
-import {} from "@/modules/watchlist";
-import { useWatchlistEntries } from "@/modules/watchlistEntry";
 import {
+    useDeleteWatchlistEntry,
+    useSaveWatchlistEntry,
+    useWatchlistEntries,
+} from "@/modules/watchlistEntry";
+import {
+    IconAction,
     IconActionV2,
     SwipeAction,
     SwipeView,
     Text,
     type ThemedStyles,
+    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, router } from "expo-router";
 import { type FC, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
-import {} from "react-native-reanimated";
 import type { SearchBarCommands } from "react-native-screens";
 
 const Shows: FC = () => {
+    const { data: reviews } = useInfiniteReviews({
+        mediaType: MediaType.Show,
+        page: 1,
+    });
+
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
@@ -35,15 +46,23 @@ const Shows: FC = () => {
     const { data: results } = useSearchShows(searchValue);
     const { data: popularShows } = usePopularShows();
     const { data: watchlistEntries = [] } = useWatchlistEntries("show");
+    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
     const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
+
+    const reviewList = useMemo(
+        () => reviews?.pages.flat().filter(Undefined) ?? [],
+        [reviews],
+    );
 
     const filteredPopularShows = useMemo(() => {
         const excludedMediaIds = [
             ...watchlistEntries.map(({ mediaId }) => mediaId),
+            ...reviewList.map(({ mediaId }) => mediaId),
         ];
 
         return popularShows?.filter(({ id }) => !excludedMediaIds.includes(id));
-    }, [popularShows, watchlistEntries]);
+    }, [popularShows, watchlistEntries, reviewList]);
 
     return (
         <>
@@ -106,6 +125,27 @@ const Shows: FC = () => {
                                     });
                                     addSearch({ searchValue: item.name });
                                 }}
+                                onAddReview={() =>
+                                    router.push({
+                                        pathname: "/shows/editReview",
+                                        params: {
+                                            mediaId: item.id,
+                                            mediaTitle: item.name,
+                                            mediaPosterUri: item.posterPath,
+                                        },
+                                    })
+                                }
+                                onToggleWatchlist={() =>
+                                    onWatchlist
+                                        ? deleteWatchlistEntry({
+                                              mediaId: item.id,
+                                              mediaType: "show",
+                                          })
+                                        : saveWatchlistEntry({
+                                              mediaId: item.id,
+                                              mediaType: "show",
+                                          })
+                                }
                             />
                         );
                     }}
@@ -160,6 +200,19 @@ const Shows: FC = () => {
                     ListHeaderComponent={
                         <>
                             <SectionHeading
+                                title="Watchlist"
+                                style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/shows/watchlist",
+                                    })
+                                }
+                            />
+                            <Text style={styles.pageElement}>
+                                {watchlistEntries.length} shows in your
+                                watchlist
+                            </Text>
+                            <SectionHeading
                                 title="Popular"
                                 style={styles.pageElement}
                                 onPress={() =>
@@ -202,6 +255,29 @@ const Shows: FC = () => {
                                                     },
                                                 })
                                             }
+                                            onAddReview={() =>
+                                                router.push({
+                                                    pathname:
+                                                        "/shows/editReview",
+                                                    params: {
+                                                        mediaId: item.id,
+                                                        mediaTitle: item.name,
+                                                        mediaPosterUri:
+                                                            item.posterPath,
+                                                    },
+                                                })
+                                            }
+                                            onToggleWatchlist={() =>
+                                                onWatchlist
+                                                    ? deleteWatchlistEntry({
+                                                          mediaId: item.id,
+                                                          mediaType: "show",
+                                                      })
+                                                    : saveWatchlistEntry({
+                                                          mediaId: item.id,
+                                                          mediaType: "show",
+                                                      })
+                                            }
                                         />
                                     );
                                 }}
@@ -209,10 +285,15 @@ const Shows: FC = () => {
                             <SectionHeading
                                 title="My Reviews"
                                 style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/shows/reviews",
+                                    })
+                                }
                             />
                         </>
                     }
-                    data={[]}
+                    data={reviewList}
                     CellRendererComponent={({
                         children,
                         cellKey,
@@ -226,12 +307,49 @@ const Shows: FC = () => {
                             {children}
                         </View>
                     )}
-                    renderItem={() => null}
+                    renderItem={({ item }) => (
+                        <ReviewSummaryCard
+                            key={item.reviewId}
+                            review={item}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/shows/show",
+                                    params: {
+                                        mediaId: item.mediaId,
+                                        mediaTitle: item.mediaTitle,
+                                        mediaPosterUri: item.mediaPosterUri,
+                                    },
+                                })
+                            }
+                            onOpenReview={() =>
+                                router.push({
+                                    pathname: "/shows/review",
+                                    params: { reviewId: item.reviewId },
+                                })
+                            }
+                        />
+                    )}
                     ListEmptyComponent={
                         <Text style={styles.reviewsEmptyMessage}>
                             Nothing here yet. To save a review, search or pick a
                             show then 'Add Review'
                         </Text>
+                    }
+                    ListFooterComponent={
+                        reviewList.length ? (
+                            <IconAction
+                                containerStyle={styles.reviewFooter}
+                                iconName="right"
+                                labelPosition="left"
+                                size="small"
+                                label="All"
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/shows/reviews",
+                                    })
+                                }
+                            />
+                        ) : null
                     }
                 />
             )}
@@ -245,18 +363,6 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
     StyleSheet.create({
         pageElement: {
             paddingHorizontal: padding.pageHorizontal,
-        },
-        watchlistSectionContainer: {
-            flexDirection: "row",
-        },
-        watchlistSectionItem: {
-            width: "50%",
-        },
-        watchlistChart: {
-            flex: 1,
-            height: 171,
-            paddingTop: padding.tiny,
-            marginRight: padding.pageHorizontal,
         },
         showsList: {
             marginBottom: padding.small,

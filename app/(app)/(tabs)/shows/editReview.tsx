@@ -1,12 +1,12 @@
 import { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
-import { useMovie } from "@/modules/movie";
 import {
     ReviewForm,
     getRatingLabel,
     useReview,
     useSaveReview,
 } from "@/modules/review";
+import { useShow } from "@/modules/show";
 import { useUser, useUsers } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
@@ -37,7 +37,7 @@ const EditReview: FC = () => {
     const { userId } = useSession();
 
     const { data: review } = useReview(reviewId);
-    const { data: movie } = useMovie(mediaId ? mediaId : review?.mediaId);
+    const { data: show } = useShow(mediaId ? mediaId : review?.mediaId);
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
     const { data: users = [] } = useUsers();
@@ -70,10 +70,7 @@ const EditReview: FC = () => {
             .filter(Undefined) ?? [],
     );
 
-    const { data: watchlistEntry } = useWatchlistEntry(
-        MediaType.Movie,
-        mediaId,
-    );
+    const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, mediaId);
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
@@ -95,7 +92,7 @@ const EditReview: FC = () => {
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
             mediaId: mediaIdValue,
-            mediaType: "movie",
+            mediaType: "show",
             venue,
             rating,
             reviewDescription,
@@ -105,7 +102,7 @@ const EditReview: FC = () => {
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
             deleteWatchlistEntry({
                 mediaId: mediaIdValue,
-                mediaType: MediaType.Movie,
+                mediaType: MediaType.Show,
             });
         }
         handleClose();
@@ -162,7 +159,7 @@ const EditReview: FC = () => {
                         label="Mark as watched"
                         value={clearWatchlistEntry}
                         onChange={setClearWatchlistEntry}
-                        helpText={`${movie?.title} is currently in your watchlist. ${
+                        helpText={`${show?.name} is currently in your watchlist. ${
                             clearWatchlistEntry
                                 ? "It will be removed when this review is created."
                                 : "It will remain there after this review is created."

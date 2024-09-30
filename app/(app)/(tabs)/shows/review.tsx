@@ -28,7 +28,7 @@ const Review: FC = () => {
                             iconName="pencil"
                             onPress={() =>
                                 router.push({
-                                    pathname: "/movies/editReview",
+                                    pathname: "/shows/editReview",
                                     params: { reviewId },
                                 })
                             }

@@ -9,13 +9,13 @@ const MoviesStack: FC = () => {
         <Stack screenOptions={screenOptions}>
             <Stack.Screen name="index" />
             <Stack.Screen name="movie" />
-            <Stack.Screen name="watchlist" />
             <Stack.Screen name="reviews" />
             <Stack.Screen name="browse" />
             <Stack.Screen
                 name="editReview"
                 options={{ presentation: "fullScreenModal" }}
             />
+            <Stack.Screen name="watchlist" />
         </Stack>
     );
 };

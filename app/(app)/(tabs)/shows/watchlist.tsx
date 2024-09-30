@@ -11,12 +11,12 @@ const Watchlist: FC = () => {
     const { jumpToDate } = useLocalSearchParams<{ jumpToDate?: string }>();
 
     const router = useRouter();
-    const { data: watchlist } = useWatchlist(MediaType.Movie);
+    const { data: watchlist } = useWatchlist(MediaType.Show);
     const {
         data: entries = [],
         isLoading,
         refetch,
-    } = useWatchlistEntries(MediaType.Movie);
+    } = useWatchlistEntries(MediaType.Show);
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     return (
@@ -29,7 +29,7 @@ const Watchlist: FC = () => {
                     onRefresh={refetch}
                     onPressEntry={(item) =>
                         router.push({
-                            pathname: "/movies/movie",
+                            pathname: "/shows/show",
                             params: {
                                 mediaId: item.mediaId,
                                 mediaTitle: item.mediaTitle,
@@ -40,7 +40,7 @@ const Watchlist: FC = () => {
                     onDeleteEntry={(mediaId) =>
                         deleteWatchlistEntry({
                             mediaId,
-                            mediaType: MediaType.Movie,
+                            mediaType: MediaType.Show,
                         })
                     }
                 />

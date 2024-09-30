@@ -19,7 +19,7 @@ import { useMovie } from "@/modules/movie";
 import {
     ReviewDetailsCard,
     ReviewRatingTimeline,
-    useReviews,
+    useMediaReviews,
 } from "@/modules/review";
 import {
     useDeleteWatchlistEntry,
@@ -41,7 +41,10 @@ const Movie: React.FC = () => {
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
 
     const { data: movie } = useMovie(mediaId);
-    const { data: reviews, refetch } = useReviews(mediaId);
+    const { data: reviews, refetch } = useMediaReviews(
+        MediaType.Movie,
+        mediaId,
+    );
     const { data: watchlistEntry } = useWatchlistEntry(
         MediaType.Movie,
         mediaId,

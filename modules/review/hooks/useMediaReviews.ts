@@ -1,14 +1,15 @@
+import type { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
 import { useQuery } from "@tanstack/react-query";
 import { ReviewsService } from "../services";
 import { ReviewKeys } from "./keys";
 
-export const useReviews = (mediaId?: number) => {
+export const useMediaReviews = (mediaType: MediaType, mediaId?: number) => {
     const { session } = useSession();
 
     return useQuery({
         queryKey: ReviewKeys.list(mediaId),
-        queryFn: () => ReviewsService.getReviews({ mediaId, session }),
-        select: (data) => data ?? undefined,
+        queryFn: () =>
+            ReviewsService.getReviews({ mediaType, mediaId, session }),
     });
 };

@@ -15,6 +15,7 @@ export type ReviewSummary = {
 
 export type GetReviewsRequest = {
     mediaId?: number;
+    mediaType: string;
     orderBy?: "rating" | "date" | "mediaTitle" | "mediaReleaseDate";
     sort?: "asc" | "desc";
     page?: number;

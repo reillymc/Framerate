@@ -1,4 +1,4 @@
 export { useReview } from "./useReview";
-export { useReviews } from "./useReviews";
+export { useMediaReviews } from "./useMediaReviews";
 export { useSaveReview } from "./useSaveReview";
 export { useInfiniteReviews } from "./useInfiniteReviews";

@@ -28,7 +28,7 @@ const Reviews: FC = () => {
         refetch,
         fetchNextPage,
     } = useInfiniteReviews({
-        mediaType: MediaType.Movie,
+        mediaType: MediaType.Show,
         atVenue,
         withCompany,
         ratingMax: rating,
@@ -87,13 +87,13 @@ const Reviews: FC = () => {
                 onFetchNextPage={() => fetchNextPage()}
                 onOpenMedia={({ mediaId, mediaTitle, mediaPosterUri }) =>
                     router.push({
-                        pathname: "/movies/movie",
+                        pathname: "/shows/show",
                         params: { mediaId, mediaTitle, mediaPosterUri },
                     })
                 }
                 onOpenReview={({ reviewId }) =>
                     router.push({
-                        pathname: "/movies/review",
+                        pathname: "/shows/review",
                         params: { reviewId },
                     })
                 }

@@ -10,7 +10,6 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import {} from "@shopify/react-native-skia";
 import {
     addMonths,
     endOfMonth,
@@ -32,7 +31,7 @@ interface WatchlistSummaryProps {
     onPressEntry: (item: WatchlistEntrySummary) => void;
     onRemoveFromWatchlist: (item: WatchlistEntrySummary) => void;
     onAddReview: (item: WatchlistEntrySummary) => void;
-    onPress: (destination?: "older") => void;
+    onPress: (date?: Date) => void;
 }
 
 export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
@@ -158,7 +157,16 @@ export const WatchlistSummary: FC<WatchlistSummaryProps> = ({
                                     styles.footerContainer,
                                     { height, width: width / 2 + gap },
                                 ]}
-                                onPress={() => onPress("older")}
+                                onPress={() =>
+                                    onPress(
+                                        startOfMonth(
+                                            subMonths(
+                                                startOfMonth(new Date()),
+                                                WatchlistConstants.monthsBack,
+                                            ),
+                                        ),
+                                    )
+                                }
                             >
                                 <Icon set="octicons" iconName="arrow-right" />
                                 <Text variant="bodyEmphasized">Older</Text>

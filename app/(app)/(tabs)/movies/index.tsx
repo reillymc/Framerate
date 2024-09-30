@@ -35,7 +35,10 @@ import Animated, {
 import type { SearchBarCommands } from "react-native-screens";
 
 const Movies: FC = () => {
-    const { data: reviews } = useInfiniteReviews({ page: 1 });
+    const { data: reviews } = useInfiniteReviews({
+        mediaType: MediaType.Movie,
+        page: 1,
+    });
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
@@ -70,13 +73,10 @@ const Movies: FC = () => {
     }, [popularMovies, watchlistEntries, reviewList]);
 
     const handlePressDate = useCallback(
-        (date: Date) =>
+        (date?: Date) =>
             router.navigate({
                 pathname: "/movies/watchlist",
-                params: {
-                    mediaType: MediaType.Movie,
-                    date: date.toISOString(),
-                },
+                params: { jumpToDate: date?.toISOString() },
             }),
         [],
     );
@@ -222,7 +222,6 @@ const Movies: FC = () => {
                                 onPress={() =>
                                     router.navigate({
                                         pathname: "/movies/watchlist",
-                                        params: { mediaType: MediaType.Movie },
                                     })
                                 }
                             />
@@ -246,15 +245,7 @@ const Movies: FC = () => {
                                                 },
                                             })
                                         }
-                                        onPress={(destination) =>
-                                            router.navigate({
-                                                pathname: "/movies/watchlist",
-                                                params: {
-                                                    mediaType: MediaType.Movie,
-                                                    destination,
-                                                },
-                                            })
-                                        }
+                                        onPress={handlePressDate}
                                         onAddReview={({
                                             mediaId,
                                             mediaTitle,
