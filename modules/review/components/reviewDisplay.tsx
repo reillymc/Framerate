@@ -11,12 +11,16 @@ import type { ReviewDetails } from "../services";
 
 interface ReviewDisplayProps {
     review: ReviewDetails;
+    starCount: number;
 }
 
-export const ReviewDisplay: FC<ReviewDisplayProps> = ({ review }) => {
+export const ReviewDisplay: FC<ReviewDisplayProps> = ({
+    review,
+    starCount,
+}) => {
     const styles = useThemedStyles(createStyles, {});
 
-    const rating = ratingToStars(review.rating ?? 0);
+    const rating = ratingToStars(review.rating, starCount);
 
     return (
         <>
@@ -24,8 +28,8 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({ review }) => {
                 rating={rating}
                 style={{ justifyContent: "center" }}
                 enableHalfStar
-                maxStars={10}
-                starSize={18}
+                maxStars={starCount}
+                starSize={180 / starCount}
             />
             {!!review.reviewTitle && <Text>{review.reviewTitle}</Text>}
             <Text style={styles.informationSection}>

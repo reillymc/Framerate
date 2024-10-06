@@ -1,5 +1,6 @@
+import { SegmentedControl } from "@/components";
 import { useSaveUser, useUser, useUsers } from "@/modules/user";
-import { ParseConfiguration } from "@/modules/user";
+import { MergeConfiguration, ParseConfiguration } from "@/modules/user";
 import {
     Action,
     Button,
@@ -58,8 +59,7 @@ const Profile: FC = () => {
 
         saveUser({
             userId: user.userId,
-            configuration: {
-                ...user.configuration,
+            configuration: MergeConfiguration(user.configuration, {
                 venues: {
                     knownVenueNames: [
                         ...new Set(
@@ -70,7 +70,7 @@ const Profile: FC = () => {
                         ),
                     ],
                 },
-            },
+            }),
         });
 
         setVenue("");
@@ -179,6 +179,30 @@ const Profile: FC = () => {
                             style={styles.sectionElement}
                         >
                             <Text variant="title">Customisation</Text>
+                            <SegmentedControl
+                                label="Rating System"
+                                options={
+                                    [
+                                        { label: "5 Star", value: 5 },
+                                        { label: "10 Star", value: 10 },
+                                    ] as const
+                                }
+                                value={user.configuration.ratings.starCount}
+                                style={styles.sectionElement}
+                                onChange={({ value }) =>
+                                    saveUser({
+                                        userId: user.userId,
+                                        configuration: MergeConfiguration(
+                                            user.configuration,
+                                            {
+                                                ratings: {
+                                                    starCount: value,
+                                                },
+                                            },
+                                        ),
+                                    })
+                                }
+                            />
                             <Pressable
                                 style={styles.collapsibleHeading}
                                 onPress={() =>
@@ -382,7 +406,7 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             paddingTop: padding.pageTop,
         },
         indentedElement: {
-            paddingLeft: padding.regular,
+            paddingLeft: padding.small,
         },
         collapsibleHeading: {
             flexDirection: "row",
@@ -391,18 +415,18 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             paddingVertical: padding.regular,
         },
         sectionInternalContainer: {
-            borderRadius: border.radius.loose,
+            borderRadius: border.radius.regular,
             overflow: "hidden",
         },
         sectionContainer: {
             marginLeft: padding.regular,
         },
         listItem: {
-            paddingVertical: padding.regular,
+            paddingVertical: padding.small + padding.tiny,
             borderBottomWidth: 1,
             borderBottomColor: color.border,
             backgroundColor: color.inputBackground,
-            paddingLeft: padding.regular,
+            paddingLeft: padding.small,
         },
         sectionElement: {
             marginTop: padding.regular,
@@ -412,8 +436,8 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
             borderTopRightRadius: 0,
             borderBottomLeftRadius: border.radius.loose,
             borderBottomRightRadius: border.radius.loose,
-            paddingLeft: padding.regular,
-            height: 56,
+            paddingLeft: padding.small,
+            height: 48,
         },
         friendInputContainer: {
             flexDirection: "row",

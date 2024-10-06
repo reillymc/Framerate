@@ -1,3 +1,5 @@
+import type { DeepPartial } from "@reillymc/react-native-components";
+
 export type User = {
     id: string;
     firstName: string;
@@ -11,6 +13,9 @@ export type Configuration = {
     venues: {
         knownVenueNames: string[];
     };
+    ratings: {
+        starCount: 5 | 10;
+    };
 };
 
 export const DefaultConfiguration: Configuration = {
@@ -20,17 +25,37 @@ export const DefaultConfiguration: Configuration = {
     venues: {
         knownVenueNames: [],
     },
+    ratings: {
+        starCount: 10,
+    },
 };
 
 export const ParseConfiguration = (
     configuration: Partial<Configuration>,
+): Configuration => MergeConfiguration(DefaultConfiguration, configuration);
+
+export const MergeConfiguration = (
+    first: Configuration,
+    second: DeepPartial<Configuration>,
 ): Configuration => {
     return {
         company: {
-            knownUserIds: configuration.company?.knownUserIds ?? [],
+            ...first.company,
+            knownUserIds: [
+                ...first.company.knownUserIds,
+                ...((second.company?.knownUserIds ?? []) as string[]),
+            ],
         },
         venues: {
-            knownVenueNames: configuration.venues?.knownVenueNames ?? [],
+            ...first.venues,
+            knownVenueNames: [
+                ...first.venues.knownVenueNames,
+                ...((second.venues?.knownVenueNames ?? []) as string[]),
+            ],
+        },
+        ratings: {
+            ...first.ratings,
+            starCount: second.ratings?.starCount ?? first.ratings.starCount,
         },
     };
 };

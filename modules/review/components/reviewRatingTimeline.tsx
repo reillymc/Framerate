@@ -11,13 +11,19 @@ import {
 import { subYears } from "date-fns";
 import { type FC, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
-import { type SharedValue, useDerivedValue } from "react-native-reanimated";
+import {
+    type SharedValue,
+    runOnJS,
+    useDerivedValue,
+    useSharedValue,
+} from "react-native-reanimated";
 import {
     CartesianChart,
     Line,
     Scatter,
     useChartPressState,
 } from "victory-native";
+import { ratingToStars } from "../helpers";
 import type { ReviewSummary } from "../services";
 
 interface ChartData extends Record<string, unknown> {
@@ -28,11 +34,13 @@ interface ChartData extends Record<string, unknown> {
 
 interface ReviewRatingTimelineProps {
     reviews: Array<Pick<ReviewSummary, "date" | "rating">>;
+    starCount: number;
     chartHeight?: number;
 }
 
 export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
     reviews,
+    starCount,
     chartHeight = 240,
 }) => {
     const font = useFont(fonts.dosis, 12);
@@ -169,6 +177,7 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                                     activeDate={state.x.value}
                                     lineColor={theme.color.primary}
                                     textColor={theme.color.primaryHighlight}
+                                    starCount={starCount}
                                 />
                             </>
                         )}
@@ -246,6 +255,7 @@ type ActiveValueIndicatorProps = {
     top: number;
     lineColor: string;
     textColor: string;
+    starCount: number;
 };
 const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     xPosition,
@@ -257,6 +267,7 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     activeDate,
     lineColor,
     textColor,
+    starCount,
 }) => {
     const topOffset = 2;
     const fontSizeRegular = 10;
@@ -271,10 +282,16 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
         ),
     );
 
-    // Text label
-    const activeValueDisplay = useDerivedValue(() =>
-        (activeValue.value / 10).toString(),
-    );
+    const activeValueDisplay = useSharedValue("");
+
+    const wrapper = (rating: number, stars: number) => {
+        activeValueDisplay.value = ratingToStars(rating, stars).toString();
+    };
+
+    useDerivedValue(() => {
+        runOnJS(wrapper)(activeValue.value, starCount);
+    });
+
     const activeValueWidth = useDerivedValue(
         () => fontBold?.measureText(activeValueDisplay.value).width || 0,
     );

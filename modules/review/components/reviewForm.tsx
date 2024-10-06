@@ -22,6 +22,7 @@ interface ReviewFormProps {
     date: Date;
     description: string;
     venue: string | undefined;
+    starCount: number;
     company: ValueItem[];
     companyOptions: UserSummary[];
     venueOptions: string[];
@@ -42,6 +43,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
     company,
     companyOptions,
     venueOptions,
+    starCount,
     onRatingChange,
     onIncludeDateChange,
     onDateChange,
@@ -58,11 +60,13 @@ export const ReviewForm: FC<ReviewFormProps> = ({
         <>
             <StarRating
                 style={styles.rating}
-                rating={ratingToStars(rating)}
+                rating={ratingToStars(rating, starCount)}
                 enableHalfStar
-                maxStars={10}
-                starSize={26}
-                onChange={(value) => onRatingChange(starsToRating(value))}
+                maxStars={starCount}
+                starSize={260 / starCount}
+                onChange={(value) =>
+                    onRatingChange(starsToRating(value, starCount))
+                }
                 enableSwiping
                 animationConfig={{
                     duration: 0,

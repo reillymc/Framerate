@@ -14,4 +14,4 @@ export {
     ReviewSortButton,
     ReviewSummaryCard,
 } from "./components";
-export { ReviewOrder, ReviewSort } from "./constants";
+export { ReviewOrder, ReviewSort, AbsoluteRatingScale } from "./constants";

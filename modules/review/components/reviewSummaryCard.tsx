@@ -13,17 +13,19 @@ import type { ReviewSummary } from "../services";
 
 interface ReviewSummaryCardProps {
     review: ReviewSummary;
+    starCount: number;
     onPress: () => void;
     onOpenReview: () => void;
 }
 
 export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     review,
+    starCount,
     onPress,
     onOpenReview,
 }) => {
-    const styles = useThemedStyles(createStyles, {});
-    const rating = ratingToStars(review?.rating ?? 0);
+    const styles = useThemedStyles(createStyles, { starCount });
+    const rating = ratingToStars(review.rating, starCount);
 
     const releaseYear = review?.mediaReleaseDate
         ? new Date(review.mediaReleaseDate).getFullYear()
@@ -56,7 +58,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                         style={styles.stars}
                         starStyle={{ marginHorizontal: 0 }}
                         enableHalfStar
-                        maxStars={10}
+                        maxStars={starCount}
                         starSize={24}
                     />
                 </View>
@@ -70,7 +72,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             numberOfLines={1}
                             style={styles.numericRating}
                         >
-                            {rating}/10
+                            {rating}/{starCount}
                         </Text>
                     </View>
                     <Text numberOfLines={3} style={styles.description}>
@@ -91,7 +93,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             numberOfLines={1}
                             style={[styles.numericRating, styles.altRating]}
                         >
-                            {rating}/10
+                            {rating}/{starCount}
                         </Text>
                         <Text variant="caption">
                             {review.date &&
@@ -111,10 +113,10 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     );
 };
 
-const createStyles = ({
-    theme: { padding, border, color },
-    styles: { text },
-}: ThemedStyles) =>
+const createStyles = (
+    { theme: { padding, border, color }, styles: { text } }: ThemedStyles,
+    { starCount }: Pick<ReviewSummaryCardProps, "starCount">,
+) =>
     StyleSheet.create({
         container: {
             flex: 1,
@@ -152,7 +154,8 @@ const createStyles = ({
         stars: {
             marginHorizontal: -1,
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: starCount >= 10 ? "space-between" : "flex-start",
+            gap: starCount <= 5 ? padding.small : 0,
         },
         body: {
             marginTop: padding.small,

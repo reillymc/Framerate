@@ -1,2 +1,2 @@
-export { User, ParseConfiguration } from "./models";
-export { useUser, useSaveUser, useUsers } from "./hooks";
+export { User, ParseConfiguration, MergeConfiguration } from "./models";
+export { useUser, useSaveUser, useUsers, useCurrentUserConfig } from "./hooks";

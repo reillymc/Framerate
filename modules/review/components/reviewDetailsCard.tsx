@@ -11,15 +11,17 @@ import type { ReviewDetails } from "../services";
 
 interface ReviewDetailsCardProps {
     review: ReviewDetails;
+    starCount: number;
     onPress: () => void;
 }
 
 export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
     review,
+    starCount,
     onPress,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const rating = ratingToStars(review?.rating ?? 0);
+    const rating = ratingToStars(review.rating, starCount);
 
     const date = review.date ? new Date(review.date) : undefined;
 
@@ -54,15 +56,15 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
                         style={styles.stars}
                         starStyle={{ marginHorizontal: 0 }}
                         enableHalfStar
-                        maxStars={10}
-                        starSize={22}
+                        maxStars={starCount}
+                        starSize={Math.min(220 / starCount, 28)}
                     />
                     <Text
                         variant="heading"
                         numberOfLines={1}
                         style={styles.numericRating}
                     >
-                        {rating}/10
+                        {rating}/{starCount}
                     </Text>
                 </View>
                 <View style={styles.bodyContainer}>

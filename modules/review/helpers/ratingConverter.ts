@@ -1,10 +1,10 @@
-export const ratingToStars = (rating: number): number => {
-    return rating / 10;
-};
+import { AbsoluteRatingScale } from "../constants";
 
-export const starsToRating = (stars: number): number => {
-    return stars * 10;
-};
+export const ratingToStars = (rating: number, starCount: number): number =>
+    (rating / AbsoluteRatingScale) * starCount;
 
-export const getRatingLabel = (rating: number) =>
-    `${ratingToStars(rating)} Star${rating === 10 ? "" : "s"}`;
+export const starsToRating = (stars: number, starCount: number): number =>
+    (stars * AbsoluteRatingScale) / starCount;
+
+export const getRatingLabel = (rating: number, starCount: number) =>
+    `${ratingToStars(rating, starCount)} Star${rating === AbsoluteRatingScale / starCount ? "" : "s"}`;

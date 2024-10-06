@@ -6,11 +6,14 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
+import { type FC, useMemo } from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { AbsoluteRatingScale } from "../constants";
 import { getRatingLabel } from "../helpers";
 import type { ReviewSummary } from "../services";
 import { ReviewSummaryCard } from "./reviewSummaryCard";
+
+const TenStarOptions = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
 interface FilterableReviewListProps {
     reviews: ReviewSummary[] | undefined;
@@ -24,6 +27,7 @@ interface FilterableReviewListProps {
     };
     companyOptions: UserSummary[];
     venueOptions: string[];
+    starCount: number;
     onRefresh: () => void;
     onFetchNextPage: () => void;
     onOpenReview: (review: ReviewSummary) => void;
@@ -42,12 +46,21 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
     },
     companyOptions,
     venueOptions,
+    starCount,
     onRefresh,
     onFetchNextPage,
     onOpenMedia,
     onOpenReview,
 }) => {
     const styles = useThemedStyles(createStyles, {});
+
+    const starValueList = useMemo(
+        () =>
+            TenStarOptions.filter(
+                (x) => x % (AbsoluteRatingScale / starCount) === 0,
+            ),
+        [starCount],
+    );
 
     return (
         <>
@@ -80,11 +93,12 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                         <ContextMenu
                             menuConfig={{
                                 menuTitle: "Rating",
-                                menuItems: [
-                                    100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0,
-                                ].map((value) => ({
+                                menuItems: starValueList.map((value) => ({
                                     actionKey: value.toString(),
-                                    actionTitle: getRatingLabel(value),
+                                    actionTitle: getRatingLabel(
+                                        value,
+                                        starCount,
+                                    ),
                                     menuState: rating === value ? "on" : "off",
                                 })),
                             }}
@@ -98,7 +112,7 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                             <Tag
                                 label={
                                     rating !== undefined
-                                        ? getRatingLabel(rating)
+                                        ? getRatingLabel(rating, starCount)
                                         : "All Ratings"
                                 }
                                 variant="light"
@@ -162,7 +176,8 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                         <Text style={styles.pageElement}>
                             {reviews?.length} review
                             {reviews?.length === 1 ? "" : "s"}
-                            {rating && ` of ${getRatingLabel(rating)}`}
+                            {rating &&
+                                ` of ${getRatingLabel(rating, starCount)}`}
                             {venue && ` at ${venue}`}
                             {company &&
                                 ` with ${company.firstName} ${company.lastName}`}
@@ -174,6 +189,7 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                     <ReviewSummaryCard
                         key={item.reviewId}
                         review={item}
+                        starCount={starCount}
                         onPress={() => onOpenMedia(item)}
                         onOpenReview={() => onOpenReview(item)}
                     />
