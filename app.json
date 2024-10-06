@@ -5,7 +5,7 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
-        "scheme": "myapp",
+        "scheme": "framerate",
         "userInterfaceStyle": "automatic",
         "splash": {
             "image": "./assets/images/splash.png",
@@ -14,7 +14,10 @@
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.reillymc.framerate"
+            "bundleIdentifier": "com.reillymc.framerate",
+            "config": {
+                "usesNonExemptEncryption": false
+            }
         },
         "android": {
             "adaptiveIcon": {
