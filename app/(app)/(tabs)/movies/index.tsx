@@ -7,6 +7,7 @@ import {
     useSearchMovies,
 } from "@/modules/movie";
 import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
+import { useCurrentUserConfig } from "@/modules/user";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import {
     useDeleteWatchlistEntry,
@@ -45,6 +46,8 @@ const Movies: FC = () => {
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
         size: "large",
     });
+
+    const { configuration } = useCurrentUserConfig();
 
     const searchRef = useRef<SearchBarCommands>(null);
     const [searchValue, setSearchValue] = useState("");
@@ -376,6 +379,7 @@ const Movies: FC = () => {
                         <ReviewSummaryCard
                             key={item.reviewId}
                             review={item}
+                            starCount={configuration.ratings.starCount}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",

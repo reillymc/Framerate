@@ -7,6 +7,7 @@ import {
     useRecentSearches,
     useSearchShows,
 } from "@/modules/show";
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
@@ -39,6 +40,8 @@ const Shows: FC = () => {
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
         size: "large",
     });
+
+    const { configuration } = useCurrentUserConfig();
 
     const searchRef = useRef<SearchBarCommands>(null);
     const [searchValue, setSearchValue] = useState("");
@@ -311,6 +314,7 @@ const Shows: FC = () => {
                         <ReviewSummaryCard
                             key={item.reviewId}
                             review={item}
+                            starCount={configuration.ratings.starCount}
                             onPress={() =>
                                 router.push({
                                     pathname: "/shows/show",

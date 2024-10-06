@@ -164,22 +164,18 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                 renderOutside={({ chartBounds }) => (
                     <>
                         {isActive && (
-                            <>
-                                <ActiveValueIndicator
-                                    xPosition={state.x.position}
-                                    yPosition={state.y.rating.position}
-                                    bottom={chartBounds.bottom}
-                                    top={chartBounds.top}
-                                    activeValue={state.y.rating.value}
-                                    filteredValue={
-                                        state.y.filteredRatings.value
-                                    }
-                                    activeDate={state.x.value}
-                                    lineColor={theme.color.primary}
-                                    textColor={theme.color.primaryHighlight}
-                                    starCount={starCount}
-                                />
-                            </>
+                            <ActiveValueIndicator
+                                xPosition={state.x.position}
+                                yPosition={state.y.rating.position}
+                                bottom={chartBounds.bottom}
+                                top={chartBounds.top}
+                                activeValue={state.y.rating.value}
+                                filteredValue={state.y.filteredRatings.value}
+                                activeDate={state.x.value}
+                                lineColor={theme.color.primary}
+                                textColor={theme.color.primaryHighlight}
+                                starCount={starCount}
+                            />
                         )}
                     </>
                 )}

@@ -1,4 +1,5 @@
 import { ReviewDisplay, getRatingLabel, useReview } from "@/modules/review";
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     IconActionV2,
     type ThemedStyles,
@@ -14,6 +15,7 @@ const Review: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
 
+    const { configuration } = useCurrentUserConfig();
     const { data: review } = useReview(reviewId);
 
     return (
@@ -21,7 +23,10 @@ const Review: FC = () => {
             <Stack.Screen
                 options={{
                     title: review?.rating
-                        ? getRatingLabel(review.rating)
+                        ? getRatingLabel(
+                              review.rating,
+                              configuration.ratings.starCount,
+                          )
                         : "...",
                     headerRight: () => (
                         <IconActionV2
@@ -41,7 +46,12 @@ const Review: FC = () => {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
             >
-                {review && <ReviewDisplay review={review} />}
+                {review && (
+                    <ReviewDisplay
+                        review={review}
+                        starCount={configuration.ratings.starCount}
+                    />
+                )}
             </ScrollView>
         </>
     );

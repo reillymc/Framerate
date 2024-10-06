@@ -1,13 +1,14 @@
 import { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
 import {
+    AbsoluteRatingScale,
     FilterableReviewList,
     type ReviewOrder,
     type ReviewSort,
     ReviewSortButton,
     useInfiniteReviews,
 } from "@/modules/review";
-import { useUser, useUsers } from "@/modules/user";
+import { useCurrentUserConfig, useUsers } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useMemo, useState } from "react";
@@ -23,6 +24,9 @@ const Reviews: FC = () => {
 
     const router = useRouter();
 
+    const { userId } = useSession();
+    const { configuration } = useCurrentUserConfig();
+
     const {
         data: reviews,
         refetch,
@@ -31,13 +35,16 @@ const Reviews: FC = () => {
         mediaType: MediaType.Movie,
         atVenue,
         withCompany,
-        ratingMax: rating !== undefined ? rating + 9 : undefined,
+        ratingMax:
+            rating !== undefined
+                ? rating +
+                  AbsoluteRatingScale / configuration.ratings.starCount -
+                  1
+                : undefined,
         ratingMin: rating,
         sort,
         orderBy,
     });
-    const { userId } = useSession();
-    const { data: user } = useUser(userId);
     // TODO: update with user configuration knownUsers when implemented
     const { data: users = [] } = useUsers();
 
@@ -73,7 +80,8 @@ const Reviews: FC = () => {
             />
             <FilterableReviewList
                 reviews={reviewList}
-                venueOptions={user?.configuration.venues.knownVenueNames ?? []}
+                venueOptions={configuration.venues.knownVenueNames}
+                starCount={configuration.ratings.starCount}
                 companyOptions={filteredUsers}
                 filters={{
                     company: selectedUser,

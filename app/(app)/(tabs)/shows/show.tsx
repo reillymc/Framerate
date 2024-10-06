@@ -21,6 +21,7 @@ import {
     useMediaReviews,
 } from "@/modules/review";
 import { useShow } from "@/modules/show";
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
@@ -43,6 +44,7 @@ const Show: React.FC = () => {
     const router = useRouter();
 
     const { data: show } = useShow(mediaId);
+    const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useMediaReviews(MediaType.Show, mediaId);
     const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, mediaId);
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
@@ -97,7 +99,10 @@ const Show: React.FC = () => {
                                 Reviews
                             </Text>
                             {reviews.length > 1 && (
-                                <ReviewRatingTimeline reviews={reviews} />
+                                <ReviewRatingTimeline
+                                    reviews={reviews}
+                                    starCount={configuration.ratings.starCount}
+                                />
                             )}
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
@@ -106,6 +111,9 @@ const Show: React.FC = () => {
                                 renderItem={({ item }) => (
                                     <ReviewDetailsCard
                                         key={item.reviewId}
+                                        starCount={
+                                            configuration.ratings.starCount
+                                        }
                                         review={item}
                                         onPress={() =>
                                             router.push({

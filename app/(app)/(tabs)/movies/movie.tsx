@@ -21,6 +21,7 @@ import {
     ReviewRatingTimeline,
     useMediaReviews,
 } from "@/modules/review";
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
@@ -41,6 +42,7 @@ const Movie: React.FC = () => {
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
 
     const { data: movie } = useMovie(mediaId);
+    const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useMediaReviews(
         MediaType.Movie,
         mediaId,
@@ -104,7 +106,10 @@ const Movie: React.FC = () => {
                                 Reviews
                             </Text>
                             {reviews.length > 1 && (
-                                <ReviewRatingTimeline reviews={reviews} />
+                                <ReviewRatingTimeline
+                                    reviews={reviews}
+                                    starCount={configuration.ratings.starCount}
+                                />
                             )}
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
@@ -113,6 +118,9 @@ const Movie: React.FC = () => {
                                 renderItem={({ item }) => (
                                     <ReviewDetailsCard
                                         key={item.reviewId}
+                                        starCount={
+                                            configuration.ratings.starCount
+                                        }
                                         review={item}
                                         onPress={() =>
                                             router.push({

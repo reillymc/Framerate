@@ -7,7 +7,7 @@ import {
     useSaveReview,
 } from "@/modules/review";
 import { useShow } from "@/modules/show";
-import { useUser, useUsers } from "@/modules/user";
+import { useCurrentUserConfig, useUsers } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useWatchlistEntry,
@@ -41,7 +41,7 @@ const EditReview: FC = () => {
     const router = useRouter();
     const { mutate: saveReview } = useSaveReview();
     const { data: users = [] } = useUsers();
-    const { data: user } = useUser(userId);
+    const { configuration } = useCurrentUserConfig();
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
 
     const filteredUsers = users.filter((user) => user.userId !== userId);
@@ -112,7 +112,10 @@ const EditReview: FC = () => {
         <>
             <Stack.Screen
                 options={{
-                    title: getRatingLabel(rating),
+                    title: getRatingLabel(
+                        rating,
+                        configuration.ratings.starCount,
+                    ),
                     headerLeft: () => (
                         <Action
                             label="Close"
@@ -144,9 +147,8 @@ const EditReview: FC = () => {
                     company={company}
                     description={reviewDescription}
                     venue={venue}
-                    venueOptions={
-                        user?.configuration.venues.knownVenueNames ?? []
-                    }
+                    starCount={configuration.ratings.starCount}
+                    venueOptions={configuration.venues.knownVenueNames}
                     onRatingChange={setRating}
                     onIncludeDateChange={setIncludeDate}
                     onDateChange={setDate}
