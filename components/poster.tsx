@@ -11,10 +11,12 @@ import {
 import {
     Text,
     type ThemedStyles,
+    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { useMemo } from "react";
+import { ContextMenu, type MenuElementConfig } from "./contextMenu";
 import { TmdbImage } from "./tmdbImage";
 
 export interface PosterProps {
@@ -36,7 +38,11 @@ export const Poster: React.FC<PosterProps> = ({
     imageUri,
     removeMargin = false,
     size = "large",
+    onWatchlist,
     onPress,
+    onAddReview,
+    onOpenReview,
+    onToggleWatchlist,
 }) => {
     const { height, width, gap } = usePosterDimensions({ size });
 
@@ -47,6 +53,31 @@ export const Poster: React.FC<PosterProps> = ({
         removeMargin,
     });
     const { theme } = useTheme();
+
+    const watchlistAction: MenuElementConfig | undefined = useMemo(() => {
+        if (!onToggleWatchlist) return undefined;
+        return onWatchlist
+            ? {
+                  actionKey: "watchlist-remove",
+                  actionTitle: "Remove from Watchlist",
+                  icon: {
+                      type: "IMAGE_SYSTEM",
+                      imageValue: {
+                          systemName: "eye.slash",
+                      },
+                  },
+              }
+            : {
+                  actionKey: "watchlist-add",
+                  actionTitle: "Add to Watchlist",
+                  icon: {
+                      type: "IMAGE_SYSTEM",
+                      imageValue: {
+                          systemName: "eye",
+                      },
+                  },
+              };
+    }, [onWatchlist, onToggleWatchlist]);
 
     return (
         <Pressable
@@ -60,17 +91,71 @@ export const Poster: React.FC<PosterProps> = ({
         >
             {({ pressed }) => (
                 <>
-                    <TmdbImage
-                        path={imageUri}
-                        type="poster"
-                        style={{
-                            height,
-                            width,
-                            borderRadius:
-                                styles.pressableContainer.borderRadius,
-                            opacity: pressed ? 0.85 : 1,
+                    <ContextMenu
+                        interaction="long-press"
+                        menuConfig={{
+                            menuTitle: "",
+                            menuItems: [
+                                onAddReview
+                                    ? ({
+                                          actionKey: "add-review",
+                                          actionTitle: "Add Review",
+                                          icon: {
+                                              type: "IMAGE_SYSTEM",
+                                              imageValue: {
+                                                  systemName: "pencil",
+                                              },
+                                          },
+                                      } satisfies MenuElementConfig)
+                                    : undefined,
+                                onOpenReview
+                                    ? ({
+                                          actionKey: "open-review",
+                                          actionTitle: "Open Review",
+                                          icon: {
+                                              type: "IMAGE_SYSTEM",
+                                              imageValue: {
+                                                  systemName: "book.fill",
+                                              },
+                                          },
+                                      } satisfies MenuElementConfig)
+                                    : undefined,
+                                watchlistAction,
+                            ].filter(Undefined),
                         }}
-                    />
+                        onPressMenuAction={({ actionKey }) => {
+                            switch (actionKey) {
+                                case "view":
+                                    onPress?.();
+                                    break;
+                                case "add-review":
+                                    onAddReview?.();
+                                    break;
+                                case "open-review":
+                                    onOpenReview?.();
+                                    break;
+                                case "watchlist-add":
+                                    onToggleWatchlist?.();
+                                    break;
+                                case "watchlist-remove":
+                                    onToggleWatchlist?.();
+                                    break;
+                            }
+                        }}
+                        style={styles.contextMenu}
+                    >
+                        <TmdbImage
+                            path={imageUri}
+                            type="poster"
+                            style={{
+                                height,
+                                width,
+                                borderRadius:
+                                    styles.pressableContainer.borderRadius,
+                                opacity: pressed ? 0.85 : 1,
+                            }}
+                        />
+                    </ContextMenu>
                     {!!heading && (
                         <View>
                             <View
@@ -171,5 +256,10 @@ const createStyles = (
         },
         contentItem: {
             flexDirection: "row",
+        },
+        contextMenu: {
+            borderRadius: ["small", "tiny"].includes(size)
+                ? border.radius.regular
+                : border.radius.loose,
         },
     });

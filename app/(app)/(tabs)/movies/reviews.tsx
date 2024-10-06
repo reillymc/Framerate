@@ -31,7 +31,7 @@ const Reviews: FC = () => {
         mediaType: MediaType.Movie,
         atVenue,
         withCompany,
-        ratingMax: rating,
+        ratingMax: rating !== undefined ? rating + 9 : undefined,
         ratingMin: rating,
         sort,
         orderBy,

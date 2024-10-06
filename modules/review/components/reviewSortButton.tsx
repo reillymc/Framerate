@@ -1,4 +1,4 @@
-import { MenuIconButton } from "@/components";
+import { BlurIconAction, ContextMenu } from "@/components";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -23,9 +23,7 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <MenuIconButton
-            iconName="arrow-switch"
-            variant="secondary"
+        <ContextMenu
             menuConfig={{
                 menuTitle: "Sort reviews by",
                 menuItems: [
@@ -70,26 +68,31 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
                     },
                 ],
             }}
-            onPressMenuItem={({ nativeEvent }) => {
+            onPressMenuAction={({ actionKey }) => {
                 if (
                     [
                         "rating",
                         "mediaTitle",
                         "date",
                         "mediaReleaseDate",
-                    ].includes(nativeEvent.actionKey)
+                    ].includes(actionKey)
                 ) {
-                    onChangeOrder(nativeEvent.actionKey as ReviewOrder);
+                    onChangeOrder(actionKey as ReviewOrder);
                     return;
                 }
 
-                if (["asc", "desc"].includes(nativeEvent.actionKey)) {
-                    onChangeSort(nativeEvent.actionKey as ReviewSort);
+                if (["asc", "desc"].includes(actionKey)) {
+                    onChangeSort(actionKey as ReviewSort);
                     return;
                 }
             }}
-            style={styles.sortIcon}
-        />
+        >
+            <BlurIconAction
+                iconName="arrow-switch"
+                variant="secondary"
+                style={styles.sortIcon}
+            />
+        </ContextMenu>
     );
 };
 

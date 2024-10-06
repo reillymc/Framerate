@@ -1,7 +1,6 @@
-import React from "react";
+import type { FC } from "react";
 import {
     type ColorValue,
-    type OpaqueColorValue,
     type StyleProp,
     StyleSheet,
     type TextStyle,
@@ -17,54 +16,41 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { BlurView } from "expo-blur";
-import {
-    ContextMenuButton,
-    type MenuConfig,
-    type OnPressMenuItemEvent,
-} from "react-native-ios-context-menu";
 
 export const getLabelColor = (
     { color }: Theme,
     type: ActionVariant,
-    pressed: boolean,
 ): ColorValue => {
     switch (type) {
         case "primary":
-            return pressed ? color.primaryHighlight : color.primary;
+            return color.primary;
         case "secondary":
-            return pressed ? color.secondaryHighlight : color.secondary;
+            return color.secondary;
         case "flat":
-            return pressed ? color.textHighlight : color.textPrimary;
+            return color.textPrimary;
     }
 
     return color.textInverted;
 };
 
-interface MenuIconButtonProps {
-    iconName: keyof typeof Octicons.glyphMap;
-    menuConfig: MenuConfig;
-    onPressMenuItem: OnPressMenuItemEvent;
-    color?: string | OpaqueColorValue | undefined;
+interface BlurIconActionProps {
+    iconName?: keyof typeof Octicons.glyphMap;
     variant?: ActionVariant;
-    style?: StyleProp<ViewStyle>;
     iconStyle?: StyleProp<TextStyle>;
+
+    style?: StyleProp<ViewStyle>;
 }
 
-export const MenuIconButton: React.FunctionComponent<MenuIconButtonProps> = ({
+export const BlurIconAction: FC<BlurIconActionProps> = ({
     iconName,
-    menuConfig,
-    onPressMenuItem,
-    color,
-    variant = "primary",
-    style,
     iconStyle,
+    variant = "secondary",
+    style,
 }) => {
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
 
-    const [menuShown, setMenuShown] = React.useState(false);
-
-    const button = (
+    return (
         <View style={[styles.container, style]}>
             <BlurView
                 intensity={100}
@@ -76,25 +62,11 @@ export const MenuIconButton: React.FunctionComponent<MenuIconButtonProps> = ({
                 name={iconName}
                 style={iconStyle}
                 size={20}
-                color={color ?? getLabelColor(theme, variant, menuShown)}
+                color={getLabelColor(theme, variant)}
             />
         </View>
     );
-
-    return (
-        <ContextMenuButton
-            isMenuPrimaryAction
-            onMenuWillShow={() => setMenuShown(true)}
-            onMenuWillHide={() => setMenuShown(false)}
-            onPressMenuItem={onPressMenuItem}
-            menuConfig={menuConfig}
-        >
-            {button}
-        </ContextMenuButton>
-    );
 };
-
-MenuIconButton.displayName = "MenuIconButton";
 
 const createStyles = () => {
     const size = 28;
