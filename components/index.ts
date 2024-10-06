@@ -17,3 +17,4 @@ export { Fade } from "./fade";
 export { MediaFooterButtons } from "./mediaFooterButtons";
 export { MediaLinks } from "./mediaLinks";
 export { BlurIconAction } from "./blurIconAction";
+export { SegmentedControl } from "./segmentedControl";
