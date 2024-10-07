@@ -15,7 +15,7 @@ export const TmdbImage: React.FunctionComponent<TmdbImageProps> = ({
 }) => {
     return (
         <Image
-            source={`https://image.tmdb.org/t/p/${type === "poster" ? "w500" : "w780"}${path}`}
+            source={`https://image.tmdb.org/t/p/${type === "poster" ? "w780" : "w1280"}${path}`}
             style={[
                 type === "poster"
                     ? {

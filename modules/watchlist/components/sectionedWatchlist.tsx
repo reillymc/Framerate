@@ -31,6 +31,45 @@ const buildGetItemLayout = getItemLayout<WatchlistEntrySummary>({
 
 const now = new Date();
 
+const nthNumber = (number: number) => {
+    if (number > 3 && number < 21) return "th";
+    switch (number % 10) {
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
+    }
+};
+
+const formateItemDate = (rawDate: string | undefined, isOlder?: boolean) => {
+    if (!rawDate) return "Unknown";
+
+    const date = new Date(rawDate);
+
+    if (isOlder) {
+        return date.toLocaleDateString("en-AU", {
+            day: "2-digit",
+            weekday: undefined,
+            month: "2-digit",
+            year: "numeric",
+        });
+    }
+
+    const dateString = date.toLocaleDateString("en-AU", {
+        day: "2-digit",
+        weekday: "long",
+        month: undefined,
+        year: undefined,
+    });
+
+    const ordinalSuffix = nthNumber(date.getDate());
+
+    return `${dateString.replace(" ", ", ")}${ordinalSuffix}`;
+};
 interface SectionedWatchlistProps {
     entries: WatchlistEntrySummary[];
     jumpToDate?: Date;
@@ -113,20 +152,10 @@ export const SectionedWatchlist: FC<SectionedWatchlistProps> = ({
                     heading={item.mediaTitle}
                     imageUri={item.mediaPosterUri}
                     onWatchlist
-                    releaseDate={
-                        item.mediaReleaseDate
-                            ? new Date(
-                                  item.mediaReleaseDate,
-                              ).toLocaleDateString("en-AU", {
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year:
-                                      section.yearTitle === "Older"
-                                          ? "numeric"
-                                          : undefined,
-                              })
-                            : "Unknown"
-                    }
+                    releaseDate={formateItemDate(
+                        item.mediaReleaseDate,
+                        section.yearTitle === "Older",
+                    )}
                     onPress={() => onPressEntry(item)}
                     onToggleWatchlist={() => onDeleteEntry(item.mediaId)}
                     height={ITEM_HEIGHT}

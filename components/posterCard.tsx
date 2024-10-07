@@ -45,7 +45,7 @@ export const PosterCard: FC<PosterCardProps> = ({
                 <Text variant="heading" numberOfLines={2}>
                     {heading}
                 </Text>
-                {releaseDate && <Text variant="body">{releaseDate}</Text>}
+                {releaseDate && <Text variant="caption">{releaseDate}</Text>}
             </View>
         </Pressable>
     );

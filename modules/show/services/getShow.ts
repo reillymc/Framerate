@@ -1,6 +1,15 @@
 import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 
+export type SeasonSummary = {
+    seasonNumber: number;
+    name?: string;
+    posterPath?: string;
+    overview?: string;
+    airDate?: string;
+    episodeCount?: number;
+};
+
 export type ShowDetails = {
     // TMDB ID
     id: number;
@@ -14,6 +23,7 @@ export type ShowDetails = {
     externalIds: {
         imdbId?: string;
     };
+    seasons?: Array<SeasonSummary>;
 };
 
 type GetShowRequest = {

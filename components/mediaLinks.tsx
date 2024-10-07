@@ -1,4 +1,4 @@
-import type { MediaType } from "@/constants/mediaTypes";
+import { MediaType } from "@/constants/mediaTypes";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -13,12 +13,14 @@ interface MediaLinksProps {
     mediaType: MediaType;
     tmdbId?: number;
     imdbId?: string;
+    seasonNumber?: number;
 }
 
 export const MediaLinks: FC<MediaLinksProps> = ({
     mediaType,
     tmdbId,
     imdbId,
+    seasonNumber,
 }) => {
     const styles = useThemedStyles(createStyles, {});
 
@@ -27,8 +29,10 @@ export const MediaLinks: FC<MediaLinksProps> = ({
             {tmdbId && <TmdbButton tmdbId={tmdbId} mediaType={mediaType} />}
             {imdbId && (
                 <>
-                    <ImdbButton imdbId={imdbId} />
-                    <VidSrcButton imdbId={imdbId} />
+                    <ImdbButton imdbId={imdbId} seasonNumber={seasonNumber} />
+                    {![MediaType.Show, MediaType.Season].includes(
+                        mediaType,
+                    ) && <VidSrcButton imdbId={imdbId} />}
                 </>
             )}
         </View>

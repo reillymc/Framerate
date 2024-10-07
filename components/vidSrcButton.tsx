@@ -5,14 +5,26 @@ import Svg, { G, Path, Rect } from "react-native-svg";
 
 interface VidSrcButtonProps {
     imdbId: string | undefined;
+    seasonNumber?: number;
+    episodeNumber?: number;
 }
 
 export const VidSrcButton: React.FunctionComponent<VidSrcButtonProps> = ({
     imdbId,
+    seasonNumber,
+    episodeNumber,
 }) => {
+    const path =
+        seasonNumber !== undefined && episodeNumber !== undefined
+            ? "tv"
+            : "movie";
     return (
         <Pressable
-            onPress={() => openURL(`https://vidsrc.xyz/embed/movie/${imdbId}/`)}
+            onPress={() =>
+                openURL(
+                    `https://vidsrc.xyz/embed/${path}/${imdbId}/${seasonNumber !== undefined ? `${seasonNumber}/` : ""}${episodeNumber !== undefined ? `${episodeNumber}/` : ""}`,
+                )
+            }
         >
             <Svg viewBox="0 0 1600 650" width={80} height={32}>
                 <G id="Layer">

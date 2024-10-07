@@ -5,14 +5,20 @@ import Svg, { Rect, G, Path } from "react-native-svg";
 
 interface ImdbButtonProps {
     imdbId: string | undefined;
+    seasonNumber?: number;
 }
 
 export const ImdbButton: React.FunctionComponent<ImdbButtonProps> = ({
     imdbId,
+    seasonNumber,
 }) => {
     return (
         <Pressable
-            onPress={() => openURL(`https://www.imdb.com/title/${imdbId}/`)}
+            onPress={() =>
+                openURL(
+                    `https://www.imdb.com/title/${imdbId}/${seasonNumber !== undefined ? `episodes?season=${seasonNumber}` : ""}`,
+                )
+            }
         >
             <Svg width={64} height={32} viewBox="0 0 64 32">
                 <Rect width="100%" height="100%" rx={4} fill="#F5C518" />

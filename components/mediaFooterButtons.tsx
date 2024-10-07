@@ -44,8 +44,7 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                     position: "absolute",
                     bottom: -bottom,
                     paddingBottom: bottom + theme.padding.regular,
-                    left: 0,
-                    right: 0,
+                    gap: 12,
                     paddingTop: theme.padding.regular,
                     paddingHorizontal: theme.padding.pageHorizontal / 1.5,
                 }}
@@ -55,34 +54,25 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                         style={{
                             backgroundColor: theme.color.primary,
                             borderRadius: 24,
-                            paddingLeft: 6,
-                            paddingVertical: 4,
+                            paddingVertical: theme.padding.tiny,
                             flexDirection: "row",
                             alignItems: "center",
-                            width: "51%",
+                            flex: 1,
+                            paddingLeft: theme.padding.small,
                         }}
                         onPress={onToggleWatchlist}
                     >
                         <IconActionV2
                             size="large"
                             iconName={onWatchlist ? "eye-closed" : "eye"}
-                            iconStyle={{
-                                color: "white",
-                            }}
-                            containerStyle={{
-                                backgroundColor: "transparent",
-                            }}
+                            iconStyle={{ color: "white" }}
+                            containerStyle={{ backgroundColor: "transparent" }}
                         />
                         <Text
-                            variant="label"
-                            style={{
-                                color: "white",
-                                marginLeft: 1,
-                            }}
+                            variant="bodyEmphasized"
+                            style={{ color: "white" }}
                         >
-                            {onWatchlist
-                                ? "Take off Watchlist"
-                                : "Save to Watchlist"}
+                            {onWatchlist ? "On Watchlist" : "Watchlist"}
                         </Text>
                     </Pressable>
                 )}
@@ -91,11 +81,11 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                         style={{
                             backgroundColor: theme.color.primary,
                             borderRadius: 24,
-                            paddingLeft: 6,
-                            paddingVertical: 4,
+                            paddingVertical: theme.padding.tiny,
                             flexDirection: "row",
                             alignItems: "center",
-                            width: "44%",
+                            flex: 1,
+                            paddingLeft: theme.padding.small,
                         }}
                         onPress={onAddReview}
                     >
@@ -116,7 +106,7 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                                 marginLeft: 1,
                             }}
                         >
-                            Add a Review
+                            Add Review
                         </Text>
                     </Pressable>
                 )}

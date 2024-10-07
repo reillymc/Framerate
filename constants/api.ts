@@ -91,7 +91,7 @@ export const FRAMERATE_API = {
     shows: {
         getShow: (showId: number) => ({
             method: "GET",
-            endpoint: `shows/details/${showId}`,
+            endpoint: `shows/${showId}/details`,
         }),
         getPopularShows: () => ({
             method: "GET",
@@ -100,6 +100,12 @@ export const FRAMERATE_API = {
         searchShows: (query: string) => ({
             method: "GET",
             endpoint: `shows/search?query=${query}`,
+        }),
+    },
+    showSeasons: {
+        getSeason: (showId: number, seasonNumber: number) => ({
+            method: "GET",
+            endpoint: `shows/${showId}/seasons/${seasonNumber}`,
         }),
     },
     users: {

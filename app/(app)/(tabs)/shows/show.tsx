@@ -13,6 +13,7 @@ import {
     ParallaxScrollView,
     Poster,
     TmdbImage,
+    usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import {
@@ -42,6 +43,9 @@ const Show: React.FC = () => {
     const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
 
     const router = useRouter();
+    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+        size: "medium",
+    });
 
     const { data: show } = useShow(mediaId);
     const { configuration } = useCurrentUserConfig();
@@ -87,14 +91,56 @@ const Show: React.FC = () => {
                     </Text>
                 </View>
                 <View style={styles.pageContent}>
-                    <Text variant="body">{show?.overview}</Text>
+                    <Text variant="body" style={styles.element}>
+                        {show?.overview}
+                    </Text>
+                    {show?.seasons && (
+                        <FlatList
+                            horizontal
+                            data={show?.seasons}
+                            style={styles.seasonsList}
+                            ListFooterComponent={<View style={{ width: 16 }} />}
+                            keyExtractor={({ seasonNumber }) =>
+                                seasonNumber.toString()
+                            }
+                            showsHorizontalScrollIndicator={false}
+                            snapToAlignment="start"
+                            decelerationRate="fast"
+                            snapToInterval={posterWidth + posterGap}
+                            renderItem={({ item }) => (
+                                <Poster
+                                    size="medium"
+                                    imageUri={
+                                        item.posterPath ?? show.posterPath
+                                    }
+                                    heading={
+                                        item.name ??
+                                        `Season ${item.seasonNumber}`
+                                    }
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/shows/season",
+                                            params: {
+                                                showId: show.id,
+                                                seasonNumber: item.seasonNumber,
+                                                name: item.name,
+                                            },
+                                        })
+                                    }
+                                />
+                            )}
+                        />
+                    )}
                     {firstAirDate && (
-                        <Text variant="bodyEmphasized" style={styles.section}>
+                        <Text
+                            variant="bodyEmphasized"
+                            style={[styles.section, styles.element]}
+                        >
                             {`First Aired: ${firstAirDate}`}
                         </Text>
                     )}
                     {!!reviews?.length && (
-                        <>
+                        <View style={styles.element}>
                             <Text variant="title" style={styles.section}>
                                 Reviews
                             </Text>
@@ -127,7 +173,7 @@ const Show: React.FC = () => {
                                 )}
                                 contentContainerStyle={styles.list}
                             />
-                        </>
+                        </View>
                     )}
                 </View>
                 <MediaLinks
@@ -170,7 +216,6 @@ export default Show;
 const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
             paddingBottom: 80,
             backgroundColor: color.background,
@@ -189,17 +234,24 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingTagline: {
-            left: padding.pageHorizontal + 125,
+            left: padding.pageHorizontal + 140,
             top: -10,
-            width: "60%",
+            width: "55%",
             height: 70,
             justifyContent: "center",
         },
         pageContent: {
             marginTop: 20,
         },
+        seasonsList: {
+            paddingTop: padding.large,
+            paddingHorizontal: padding.pageHorizontal,
+        },
         list: {
             marginTop: padding.large,
+        },
+        element: {
+            paddingHorizontal: padding.pageHorizontal,
         },
         section: {
             marginTop: padding.large,
