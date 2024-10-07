@@ -1,6 +1,5 @@
-import { Poster } from "@/components";
+import { Poster, usePosterDimensions } from "@/components";
 import {
-    Action,
     Text,
     type ThemedStyles,
     useThemedStyles,
@@ -24,7 +23,12 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     onPress,
     onOpenReview,
 }) => {
-    const styles = useThemedStyles(createStyles, { starCount });
+    const { width } = usePosterDimensions({ size: "tiny" });
+    const styles = useThemedStyles(createStyles, {
+        starCount,
+        posterWidth: width,
+    });
+
     const rating = ratingToStars(review.rating, starCount);
 
     const releaseYear = review?.mediaReleaseDate
@@ -82,9 +86,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
             )}
             <View style={styles.informationSection}>
                 {review.reviewDescription ? (
-                    <Text variant="caption">
-                        {review.date && new Date(review.date).toDateString()}
-                    </Text>
+                    <View />
                 ) : (
                     <View style={styles.altInformationInnerContainer}>
                         <Text
@@ -95,19 +97,12 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                         >
                             {rating}/{starCount}
                         </Text>
-                        <Text variant="caption">
-                            {review.date &&
-                                new Date(review.date).toDateString()}
-                        </Text>
                     </View>
                 )}
 
-                <Action
-                    label="Read more..."
-                    onPress={onOpenReview}
-                    variant="primary"
-                    size="small"
-                />
+                <Text variant="caption">
+                    {review.date && new Date(review.date).toDateString()}
+                </Text>
             </View>
         </Pressable>
     );
@@ -115,7 +110,10 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
 
 const createStyles = (
     { theme: { padding, border, color }, styles: { text } }: ThemedStyles,
-    { starCount }: Pick<ReviewSummaryCardProps, "starCount">,
+    {
+        starCount,
+        posterWidth,
+    }: Pick<ReviewSummaryCardProps, "starCount"> & { posterWidth: number },
 ) =>
     StyleSheet.create({
         container: {
@@ -138,13 +136,13 @@ const createStyles = (
         },
         headingTitleContainer: {
             flexDirection: "row",
-            alignItems: "flex-start",
+            alignItems: "flex-end",
             justifyContent: "space-between",
             gap: padding.small,
         },
         title: {
             // TODO a 'compact' options in RNC that excludes the LINE_HEIGHT_MODIFIER
-            lineHeight: text.lineHeight.title - 16,
+            lineHeight: text.lineHeight.title - 14,
             flexShrink: 1,
         },
         date: {
@@ -162,8 +160,9 @@ const createStyles = (
             flexDirection: "row",
         },
         bodyDecoration: {
-            width: 48,
-            marginRight: padding.small,
+            width: posterWidth + 2,
+            paddingHorizontal: 1,
+            marginRight: padding.tiny,
             alignItems: "center",
         },
         numericRating: {
@@ -171,6 +170,7 @@ const createStyles = (
         },
         description: {
             flexShrink: 1,
+            marginLeft: padding.tiny,
         },
         informationSection: {
             flexDirection: "row",

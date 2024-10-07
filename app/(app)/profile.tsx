@@ -448,6 +448,7 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
         actionButton: {
             marginTop: padding.large,
             marginBottom: padding.regular,
+            width: "100%",
         },
     });
 
