@@ -1,4 +1,4 @@
-import { ContextMenu } from "@/components";
+import { ContextMenu, EmptyState } from "@/components";
 import type { UserSummary } from "@/modules/user/services";
 import {
     Tag,
@@ -62,6 +62,19 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
         [starCount],
     );
 
+    if (!(reviews?.length || company || venue || rating)) {
+        return (
+            <EmptyState
+                heading="No reviews here yet"
+                action={
+                    <Text variant="caption">
+                        Get started by searching for something you have watched
+                    </Text>
+                }
+            />
+        );
+    }
+
     return (
         <>
             <FlatList
@@ -118,57 +131,64 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                                 variant="light"
                             />
                         </ContextMenu>
-                        <ContextMenu
-                            menuConfig={{
-                                menuTitle: "Venue",
-                                menuItems: venueOptions.map((name) => ({
-                                    actionKey: name,
-                                    actionTitle: name,
-                                    menuState: venue === name ? "on" : "off",
-                                })),
-                            }}
-                            onPressMenuAction={({ actionKey }) => {
-                                onChangeVenue(
-                                    venue !== actionKey ? actionKey : undefined,
-                                );
-                            }}
-                        >
-                            <Tag
-                                label={venue ?? "All Venues"}
-                                variant="light"
-                            />
-                        </ContextMenu>
-                        <ContextMenu
-                            menuConfig={{
-                                menuTitle: "Company",
-                                menuItems: companyOptions.map(
-                                    ({ userId, firstName, lastName }) => ({
-                                        actionKey: userId,
-                                        actionTitle: `${firstName} ${lastName}`,
+                        {!!venueOptions.length && (
+                            <ContextMenu
+                                menuConfig={{
+                                    menuTitle: "Venue",
+                                    menuItems: venueOptions.map((name) => ({
+                                        actionKey: name,
+                                        actionTitle: name,
                                         menuState:
-                                            company?.userId === userId
-                                                ? "on"
-                                                : "off",
-                                    }),
-                                ),
-                            }}
-                            onPressMenuAction={({ actionKey }) => {
-                                onChangeCompany(
-                                    company?.userId !== actionKey
-                                        ? actionKey
-                                        : undefined,
-                                );
-                            }}
-                        >
-                            <Tag
-                                label={
-                                    company
-                                        ? `${company.firstName} ${company.lastName}`
-                                        : "All Company"
-                                }
-                                variant="light"
-                            />
-                        </ContextMenu>
+                                            venue === name ? "on" : "off",
+                                    })),
+                                }}
+                                onPressMenuAction={({ actionKey }) => {
+                                    onChangeVenue(
+                                        venue !== actionKey
+                                            ? actionKey
+                                            : undefined,
+                                    );
+                                }}
+                            >
+                                <Tag
+                                    label={venue ?? "All Venues"}
+                                    variant="light"
+                                />
+                            </ContextMenu>
+                        )}
+                        {!!companyOptions.length && (
+                            <ContextMenu
+                                menuConfig={{
+                                    menuTitle: "Company",
+                                    menuItems: companyOptions.map(
+                                        ({ userId, firstName, lastName }) => ({
+                                            actionKey: userId,
+                                            actionTitle: `${firstName} ${lastName}`,
+                                            menuState:
+                                                company?.userId === userId
+                                                    ? "on"
+                                                    : "off",
+                                        }),
+                                    ),
+                                }}
+                                onPressMenuAction={({ actionKey }) => {
+                                    onChangeCompany(
+                                        company?.userId !== actionKey
+                                            ? actionKey
+                                            : undefined,
+                                    );
+                                }}
+                            >
+                                <Tag
+                                    label={
+                                        company
+                                            ? `${company.firstName} ${company.lastName}`
+                                            : "All Company"
+                                    }
+                                    variant="light"
+                                />
+                            </ContextMenu>
+                        )}
                     </ScrollView>
                 }
                 ListFooterComponent={
@@ -183,6 +203,19 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                                 ` with ${company.firstName} ${company.lastName}`}
                         </Text>
                     ) : null
+                }
+                ListEmptyComponent={
+                    <EmptyState
+                        heading={`No reviews${
+                            rating
+                                ? ` of ${getRatingLabel(rating, starCount)}`
+                                : ""
+                        }${venue ? ` at ${venue}` : ""}${
+                            company
+                                ? ` with ${company.firstName} ${company.lastName}`
+                                : ""
+                        }`}
+                    />
                 }
                 keyExtractor={({ reviewId }) => reviewId}
                 renderItem={({ item }) => (

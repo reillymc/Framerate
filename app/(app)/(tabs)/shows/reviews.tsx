@@ -69,14 +69,19 @@ const Reviews: FC = () => {
             <Stack.Screen
                 options={{
                     title: "My Reviews",
-                    headerRight: () => (
-                        <ReviewSortButton
-                            order={orderBy}
-                            sort={sort}
-                            onChangeOrder={setOrderBy}
-                            onChangeSort={setSort}
-                        />
-                    ),
+                    headerRight: () =>
+                        reviewList?.length ||
+                        withCompany ||
+                        atVenue ||
+                        rating ? (
+                            <ReviewSortButton
+                                order={orderBy}
+                                sort={sort}
+                                mediaType={MediaType.Show}
+                                onChangeOrder={setOrderBy}
+                                onChangeSort={setSort}
+                            />
+                        ) : undefined,
                 }}
             />
             <FilterableReviewList

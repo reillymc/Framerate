@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { type GetReviewsRequest, ReviewsService } from "../services";
 import { ReviewKeys } from "./keys";
 
-export const useInfiniteReviews = (params: GetReviewsRequest) => {
+export const useInfiniteReviews = (params: Omit<GetReviewsRequest, "page">) => {
     const { session } = useSession();
 
     return useInfiniteQuery({

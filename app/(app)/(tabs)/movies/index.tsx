@@ -38,7 +38,6 @@ import type { SearchBarCommands } from "react-native-screens";
 const Movies: FC = () => {
     const { data: reviews } = useInfiniteReviews({
         mediaType: MediaType.Movie,
-        page: 1,
     });
 
     const styles = useThemedStyles(createStyles, {});

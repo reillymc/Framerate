@@ -22,11 +22,10 @@ export const useSaveReview = () => {
     >({
         mutationFn: (params) =>
             ReviewsService.saveReview({ session, ...params }),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
+        onSuccess: () =>
+            queryClient.invalidateQueries({
                 queryKey: ReviewKeys.base,
-            });
-        },
+            }),
         onMutate: ({ reviewId, ...params }) => {
             if (!reviewId) return;
             // Snapshot the previous value

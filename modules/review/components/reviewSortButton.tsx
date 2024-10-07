@@ -1,4 +1,5 @@
 import { BlurIconAction, ContextMenu } from "@/components";
+import type { MediaType } from "@/constants/mediaTypes";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -10,6 +11,7 @@ import type { ReviewOrder, ReviewSort } from "../constants";
 interface ReviewSortButtonProps {
     order: ReviewOrder;
     sort: ReviewSort;
+    mediaType: MediaType;
     onChangeOrder: (order: ReviewOrder) => void;
     onChangeSort: (sort: ReviewSort) => void;
 }
@@ -17,6 +19,7 @@ interface ReviewSortButtonProps {
 export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
     order,
     sort,
+    mediaType,
     onChangeOrder,
     onChangeSort,
 }) => {
@@ -25,7 +28,7 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
     return (
         <ContextMenu
             menuConfig={{
-                menuTitle: "Sort reviews by",
+                menuTitle: "Sort by",
                 menuItems: [
                     {
                         actionKey: "date",
@@ -39,12 +42,18 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
                     },
                     {
                         actionKey: "mediaTitle",
-                        actionTitle: "Movie Title",
+                        actionTitle:
+                            mediaType === "movie"
+                                ? "Movie Title"
+                                : "Show Title",
                         menuState: order === "mediaTitle" ? "on" : "off",
                     },
                     {
                         actionKey: "mediaReleaseDate",
-                        actionTitle: "Movie Release Date",
+                        actionTitle:
+                            mediaType === "movie"
+                                ? "Movie Release Date"
+                                : "Show Air Date",
                         menuState: order === "mediaReleaseDate" ? "on" : "off",
                     },
                     {
