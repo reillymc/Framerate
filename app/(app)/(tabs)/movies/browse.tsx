@@ -59,20 +59,16 @@ const Browse: FC = () => {
                                 router.push({
                                     pathname: "/movies/movie",
                                     params: {
-                                        mediaId: item.id,
-                                        mediaTitle: item.title,
-                                        mediaPosterUri: item.posterPath,
+                                        id: item.id,
+                                        title: item.title,
+                                        posterPath: item.posterPath,
                                     },
                                 })
                             }
                             onAddReview={() =>
                                 router.push({
                                     pathname: "/movies/editReview",
-                                    params: {
-                                        mediaId: item.id,
-                                        mediaTitle: item.title,
-                                        mediaPosterUri: item.posterPath,
-                                    },
+                                    params: { movieId: item.id },
                                 })
                             }
                             onToggleWatchlist={() =>

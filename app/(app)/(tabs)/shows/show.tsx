@@ -4,6 +4,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import {
     Text,
     type ThemedStyles,
+    Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
@@ -16,43 +17,47 @@ import {
     usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
-import {
-    ReviewDetailsCard,
-    ReviewRatingTimeline,
-    useMediaReviews,
-} from "@/modules/review";
+import { ReviewDetailsCard, ReviewRatingTimeline } from "@/modules/review";
 import { useShow } from "@/modules/show";
+import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
     useWatchlistEntry,
 } from "@/modules/watchlistEntry";
+import { useMemo } from "react";
 
 const Show: React.FC = () => {
     const {
-        mediaId: mediaIdParam,
-        mediaTitle,
-        mediaPosterUri,
+        id: idParam,
+        name,
+        posterPath,
     } = useLocalSearchParams<{
-        mediaId: string;
-        mediaTitle?: string;
-        mediaPosterUri?: string;
+        id: string;
+        name?: string;
+        posterPath?: string;
     }>();
 
-    const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
+    const showId = Number.parseInt(idParam ?? "", 10);
 
     const router = useRouter();
+
+    const { data: show } = useShow(showId);
+    const { configuration } = useCurrentUserConfig();
+    const { data: reviews, refetch } = useShowReviews({ showId });
+    const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, showId);
+    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+
+    const reviewList = useMemo(
+        () => reviews?.pages.flat().filter(Undefined) ?? [],
+        [reviews],
+    );
+
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
         size: "medium",
     });
-
-    const { data: show } = useShow(mediaId);
-    const { configuration } = useCurrentUserConfig();
-    const { data: reviews, refetch } = useMediaReviews(MediaType.Show, mediaId);
-    const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, mediaId);
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
 
     const firstAirDate = show?.firstAirDate
         ? new Date(show.firstAirDate).toLocaleString("default", {
@@ -66,7 +71,7 @@ const Show: React.FC = () => {
 
     return (
         <>
-            <Stack.Screen options={{ title: show?.name ?? mediaTitle }} />
+            <Stack.Screen options={{ title: show?.name ?? name }} />
             <ParallaxScrollView
                 headerImage={
                     <TmdbImage type="backdrop" path={show?.backdropPath} />
@@ -83,7 +88,7 @@ const Show: React.FC = () => {
                     style={styles.floatingPoster}
                     size="small"
                     removeMargin
-                    imageUri={show?.posterPath ?? mediaPosterUri}
+                    imageUri={show?.posterPath ?? posterPath}
                 />
                 <View style={styles.floatingTagline}>
                     <Text variant="heading" numberOfLines={3}>
@@ -139,21 +144,21 @@ const Show: React.FC = () => {
                             {`First Aired: ${firstAirDate}`}
                         </Text>
                     )}
-                    {!!reviews?.length && (
+                    {!!reviewList?.length && (
                         <View style={styles.element}>
                             <Text variant="title" style={styles.section}>
                                 Reviews
                             </Text>
-                            {reviews.length > 1 && (
+                            {reviewList.length > 1 && (
                                 <ReviewRatingTimeline
-                                    reviews={reviews}
+                                    reviews={reviewList}
                                     starCount={configuration.ratings.starCount}
                                 />
                             )}
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
-                                data={reviews}
+                                data={reviewList}
                                 renderItem={({ item }) => (
                                     <ReviewDetailsCard
                                         key={item.reviewId}
@@ -179,7 +184,7 @@ const Show: React.FC = () => {
                 <MediaLinks
                     mediaType={MediaType.Show}
                     tmdbId={show?.id}
-                    imdbId={show?.externalIds.imdbId}
+                    imdbId={show?.externalIds?.imdbId}
                 />
             </ParallaxScrollView>
             <MediaFooterButtons
@@ -187,13 +192,13 @@ const Show: React.FC = () => {
                 onAddReview={() =>
                     router.push({
                         pathname: "/shows/editReview",
-                        params: { mediaId },
+                        params: { showId: showId },
                     })
                 }
                 onToggleWatchlist={() => {
                     if (watchlistEntry) {
                         deleteWatchlistEntry({
-                            mediaId,
+                            mediaId: showId,
                             mediaType: MediaType.Show,
                         });
                         return;
@@ -202,7 +207,7 @@ const Show: React.FC = () => {
                     if (!show) return;
 
                     saveWatchlistEntry({
-                        mediaId,
+                        mediaId: showId,
                         mediaType: MediaType.Show,
                     });
                 }}

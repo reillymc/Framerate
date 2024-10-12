@@ -1,4 +1,5 @@
-import { ReviewDisplay, getRatingLabel, useReview } from "@/modules/review";
+import { useMovieReview } from "@/modules/movieReview";
+import { ReviewDisplay, getRatingLabel } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     IconActionV2,
@@ -16,7 +17,7 @@ const Review: FC = () => {
     const styles = useThemedStyles(createStyles, {});
 
     const { configuration } = useCurrentUserConfig();
-    const { data: review } = useReview(reviewId);
+    const { data: review } = useMovieReview(reviewId);
 
     return (
         <>

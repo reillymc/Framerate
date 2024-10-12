@@ -1,12 +1,8 @@
 import { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
 import { useMovie } from "@/modules/movie";
-import {
-    ReviewForm,
-    getRatingLabel,
-    useReview,
-    useSaveReview,
-} from "@/modules/review";
+import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
+import { ReviewForm, getRatingLabel } from "@/modules/review";
 import { useCurrentUserConfig, useUsers } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
@@ -25,21 +21,21 @@ import { type FC, useEffect, useState } from "react";
 import { ScrollView, StatusBar, StyleSheet } from "react-native";
 
 const EditReview: FC = () => {
-    const { reviewId, mediaId: mediaIdParam } = useGlobalSearchParams<{
+    const { reviewId, movieId: movieIdParam } = useGlobalSearchParams<{
         reviewId: string;
-        mediaId: string;
+        movieId: string;
     }>();
 
-    const mediaId = mediaIdParam
-        ? Number.parseInt(mediaIdParam ?? "", 10)
+    const movieId = movieIdParam
+        ? Number.parseInt(movieIdParam ?? "", 10)
         : undefined;
 
     const { userId } = useSession();
 
-    const { data: review } = useReview(reviewId);
-    const { data: movie } = useMovie(mediaId ? mediaId : review?.mediaId);
+    const { data: review } = useMovieReview(reviewId);
+    const { data: movie } = useMovie(movieId ?? review?.movie.id);
     const router = useRouter();
-    const { mutate: saveReview } = useSaveReview();
+    const { mutate: saveReview } = useSaveMovieReview();
     const { data: users = [] } = useUsers();
     const { configuration } = useCurrentUserConfig();
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
@@ -52,9 +48,7 @@ const EditReview: FC = () => {
         review?.date ? new Date(review.date) : new Date(),
     );
     const [rating, setRating] = useState(review?.rating ?? 0);
-    const [reviewDescription, setReviewDescription] = useState(
-        review?.reviewDescription ?? "",
-    );
+    const [description, setDescription] = useState(review?.description ?? "");
 
     const [includeDate, setIncludeDate] = useState(
         review ? !!review.date : true,
@@ -72,13 +66,13 @@ const EditReview: FC = () => {
 
     const { data: watchlistEntry } = useWatchlistEntry(
         MediaType.Movie,
-        mediaId,
+        movieId,
     );
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
         setRating(review?.rating ?? 0);
-        setReviewDescription(review?.reviewDescription ?? "");
+        setDescription(review?.description ?? "");
     }, [review]);
 
     const handleClose = () => {
@@ -86,7 +80,7 @@ const EditReview: FC = () => {
     };
 
     const handleSave = () => {
-        const mediaIdValue = mediaId ?? review?.mediaId;
+        const mediaIdValue = movieId ?? review?.movie.id;
 
         if (!(rating && mediaIdValue)) return;
 
@@ -94,11 +88,10 @@ const EditReview: FC = () => {
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
-            mediaId: mediaIdValue,
-            mediaType: "movie",
+            movieId: mediaIdValue,
             venue,
             rating,
-            reviewDescription,
+            description,
             company: company.map(({ value }) => ({ userId: value })),
         });
 
@@ -148,7 +141,7 @@ const EditReview: FC = () => {
                     includeDate={includeDate}
                     date={date}
                     company={company}
-                    description={reviewDescription}
+                    description={description}
                     venue={venue}
                     starCount={configuration.ratings.starCount}
                     venueOptions={configuration.venues.knownVenueNames}
@@ -156,7 +149,7 @@ const EditReview: FC = () => {
                     onIncludeDateChange={setIncludeDate}
                     onDateChange={setDate}
                     onCompanyChange={setCompany}
-                    onDescriptionChange={setReviewDescription}
+                    onDescriptionChange={setDescription}
                     onVenueChange={setVenue}
                 />
                 {!!watchlistEntry && !reviewId && (

@@ -1,3 +1,11 @@
+/**
+ * Watchlist Entry
+ *
+ * Depends on:
+ * - Auth
+ * - Movie
+ */
+
 export {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,

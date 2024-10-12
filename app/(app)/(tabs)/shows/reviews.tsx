@@ -6,8 +6,9 @@ import {
     type ReviewOrder,
     type ReviewSort,
     ReviewSortButton,
-    useInfiniteReviews,
+    ReviewSummaryCard,
 } from "@/modules/review";
+import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig, useUsers } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
@@ -31,8 +32,7 @@ const Reviews: FC = () => {
         data: reviews,
         refetch,
         fetchNextPage,
-    } = useInfiniteReviews({
-        mediaType: MediaType.Show,
+    } = useShowReviews({
         atVenue,
         withCompany,
         ratingMax:
@@ -99,18 +99,32 @@ const Reviews: FC = () => {
                 }}
                 onRefresh={refetch}
                 onFetchNextPage={() => fetchNextPage()}
-                onOpenMedia={({ mediaId, mediaTitle, mediaPosterUri }) =>
-                    router.push({
-                        pathname: "/shows/show",
-                        params: { mediaId, mediaTitle, mediaPosterUri },
-                    })
-                }
-                onOpenReview={({ reviewId }) =>
-                    router.push({
-                        pathname: "/shows/review",
-                        params: { reviewId },
-                    })
-                }
+                renderItem={({ item }) => (
+                    <ReviewSummaryCard
+                        key={item.reviewId}
+                        review={item}
+                        mediaTitle={item.show.name}
+                        mediaPosterPath={item.show.posterPath}
+                        mediaDate={item.show.firstAirDate}
+                        starCount={configuration.ratings.starCount}
+                        onPress={() =>
+                            router.push({
+                                pathname: "/shows/show",
+                                params: {
+                                    id: item.show.id,
+                                    name: item.show.name,
+                                    posterPath: item.show.posterPath,
+                                },
+                            })
+                        }
+                        onOpenReview={() =>
+                            router.push({
+                                pathname: "/shows/review",
+                                params: { reviewId: item.reviewId },
+                            })
+                        }
+                    />
+                )}
             />
         </>
     );

@@ -7,6 +7,3 @@ export const MoviesService = {
     getPopularMovies,
     searchMovies,
 };
-
-export { MovieDetails } from "./getMovie";
-export { MovieSearchResult } from "./searchMovies";

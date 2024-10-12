@@ -6,7 +6,7 @@ import {
 } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import { StyleSheet } from "react-native";
-import type { ReviewOrder, ReviewSort } from "../constants";
+import type { ReviewOrder, ReviewSort } from "../models";
 
 interface ReviewSortButtonProps {
     order: ReviewOrder;

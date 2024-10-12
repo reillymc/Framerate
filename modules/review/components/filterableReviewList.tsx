@@ -6,17 +6,21 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { type FC, useMemo } from "react";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
-import { AbsoluteRatingScale } from "../constants";
+import { useMemo } from "react";
+import {
+    FlatList,
+    type ListRenderItem,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
 import { getRatingLabel } from "../helpers";
-import type { ReviewSummary } from "../services";
-import { ReviewSummaryCard } from "./reviewSummaryCard";
+import { AbsoluteRatingScale, type Review } from "../models";
 
 const TenStarOptions = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
-interface FilterableReviewListProps {
-    reviews: ReviewSummary[] | undefined;
+interface FilterableReviewListProps<T extends Review> {
+    reviews: T[] | undefined;
     filters: {
         rating: number | undefined;
         venue: string | undefined;
@@ -30,11 +34,11 @@ interface FilterableReviewListProps {
     starCount: number;
     onRefresh: () => void;
     onFetchNextPage: () => void;
-    onOpenReview: (review: ReviewSummary) => void;
-    onOpenMedia: (review: ReviewSummary) => void;
+    renderItem: ListRenderItem<T>;
 }
 
-export const FilterableReviewList: FC<FilterableReviewListProps> = ({
+// TODO: Generic? T extends Review?
+export const FilterableReviewList = <T extends Review>({
     reviews,
     filters: {
         company,
@@ -49,9 +53,8 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
     starCount,
     onRefresh,
     onFetchNextPage,
-    onOpenMedia,
-    onOpenReview,
-}) => {
+    renderItem,
+}: FilterableReviewListProps<T>) => {
     const styles = useThemedStyles(createStyles, {});
 
     const starValueList = useMemo(
@@ -218,15 +221,7 @@ export const FilterableReviewList: FC<FilterableReviewListProps> = ({
                     />
                 }
                 keyExtractor={({ reviewId }) => reviewId}
-                renderItem={({ item }) => (
-                    <ReviewSummaryCard
-                        key={item.reviewId}
-                        review={item}
-                        starCount={starCount}
-                        onPress={() => onOpenMedia(item)}
-                        onOpenReview={() => onOpenReview(item)}
-                    />
-                )}
+                renderItem={renderItem}
             />
         </>
     );

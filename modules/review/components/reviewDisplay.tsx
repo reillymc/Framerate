@@ -7,10 +7,10 @@ import type { FC } from "react";
 import { StyleSheet } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
-import type { ReviewDetails } from "../services";
+import type { Review } from "../models";
 
 interface ReviewDisplayProps {
-    review: ReviewDetails;
+    review: Review;
     starCount: number;
 }
 
@@ -31,10 +31,8 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
                 maxStars={starCount}
                 starSize={180 / starCount}
             />
-            {!!review.reviewTitle && <Text>{review.reviewTitle}</Text>}
-            <Text style={styles.informationSection}>
-                {review.reviewDescription}
-            </Text>
+            {!!review.title && <Text>{review.title}</Text>}
+            <Text style={styles.informationSection}>{review.description}</Text>
             <Text variant="bodyEmphasized" style={styles.informationSection}>
                 <Text variant="body">Watched </Text>
                 {review.date && (

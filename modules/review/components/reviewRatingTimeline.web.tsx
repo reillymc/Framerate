@@ -1,8 +1,8 @@
 import type { FC } from "react";
-import type { ReviewSummary } from "../services";
+import type { Review } from "../models";
 
 interface ReviewRatingTimelineProps {
-    reviews: Array<Pick<ReviewSummary, "date" | "rating">>;
+    reviews: Array<Pick<Review, "date" | "rating">>;
     chartHeight?: number;
 }
 

@@ -6,7 +6,8 @@ import {
     useRecentSearches,
     useSearchMovies,
 } from "@/modules/movie";
-import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
+import { useMovieReviews } from "@/modules/movieReview";
+import { ReviewSummaryCard } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
 import {
@@ -36,9 +37,7 @@ import Animated, {
 import type { SearchBarCommands } from "react-native-screens";
 
 const Movies: FC = () => {
-    const { data: reviews } = useInfiniteReviews({
-        mediaType: MediaType.Movie,
-    });
+    const { data: reviews } = useMovieReviews();
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
@@ -66,7 +65,7 @@ const Movies: FC = () => {
     const filteredPopularMovies = useMemo(() => {
         const excludedMediaIds = [
             ...watchlistEntries.map(({ mediaId }) => mediaId),
-            ...reviewList.map(({ mediaId }) => mediaId),
+            ...reviewList.map(({ movie }) => movie.id),
         ];
 
         return popularMovies?.filter(
@@ -147,11 +146,7 @@ const Movies: FC = () => {
                                 onAddReview={() =>
                                     router.push({
                                         pathname: "/movies/editReview",
-                                        params: {
-                                            mediaId: item.id,
-                                            mediaTitle: item.title,
-                                            mediaPosterUri: item.posterPath,
-                                        },
+                                        params: { movieId: item.id },
                                     })
                                 }
                                 onToggleWatchlist={() =>
@@ -240,26 +235,18 @@ const Movies: FC = () => {
                                             router.push({
                                                 pathname: "/movies/movie",
                                                 params: {
-                                                    mediaId: item.mediaId,
-                                                    mediaTitle: item.mediaTitle,
-                                                    mediaPosterUri:
+                                                    id: item.mediaId,
+                                                    title: item.mediaTitle,
+                                                    posterPath:
                                                         item.mediaPosterUri,
                                                 },
                                             })
                                         }
                                         onPress={handlePressDate}
-                                        onAddReview={({
-                                            mediaId,
-                                            mediaTitle,
-                                            mediaPosterUri,
-                                        }) =>
+                                        onAddReview={({ mediaId }) =>
                                             router.push({
                                                 pathname: "/movies/editReview",
-                                                params: {
-                                                    mediaId,
-                                                    mediaTitle,
-                                                    mediaPosterUri,
-                                                },
+                                                params: { movieId: mediaId },
                                             })
                                         }
                                         onRemoveFromWatchlist={({ mediaId }) =>
@@ -315,9 +302,9 @@ const Movies: FC = () => {
                                                 router.push({
                                                     pathname: "/movies/movie",
                                                     params: {
-                                                        mediaId: item.id,
-                                                        mediaTitle: item.title,
-                                                        mediaPosterUri:
+                                                        id: item.id,
+                                                        title: item.title,
+                                                        posterPath:
                                                             item.posterPath,
                                                     },
                                                 })
@@ -327,10 +314,7 @@ const Movies: FC = () => {
                                                     pathname:
                                                         "/movies/editReview",
                                                     params: {
-                                                        mediaId: item.id,
-                                                        mediaTitle: item.title,
-                                                        mediaPosterUri:
-                                                            item.posterPath,
+                                                        movieId: item.id,
                                                     },
                                                 })
                                             }
@@ -378,14 +362,17 @@ const Movies: FC = () => {
                         <ReviewSummaryCard
                             key={item.reviewId}
                             review={item}
+                            mediaTitle={item.movie.title}
+                            mediaDate={item.movie.releaseDate}
+                            mediaPosterPath={item.movie.posterPath}
                             starCount={configuration.ratings.starCount}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",
                                     params: {
-                                        mediaId: item.mediaId,
-                                        mediaTitle: item.mediaTitle,
-                                        mediaPosterUri: item.mediaPosterUri,
+                                        id: item.movie.id,
+                                        title: item.movie.title,
+                                        posterPath: item.movie.posterPath,
                                     },
                                 })
                             }
@@ -451,11 +438,11 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         reviewFooter: {
             alignSelf: "flex-end",
             paddingHorizontal: padding.pageHorizontal,
-            marginBottom: padding.large,
+            marginBottom: padding.pageBottom,
         },
         reviewsEmptyMessage: {
             paddingHorizontal: padding.pageHorizontal,
-            marginBottom: 64,
+            marginBottom: padding.pageBottom,
         },
         searchList: {
             paddingTop: padding.small,

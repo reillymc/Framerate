@@ -1,9 +1,10 @@
-export {
-    useReview,
-    useMediaReviews,
-    useSaveReview,
-    useInfiniteReviews,
-} from "./hooks";
+/**
+ * Review
+ *
+ * Depends on:
+ * - User
+ */
+
 export { ratingToStars, starsToRating, getRatingLabel } from "./helpers";
 export {
     FilterableReviewList,
@@ -14,4 +15,11 @@ export {
     ReviewSortButton,
     ReviewSummaryCard,
 } from "./components";
-export { ReviewOrder, ReviewSort, AbsoluteRatingScale } from "./constants";
+export {
+    ReviewOrder,
+    ReviewSort,
+    AbsoluteRatingScale,
+    Review,
+    ReviewCompanyDetails,
+    ReviewCompanySummary,
+} from "./models";

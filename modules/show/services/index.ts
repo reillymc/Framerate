@@ -7,6 +7,3 @@ export const ShowsService = {
     getPopularShows,
     searchShows,
 };
-
-export { ShowDetails } from "./getShow";
-export { ShowSearchResult } from "./searchShows";

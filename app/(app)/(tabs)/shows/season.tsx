@@ -59,7 +59,7 @@ const Season: React.FC = () => {
                         )}
                         <MediaLinks
                             mediaType={MediaType.Season}
-                            imdbId={show?.externalIds.imdbId}
+                            imdbId={show?.externalIds?.imdbId}
                             seasonNumber={seasonNumber}
                         />
                         <Text variant="title" style={styles.topMargin}>
@@ -108,7 +108,7 @@ const Season: React.FC = () => {
                                 <Text variant="caption">{item.overview}</Text>
                             )}
                             <VidSrcButton
-                                imdbId={show?.externalIds.imdbId}
+                                imdbId={show?.externalIds?.imdbId}
                                 episodeNumber={item.episodeNumber}
                                 seasonNumber={seasonNumber}
                             />

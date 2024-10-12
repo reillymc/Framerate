@@ -1,52 +1,49 @@
 import { useSession } from "@/modules/auth";
+import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
-import type { MovieDetails } from "@/modules/movie/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-    type ReviewDetails,
-    ReviewsService,
-    type SaveReviewRequest,
-    type SaveReviewResponse,
-} from "../services";
+import type { MovieReview } from "../models";
+import { MovieReviewService, type SaveReviewRequest } from "../services";
 import { ReviewKeys } from "./keys";
 
-export const useSaveReview = () => {
+export const useSaveMovieReview = () => {
     const queryClient = useQueryClient();
     const { session } = useSession();
 
     return useMutation<
-        SaveReviewResponse | null,
+        MovieReview | null,
         unknown,
         SaveReviewRequest,
-        { previousEntry?: ReviewDetails }
+        { previousEntry?: MovieReview }
     >({
         mutationFn: (params) =>
-            ReviewsService.saveReview({ session, ...params }),
+            MovieReviewService.saveMovieReview({ session, ...params }),
         onSuccess: () =>
             queryClient.invalidateQueries({
                 queryKey: ReviewKeys.base,
             }),
-        onMutate: ({ reviewId, ...params }) => {
+        onMutate: ({ reviewId, movieId, ...params }) => {
             if (!reviewId) return;
             // Snapshot the previous value
-            const previousEntry = queryClient.getQueryData<ReviewDetails>(
+            const previousEntry = queryClient.getQueryData<MovieReview>(
                 ReviewKeys.details(reviewId),
             );
 
-            const movieDetails = queryClient.getQueryData<MovieDetails>(
-                MovieKeys.details(params.mediaId),
+            const movieDetails = queryClient.getQueryData<Movie>(
+                MovieKeys.details(movieId),
             );
 
-            // Optimistically update to the new value
-            queryClient.setQueryData<ReviewDetails>(
-                ReviewKeys.details(reviewId),
-                {
-                    ...movieDetails,
-                    ...params,
-                    reviewId,
-                    mediaTitle: movieDetails?.title ?? "",
-                } satisfies ReviewDetails,
-            );
+            if (movieDetails) {
+                // Optimistically update to the new value
+                queryClient.setQueryData<MovieReview>(
+                    ReviewKeys.details(reviewId),
+                    {
+                        ...params,
+                        reviewId,
+                        movie: movieDetails,
+                    },
+                );
+            }
 
             // Return snapshot so we can rollback in case of failure
             return { previousEntry };
@@ -55,7 +52,7 @@ export const useSaveReview = () => {
             console.warn(error);
             if (!(context && params.reviewId)) return;
 
-            queryClient.setQueryData<ReviewDetails>(
+            queryClient.setQueryData<MovieReview>(
                 ReviewKeys.details(params.reviewId),
                 context.previousEntry,
             );

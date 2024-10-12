@@ -8,11 +8,14 @@ import type { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
-import type { ReviewSummary } from "../services";
+import type { Review } from "../models";
 
 interface ReviewSummaryCardProps {
-    review: ReviewSummary;
+    review: Review;
     starCount: number;
+    mediaTitle: string;
+    mediaDate?: string;
+    mediaPosterPath?: string;
     onPress: () => void;
     onOpenReview: () => void;
 }
@@ -20,6 +23,9 @@ interface ReviewSummaryCardProps {
 export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     review,
     starCount,
+    mediaDate,
+    mediaPosterPath,
+    mediaTitle,
     onPress,
     onOpenReview,
 }) => {
@@ -31,15 +37,13 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
 
     const rating = ratingToStars(review.rating, starCount);
 
-    const releaseYear = review?.mediaReleaseDate
-        ? new Date(review.mediaReleaseDate).getFullYear()
-        : null;
+    const releaseYear = mediaDate ? new Date(mediaDate).getFullYear() : null;
 
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.topContainer}>
                 <Poster
-                    imageUri={review.mediaPosterUri}
+                    imageUri={mediaPosterPath}
                     size="tiny"
                     removeMargin
                     onOpenReview={onOpenReview}
@@ -51,7 +55,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             style={styles.title}
                             numberOfLines={1}
                         >
-                            {review.mediaTitle}
+                            {mediaTitle}
                         </Text>
                         <Text key="date" variant="label" style={styles.date}>
                             {releaseYear}
@@ -67,7 +71,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                     />
                 </View>
             </View>
-            {!!review.reviewDescription && (
+            {!!review.description && (
                 <View style={styles.body}>
                     <View style={styles.bodyDecoration}>
                         <Text
@@ -80,12 +84,12 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                         </Text>
                     </View>
                     <Text numberOfLines={3} style={styles.description}>
-                        {review.reviewDescription}
+                        {review.description}
                     </Text>
                 </View>
             )}
             <View style={styles.informationSection}>
-                {review.reviewDescription ? (
+                {review.description ? (
                     <View />
                 ) : (
                     <View style={styles.altInformationInnerContainer}>

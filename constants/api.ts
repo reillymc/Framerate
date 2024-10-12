@@ -22,11 +22,21 @@ export type FramerateService<
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention
     TResponse extends
         | Record<string, string | number | object>
-        | Array<Record<string, string | number | undefined>>,
+        | Array<Record<string, string | number | object | undefined>>,
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention
     // biome-ignore lint/complexity/noBannedTypes: Default value
     TRequest extends Record<string, string | number | object> = {},
 > = (params: BaseRequestParams & TRequest) => Promise<TResponse | null>;
+
+type ReviewQueryParams = {
+    orderBy?: string;
+    sort?: string;
+    page?: number;
+    pageSize?: number;
+    ratingMin?: number;
+    ratingMax?: number;
+    atVenue?: string;
+};
 
 const recordToParams = (record?: Record<string, string | number>) => {
     if (!record) return "";
@@ -60,32 +70,22 @@ export const FRAMERATE_API = {
             endpoint: `movies/search?query=${query}`,
         }),
     },
-    reviews: {
-        getReviews: (
-            mediaId?: number,
-            params?: {
-                mediaType: string;
-                orderBy?: string;
-                sort?: string;
-                page?: number;
-                pageSize?: number;
-                ratingMin?: number;
-                ratingMax?: number;
-                atVenue?: string;
-            },
-        ) => ({
+    movieReviews: {
+        getReviews: (movieId?: number, params?: ReviewQueryParams) => ({
             method: "GET",
-            endpoint: mediaId
-                ? `reviews/media/${mediaId}`
-                : `reviews${recordToParams(params)}`,
+            endpoint: movieId
+                ? `movies/reviews/movie/${movieId}`
+                : `movies/reviews${recordToParams(params)}`,
         }),
         getReview: (id: string) => ({
             method: "GET",
-            endpoint: `reviews/review/${id}`,
+            endpoint: `movies/reviews/review/${id}`,
         }),
         saveReview: (reviewId?: string) => ({
             method: reviewId ? "PUT" : "POST",
-            endpoint: reviewId ? `reviews/review/${reviewId}` : "reviews",
+            endpoint: reviewId
+                ? `movies/reviews/review/${reviewId}`
+                : "movies/reviews",
         }),
     },
     shows: {
@@ -100,6 +100,24 @@ export const FRAMERATE_API = {
         searchShows: (query: string) => ({
             method: "GET",
             endpoint: `shows/search?query=${query}`,
+        }),
+    },
+    showReviews: {
+        getReviews: (showId?: number, params?: ReviewQueryParams) => ({
+            method: "GET",
+            endpoint: showId
+                ? `shows/reviews/show/${showId}`
+                : `shows/reviews${recordToParams(params)}`,
+        }),
+        getReview: (id: string) => ({
+            method: "GET",
+            endpoint: `shows/reviews/review/${id}`,
+        }),
+        saveReview: (reviewId?: string) => ({
+            method: reviewId ? "PUT" : "POST",
+            endpoint: reviewId
+                ? `shows/reviews/review/${reviewId}`
+                : "shows/reviews",
         }),
     },
     showSeasons: {

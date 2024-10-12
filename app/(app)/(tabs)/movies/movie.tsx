@@ -4,6 +4,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import {
     Text,
     type ThemedStyles,
+    Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
@@ -16,45 +17,45 @@ import {
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
-import {
-    ReviewDetailsCard,
-    ReviewRatingTimeline,
-    useMediaReviews,
-} from "@/modules/review";
+import { useMovieReviews } from "@/modules/movieReview";
+import { ReviewDetailsCard, ReviewRatingTimeline } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
     useSaveWatchlistEntry,
     useWatchlistEntry,
 } from "@/modules/watchlistEntry";
+import { useMemo } from "react";
 
 const Movie: React.FC = () => {
     const {
-        mediaId: mediaIdParam,
-        mediaTitle,
-        mediaPosterUri,
+        id: idParam,
+        title,
+        posterPath,
     } = useLocalSearchParams<{
-        mediaId: string;
-        mediaTitle?: string;
-        mediaPosterUri?: string;
+        id: string;
+        title?: string;
+        posterPath?: string;
     }>();
 
-    const mediaId = Number.parseInt(mediaIdParam ?? "", 10);
+    const movieId = Number.parseInt(idParam ?? "", 10);
 
-    const { data: movie } = useMovie(mediaId);
+    const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
-    const { data: reviews, refetch } = useMediaReviews(
-        MediaType.Movie,
-        mediaId,
-    );
+    const { data: reviews, refetch } = useMovieReviews({ movieId });
     const { data: watchlistEntry } = useWatchlistEntry(
         MediaType.Movie,
-        mediaId,
+        movieId,
     );
     const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
     const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
 
     const router = useRouter();
+
+    const reviewList = useMemo(
+        () => reviews?.pages.flat().filter(Undefined) ?? [],
+        [reviews],
+    );
 
     const releaseDate = movie?.releaseDate
         ? new Date(movie.releaseDate).toLocaleString("default", {
@@ -68,7 +69,7 @@ const Movie: React.FC = () => {
 
     return (
         <>
-            <Stack.Screen options={{ title: movie?.title ?? mediaTitle }} />
+            <Stack.Screen options={{ title: movie?.title ?? title }} />
             <ParallaxScrollView
                 headerImage={
                     <TmdbImage type="backdrop" path={movie?.backdropPath} />
@@ -85,7 +86,7 @@ const Movie: React.FC = () => {
                     style={styles.floatingPoster}
                     size="small"
                     removeMargin
-                    imageUri={movie?.posterPath ?? mediaPosterUri}
+                    imageUri={movie?.posterPath ?? posterPath}
                 />
                 <View style={styles.floatingTagline}>
                     <Text variant="heading" numberOfLines={3}>
@@ -100,21 +101,21 @@ const Movie: React.FC = () => {
                         </Text>
                     )}
 
-                    {!!reviews?.length && (
+                    {!!reviewList?.length && (
                         <>
                             <Text variant="title" style={styles.section}>
                                 Reviews
                             </Text>
-                            {reviews.length > 1 && (
+                            {reviewList.length > 1 && (
                                 <ReviewRatingTimeline
-                                    reviews={reviews}
+                                    reviews={reviewList}
                                     starCount={configuration.ratings.starCount}
                                 />
                             )}
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
-                                data={reviews}
+                                data={reviewList}
                                 renderItem={({ item }) => (
                                     <ReviewDetailsCard
                                         key={item.reviewId}
@@ -148,13 +149,13 @@ const Movie: React.FC = () => {
                 onAddReview={() =>
                     router.push({
                         pathname: "/movies/editReview",
-                        params: { mediaId },
+                        params: { movieId },
                     })
                 }
                 onToggleWatchlist={() => {
                     if (watchlistEntry) {
                         deleteWatchlistEntry({
-                            mediaId,
+                            mediaId: movieId,
                             mediaType: MediaType.Movie,
                         });
                         return;
@@ -163,7 +164,7 @@ const Movie: React.FC = () => {
                     if (!movie) return;
 
                     saveWatchlistEntry({
-                        mediaId,
+                        mediaId: movieId,
                         mediaType: MediaType.Movie,
                     });
                 }}
@@ -174,14 +175,14 @@ const Movie: React.FC = () => {
 
 export default Movie;
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
-            paddingBottom: 80,
+            paddingBottom: padding.pageBottom,
             backgroundColor: color.background,
-            borderRadius: 16,
+            borderRadius: border.radius.loose,
         },
         floatingPoster: {
             position: "absolute",

@@ -52,9 +52,9 @@ const Browse: FC = () => {
                                 router.push({
                                     pathname: "/shows/show",
                                     params: {
-                                        mediaId: item.id,
-                                        mediaTitle: item.name,
-                                        mediaPosterUri: item.posterPath,
+                                        id: item.id,
+                                        name: item.name,
+                                        posterPath: item.posterPath,
                                     },
                                 })
                             }

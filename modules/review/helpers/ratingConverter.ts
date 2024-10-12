@@ -1,4 +1,4 @@
-import { AbsoluteRatingScale } from "../constants";
+import { AbsoluteRatingScale } from "../models";
 
 export const ratingToStars = (rating: number, starCount: number): number =>
     (rating / AbsoluteRatingScale) * starCount;

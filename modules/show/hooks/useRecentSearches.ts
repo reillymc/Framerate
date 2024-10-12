@@ -1,5 +1,4 @@
 import { useSession } from "@/modules/auth";
-import { useUser } from "@/modules/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -9,12 +8,11 @@ type RecentSearch = {
 
 export const useRecentSearches = () => {
     const { userId } = useSession();
-    const { data: user } = useUser(userId);
 
     const storageKey = useMemo(() => {
-        if (!user?.userId) return;
-        return `${user?.userId}-show-searches`;
-    }, [user?.userId]);
+        if (!userId) return;
+        return `${userId}-show-searches`;
+    }, [userId]);
 
     const [recentSearches, setRecentSearches] = useState<RecentSearch[]>();
 

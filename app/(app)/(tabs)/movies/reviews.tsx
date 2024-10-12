@@ -1,12 +1,13 @@
 import { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
+import { useMovieReviews } from "@/modules/movieReview";
 import {
     AbsoluteRatingScale,
     FilterableReviewList,
     type ReviewOrder,
     type ReviewSort,
     ReviewSortButton,
-    useInfiniteReviews,
+    ReviewSummaryCard,
 } from "@/modules/review";
 import { useCurrentUserConfig, useUsers } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
@@ -31,8 +32,7 @@ const Reviews: FC = () => {
         data: reviews,
         refetch,
         fetchNextPage,
-    } = useInfiniteReviews({
-        mediaType: MediaType.Movie,
+    } = useMovieReviews({
         atVenue,
         withCompany,
         ratingMax:
@@ -98,18 +98,32 @@ const Reviews: FC = () => {
                 }}
                 onRefresh={refetch}
                 onFetchNextPage={() => fetchNextPage()}
-                onOpenMedia={({ mediaId, mediaTitle, mediaPosterUri }) =>
-                    router.push({
-                        pathname: "/movies/movie",
-                        params: { mediaId, mediaTitle, mediaPosterUri },
-                    })
-                }
-                onOpenReview={({ reviewId }) =>
-                    router.push({
-                        pathname: "/movies/review",
-                        params: { reviewId },
-                    })
-                }
+                renderItem={({ item }) => (
+                    <ReviewSummaryCard
+                        key={item.reviewId}
+                        review={item}
+                        mediaTitle={item.movie.title}
+                        mediaPosterPath={item.movie.posterPath}
+                        mediaDate={item.movie.releaseDate}
+                        starCount={configuration.ratings.starCount}
+                        onPress={() =>
+                            router.push({
+                                pathname: "/movies/movie",
+                                params: {
+                                    id: item.movie.id,
+                                    title: item.movie.title,
+                                    posterPath: item.movie.posterPath,
+                                },
+                            })
+                        }
+                        onOpenReview={() =>
+                            router.push({
+                                pathname: "/movies/review",
+                                params: { reviewId: item.reviewId },
+                            })
+                        }
+                    />
+                )}
             />
         </>
     );

@@ -24,7 +24,7 @@ import {
     useChartPressState,
 } from "victory-native";
 import { ratingToStars } from "../helpers";
-import type { ReviewSummary } from "../services";
+import type { Review } from "../models";
 
 interface ChartData extends Record<string, unknown> {
     date: number;
@@ -33,7 +33,7 @@ interface ChartData extends Record<string, unknown> {
 }
 
 interface ReviewRatingTimelineProps {
-    reviews: Array<Pick<ReviewSummary, "date" | "rating">>;
+    reviews: Array<Pick<Review, "date" | "rating">>;
     starCount: number;
     chartHeight?: number;
 }

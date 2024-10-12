@@ -1,3 +1,11 @@
+/**
+ * Watchlist
+ *
+ * Depends on:
+ * - Auth
+ * - Watchlist Entry
+ */
+
 export { useWatchlist, useSaveWatchlist } from "./hooks";
 export {
     WatchlistSummary,

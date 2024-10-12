@@ -1,12 +1,12 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
-import { MediaType } from "@/constants/mediaTypes";
-import { ReviewSummaryCard, useInfiniteReviews } from "@/modules/review";
+import { ReviewSummaryCard } from "@/modules/review";
 import {
     usePopularShows,
     useRecentSearches,
     useSearchShows,
 } from "@/modules/show";
+import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
@@ -30,9 +30,7 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import type { SearchBarCommands } from "react-native-screens";
 
 const Shows: FC = () => {
-    const { data: reviews } = useInfiniteReviews({
-        mediaType: MediaType.Show,
-    });
+    const { data: reviews } = useShowReviews();
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
@@ -60,7 +58,7 @@ const Shows: FC = () => {
     const filteredPopularShows = useMemo(() => {
         const excludedMediaIds = [
             ...watchlistEntries.map(({ mediaId }) => mediaId),
-            ...reviewList.map(({ mediaId }) => mediaId),
+            ...reviewList.map(({ show }) => show.id),
         ];
 
         return popularShows?.filter(({ id }) => !excludedMediaIds.includes(id));
@@ -120,9 +118,9 @@ const Shows: FC = () => {
                                     router.push({
                                         pathname: "/shows/show",
                                         params: {
-                                            mediaId: item.id,
-                                            mediaTitle: item.name,
-                                            mediaPosterUri: item.posterPath,
+                                            id: item.id,
+                                            name: item.name,
+                                            posterPath: item.posterPath,
                                         },
                                     });
                                     addSearch({ searchValue: item.name });
@@ -130,11 +128,7 @@ const Shows: FC = () => {
                                 onAddReview={() =>
                                     router.push({
                                         pathname: "/shows/editReview",
-                                        params: {
-                                            mediaId: item.id,
-                                            mediaTitle: item.name,
-                                            mediaPosterUri: item.posterPath,
-                                        },
+                                        params: { showId: item.id },
                                     })
                                 }
                                 onToggleWatchlist={() =>
@@ -250,9 +244,9 @@ const Shows: FC = () => {
                                                 router.push({
                                                     pathname: "/shows/show",
                                                     params: {
-                                                        mediaId: item.id,
-                                                        mediaTitle: item.name,
-                                                        mediaPosterUri:
+                                                        id: item.id,
+                                                        name: item.name,
+                                                        posterPath:
                                                             item.posterPath,
                                                     },
                                                 })
@@ -261,12 +255,7 @@ const Shows: FC = () => {
                                                 router.push({
                                                     pathname:
                                                         "/shows/editReview",
-                                                    params: {
-                                                        mediaId: item.id,
-                                                        mediaTitle: item.name,
-                                                        mediaPosterUri:
-                                                            item.posterPath,
-                                                    },
+                                                    params: { showId: item.id },
                                                 })
                                             }
                                             onToggleWatchlist={() =>
@@ -313,14 +302,17 @@ const Shows: FC = () => {
                         <ReviewSummaryCard
                             key={item.reviewId}
                             review={item}
+                            mediaTitle={item.show.name}
+                            mediaDate={item.show.firstAirDate}
+                            mediaPosterPath={item.show.posterPath}
                             starCount={configuration.ratings.starCount}
                             onPress={() =>
                                 router.push({
                                     pathname: "/shows/show",
                                     params: {
-                                        mediaId: item.mediaId,
-                                        mediaTitle: item.mediaTitle,
-                                        mediaPosterUri: item.mediaPosterUri,
+                                        id: item.show.id,
+                                        name: item.show.name,
+                                        posterPath: item.show.posterPath,
                                     },
                                 })
                             }
@@ -374,11 +366,11 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         reviewFooter: {
             alignSelf: "flex-end",
             paddingHorizontal: padding.pageHorizontal,
-            marginBottom: padding.large,
+            marginBottom: padding.pageBottom,
         },
         reviewsEmptyMessage: {
             paddingHorizontal: padding.pageHorizontal,
-            marginBottom: 64,
+            marginBottom: padding.pageBottom,
         },
         searchList: {
             paddingTop: padding.small,

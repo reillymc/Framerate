@@ -31,9 +31,9 @@ const Watchlist: FC = () => {
                         router.push({
                             pathname: "/shows/show",
                             params: {
-                                mediaId: item.mediaId,
-                                mediaTitle: item.mediaTitle,
-                                mediaPosterUri: item.mediaPosterUri,
+                                id: item.mediaId,
+                                name: item.mediaTitle,
+                                posterPath: item.mediaPosterUri,
                             },
                         })
                     }

@@ -7,10 +7,10 @@ import type { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
-import type { ReviewDetails } from "../services";
+import type { Review } from "../models";
 
 interface ReviewDetailsCardProps {
-    review: ReviewDetails;
+    review: Review;
     starCount: number;
     onPress: () => void;
 }
@@ -69,7 +69,7 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
                 </View>
                 <View style={styles.bodyContainer}>
                     <Text numberOfLines={5} style={styles.description}>
-                        {review.reviewDescription}
+                        {review.description}
                     </Text>
                 </View>
             </View>

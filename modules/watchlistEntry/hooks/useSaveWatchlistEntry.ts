@@ -1,6 +1,6 @@
 import { useSession } from "@/modules/auth";
+import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
-import type { MovieDetails, MovieSearchResult } from "@/modules/movie/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     type SaveWatchlistEntryRequest,
@@ -47,12 +47,12 @@ export const useSaveWatchlistEntry = () => {
                     ),
                 );
 
-            const movieDetails = queryClient.getQueryData<MovieDetails>(
+            const movieDetails = queryClient.getQueryData<Movie>(
                 MovieKeys.details(params.mediaId),
             );
 
             const movieDetailsPopular = queryClient
-                .getQueryData<MovieSearchResult[]>(MovieKeys.popular())
+                .getQueryData<Movie[]>(MovieKeys.popular())
                 ?.find(({ id }) => id === params.mediaId);
 
             const updatedEntry = {
