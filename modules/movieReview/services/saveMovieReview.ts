@@ -14,8 +14,13 @@ export type SaveReviewRequest = Pick<
 
 type SaveReview = FramerateService<MovieReview, SaveReviewRequest>;
 
-export const saveMovieReview: SaveReview = ({ session, ...body }) =>
-    ExecuteRequest(FRAMERATE_API.movieReviews.saveReview(body.reviewId), {
+export const saveMovieReview: SaveReview = ({
+    session,
+    reviewId,
+    movieId,
+    ...body
+}) =>
+    ExecuteRequest(FRAMERATE_API.movieReviews.saveReview(movieId, reviewId), {
         session,
         body,
     });

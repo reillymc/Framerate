@@ -8,7 +8,7 @@ import Animated, {
     useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { Poster, usePosterDimensions } from "@/components/poster";
+import { Poster, usePosterDimensions } from "@/components";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import type { FC } from "react";
 

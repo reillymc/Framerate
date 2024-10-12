@@ -9,4 +9,6 @@ export type GetShowReviewRequest = {
 type GetReview = FramerateService<ShowReview, GetShowReviewRequest>;
 
 export const getShowReview: GetReview = ({ reviewId, session }) =>
-    ExecuteRequest(FRAMERATE_API.showReviews.getReview(reviewId), { session });
+    ExecuteRequest(FRAMERATE_API.showReviews.getReview(reviewId), {
+        session,
+    });

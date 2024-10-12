@@ -10,6 +10,6 @@ type GetSeasonRequest = {
 type GetSeason = FramerateService<Season, GetSeasonRequest>;
 
 export const getSeason: GetSeason = ({ showId, seasonNumber, session }) =>
-    ExecuteRequest(FRAMERATE_API.showSeasons.getSeason(showId, seasonNumber), {
+    ExecuteRequest(FRAMERATE_API.seasons.getSeason(showId, seasonNumber), {
         session,
     });
