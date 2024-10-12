@@ -1,13 +1,23 @@
-import { MediaLinks, TmdbImage, VidSrcButton } from "@/components";
+import {
+    MediaFooterButtons,
+    MediaLinks,
+    TmdbImage,
+    VidSrcButton,
+} from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
+import { ReviewDetailsCard, ReviewRatingTimeline } from "@/modules/review";
 import { useSeason } from "@/modules/season";
+import { useSeasonReviews } from "@/modules/seasonReview";
 import { useShow } from "@/modules/show";
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     Text,
     type ThemedStyles,
+    Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useMemo } from "react";
 import { FlatList, StyleSheet, View, useWindowDimensions } from "react-native";
 
 const Season: React.FC = () => {
@@ -21,12 +31,21 @@ const Season: React.FC = () => {
         name?: string;
     }>();
 
+    const router = useRouter();
+
     const showId = Number.parseInt(showIdParam ?? "", 10);
     const seasonNumber = Number.parseInt(seasonNumberParam ?? "", 10);
     const { fontScale, width } = useWindowDimensions();
 
+    const { configuration } = useCurrentUserConfig();
     const { data: show } = useShow(showId);
     const { data: season } = useSeason(showId, seasonNumber);
+    const { data: reviews } = useSeasonReviews({ showId, seasonNumber });
+
+    const reviewList = useMemo(
+        () => reviews?.pages.flat().filter(Undefined) ?? [],
+        [reviews],
+    );
 
     const airDate = season?.airDate
         ? new Date(season.airDate).toLocaleString("default", {
@@ -42,9 +61,10 @@ const Season: React.FC = () => {
         <>
             <Stack.Screen options={{ title: season?.name ?? name }} />
             <FlatList
-                contentInsetAdjustmentBehavior="always"
+                contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
                 data={season?.episodes}
+                initialNumToRender={season?.episodes?.length} // Issue in FlatList: https://github.com/facebook/react-native/issues/36766#issuecomment-1853107471
                 keyExtractor={({ episodeNumber }) => episodeNumber.toString()}
                 ListHeaderComponent={
                     <>
@@ -62,6 +82,45 @@ const Season: React.FC = () => {
                             imdbId={show?.externalIds?.imdbId}
                             seasonNumber={seasonNumber}
                         />
+                        {!!reviewList?.length && (
+                            <>
+                                <Text variant="title" style={styles.topMargin}>
+                                    Reviews
+                                </Text>
+                                {reviewList.length > 1 && (
+                                    <ReviewRatingTimeline
+                                        reviews={reviewList}
+                                        starCount={
+                                            configuration.ratings.starCount
+                                        }
+                                    />
+                                )}
+                                <FlatList
+                                    contentInsetAdjustmentBehavior="automatic"
+                                    scrollEnabled={false}
+                                    data={reviewList}
+                                    renderItem={({ item }) => (
+                                        <ReviewDetailsCard
+                                            key={item.reviewId}
+                                            starCount={
+                                                configuration.ratings.starCount
+                                            }
+                                            review={item}
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname:
+                                                        "/shows/season/review",
+                                                    params: {
+                                                        reviewId: item.reviewId,
+                                                    },
+                                                })
+                                            }
+                                        />
+                                    )}
+                                    contentContainerStyle={styles.list}
+                                />
+                            </>
+                        )}
                         <Text variant="title" style={styles.topMargin}>
                             Episodes
                         </Text>
@@ -116,6 +175,14 @@ const Season: React.FC = () => {
                     );
                 }}
             />
+            <MediaFooterButtons
+                onAddReview={() =>
+                    router.push({
+                        pathname: "/shows/season/editReview",
+                        params: { showId, seasonNumber },
+                    })
+                }
+            />
         </>
     );
 };
@@ -136,6 +203,9 @@ const createStyles = (
             paddingHorizontal: padding.pageHorizontal,
         },
         topMargin: {
+            marginTop: padding.large,
+        },
+        list: {
             marginTop: padding.large,
         },
         episode: {

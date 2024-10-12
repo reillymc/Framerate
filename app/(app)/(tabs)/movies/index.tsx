@@ -26,7 +26,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, router } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
@@ -37,6 +37,7 @@ import Animated, {
 import type { SearchBarCommands } from "react-native-screens";
 
 const Movies: FC = () => {
+    const router = useRouter();
     const { data: reviews } = useMovieReviews();
 
     const styles = useThemedStyles(createStyles, {});

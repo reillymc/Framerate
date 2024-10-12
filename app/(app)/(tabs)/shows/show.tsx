@@ -192,7 +192,7 @@ const Show: React.FC = () => {
                 onAddReview={() =>
                     router.push({
                         pathname: "/shows/editReview",
-                        params: { showId: showId },
+                        params: { showId },
                     })
                 }
                 onToggleWatchlist={() => {

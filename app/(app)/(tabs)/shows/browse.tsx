@@ -5,11 +5,12 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, router } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import type { FC } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 
 const Browse: FC = () => {
+    const router = useRouter();
     const { data: shows, refetch } = usePopularShows();
     const { data: watchlistEntries = [] } = useWatchlistEntries("show");
 

@@ -24,7 +24,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, router } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { type FC, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import type { SearchBarCommands } from "react-native-screens";
@@ -37,6 +37,8 @@ const Shows: FC = () => {
     const { width: posterWidth, gap: posterGap } = usePosterDimensions({
         size: "large",
     });
+
+    const router = useRouter();
 
     const { configuration } = useCurrentUserConfig();
 

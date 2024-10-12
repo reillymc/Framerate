@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Fade } from "./fade";
 
 interface MediaFooterButtonsProps {
-    onWatchlist: boolean;
+    onWatchlist?: boolean;
     onToggleWatchlist?: () => void;
     onAddReview?: () => void;
 }

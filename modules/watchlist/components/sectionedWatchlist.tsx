@@ -116,6 +116,7 @@ export const SectionedWatchlist: FC<SectionedWatchlistProps> = ({
         <SectionList
             sections={sectionData}
             ref={listRef}
+            initialNumToRender={sectionData?.length} // Issue in FlatList: https://github.com/facebook/react-native/issues/36766#issuecomment-1853107471
             refreshing={false}
             onRefresh={onRefresh}
             onScrollToIndexFailed={(info) => {
