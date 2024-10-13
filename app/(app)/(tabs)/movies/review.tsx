@@ -28,18 +28,19 @@ const Review: FC = () => {
                               review.rating,
                               configuration.ratings.starCount,
                           )
-                        : "...",
-                    headerRight: () => (
-                        <IconActionV2
-                            iconName="pencil"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/movies/editReview",
-                                    params: { reviewId },
-                                })
-                            }
-                        />
-                    ),
+                        : "Watched",
+                    headerRight: () =>
+                        review?.rating ? (
+                            <IconActionV2
+                                iconName="pencil"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/editReview",
+                                        params: { reviewId },
+                                    })
+                                }
+                            />
+                        ) : null,
                 }}
             />
             <ScrollView

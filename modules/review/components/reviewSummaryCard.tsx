@@ -35,7 +35,9 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
         posterWidth: width,
     });
 
-    const rating = ratingToStars(review.rating, starCount);
+    const rating = review.rating
+        ? ratingToStars(review.rating, starCount)
+        : undefined;
 
     const releaseYear = mediaDate ? new Date(mediaDate).getFullYear() : null;
 
@@ -61,14 +63,16 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             {releaseYear}
                         </Text>
                     </View>
-                    <StarRatingDisplay
-                        rating={rating}
-                        style={styles.stars}
-                        starStyle={{ marginHorizontal: 0 }}
-                        enableHalfStar
-                        maxStars={starCount}
-                        starSize={24}
-                    />
+                    {rating && (
+                        <StarRatingDisplay
+                            rating={rating}
+                            style={styles.stars}
+                            starStyle={{ marginHorizontal: 0 }}
+                            enableHalfStar
+                            maxStars={starCount}
+                            starSize={24}
+                        />
+                    )}
                 </View>
             </View>
             {!!review.description && (
@@ -80,7 +84,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             numberOfLines={1}
                             style={styles.numericRating}
                         >
-                            {rating}/{starCount}
+                            {rating ? `${rating}/${starCount}` : "Watched"}
                         </Text>
                     </View>
                     <Text numberOfLines={3} style={styles.description}>
@@ -99,7 +103,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             numberOfLines={1}
                             style={[styles.numericRating, styles.altRating]}
                         >
-                            {rating}/{starCount}
+                            {rating ? `${rating}/${starCount}` : "Watched"}
                         </Text>
                     </View>
                 )}

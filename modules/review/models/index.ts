@@ -14,7 +14,7 @@ export type ReviewCompanyDetails = ReviewCompanySummary & {
 export type Review = {
     reviewId: string;
     date?: string;
-    rating: number;
+    rating?: number;
     title?: string;
     description?: string;
     venue?: string;

@@ -26,9 +26,7 @@ const EditReview: FC = () => {
         showId: string;
     }>();
 
-    const showId = showIdParam
-        ? Number.parseInt(showIdParam ?? "", 10)
-        : undefined;
+    const showId = showIdParam ? Number.parseInt(showIdParam, 10) : undefined;
 
     const { userId } = useSession();
 
@@ -77,15 +75,15 @@ const EditReview: FC = () => {
     };
 
     const handleSave = () => {
-        const mediaIdValue = showId ?? review?.show.id;
+        const showIdValue = showId ?? review?.show.id;
 
-        if (!(rating && mediaIdValue)) return;
+        if (!(rating && showIdValue)) return;
 
         saveReview({
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
-            showId: mediaIdValue,
+            showId: showIdValue,
             venue,
             rating,
             description,
@@ -94,7 +92,7 @@ const EditReview: FC = () => {
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
             deleteWatchlistEntry({
-                mediaId: mediaIdValue,
+                mediaId: showIdValue,
                 mediaType: MediaType.Show,
             });
         }

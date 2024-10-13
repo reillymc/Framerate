@@ -1,19 +1,18 @@
-import { useSession } from "@/modules/auth";
-import { ReviewForm, getRatingLabel } from "@/modules/review";
+import { SegmentedControl } from "@/components";
 import { useSaveSeasonReview, useSeasonReview } from "@/modules/seasonReview";
-import { useCurrentUserConfig, useUsers } from "@/modules/user";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     Action,
     type ThemedStyles,
-    Undefined,
-    type ValueItem,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import { type FC, useEffect, useState } from "react";
-import { ScrollView, StatusBar, StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
-const EditReview: FC = () => {
+const EditWatch: FC = () => {
     const {
         reviewId,
         showId: showIdParam,
@@ -21,7 +20,7 @@ const EditReview: FC = () => {
     } = useGlobalSearchParams<{
         reviewId: string;
         showId: string;
-        seasonNumber?: string;
+        seasonNumber: string;
     }>();
 
     const showId = showIdParam ? Number.parseInt(showIdParam, 10) : undefined;
@@ -30,42 +29,23 @@ const EditReview: FC = () => {
         ? Number.parseInt(seasonNumberParam, 10)
         : undefined;
 
-    const { userId } = useSession();
-
     const { data: review } = useSeasonReview(reviewId);
-
     const router = useRouter();
     const { mutate: saveReview } = useSaveSeasonReview();
-    const { data: users = [] } = useUsers();
-    const { configuration } = useCurrentUserConfig();
-
-    const filteredUsers = users.filter((user) => user.userId !== userId);
+    const { theme } = useTheme();
 
     const styles = useThemedStyles(createStyles, {});
 
     const [date, setDate] = useState(
         review?.date ? new Date(review.date) : new Date(),
     );
-    const [rating, setRating] = useState(review?.rating ?? 0);
-    const [description, setDescription] = useState(review?.description ?? "");
 
-    const [includeDate, setIncludeDate] = useState(
-        review ? !!review.date : true,
-    );
-    const [venue, setVenue] = useState(review?.venue);
-    const [company, setCompany] = useState<ValueItem[]>(
-        review?.company
-            ?.map((user) => ({
-                value: user.userId,
-                label: `${user.firstName} ${user.lastName}`,
-            }))
-            .filter(Undefined) ?? [],
-    );
+    const [watchDateOption, setWatchDateOption] = useState<
+        "today" | "custom" | "noDate"
+    >(review?.date ? "custom" : "today");
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
-        setRating(review?.rating ?? 0);
-        setDescription(review?.description ?? "");
     }, [review]);
 
     const handleClose = () => {
@@ -76,18 +56,17 @@ const EditReview: FC = () => {
         const showIdValue = showId ?? review?.season.showId;
         const seasonNumberValue = seasonNumber ?? review?.season.seasonNumber;
 
-        if (!(rating && showIdValue && seasonNumberValue)) return;
+        if (!(showIdValue && seasonNumberValue)) return;
 
         saveReview({
             ...review,
             reviewId,
-            date: includeDate ? date.toISOString().split("T")[0] : undefined,
+            date:
+                watchDateOption === "noDate"
+                    ? undefined
+                    : date.toISOString().split("T")[0],
             showId: showIdValue,
             seasonNumber: seasonNumberValue,
-            venue,
-            rating,
-            description,
-            company: company.map(({ value }) => ({ userId: value })),
         });
 
         handleClose();
@@ -97,10 +76,7 @@ const EditReview: FC = () => {
         <>
             <Stack.Screen
                 options={{
-                    title: getRatingLabel(
-                        rating,
-                        configuration.ratings.starCount,
-                    ),
+                    title: reviewId ? "Edit Watch" : "Log Watch",
                     headerLeft: () => (
                         <Action
                             label="Close"
@@ -117,36 +93,40 @@ const EditReview: FC = () => {
                     ),
                 }}
             />
-            <StatusBar barStyle="light-content" animated={true} />
+            <StatusBar barStyle="light-content" animated />
             <ScrollView
-                scrollEnabled={false}
-                contentInsetAdjustmentBehavior="always"
-                keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
+                contentInsetAdjustmentBehavior="automatic"
             >
-                <ReviewForm
-                    companyOptions={filteredUsers}
-                    rating={rating}
-                    includeDate={includeDate}
-                    date={date}
-                    company={company}
-                    description={description}
-                    venue={venue}
-                    starCount={configuration.ratings.starCount}
-                    venueOptions={configuration.venues.knownVenueNames}
-                    onRatingChange={setRating}
-                    onIncludeDateChange={setIncludeDate}
-                    onDateChange={setDate}
-                    onCompanyChange={setCompany}
-                    onDescriptionChange={setDescription}
-                    onVenueChange={setVenue}
+                <SegmentedControl
+                    value={watchDateOption}
+                    options={
+                        [
+                            { value: "today", label: "Today" },
+                            { value: "custom", label: "Custom Date" },
+                            { value: "noDate", label: "No Date" },
+                        ] as const
+                    }
+                    onChange={({ value }) => setWatchDateOption(value)}
                 />
+
+                {watchDateOption !== "noDate" && (
+                    <DateTimePicker
+                        value={date}
+                        mode="date"
+                        style={styles.dateInput}
+                        disabled={watchDateOption === "today"}
+                        maximumDate={new Date()}
+                        onChange={(_, newDate) => newDate && setDate(newDate)}
+                        accentColor={theme.color.primary}
+                    />
+                )}
             </ScrollView>
         </>
     );
 };
 
-export default EditReview;
+export default EditWatch;
 
 const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
@@ -155,7 +135,11 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         },
         container: {
             paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
             paddingBottom: padding.large,
+        },
+        dateInput: {
+            marginTop: padding.regular,
+            alignSelf: "center",
+            marginRight: padding.small,
         },
     });

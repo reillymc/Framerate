@@ -33,8 +33,10 @@ const Season: React.FC = () => {
 
     const router = useRouter();
 
-    const showId = Number.parseInt(showIdParam ?? "", 10);
-    const seasonNumber = Number.parseInt(seasonNumberParam ?? "", 10);
+    const showId = showIdParam ? Number.parseInt(showIdParam, 10) : undefined;
+    const seasonNumber = seasonNumberParam
+        ? Number.parseInt(seasonNumberParam, 10)
+        : undefined;
     const { fontScale, width } = useWindowDimensions();
 
     const { configuration } = useCurrentUserConfig();
@@ -85,16 +87,12 @@ const Season: React.FC = () => {
                         {!!reviewList?.length && (
                             <>
                                 <Text variant="title" style={styles.topMargin}>
-                                    Reviews
+                                    Watch History
                                 </Text>
-                                {reviewList.length > 1 && (
-                                    <ReviewRatingTimeline
-                                        reviews={reviewList}
-                                        starCount={
-                                            configuration.ratings.starCount
-                                        }
-                                    />
-                                )}
+                                <ReviewRatingTimeline
+                                    reviews={reviewList}
+                                    starCount={configuration.ratings.starCount}
+                                />
                                 <FlatList
                                     contentInsetAdjustmentBehavior="automatic"
                                     scrollEnabled={false}
@@ -117,7 +115,7 @@ const Season: React.FC = () => {
                                             }
                                         />
                                     )}
-                                    contentContainerStyle={styles.list}
+                                    style={styles.list}
                                 />
                             </>
                         )}
@@ -179,6 +177,12 @@ const Season: React.FC = () => {
                 onAddReview={() =>
                     router.push({
                         pathname: "/shows/season/editReview",
+                        params: { showId, seasonNumber },
+                    })
+                }
+                onAddWatch={() =>
+                    router.push({
+                        pathname: "/shows/season/editWatch",
                         params: { showId, seasonNumber },
                     })
                 }

@@ -14,12 +14,14 @@ interface MediaFooterButtonsProps {
     onWatchlist?: boolean;
     onToggleWatchlist?: () => void;
     onAddReview?: () => void;
+    onAddWatch?: () => void;
 }
 
 export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
     onWatchlist,
     onAddReview,
     onToggleWatchlist,
+    onAddWatch,
 }) => {
     const { bottom } = useSafeAreaInsets();
     const { width } = useWindowDimensions();
@@ -64,7 +66,7 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                     >
                         <IconActionV2
                             size="large"
-                            iconName={onWatchlist ? "eye-closed" : "eye"}
+                            iconName={onWatchlist ? "dash" : "plus"}
                             iconStyle={{ color: "white" }}
                             containerStyle={{ backgroundColor: "transparent" }}
                         />
@@ -72,7 +74,7 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                             variant="bodyEmphasized"
                             style={{ color: "white" }}
                         >
-                            {onWatchlist ? "On Watchlist" : "Watchlist"}
+                            Watchlist
                         </Text>
                     </Pressable>
                 )}
@@ -106,7 +108,41 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                                 marginLeft: 1,
                             }}
                         >
-                            Add Review
+                            Review
+                        </Text>
+                    </Pressable>
+                )}
+                {onAddWatch && (
+                    <Pressable
+                        style={{
+                            backgroundColor: theme.color.primary,
+                            borderRadius: 24,
+                            paddingVertical: theme.padding.tiny,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            flex: 1,
+                            paddingLeft: theme.padding.small,
+                        }}
+                        onPress={onAddWatch}
+                    >
+                        <IconActionV2
+                            size="large"
+                            iconName="eye"
+                            iconStyle={{
+                                color: "white",
+                            }}
+                            containerStyle={{
+                                backgroundColor: "transparent",
+                            }}
+                        />
+                        <Text
+                            variant="label"
+                            style={{
+                                color: "white",
+                                marginLeft: 1,
+                            }}
+                        >
+                            Watch
                         </Text>
                     </Pressable>
                 )}

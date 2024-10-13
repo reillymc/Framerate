@@ -44,7 +44,6 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
     chartHeight = 240,
 }) => {
     const font = useFont(FontResources.Regular, 12);
-    
     const { state, isActive } = useChartPressState({
         x: 0,
         y: { rating: 0, filteredRatings: 0 },
@@ -60,6 +59,7 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
 
     const chartData: ChartData[] = useMemo(() => {
         const sorted = [...(reviews ?? [])]
+            .filter(({ rating }) => rating !== undefined)
             .map((review) => ({
                 ...review,
                 date: review.date ? new Date(review.date) : undefined,
@@ -72,7 +72,7 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
                 return 0;
             });
 
-        return sorted.map(({ date, rating }): ChartData => {
+        return sorted.map(({ date, rating = 0 }): ChartData => {
             if (date) {
                 return {
                     date: date.getTime(),
@@ -115,6 +115,8 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
             };
         });
     }, [reviews]);
+
+    if (chartData.length < 2) return null;
 
     return (
         <View style={{ height: chartHeight }}>

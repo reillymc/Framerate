@@ -21,7 +21,9 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
     onPress,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const rating = ratingToStars(review.rating, starCount);
+    const rating = review.rating
+        ? ratingToStars(review.rating, starCount)
+        : undefined;
 
     const date = review.date ? new Date(review.date) : undefined;
 
@@ -51,20 +53,23 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
             </View>
             <View style={styles.reviewContainer}>
                 <View style={styles.topContainer}>
-                    <StarRatingDisplay
-                        rating={rating}
-                        style={styles.stars}
-                        starStyle={{ marginHorizontal: 0 }}
-                        enableHalfStar
-                        maxStars={starCount}
-                        starSize={Math.min(220 / starCount, 28)}
-                    />
+                    {!!rating && (
+                        <StarRatingDisplay
+                            rating={rating}
+                            style={styles.stars}
+                            starStyle={{ marginHorizontal: 0 }}
+                            enableHalfStar
+                            maxStars={starCount}
+                            starSize={Math.min(220 / starCount, 28)}
+                        />
+                    )}
+
                     <Text
                         variant="heading"
                         numberOfLines={1}
-                        style={styles.numericRating}
+                        style={rating ? styles.numericRating : undefined}
                     >
-                        {rating}/{starCount}
+                        {rating ? `${rating}/${starCount}` : "Watched"}
                     </Text>
                 </View>
                 <View style={styles.bodyContainer}>

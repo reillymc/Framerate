@@ -28,7 +28,7 @@ const Review: FC = () => {
                               review.rating,
                               configuration.ratings.starCount,
                           )
-                        : "...",
+                        : "Watched",
                     headerRight: () => (
                         <IconActionV2
                             iconName="pencil"

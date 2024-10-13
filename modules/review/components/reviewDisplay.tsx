@@ -20,19 +20,30 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
 }) => {
     const styles = useThemedStyles(createStyles, {});
 
-    const rating = ratingToStars(review.rating, starCount);
+    const rating =
+        review.rating !== undefined
+            ? ratingToStars(review.rating, starCount)
+            : undefined;
 
     return (
         <>
-            <StarRatingDisplay
-                rating={rating}
-                style={{ justifyContent: "center" }}
-                enableHalfStar
-                maxStars={starCount}
-                starSize={180 / starCount}
-            />
-            {!!review.title && <Text>{review.title}</Text>}
-            <Text style={styles.informationSection}>{review.description}</Text>
+            {!!rating && (
+                <StarRatingDisplay
+                    rating={rating}
+                    style={styles.ratingDisplay}
+                    enableHalfStar
+                    maxStars={starCount}
+                    starSize={180 / starCount}
+                />
+            )}
+            {!!review.title && (
+                <Text style={styles.informationSection}>{review.title}</Text>
+            )}
+            {!!review.description && (
+                <Text style={styles.informationSection}>
+                    {review.description}
+                </Text>
+            )}
             <Text variant="bodyEmphasized" style={styles.informationSection}>
                 <Text variant="body">Watched </Text>
                 {review.date && (
@@ -70,7 +81,11 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             paddingTop: padding.pageTop,
             paddingBottom: padding.large,
         },
+        ratingDisplay: {
+            justifyContent: "center",
+            marginBottom: padding.large,
+        },
         informationSection: {
-            marginTop: padding.large,
+            marginBottom: padding.large,
         },
     });

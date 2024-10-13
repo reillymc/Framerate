@@ -39,7 +39,7 @@ const Show: React.FC = () => {
         posterPath?: string;
     }>();
 
-    const showId = Number.parseInt(idParam ?? "", 10);
+    const showId = idParam ? Number.parseInt(idParam, 10) : undefined;
 
     const router = useRouter();
 
@@ -147,14 +147,12 @@ const Show: React.FC = () => {
                     {!!reviewList?.length && (
                         <View style={styles.element}>
                             <Text variant="title" style={styles.section}>
-                                Reviews
+                                Watch History
                             </Text>
-                            {reviewList.length > 1 && (
-                                <ReviewRatingTimeline
-                                    reviews={reviewList}
-                                    starCount={configuration.ratings.starCount}
-                                />
-                            )}
+                            <ReviewRatingTimeline
+                                reviews={reviewList}
+                                starCount={configuration.ratings.starCount}
+                            />
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
@@ -195,7 +193,15 @@ const Show: React.FC = () => {
                         params: { showId },
                     })
                 }
+                onAddWatch={() =>
+                    router.push({
+                        pathname: "/shows/editWatch",
+                        params: { showId },
+                    })
+                }
                 onToggleWatchlist={() => {
+                    if (!showId) return;
+
                     if (watchlistEntry) {
                         deleteWatchlistEntry({
                             mediaId: showId,
@@ -203,8 +209,6 @@ const Show: React.FC = () => {
                         });
                         return;
                     }
-
-                    if (!show) return;
 
                     saveWatchlistEntry({
                         mediaId: showId,

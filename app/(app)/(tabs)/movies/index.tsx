@@ -80,7 +80,7 @@ const Movies: FC = () => {
                 pathname: "/movies/watchlist",
                 params: { jumpToDate: date?.toISOString() },
             }),
-        [],
+        [router],
     );
 
     return (

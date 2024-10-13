@@ -38,7 +38,7 @@ const Movie: React.FC = () => {
         posterPath?: string;
     }>();
 
-    const movieId = Number.parseInt(idParam ?? "", 10);
+    const movieId = idParam ? Number.parseInt(idParam, 10) : undefined;
 
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
@@ -104,14 +104,12 @@ const Movie: React.FC = () => {
                     {!!reviewList?.length && (
                         <>
                             <Text variant="title" style={styles.section}>
-                                Reviews
+                                Watch History
                             </Text>
-                            {reviewList.length > 1 && (
-                                <ReviewRatingTimeline
-                                    reviews={reviewList}
-                                    starCount={configuration.ratings.starCount}
-                                />
-                            )}
+                            <ReviewRatingTimeline
+                                reviews={reviewList}
+                                starCount={configuration.ratings.starCount}
+                            />
                             <FlatList
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
@@ -152,7 +150,15 @@ const Movie: React.FC = () => {
                         params: { movieId },
                     })
                 }
+                onAddWatch={() =>
+                    router.push({
+                        pathname: "/movies/editWatch",
+                        params: { movieId },
+                    })
+                }
                 onToggleWatchlist={() => {
+                    if (!movieId) return;
+
                     if (watchlistEntry) {
                         deleteWatchlistEntry({
                             mediaId: movieId,
@@ -160,8 +166,6 @@ const Movie: React.FC = () => {
                         });
                         return;
                     }
-
-                    if (!movie) return;
 
                     saveWatchlistEntry({
                         mediaId: movieId,

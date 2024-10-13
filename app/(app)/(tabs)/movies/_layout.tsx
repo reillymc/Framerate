@@ -15,6 +15,10 @@ const MoviesStack: FC = () => {
                 name="editReview"
                 options={{ presentation: "fullScreenModal" }}
             />
+            <Stack.Screen
+                name="editWatch"
+                options={{ presentation: "formSheet" }}
+            />
             <Stack.Screen name="watchlist" />
         </Stack>
     );
