@@ -1,5 +1,5 @@
 import "react-native-reanimated";
-import { fonts } from "@/assets/fonts";
+import { Font } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks";
 import { SessionProvider } from "@/modules/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,9 +21,7 @@ import {
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, onlineManager } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
-import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -33,9 +31,6 @@ if (__DEV__) {
     DevToolsBubble =
         require("react-native-react-query-devtools").DevToolsBubble;
 }
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-preventAutoHideAsync();
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -58,14 +53,6 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
     const { fontScale } = useWindowDimensions();
 
-    const [loaded] = useFonts(fonts);
-
-    useEffect(() => {
-        if (loaded) {
-            hideAsync();
-        }
-    }, [loaded]);
-
     useEffect(() => {
         return NetInfo.addEventListener((state) => {
             const status = !!state.isConnected;
@@ -77,11 +64,11 @@ export default function RootLayout() {
         () => ({
             font: {
                 familyWeight: {
-                    light100: "dosisLight",
-                    light200: "dosisLight",
-                    regular400: "dosis",
-                    bold600: "dosisSemiBold",
-                    bold800: "dosisBold",
+                    light100: Font.Light,
+                    light200: Font.Light,
+                    regular400: Font.Regular,
+                    bold600: Font.SemiBold,
+                    bold800: Font.Bold,
                 },
                 size: {
                     tiny: scaleFont(14, 0.9, fontScale),
@@ -167,10 +154,6 @@ export default function RootLayout() {
         }),
         [colorScheme, theme],
     );
-
-    if (!loaded) {
-        return null;
-    }
 
     return (
         <PersistQueryClientProvider

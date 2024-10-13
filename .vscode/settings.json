@@ -5,5 +5,5 @@
         "source.organizeImports.biome": "explicit"
     },
     "typescript.preferences.preferTypeOnlyAutoImports": true,
-    "cSpell.words": ["imdb", "tanstack", "tmdb"]
+    "cSpell.words": ["Dosis", "imdb", "tanstack", "tmdb"]
 }

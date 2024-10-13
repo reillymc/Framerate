@@ -40,11 +40,13 @@ export const SegmentedControl = <T extends string | number>({
                     selectedIndex={selectedIndex}
                     fontStyle={{
                         fontFamily: theme.font.familyWeight.regular400,
+                        fontWeight: "400",
                         color: theme.color.inputText,
                     }}
                     tintColor={theme.color.background}
                     activeFontStyle={{
-                        fontFamily: theme.font.familyWeight.bold600,
+                        fontFamily: theme.font.familyWeight.bold800,
+                        fontWeight: "600",
                         color: theme.color.inputText,
                     }}
                     backgroundColor={theme.color.inputBackground}

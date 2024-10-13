@@ -1,4 +1,4 @@
-import { fonts } from "@/assets/fonts";
+import { FontResources } from "@/assets/fonts";
 import type { WatchlistEntrySummary } from "@/modules/watchlistEntry/services";
 import { useTheme } from "@reillymc/react-native-components";
 import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
@@ -33,8 +33,8 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
     style,
     onPressDate,
 }) => {
-    const font = useFont(fonts.dosisSemiBold, 12);
-
+    const font = useFont(FontResources.Bold, 12);
+    
     const { state } = useChartPressState({
         x: 0,
         y: { count: 0, date: 0 },

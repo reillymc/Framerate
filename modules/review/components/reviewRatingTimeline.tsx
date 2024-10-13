@@ -1,4 +1,4 @@
-import { fonts } from "@/assets/fonts";
+import { FontResources } from "@/assets/fonts";
 import { useTheme } from "@reillymc/react-native-components";
 import {
     Circle,
@@ -43,8 +43,8 @@ export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
     starCount,
     chartHeight = 240,
 }) => {
-    const font = useFont(fonts.dosis, 12);
-
+    const font = useFont(FontResources.Regular, 12);
+    
     const { state, isActive } = useChartPressState({
         x: 0,
         y: { rating: 0, filteredRatings: 0 },
@@ -268,8 +268,8 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     const topOffset = 2;
     const fontSizeRegular = 10;
     const fontSizeBold = 14;
-    const fontRegular = useFont(fonts.dosis, fontSizeRegular);
-    const fontBold = useFont(fonts.dosisBold, fontSizeBold);
+    const fontRegular = useFont(FontResources.Regular, fontSizeRegular);
+    const fontBold = useFont(FontResources.Bold, fontSizeBold);
     const start = useDerivedValue(() => vec(xPosition.value, bottom));
     const end = useDerivedValue(() =>
         vec(
