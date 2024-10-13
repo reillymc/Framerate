@@ -32,18 +32,18 @@ interface ChartData extends Record<string, unknown> {
     filteredRatings: number | undefined;
 }
 
-interface ReviewRatingTimelineProps {
+interface RatingHistoryChartProps {
     reviews: Array<Pick<Review, "date" | "rating">>;
     starCount: number;
     chartHeight?: number;
 }
 
-export const ReviewRatingTimeline: FC<ReviewRatingTimelineProps> = ({
+export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     reviews,
     starCount,
     chartHeight = 240,
 }) => {
-    const font = useFont(FontResources.Regular, 12);
+    const font = useFont(FontResources.regular, 12);
     const { state, isActive } = useChartPressState({
         x: 0,
         y: { rating: 0, filteredRatings: 0 },
@@ -270,8 +270,8 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     const topOffset = 2;
     const fontSizeRegular = 10;
     const fontSizeBold = 14;
-    const fontRegular = useFont(FontResources.Regular, fontSizeRegular);
-    const fontBold = useFont(FontResources.Bold, fontSizeBold);
+    const fontRegular = useFont(FontResources.regular, fontSizeRegular);
+    const fontBold = useFont(FontResources.bold, fontSizeBold);
     const start = useDerivedValue(() => vec(xPosition.value, bottom));
     const end = useDerivedValue(() =>
         vec(

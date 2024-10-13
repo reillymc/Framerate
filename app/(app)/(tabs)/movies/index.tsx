@@ -137,9 +137,9 @@ const Movies: FC = () => {
                                     router.push({
                                         pathname: "/movies/movie",
                                         params: {
-                                            mediaId: item.id,
-                                            mediaTitle: item.title,
-                                            mediaPosterUri: item.posterPath,
+                                            id: item.id,
+                                            title: item.title,
+                                            posterPath: item.posterPath,
                                         },
                                     });
                                     addSearch({ searchValue: item.title });

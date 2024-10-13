@@ -17,7 +17,7 @@ import {
     usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
-import { ReviewDetailsCard, ReviewRatingTimeline } from "@/modules/review";
+import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
@@ -149,7 +149,7 @@ const Show: React.FC = () => {
                             <Text variant="title" style={styles.section}>
                                 Watch History
                             </Text>
-                            <ReviewRatingTimeline
+                            <RatingHistoryChart
                                 reviews={reviewList}
                                 starCount={configuration.ratings.starCount}
                             />
@@ -157,13 +157,16 @@ const Show: React.FC = () => {
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
                                 data={reviewList}
-                                renderItem={({ item }) => (
-                                    <ReviewDetailsCard
+                                renderItem={({ item, index }) => (
+                                    <ReviewTimelineItem
                                         key={item.reviewId}
                                         starCount={
                                             configuration.ratings.starCount
                                         }
                                         review={item}
+                                        hideTimeline={
+                                            index === reviewList.length - 1
+                                        }
                                         onPress={() =>
                                             router.push({
                                                 pathname: "/shows/review",

@@ -33,8 +33,8 @@ export const WatchlistEntriesChart: FC<WatchlistEntriesChartProps> = ({
     style,
     onPressDate,
 }) => {
-    const font = useFont(FontResources.Bold, 12);
-    
+    const font = useFont(FontResources.bold, 12);
+
     const { state } = useChartPressState({
         x: 0,
         y: { count: 0, date: 0 },

@@ -9,15 +9,17 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 
-interface ReviewDetailsCardProps {
+interface ReviewTimelineItemProps {
     review: Review;
     starCount: number;
+    hideTimeline?: boolean;
     onPress: () => void;
 }
 
-export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
+export const ReviewTimelineItem: FC<ReviewTimelineItemProps> = ({
     review,
     starCount,
+    hideTimeline,
     onPress,
 }) => {
     const styles = useThemedStyles(createStyles, {});
@@ -48,7 +50,7 @@ export const ReviewDetailsCard: FC<ReviewDetailsCardProps> = ({
                     )}
                 </View>
                 <View style={styles.timelineClip}>
-                    <View style={styles.timeline} />
+                    {!hideTimeline && <View style={styles.timeline} />}
                 </View>
             </View>
             <View style={styles.reviewContainer}>

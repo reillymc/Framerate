@@ -1,15 +1,15 @@
 export enum Font {
-    Regular = "Dosis-Regular",
     Light = "Dosis-Light",
-    Bold = "Dosis-Bold",
+    Regular = "Dosis-Regular",
     Medium = "Dosis-Medium",
+    Bold = "Dosis-Bold",
     SemiBold = "Dosis-SemiBold",
 }
 
 export const FontResources = {
-    Light: require("./Dosis-Light.ttf"),
-    Regular: require("./Dosis-Regular.ttf"),
-    Medium: require("./Dosis-Medium.ttf"),
-    Bold: require("./Dosis-Bold.ttf"),
-    SemiBold: require("./Dosis-SemiBold.ttf"),
+    light: require("./Dosis-Light.ttf"),
+    regular: require("./Dosis-Regular.ttf"),
+    medium: require("./Dosis-Medium.ttf"),
+    bold: require("./Dosis-Bold.ttf"),
+    semiBold: require("./Dosis-SemiBold.ttf"),
 };

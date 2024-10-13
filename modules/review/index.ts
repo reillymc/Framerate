@@ -8,10 +8,10 @@
 export { ratingToStars, starsToRating, getRatingLabel } from "./helpers";
 export {
     FilterableReviewList,
-    ReviewDetailsCard,
+    ReviewTimelineItem,
     ReviewDisplay,
     ReviewForm,
-    ReviewRatingTimeline,
+    RatingHistoryChart,
     ReviewSortButton,
     ReviewSummaryCard,
 } from "./components";

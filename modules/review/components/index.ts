@@ -1,6 +1,6 @@
-export { ReviewRatingTimeline } from "./reviewRatingTimeline";
+export { RatingHistoryChart } from "./ratingHistoryChart";
 export { ReviewSummaryCard } from "./reviewSummaryCard";
-export { ReviewDetailsCard } from "./reviewDetailsCard";
+export { ReviewTimelineItem } from "./reviewTimelineItem";
 export { ReviewForm } from "./reviewForm";
 export { ReviewDisplay } from "./reviewDisplay";
 export { ReviewSortButton } from "./reviewSortButton";

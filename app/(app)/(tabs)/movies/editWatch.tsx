@@ -44,7 +44,8 @@ const EditWatch: FC = () => {
 
     const [watchDateOption, setWatchDateOption] = useState<
         "today" | "custom" | "noDate"
-    >(review?.date ? "custom" : "today");
+    >(reviewId ? (review?.date ? "custom" : "noDate") : "today");
+
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
 
     const { data: watchlistEntry } = useWatchlistEntry(

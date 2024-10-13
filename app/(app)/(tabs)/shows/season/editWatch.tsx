@@ -42,7 +42,7 @@ const EditWatch: FC = () => {
 
     const [watchDateOption, setWatchDateOption] = useState<
         "today" | "custom" | "noDate"
-    >(review?.date ? "custom" : "today");
+    >(reviewId ? (review?.date ? "custom" : "noDate") : "today");
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());

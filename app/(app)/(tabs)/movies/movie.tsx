@@ -18,7 +18,7 @@ import {
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
 import { useMovieReviews } from "@/modules/movieReview";
-import { ReviewDetailsCard, ReviewRatingTimeline } from "@/modules/review";
+import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     useDeleteWatchlistEntry,
@@ -106,7 +106,7 @@ const Movie: React.FC = () => {
                             <Text variant="title" style={styles.section}>
                                 Watch History
                             </Text>
-                            <ReviewRatingTimeline
+                            <RatingHistoryChart
                                 reviews={reviewList}
                                 starCount={configuration.ratings.starCount}
                             />
@@ -114,13 +114,16 @@ const Movie: React.FC = () => {
                                 contentInsetAdjustmentBehavior="automatic"
                                 scrollEnabled={false}
                                 data={reviewList}
-                                renderItem={({ item }) => (
-                                    <ReviewDetailsCard
+                                renderItem={({ item, index }) => (
+                                    <ReviewTimelineItem
                                         key={item.reviewId}
                                         starCount={
                                             configuration.ratings.starCount
                                         }
                                         review={item}
+                                        hideTimeline={
+                                            index === reviewList.length - 1
+                                        }
                                         onPress={() =>
                                             router.push({
                                                 pathname: "/movies/review",
