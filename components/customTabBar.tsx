@@ -90,6 +90,12 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                                 styles.tab,
                                 { opacity: pressed ? 0.5 : 1 },
                             ]}
+                            hitSlop={{
+                                top: 20,
+                                bottom: 20,
+                                left: 16,
+                                right: 16,
+                            }}
                         >
                             <Text
                                 variant={isFocused ? "bodyEmphasized" : "body"}
@@ -131,14 +137,14 @@ const createStyles = (
         },
         innerContainer: {
             flex: 1,
-            height: 50,
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
             gap: padding.large,
-            borderRadius: 25,
+            borderRadius: 40,
             overflow: "hidden",
             paddingHorizontal: padding.large,
+            paddingVertical: padding.small + padding.tiny,
         },
         tab: {
             justifyContent: "center",
