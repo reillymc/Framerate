@@ -447,6 +447,7 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         },
         searchList: {
             paddingTop: padding.small,
+            paddingBottom: padding.pageBottom,
         },
         searchSuggestion: {
             marginLeft: padding.pageHorizontal,
