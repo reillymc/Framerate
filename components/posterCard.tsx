@@ -50,5 +50,3 @@ export const PosterCard: FC<PosterCardProps> = ({
         </Pressable>
     );
 };
-
-PosterCard.displayName = "PosterCard";

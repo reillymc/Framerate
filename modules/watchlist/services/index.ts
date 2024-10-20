@@ -8,6 +8,4 @@ export const WatchlistsService = {
     saveWatchlist,
 };
 
-export { WatchlistDetails } from "./getWatchlist";
-export { Watchlist } from "./getWatchlists";
 export { SaveWatchlistRequest, SaveWatchlistResponse } from "./saveWatchlist";

@@ -1,20 +1,20 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
-import { MediaType } from "@/constants/mediaTypes";
 import {
     usePopularMovies,
     useRecentSearches,
     useSearchMovies,
 } from "@/modules/movie";
+import {
+    MovieEntriesChart,
+    MovieEntriesSummary,
+    useDeleteMovieEntry,
+    useMovieEntries,
+    useSaveMovieEntry,
+} from "@/modules/movieEntry";
 import { useMovieReviews } from "@/modules/movieReview";
 import { ReviewSummaryCard } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-import { WatchlistEntriesChart, WatchlistSummary } from "@/modules/watchlist";
-import {
-    useDeleteWatchlistEntry,
-    useSaveWatchlistEntry,
-    useWatchlistEntries,
-} from "@/modules/watchlistEntry";
 import {
     IconAction,
     IconActionV2,
@@ -53,9 +53,9 @@ const Movies: FC = () => {
     const [isSearching, setIsSearching] = useState(false);
     const { data: results } = useSearchMovies(searchValue);
     const { data: popularMovies } = usePopularMovies();
-    const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { data: watchlistEntries = [] } = useMovieEntries();
+    const { mutate: saveEntry } = useSaveMovieEntry();
+    const { mutate: deleteEntry } = useDeleteMovieEntry();
     const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
 
     const reviewList = useMemo(
@@ -65,7 +65,7 @@ const Movies: FC = () => {
 
     const filteredPopularMovies = useMemo(() => {
         const excludedMediaIds = [
-            ...watchlistEntries.map(({ mediaId }) => mediaId),
+            ...watchlistEntries.map(({ movieId }) => movieId),
             ...reviewList.map(({ movie }) => movie.id),
         ];
 
@@ -118,7 +118,7 @@ const Movies: FC = () => {
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => {
                         const onWatchlist = watchlistEntries.some(
-                            ({ mediaId }) => mediaId === item.id,
+                            ({ movieId }) => movieId === item.id,
                         );
 
                         return (
@@ -152,14 +152,8 @@ const Movies: FC = () => {
                                 }
                                 onToggleWatchlist={() =>
                                     onWatchlist
-                                        ? deleteWatchlistEntry({
-                                              mediaId: item.id,
-                                              mediaType: MediaType.Movie,
-                                          })
-                                        : saveWatchlistEntry({
-                                              mediaId: item.id,
-                                              mediaType: MediaType.Movie,
-                                          })
+                                        ? deleteEntry({ movieId: item.id })
+                                        : saveEntry({ movieId: item.id })
                                 }
                             />
                         );
@@ -230,35 +224,31 @@ const Movies: FC = () => {
                                     layout={LinearTransition}
                                     style={styles.watchlistSectionItem}
                                 >
-                                    <WatchlistSummary
+                                    <MovieEntriesSummary
                                         watchlistEntries={watchlistEntries}
                                         onPressEntry={(item) =>
                                             router.push({
                                                 pathname: "/movies/movie",
                                                 params: {
-                                                    id: item.mediaId,
-                                                    title: item.mediaTitle,
-                                                    posterPath:
-                                                        item.mediaPosterUri,
+                                                    id: item.movieId,
+                                                    title: item.title,
+                                                    posterPath: item.posterPath,
                                                 },
                                             })
                                         }
                                         onPress={handlePressDate}
-                                        onAddReview={({ mediaId }) =>
+                                        onAddReview={({ movieId }) =>
                                             router.push({
                                                 pathname: "/movies/editReview",
-                                                params: { movieId: mediaId },
+                                                params: { movieId },
                                             })
                                         }
-                                        onRemoveFromWatchlist={({ mediaId }) =>
-                                            deleteWatchlistEntry({
-                                                mediaId,
-                                                mediaType: "movie",
-                                            })
+                                        onRemoveFromWatchlist={({ movieId }) =>
+                                            deleteEntry({ movieId })
                                         }
                                     />
                                 </Animated.View>
-                                <WatchlistEntriesChart
+                                <MovieEntriesChart
                                     style={[
                                         styles.watchlistSectionItem,
                                         styles.watchlistChart,
@@ -289,7 +279,7 @@ const Movies: FC = () => {
                                 snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => {
                                     const onWatchlist = watchlistEntries.some(
-                                        ({ mediaId }) => mediaId === item.id,
+                                        ({ movieId }) => movieId === item.id,
                                     );
 
                                     return (
@@ -321,13 +311,11 @@ const Movies: FC = () => {
                                             }
                                             onToggleWatchlist={() =>
                                                 onWatchlist
-                                                    ? deleteWatchlistEntry({
-                                                          mediaId: item.id,
-                                                          mediaType: "movie",
+                                                    ? deleteEntry({
+                                                          movieId: item.id,
                                                       })
-                                                    : saveWatchlistEntry({
-                                                          mediaId: item.id,
-                                                          mediaType: "movie",
+                                                    : saveEntry({
+                                                          movieId: item.id,
                                                       })
                                             }
                                         />

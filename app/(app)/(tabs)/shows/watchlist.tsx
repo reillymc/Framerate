@@ -1,9 +1,6 @@
 import { MediaType } from "@/constants/mediaTypes";
-import { SectionedWatchlist, useWatchlist } from "@/modules/watchlist";
-import {
-    useDeleteWatchlistEntry,
-    useWatchlistEntries,
-} from "@/modules/watchlistEntry";
+import { useDeleteShowEntry, useShowEntries } from "@/modules/showEntry";
+import { useWatchlist } from "@/modules/watchlist";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import type { FC } from "react";
 
@@ -12,39 +9,13 @@ const Watchlist: FC = () => {
 
     const router = useRouter();
     const { data: watchlist } = useWatchlist(MediaType.Show);
-    const {
-        data: entries = [],
-        isLoading,
-        refetch,
-    } = useWatchlistEntries(MediaType.Show);
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { data: entries = [], isLoading, refetch } = useShowEntries();
+    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
 
     return (
         <>
             <Stack.Screen options={{ title: watchlist?.name ?? "..." }} />
-            {!isLoading && (
-                <SectionedWatchlist
-                    entries={entries}
-                    jumpToDate={jumpToDate ? new Date(jumpToDate) : undefined}
-                    onRefresh={refetch}
-                    onPressEntry={(item) =>
-                        router.push({
-                            pathname: "/shows/show",
-                            params: {
-                                id: item.mediaId,
-                                name: item.mediaTitle,
-                                posterPath: item.mediaPosterUri,
-                            },
-                        })
-                    }
-                    onDeleteEntry={(mediaId) =>
-                        deleteWatchlistEntry({
-                            mediaId,
-                            mediaType: MediaType.Show,
-                        })
-                    }
-                />
-            )}
+            {!isLoading && <></>}
         </>
     );
 };

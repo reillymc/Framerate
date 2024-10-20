@@ -1,13 +1,10 @@
-import { MediaType } from "@/constants/mediaTypes";
 import { useSession } from "@/modules/auth";
 import { useMovie } from "@/modules/movie";
+import { useDeleteMovieEntry, useMovieEntry } from "@/modules/movieEntry";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
 import { ReviewForm, getRatingLabel } from "@/modules/review";
 import { useCurrentUserConfig, useUsers } from "@/modules/user";
-import {
-    useDeleteWatchlistEntry,
-    useWatchlistEntry,
-} from "@/modules/watchlistEntry";
+
 import {
     Action,
     type ThemedStyles,
@@ -38,7 +35,7 @@ const EditReview: FC = () => {
     const { mutate: saveReview } = useSaveMovieReview();
     const { data: users = [] } = useUsers();
     const { configuration } = useCurrentUserConfig();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { mutate: deleteEntry } = useDeleteMovieEntry();
 
     const filteredUsers = users.filter((user) => user.userId !== userId);
 
@@ -64,10 +61,7 @@ const EditReview: FC = () => {
             .filter(Undefined) ?? [],
     );
 
-    const { data: watchlistEntry } = useWatchlistEntry(
-        MediaType.Movie,
-        movieId,
-    );
+    const { data: watchlistEntry } = useMovieEntry(movieId);
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
@@ -96,10 +90,7 @@ const EditReview: FC = () => {
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
-            deleteWatchlistEntry({
-                mediaId: movieIdValue,
-                mediaType: MediaType.Movie,
-            });
+            deleteEntry({ movieId: movieIdValue });
         }
         handleClose();
     };

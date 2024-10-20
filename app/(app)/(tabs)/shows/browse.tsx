@@ -1,6 +1,6 @@
 import { Poster } from "@/components/poster";
 import { usePopularShows } from "@/modules/show";
-import { useWatchlistEntries } from "@/modules/watchlistEntry";
+import { useShowEntries } from "@/modules/showEntry";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -12,7 +12,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 const Browse: FC = () => {
     const router = useRouter();
     const { data: shows, refetch } = usePopularShows();
-    const { data: watchlistEntries = [] } = useWatchlistEntries("show");
+    const { data: watchlistEntries = [] } = useShowEntries();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -39,7 +39,7 @@ const Browse: FC = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
                     const onWatchlist = watchlistEntries.some(
-                        ({ mediaId }) => mediaId === item.id,
+                        ({ showId }) => showId === item.id,
                     );
 
                     return (

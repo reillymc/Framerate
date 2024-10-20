@@ -3,13 +3,8 @@
  *
  * Depends on:
  * - Auth
- * - Watchlist Entry
+ * - User
  */
 
 export { useWatchlist, useSaveWatchlist } from "./hooks";
-export {
-    WatchlistSummary,
-    WatchlistEntriesChart,
-    SectionedWatchlist,
-} from "./components";
-export { getGroupedEntries } from "./helpers";
+export { Watchlist } from "./models";

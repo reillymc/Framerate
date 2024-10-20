@@ -21,11 +21,12 @@ import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
+
 import {
-    useDeleteWatchlistEntry,
-    useSaveWatchlistEntry,
-    useWatchlistEntry,
-} from "@/modules/watchlistEntry";
+    useDeleteShowEntry,
+    useSaveShowEntry,
+    useShowEntry,
+} from "@/modules/showEntry";
 import { useMemo } from "react";
 
 const Show: React.FC = () => {
@@ -46,9 +47,9 @@ const Show: React.FC = () => {
     const { data: show } = useShow(showId);
     const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useShowReviews({ showId });
-    const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, showId);
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+    const { data: watchlistEntry } = useShowEntry(showId);
+    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
+    const { mutate: saveWatchlistEntry } = useSaveShowEntry();
 
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
@@ -206,17 +207,11 @@ const Show: React.FC = () => {
                     if (!showId) return;
 
                     if (watchlistEntry) {
-                        deleteWatchlistEntry({
-                            mediaId: showId,
-                            mediaType: MediaType.Show,
-                        });
+                        deleteWatchlistEntry({ showId });
                         return;
                     }
 
-                    saveWatchlistEntry({
-                        mediaId: showId,
-                        mediaType: MediaType.Show,
-                    });
+                    saveWatchlistEntry({ showId });
                 }}
             />
         </>

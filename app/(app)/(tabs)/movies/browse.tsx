@@ -1,10 +1,10 @@
 import { Poster } from "@/components/poster";
 import { usePopularMovies } from "@/modules/movie";
 import {
-    useDeleteWatchlistEntry,
-    useSaveWatchlistEntry,
-    useWatchlistEntries,
-} from "@/modules/watchlistEntry";
+    useDeleteMovieEntry,
+    useMovieEntries,
+    useSaveMovieEntry,
+} from "@/modules/movieEntry";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -16,9 +16,9 @@ import { FlatList, StyleSheet, View } from "react-native";
 const Browse: FC = () => {
     const router = useRouter();
     const { data: movies } = usePopularMovies();
-    const { data: watchlistEntries = [] } = useWatchlistEntries("movie");
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { data: watchlistEntries = [] } = useMovieEntries();
+    const { mutate: saveEntry } = useSaveMovieEntry();
+    const { mutate: deleteEntry } = useDeleteMovieEntry();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -46,7 +46,7 @@ const Browse: FC = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
                     const onWatchlist = watchlistEntries.some(
-                        ({ mediaId }) => mediaId === item.id,
+                        ({ movieId }) => movieId === item.id,
                     );
 
                     return (
@@ -74,14 +74,8 @@ const Browse: FC = () => {
                             }
                             onToggleWatchlist={() =>
                                 onWatchlist
-                                    ? deleteWatchlistEntry({
-                                          mediaId: item.id,
-                                          mediaType: "movie",
-                                      })
-                                    : saveWatchlistEntry({
-                                          mediaId: item.id,
-                                          mediaType: "movie",
-                                      })
+                                    ? deleteEntry({ movieId: item.id })
+                                    : saveEntry({ movieId: item.id })
                             }
                         />
                     );

@@ -70,6 +70,24 @@ export const FRAMERATE_API = {
             endpoint: `movies/search?query=${query}`,
         }),
     },
+    movieEntries: {
+        getEntries: (watchlistId: string) => ({
+            method: "GET",
+            endpoint: `movies/entries/${watchlistId}`,
+        }),
+        getEntry: (watchlistId: string, movieId: number) => ({
+            method: "GET",
+            endpoint: `movies/entries/${watchlistId}/${movieId}`,
+        }),
+        postEntry: (watchlistId: string) => ({
+            method: "POST",
+            endpoint: `movies/entries/${watchlistId}`,
+        }),
+        deleteEntry: (watchlistId: string, movieId: number) => ({
+            method: "DELETE",
+            endpoint: `movies/entries/${watchlistId}/${movieId}`,
+        }),
+    },
     movieReviews: {
         getReviews: (movieId?: number, params?: ReviewQueryParams) => ({
             method: "GET",
@@ -100,6 +118,24 @@ export const FRAMERATE_API = {
         searchShows: (query: string) => ({
             method: "GET",
             endpoint: `shows/search?query=${query}`,
+        }),
+    },
+    showEntries: {
+        getEntries: (watchlistId: string) => ({
+            method: "GET",
+            endpoint: `shows/entries/${watchlistId}`,
+        }),
+        getEntry: (watchlistId: string, showId: number) => ({
+            method: "GET",
+            endpoint: `shows/entries/${watchlistId}/${showId}`,
+        }),
+        postEntry: (watchlistId: string) => ({
+            method: "POST",
+            endpoint: `shows/entries/${watchlistId}`,
+        }),
+        deleteEntry: (watchlistId: string, showId: number) => ({
+            method: "DELETE",
+            endpoint: `shows/entries/${watchlistId}/${showId}`,
         }),
     },
     showReviews: {
@@ -172,24 +208,6 @@ export const FRAMERATE_API = {
         saveWatchlist: (watchlistId?: string) => ({
             method: watchlistId ? "PUT" : "POST",
             endpoint: watchlistId ? `watchlists/${watchlistId}` : "watchlists",
-        }),
-    },
-    watchlistEntries: {
-        getWatchlistEntries: (mediaType: string) => ({
-            method: "GET",
-            endpoint: `watchlists/${mediaType}/entries`,
-        }),
-        getWatchlistEntry: (mediaType: string, mediaId: number) => ({
-            method: "GET",
-            endpoint: `watchlists/${mediaType}/entries/${mediaId}`,
-        }),
-        postWatchlistEntry: (mediaType: string) => ({
-            method: "POST",
-            endpoint: `watchlists/${mediaType}/entries`,
-        }),
-        deleteWatchlistEntry: (mediaType: string, mediaId: number) => ({
-            method: "DELETE",
-            endpoint: `watchlists/${mediaType}/entries/${mediaId}`,
         }),
     },
 } satisfies Api;

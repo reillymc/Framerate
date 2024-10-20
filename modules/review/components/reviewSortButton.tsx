@@ -1,5 +1,5 @@
 import { BlurIconAction, ContextMenu } from "@/components";
-import type { MediaType } from "@/constants/mediaTypes";
+import { MediaType } from "@/constants/mediaTypes";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -43,7 +43,7 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
                     {
                         actionKey: "mediaTitle",
                         actionTitle:
-                            mediaType === "movie"
+                            mediaType === MediaType.Movie
                                 ? "Movie Title"
                                 : "Show Title",
                         menuState: order === "mediaTitle" ? "on" : "off",
@@ -51,7 +51,7 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
                     {
                         actionKey: "mediaReleaseDate",
                         actionTitle:
-                            mediaType === "movie"
+                            mediaType === MediaType.Movie
                                 ? "Movie Release Date"
                                 : "Show Air Date",
                         menuState: order === "mediaReleaseDate" ? "on" : "off",

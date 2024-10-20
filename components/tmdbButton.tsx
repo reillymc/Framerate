@@ -1,4 +1,4 @@
-import type { MediaType } from "@/constants/mediaTypes";
+import { MediaType } from "@/constants/mediaTypes";
 import { openURL } from "expo-linking";
 import type React from "react";
 import { Pressable } from "react-native";
@@ -20,7 +20,7 @@ export const TmdbButton: React.FunctionComponent<TmdbButtonProps> = ({
             onPress={() =>
                 openURL(
                     tmdbId && mediaType
-                        ? `https://www.themoviedb.org/${mediaType === "movie" ? "movie" : "tv"}/${tmdbId}/`
+                        ? `https://www.themoviedb.org/${mediaType === MediaType.Movie ? "movie" : "tv"}/${tmdbId}/`
                         : "https://www.themoviedb.org/",
                 )
             }

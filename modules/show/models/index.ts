@@ -18,6 +18,8 @@ export type Show = {
     posterPath?: string;
     backdropPath?: string;
     firstAirDate?: string;
+    lastAirDate?: string;
+    nextAirDate?: string;
     overview?: string;
     tagline?: string;
     popularity?: number;

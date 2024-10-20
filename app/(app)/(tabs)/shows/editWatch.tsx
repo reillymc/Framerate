@@ -1,11 +1,7 @@
 import { SegmentedControl } from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
 import { useShow } from "@/modules/show";
+import { useDeleteShowEntry, useShowEntry } from "@/modules/showEntry";
 import { useSaveShowReview, useShowReview } from "@/modules/showReview";
-import {
-    useDeleteWatchlistEntry,
-    useWatchlistEntry,
-} from "@/modules/watchlistEntry";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     Action,
@@ -31,7 +27,7 @@ const EditWatch: FC = () => {
     const { data: show } = useShow(showId ?? review?.show.id);
     const router = useRouter();
     const { mutate: saveReview } = useSaveShowReview();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
     const { theme } = useTheme();
 
     const styles = useThemedStyles(createStyles, {});
@@ -46,7 +42,7 @@ const EditWatch: FC = () => {
 
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
 
-    const { data: watchlistEntry } = useWatchlistEntry(MediaType.Show, showId);
+    const { data: watchlistEntry } = useShowEntry(showId);
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
@@ -72,10 +68,7 @@ const EditWatch: FC = () => {
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
-            deleteWatchlistEntry({
-                mediaId: showIdValue,
-                mediaType: MediaType.Show,
-            });
+            deleteWatchlistEntry({ showId: showIdValue });
         }
         handleClose();
     };

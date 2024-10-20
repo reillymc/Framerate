@@ -1,11 +1,8 @@
 import { SegmentedControl } from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
+import { useDeleteMovieEntry, useMovieEntry } from "@/modules/movieEntry";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
-import {
-    useDeleteWatchlistEntry,
-    useWatchlistEntry,
-} from "@/modules/watchlistEntry";
+
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     Action,
@@ -33,7 +30,7 @@ const EditWatch: FC = () => {
     const { data: movie } = useMovie(movieId ?? review?.movie.id);
     const router = useRouter();
     const { mutate: saveReview } = useSaveMovieReview();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { mutate: deleteEntry } = useDeleteMovieEntry();
     const { theme } = useTheme();
 
     const styles = useThemedStyles(createStyles, {});
@@ -48,10 +45,7 @@ const EditWatch: FC = () => {
 
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
 
-    const { data: watchlistEntry } = useWatchlistEntry(
-        MediaType.Movie,
-        movieId,
-    );
+    const { data: watchlistEntry } = useMovieEntry(movieId);
 
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
@@ -77,10 +71,7 @@ const EditWatch: FC = () => {
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
-            deleteWatchlistEntry({
-                mediaId: movieIdValue,
-                mediaType: MediaType.Movie,
-            });
+            deleteEntry({ movieId: movieIdValue });
         }
         handleClose();
     };

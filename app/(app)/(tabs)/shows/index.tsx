@@ -6,13 +6,13 @@ import {
     useRecentSearches,
     useSearchShows,
 } from "@/modules/show";
+import {
+    useDeleteShowEntry,
+    useSaveShowEntry,
+    useShowEntries,
+} from "@/modules/showEntry";
 import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
-import {
-    useDeleteWatchlistEntry,
-    useSaveWatchlistEntry,
-    useWatchlistEntries,
-} from "@/modules/watchlistEntry";
 import {
     IconAction,
     IconActionV2,
@@ -47,9 +47,9 @@ const Shows: FC = () => {
     const [isSearching, setIsSearching] = useState(false);
     const { data: results } = useSearchShows(searchValue);
     const { data: popularShows } = usePopularShows();
-    const { data: watchlistEntries = [] } = useWatchlistEntries("show");
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
+    const { data: watchlistEntries = [] } = useShowEntries();
+    const { mutate: saveWatchlistEntry } = useSaveShowEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
     const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
 
     const reviewList = useMemo(
@@ -59,7 +59,7 @@ const Shows: FC = () => {
 
     const filteredPopularShows = useMemo(() => {
         const excludedMediaIds = [
-            ...watchlistEntries.map(({ mediaId }) => mediaId),
+            ...watchlistEntries.map(({ showId }) => showId),
             ...reviewList.map(({ show }) => show.id),
         ];
 
@@ -101,7 +101,7 @@ const Shows: FC = () => {
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => {
                         const onWatchlist = watchlistEntries.some(
-                            ({ mediaId }) => mediaId === item.id,
+                            ({ showId }) => showId === item.id,
                         );
 
                         return (
@@ -136,12 +136,10 @@ const Shows: FC = () => {
                                 onToggleWatchlist={() =>
                                     onWatchlist
                                         ? deleteWatchlistEntry({
-                                              mediaId: item.id,
-                                              mediaType: "show",
+                                              showId: item.id,
                                           })
                                         : saveWatchlistEntry({
-                                              mediaId: item.id,
-                                              mediaType: "show",
+                                              showId: item.id,
                                           })
                                 }
                             />
@@ -232,7 +230,7 @@ const Shows: FC = () => {
                                 snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => {
                                     const onWatchlist = watchlistEntries.some(
-                                        ({ mediaId }) => mediaId === item.id,
+                                        ({ showId }) => showId === item.id,
                                     );
 
                                     return (
@@ -263,12 +261,10 @@ const Shows: FC = () => {
                                             onToggleWatchlist={() =>
                                                 onWatchlist
                                                     ? deleteWatchlistEntry({
-                                                          mediaId: item.id,
-                                                          mediaType: "show",
+                                                          showId: item.id,
                                                       })
                                                     : saveWatchlistEntry({
-                                                          mediaId: item.id,
-                                                          mediaType: "show",
+                                                          showId: item.id,
                                                       })
                                             }
                                         />

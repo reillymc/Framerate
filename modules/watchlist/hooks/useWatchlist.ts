@@ -1,6 +1,7 @@
 import { useSession } from "@/modules/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { type Watchlist, WatchlistsService } from "../services";
+import type { Watchlist } from "../models";
+import { WatchlistsService } from "../services";
 
 export const useWatchlist = (mediaType: string | undefined) => {
     const queryClient = useQueryClient();

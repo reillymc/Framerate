@@ -30,5 +30,3 @@ export const ImdbButton: React.FunctionComponent<ImdbButtonProps> = ({
         </Pressable>
     );
 };
-
-ImdbButton.displayName = "ImdbButton";

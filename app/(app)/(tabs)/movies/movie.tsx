@@ -17,14 +17,14 @@ import {
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
+import {
+    useDeleteMovieEntry,
+    useMovieEntry,
+    useSaveMovieEntry,
+} from "@/modules/movieEntry";
 import { useMovieReviews } from "@/modules/movieReview";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-import {
-    useDeleteWatchlistEntry,
-    useSaveWatchlistEntry,
-    useWatchlistEntry,
-} from "@/modules/watchlistEntry";
 import { useMemo } from "react";
 
 const Movie: React.FC = () => {
@@ -43,12 +43,9 @@ const Movie: React.FC = () => {
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useMovieReviews({ movieId });
-    const { data: watchlistEntry } = useWatchlistEntry(
-        MediaType.Movie,
-        movieId,
-    );
-    const { mutate: deleteWatchlistEntry } = useDeleteWatchlistEntry();
-    const { mutate: saveWatchlistEntry } = useSaveWatchlistEntry();
+    const { data: watchlistEntry } = useMovieEntry(movieId);
+    const { mutate: deleteEntry } = useDeleteMovieEntry();
+    const { mutate: saveEntry } = useSaveMovieEntry();
 
     const router = useRouter();
 
@@ -163,17 +160,11 @@ const Movie: React.FC = () => {
                     if (!movieId) return;
 
                     if (watchlistEntry) {
-                        deleteWatchlistEntry({
-                            mediaId: movieId,
-                            mediaType: MediaType.Movie,
-                        });
+                        deleteEntry({ movieId });
                         return;
                     }
 
-                    saveWatchlistEntry({
-                        mediaId: movieId,
-                        mediaType: MediaType.Movie,
-                    });
+                    saveEntry({ movieId });
                 }}
             />
         </>
