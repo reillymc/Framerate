@@ -1,7 +1,7 @@
 import { Fade, PosterCard } from "@/components";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import type { MovieEntry } from "@/modules/movieEntry/models";
+import { ActiveStatuses } from "@/modules/show";
 import {
     Text,
     type ThemedStyles,
@@ -12,115 +12,135 @@ import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
     SectionList,
+    type SectionListData,
     StyleSheet,
     View,
     useWindowDimensions,
 } from "react-native";
-import { getGroupedEntries } from "../helpers";
+import type { ShowEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
 const ITEM_HEIGHT = 92;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 
-const buildGetItemLayout = getItemLayout<MovieEntry>({
+const buildGetItemLayout = getItemLayout<ShowEntry>({
     getItemHeight: ITEM_HEIGHT,
     getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
     getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
 });
 
-const now = new Date();
-
-const nthNumber = (number: number) => {
-    if (number > 3 && number < 21) return "th";
-    switch (number % 10) {
-        case 1:
-            return "st";
-        case 2:
-            return "nd";
-        case 3:
-            return "rd";
-        default:
-            return "th";
-    }
-};
-
-const formatItemDate = (rawDate: string | undefined, isOlder?: boolean) => {
-    if (!rawDate) return "Unknown";
-
-    const date = new Date(rawDate);
-
-    if (isOlder) {
-        return date.toLocaleDateString("en-AU", {
-            day: "2-digit",
-            weekday: undefined,
-            month: "2-digit",
-            year: "numeric",
-        });
-    }
-
-    const dateString = date.toLocaleDateString("en-AU", {
-        day: "2-digit",
-        weekday: "long",
-        month: undefined,
-        year: undefined,
-    });
-
-    const ordinalSuffix = nthNumber(date.getDate());
-
-    return `${dateString.replace(" ", ", ")}${ordinalSuffix}`;
-};
-interface SectionedMovieEntryListProps {
-    entries: MovieEntry[];
-    jumpToDate?: Date;
+interface SectionedShowEntryListProps {
+    entries: ShowEntry[];
     onRefresh: () => void;
-    onPressEntry: (item: MovieEntry) => void;
-    onDeleteEntry: (movieId: number) => void;
+    onPressEntry: (item: ShowEntry) => void;
+    onDeleteEntry: (showId: number) => void;
 }
 
-export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
+export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     entries,
-    jumpToDate,
-    onRefresh,
     onDeleteEntry,
     onPressEntry,
+    onRefresh,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const listRef = useRef<SectionList<MovieEntry> | null>(null);
+    const listRef = useRef<SectionList<ShowEntry> | null>(null);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
     const { theme } = useTheme();
 
-    const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
+    const sectionData: Array<SectionListData<ShowEntry, unknown>> =
+        useMemo(() => {
+            const endedShows = entries.filter(
+                ({ status, nextAirDate }) =>
+                    (status === undefined ||
+                        !ActiveStatuses.includes(status)) &&
+                    nextAirDate === undefined,
+            );
+
+            const nonEndedShows = entries.filter(
+                (show) => !endedShows.includes(show),
+            );
+
+            const currentShows = nonEndedShows.filter(
+                ({ nextAirDate }) => nextAirDate !== undefined,
+            );
+
+            const upcomingShows = nonEndedShows.filter(
+                ({ nextAirDate }) => nextAirDate === undefined,
+            );
+
+            return [
+                {
+                    data: upcomingShows,
+                    title: "Upcoming",
+                    renderItem: ({ item }) => (
+                        <PosterCard
+                            heading={item.name}
+                            imageUri={item.posterPath}
+                            releaseDate={item.nextAirDate}
+                            onWatchlist
+                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onPress={() => onPressEntry(item)}
+                        />
+                    ),
+                },
+                {
+                    data: currentShows,
+                    title: "Current",
+                    renderItem: ({ item }) => (
+                        <PosterCard
+                            heading={item.name}
+                            imageUri={item.posterPath}
+                            releaseDate={item.nextAirDate}
+                            onWatchlist
+                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onPress={() => onPressEntry(item)}
+                        />
+                    ),
+                },
+                {
+                    data: endedShows,
+                    title: "Concluded",
+                    renderItem: ({ item }) => (
+                        <PosterCard
+                            heading={item.name}
+                            imageUri={item.posterPath}
+                            releaseDate={item.status}
+                            onWatchlist
+                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onPress={() => onPressEntry(item)}
+                        />
+                    ),
+                },
+            ];
+        }, [entries, onPressEntry, onDeleteEntry]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
-
-        const sectionCount = sectionData.length - 1;
-
-        const closest =
-            sectionCount -
-            sectionData
-                .toReversed()
-                .findIndex((section) => section.date >= (jumpToDate ?? now));
-
         listRef.current.scrollToLocation({
             animated: false,
-            sectionIndex: closest > sectionCount ? 0 : closest,
+            sectionIndex: 1,
             itemIndex: 0,
         });
-    }, [sectionData, jumpToDate]);
-    if (!sectionData.length) return null;
+    }, [sectionData]);
 
     return (
         <SectionList
             sections={sectionData}
             ref={listRef}
-            initialNumToRender={sectionData?.length} // Issue in FlatList: https://github.com/facebook/react-native/issues/36766#issuecomment-1853107471
+            stickySectionHeadersEnabled
+            keyExtractor={(item) => item.showId.toString()}
+            contentInsetAdjustmentBehavior="automatic"
+            contentInset={{ top: HEADER_HEIGHT }}
+            contentContainerStyle={styles.container}
+            getItemLayout={buildGetItemLayout}
+            onLayout={scrollToCurrentSection}
             refreshing={false}
             onRefresh={onRefresh}
             onScrollToIndexFailed={(info) => {
                 const wait = new Promise((resolve) => setTimeout(resolve, 100));
+
                 wait.then(() => {
                     listRef.current?.scrollToLocation({
                         sectionIndex: info.index,
@@ -129,8 +149,6 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     });
                 });
             }}
-            onLayout={scrollToCurrentSection}
-            getItemLayout={buildGetItemLayout}
             renderSectionHeader={({ section }) => (
                 <BlurView
                     intensity={scheme === "light" ? 90 : 40}
@@ -141,26 +159,11 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     }
                     style={styles.sectionHeaderContainer}
                 >
-                    <Text variant="title">{section.monthTitle}</Text>
+                    <Text variant="title">{section.title}</Text>
                     <Text variant="display" style={styles.yearHeading}>
                         {section.yearTitle}
                     </Text>
                 </BlurView>
-            )}
-            stickySectionHeadersEnabled
-            renderItem={({ item, section }) => (
-                <PosterCard
-                    heading={item.title}
-                    imageUri={item.posterPath}
-                    onWatchlist
-                    releaseDate={formatItemDate(
-                        item.releaseDate,
-                        section.yearTitle === "Older",
-                    )}
-                    onPress={() => onPressEntry(item)}
-                    onToggleWatchlist={() => onDeleteEntry(item.movieId)}
-                    height={ITEM_HEIGHT}
-                />
             )}
             renderSectionFooter={() => (
                 <View style={{ height: SECTION_FOOTER_HEIGHT }} />
@@ -201,10 +204,6 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     />
                 </View>
             }
-            keyExtractor={(item) => item.movieId.toString()}
-            contentInsetAdjustmentBehavior="automatic"
-            contentInset={{ top: HEADER_HEIGHT }}
-            contentContainerStyle={styles.container}
         />
     );
 };

@@ -1,4 +1,5 @@
 import type { Season } from "@/modules/season";
+import type { ShowStatus } from "../constants";
 
 export enum ShowType {
     Scripted = "Scripted",
@@ -15,6 +16,7 @@ export type Show = {
      */
     id: number;
     name: string;
+    status?: ShowStatus;
     posterPath?: string;
     backdropPath?: string;
     firstAirDate?: string;

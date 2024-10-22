@@ -12,3 +12,5 @@ export {
     useShowEntries,
     useShowEntry,
 } from "./hooks";
+export { ShowEntry } from "./models";
+export { SectionedShowEntryList } from "./components";

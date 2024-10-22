@@ -4,6 +4,8 @@ export type ShowEntry = {
     showId: Show["id"];
     name: Show["name"];
     imdbId?: string;
+    updatedAt?: string;
+    status?: Show["status"];
     posterPath?: Show["posterPath"];
     firstAirDate?: Show["firstAirDate"];
     lastAirDate?: Show["lastAirDate"];

@@ -1,12 +1,14 @@
 import { MediaType } from "@/constants/mediaTypes";
-import { useDeleteShowEntry, useShowEntries } from "@/modules/showEntry";
+import {
+    SectionedShowEntryList,
+    useDeleteShowEntry,
+    useShowEntries,
+} from "@/modules/showEntry";
 import { useWatchlist } from "@/modules/watchlist";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import type { FC } from "react";
 
 const Watchlist: FC = () => {
-    const { jumpToDate } = useLocalSearchParams<{ jumpToDate?: string }>();
-
     const router = useRouter();
     const { data: watchlist } = useWatchlist(MediaType.Show);
     const { data: entries = [], isLoading, refetch } = useShowEntries();
@@ -15,7 +17,23 @@ const Watchlist: FC = () => {
     return (
         <>
             <Stack.Screen options={{ title: watchlist?.name ?? "..." }} />
-            {!isLoading && <></>}
+            {!isLoading && (
+                <SectionedShowEntryList
+                    entries={entries}
+                    onDeleteEntry={(showId) => deleteWatchlistEntry({ showId })}
+                    onPressEntry={(item) =>
+                        router.push({
+                            pathname: "/shows/show",
+                            params: {
+                                id: item.showId,
+                                name: item.name,
+                                posterPath: item.posterPath,
+                            },
+                        })
+                    }
+                    onRefresh={refetch}
+                />
+            )}
         </>
     );
 };
