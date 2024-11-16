@@ -1,6 +1,6 @@
 import { SegmentedControl } from "@/components";
 import { useSaveUser, useUser, useUsers } from "@/modules/user";
-import { MergeConfiguration, ParseConfiguration } from "@/modules/user";
+import { MergeConfiguration } from "@/modules/user";
 import {
     Action,
     Button,
@@ -88,9 +88,6 @@ const Profile: FC = () => {
         saveUser({
             firstName: trimmedFirstName,
             lastName: trimmedLastName,
-            password: "",
-            email: "",
-            configuration: ParseConfiguration({}),
         });
 
         setFirstName("");
