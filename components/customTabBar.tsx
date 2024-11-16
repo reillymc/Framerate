@@ -83,7 +83,6 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                             accessibilityLabel={
                                 options.tabBarAccessibilityLabel
                             }
-                            testID={options.tabBarTestID}
                             onPress={onPress}
                             onLongPress={onLongPress}
                             style={({ pressed }) => [

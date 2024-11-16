@@ -17,7 +17,7 @@ const LoginScreen: FC = () => {
         if (!(email && password)) return;
 
         signIn({ email, password });
-        router.replace("/(tabs)/movies");
+        router.replace("/movies");
     }, [router, email, password, signIn]);
 
     return (

@@ -155,6 +155,24 @@ export default function RootLayout() {
                 primary: theme.color.textPrimary,
                 text: theme.color.textPrimary,
             },
+            fonts: {
+                regular: {
+                    fontFamily: Font.Regular,
+                    fontWeight: "400",
+                },
+                bold: {
+                    fontFamily: Font.Medium,
+                    fontWeight: "500",
+                },
+                medium: {
+                    fontFamily: Font.SemiBold,
+                    fontWeight: "600",
+                },
+                heavy: {
+                    fontFamily: Font.Bold,
+                    fontWeight: "700",
+                },
+            },
         }),
         [colorScheme, theme],
     );

@@ -37,7 +37,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
 
     const { state } = useChartPressState({
         x: 0,
-        y: { count: 0, date: 0 },
+        y: { count: 0 },
     });
     const { theme } = useTheme();
 
