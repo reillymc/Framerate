@@ -14,18 +14,17 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
             headerTransparent: true,
             headerBlurEffect: "regular",
             headerLargeTitleStyle: {
-                fontFamily: theme.font.familyWeight.bold800,
+                color: theme.color.textPrimary,
             },
             headerLargeStyle: {
                 backgroundColor: theme.color.background,
             },
             headerBackTitleStyle: {
-                fontFamily: theme.font.familyWeight.bold600,
                 fontSize: theme.font.size.small,
             },
             headerTintColor: theme.color.secondary,
             headerTitleStyle: {
-                fontFamily: theme.font.familyWeight.bold800,
+                fontWeight: "600",
                 color: theme.color.textPrimary,
             },
             contentStyle: {

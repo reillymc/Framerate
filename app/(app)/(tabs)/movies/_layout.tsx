@@ -6,7 +6,7 @@ const MoviesStack: FC = () => {
     const screenOptions = useDefaultScreenOptions();
 
     return (
-        <Stack screenOptions={screenOptions}>
+        <Stack screenOptions={screenOptions} initialRouteName="index">
             <Stack.Screen name="index" />
             <Stack.Screen name="movie" />
             <Stack.Screen name="reviews" />
@@ -17,7 +17,10 @@ const MoviesStack: FC = () => {
             />
             <Stack.Screen
                 name="editWatch"
-                options={{ presentation: "formSheet" }}
+                options={{
+                    presentation: "formSheet",
+                    sheetAllowedDetents: [0.3],
+                }}
             />
             <Stack.Screen name="watchlist" />
         </Stack>

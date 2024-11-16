@@ -8,11 +8,6 @@
         "scheme": "framerate",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
-        "splash": {
-            "image": "./assets/images/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.reillymc.framerate",
@@ -37,6 +32,18 @@
                 "expo-secure-store",
                 {
                     "faceIDPermission": "Allow $(PRODUCT_NAME) to sign in with Face ID."
+                }
+            ],
+            [
+                "expo-splash-screen",
+                {
+                    "backgroundColor": "#ffffff",
+                    "image": "./assets/splash.png",
+                    "dark": {
+                        "image": "./assets/splash.png",
+                        "backgroundColor": "#000000"
+                    },
+                    "imageWidth": 200
                 }
             ],
             [

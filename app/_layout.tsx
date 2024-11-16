@@ -22,9 +22,15 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { QueryClient, onlineManager } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Slot } from "expo-router";
+import { setOptions } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+setOptions({
+    duration: 250,
+    fade: true,
+});
 
 let DevToolsBubble: FC | undefined = undefined;
 if (__DEV__) {

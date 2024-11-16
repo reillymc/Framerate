@@ -13,7 +13,7 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import { type FC, useEffect, useState } from "react";
-import { StatusBar, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 const EditWatch: FC = () => {
@@ -97,7 +97,6 @@ const EditWatch: FC = () => {
                     ),
                 }}
             />
-            <StatusBar barStyle="light-content" animated />
             <ScrollView
                 contentContainerStyle={styles.container}
                 contentInsetAdjustmentBehavior="automatic"

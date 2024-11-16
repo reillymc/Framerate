@@ -6,7 +6,7 @@ const ShowsStack: FC = () => {
     const screenOptions = useDefaultScreenOptions();
 
     return (
-        <Stack screenOptions={screenOptions}>
+        <Stack screenOptions={screenOptions} initialRouteName="index">
             <Stack.Screen name="index" />
             <Stack.Screen name="show" />
             <Stack.Screen name="reviews" />
@@ -26,7 +26,10 @@ const ShowsStack: FC = () => {
             />
             <Stack.Screen
                 name="season/editWatch"
-                options={{ presentation: "fullScreenModal" }}
+                options={{
+                    presentation: "formSheet",
+                    sheetAllowedDetents: [0.3],
+                }}
             />
         </Stack>
     );
