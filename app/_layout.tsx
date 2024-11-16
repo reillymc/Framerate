@@ -28,8 +28,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 let DevToolsBubble: FC | undefined = undefined;
 if (__DEV__) {
-    DevToolsBubble =
-        require("react-native-react-query-devtools").DevToolsBubble;
+    try {
+        DevToolsBubble =
+            require("react-native-react-query-devtools").DevToolsBubble;
+    } catch {
+        console.debug("Unable to load React Query dev tools");
+    }
 }
 
 const queryClient = new QueryClient({
