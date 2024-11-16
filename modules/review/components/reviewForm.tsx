@@ -1,3 +1,4 @@
+import { StarRating } from "@/components";
 import type { UserSummary } from "@/modules/user/services";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
@@ -13,7 +14,6 @@ import {
 } from "@reillymc/react-native-components";
 import { type FC, useRef } from "react";
 import { StyleSheet, View, type TextInput as rnTextInput } from "react-native";
-import StarRating from "react-native-star-rating-widget";
 import { ratingToStars, starsToRating } from "../helpers";
 
 interface ReviewFormProps {

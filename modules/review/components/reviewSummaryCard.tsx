@@ -1,4 +1,4 @@
-import { Poster, usePosterDimensions } from "@/components";
+import { Poster, StarRatingDisplay, usePosterDimensions } from "@/components";
 import {
     Text,
     type ThemedStyles,
@@ -6,7 +6,6 @@ import {
 } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 
@@ -68,7 +67,6 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             rating={rating}
                             style={styles.stars}
                             starStyle={{ marginHorizontal: 0 }}
-                            enableHalfStar
                             maxStars={starCount}
                             starSize={24}
                         />

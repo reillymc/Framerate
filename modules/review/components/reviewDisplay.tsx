@@ -1,3 +1,4 @@
+import { StarRatingDisplay } from "@/components";
 import {
     Text,
     type ThemedStyles,
@@ -5,7 +6,6 @@ import {
 } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import { StyleSheet } from "react-native";
-import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 
@@ -31,7 +31,6 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
                 <StarRatingDisplay
                     rating={rating}
                     style={styles.ratingDisplay}
-                    enableHalfStar
                     maxStars={starCount}
                     starSize={180 / starCount}
                 />
