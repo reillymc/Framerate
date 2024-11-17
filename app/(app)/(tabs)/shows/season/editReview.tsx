@@ -1,3 +1,4 @@
+import { useSelectionModal } from "@/app/(app)/selectionModal";
 import { useSession } from "@/modules/auth";
 import { ReviewForm, getRatingLabel } from "@/modules/review";
 import { useSaveSeasonReview, useSeasonReview } from "@/modules/seasonReview";
@@ -6,11 +7,10 @@ import {
     Action,
     type ThemedStyles,
     Undefined,
-    type ValueItem,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { ScrollView, StatusBar, StyleSheet } from "react-native";
 
 const EditReview: FC = () => {
@@ -39,8 +39,6 @@ const EditReview: FC = () => {
     const { data: users = [] } = useUsers();
     const { configuration } = useCurrentUserConfig();
 
-    const filteredUsers = users.filter((user) => user.userId !== userId);
-
     const styles = useThemedStyles(createStyles, {});
 
     const [date, setDate] = useState(
@@ -53,15 +51,34 @@ const EditReview: FC = () => {
         review ? !!review.date : true,
     );
     const [venue, setVenue] = useState(review?.venue);
-    const [company, setCompany] = useState<ValueItem[]>(
-        review?.company
-            ?.map((user) => ({
-                value: user.userId,
-                label: `${user.firstName} ${user.lastName}`,
-            }))
-            .filter(Undefined) ?? [],
+
+    const companyItems = useMemo(() => {
+        const filteredUsers = users.filter((user) => user.userId !== userId);
+
+        return filteredUsers.map((user) => ({
+            value: user.userId,
+            label: `${user.firstName} ${user.lastName}`,
+        }));
+    }, [users, userId]);
+
+    const initialCompany = useMemo(
+        () =>
+            review?.company
+                ?.map((user) => ({
+                    value: user.userId,
+                    label: `${user.firstName} ${user.lastName}`,
+                }))
+                .filter(Undefined),
+        [review?.company],
     );
 
+    const { selectedItems: company, openSelectionModal } = useSelectionModal({
+        key: "company",
+        selectionMode: "multi",
+        label: "Company",
+        items: companyItems,
+        initialSelection: initialCompany,
+    });
     useEffect(() => {
         setDate(review?.date ? new Date(review.date) : new Date());
         setRating(review?.rating ?? 0);
@@ -125,7 +142,7 @@ const EditReview: FC = () => {
                 contentContainerStyle={styles.container}
             >
                 <ReviewForm
-                    companyOptions={filteredUsers}
+                    companyOptions={companyItems}
                     rating={rating}
                     includeDate={includeDate}
                     date={date}
@@ -137,7 +154,7 @@ const EditReview: FC = () => {
                     onRatingChange={setRating}
                     onIncludeDateChange={setIncludeDate}
                     onDateChange={setDate}
-                    onCompanyChange={setCompany}
+                    onCompanyPress={openSelectionModal}
                     onDescriptionChange={setDescription}
                     onVenueChange={setVenue}
                 />
@@ -156,6 +173,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
-            paddingBottom: padding.large,
+            paddingBottom: padding.pageBottom,
         },
     });

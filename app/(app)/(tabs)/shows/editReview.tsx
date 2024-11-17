@@ -10,12 +10,12 @@ import {
     type ThemedStyles,
     ToggleInput,
     Undefined,
-    type ValueItem,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { ScrollView, StatusBar, StyleSheet } from "react-native";
+import { useSelectionModal } from "../../selectionModal";
 
 const EditReview: FC = () => {
     const { reviewId, showId: showIdParam } = useGlobalSearchParams<{
@@ -35,8 +35,6 @@ const EditReview: FC = () => {
     const { configuration } = useCurrentUserConfig();
     const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
 
-    const filteredUsers = users.filter((user) => user.userId !== userId);
-
     const styles = useThemedStyles(createStyles, {});
 
     const [date, setDate] = useState(
@@ -50,14 +48,34 @@ const EditReview: FC = () => {
     );
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
     const [venue, setVenue] = useState(review?.venue);
-    const [company, setCompany] = useState<ValueItem[]>(
-        review?.company
-            ?.map((user) => ({
-                value: user.userId,
-                label: `${user.firstName} ${user.lastName}`,
-            }))
-            .filter(Undefined) ?? [],
+
+    const companyItems = useMemo(() => {
+        const filteredUsers = users.filter((user) => user.userId !== userId);
+
+        return filteredUsers.map((user) => ({
+            value: user.userId,
+            label: `${user.firstName} ${user.lastName}`,
+        }));
+    }, [users, userId]);
+
+    const initialCompany = useMemo(
+        () =>
+            review?.company
+                ?.map((user) => ({
+                    value: user.userId,
+                    label: `${user.firstName} ${user.lastName}`,
+                }))
+                .filter(Undefined),
+        [review?.company],
     );
+
+    const { selectedItems: company, openSelectionModal } = useSelectionModal({
+        key: "company",
+        selectionMode: "multi",
+        label: "Company",
+        items: companyItems,
+        initialSelection: initialCompany,
+    });
 
     const { data: watchlistEntry } = useShowEntry(showId);
 
@@ -125,7 +143,7 @@ const EditReview: FC = () => {
                 contentContainerStyle={styles.container}
             >
                 <ReviewForm
-                    companyOptions={filteredUsers}
+                    companyOptions={companyItems}
                     rating={rating}
                     includeDate={includeDate}
                     date={date}
@@ -137,7 +155,7 @@ const EditReview: FC = () => {
                     onRatingChange={setRating}
                     onIncludeDateChange={setIncludeDate}
                     onDateChange={setDate}
-                    onCompanyChange={setCompany}
+                    onCompanyPress={openSelectionModal}
                     onDescriptionChange={setDescription}
                     onVenueChange={setVenue}
                 />
@@ -168,6 +186,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
-            paddingBottom: padding.large,
+            paddingBottom: padding.pageBottom,
         },
     });

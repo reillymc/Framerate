@@ -1,9 +1,7 @@
-import { StarRating } from "@/components";
-import type { UserSummary } from "@/modules/user/services";
+import { ControlledSelectionInput, StarRating } from "@/components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     DropdownInput,
-    SelectionInput,
     Text,
     TextInput,
     type ThemedStyles,
@@ -24,14 +22,14 @@ interface ReviewFormProps {
     venue: string | undefined;
     starCount: number;
     company: ValueItem[];
-    companyOptions: UserSummary[];
+    companyOptions: ValueItem[];
     venueOptions: string[];
     onRatingChange: (rating: number) => void;
     onIncludeDateChange: (includeDate: boolean) => void;
     onDateChange: (date: Date) => void;
     onDescriptionChange: (description: string) => void;
     onVenueChange: (venue: string) => void;
-    onCompanyChange: (company: ValueItem[]) => void;
+    onCompanyPress: () => void;
 }
 
 export const ReviewForm: FC<ReviewFormProps> = ({
@@ -49,7 +47,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
     onDateChange,
     onDescriptionChange,
     onVenueChange,
-    onCompanyChange,
+    onCompanyPress,
 }) => {
     const dropdownRef = useRef<rnTextInput>(null);
 
@@ -78,6 +76,8 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "flex-end",
+                    gap: 12,
+                    marginVertical: 6,
                 }}
             >
                 <ToggleInput
@@ -98,10 +98,10 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                         }
                         accentColor={theme.color.primary}
                         hitSlop={{
-                            top: 20,
-                            right: 20,
-                            bottom: 20,
-                            left: 20,
+                            top: 8,
+                            right: 8,
+                            bottom: 8,
+                            left: 0,
                         }}
                     />
                 ) : (
@@ -139,16 +139,13 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     label: venue,
                 }))}
             />
-            <SelectionInput
+            <ControlledSelectionInput
                 label="Company"
                 selectionMode="multi"
                 selection={company}
-                items={companyOptions.map((user) => ({
-                    value: user.userId,
-                    label: `${user.firstName} ${user.lastName}`,
-                }))}
-                onChange={onCompanyChange}
-                style={styles.input}
+                items={companyOptions}
+                onPress={onCompanyPress}
+                containerStyle={styles.input}
             />
         </>
     );
