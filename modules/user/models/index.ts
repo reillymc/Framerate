@@ -41,17 +41,13 @@ export const MergeConfiguration = (
     return {
         company: {
             ...first.company,
-            knownUserIds: [
-                ...first.company.knownUserIds,
-                ...((second.company?.knownUserIds ?? []) as string[]),
-            ],
+            knownUserIds: (second.company?.knownUserIds ??
+                first.company.knownUserIds) as string[],
         },
         venues: {
             ...first.venues,
-            knownVenueNames: [
-                ...first.venues.knownVenueNames,
-                ...((second.venues?.knownVenueNames ?? []) as string[]),
-            ],
+            knownVenueNames: (second.venues?.knownVenueNames ??
+                first.venues.knownVenueNames) as string[],
         },
         ratings: {
             ...first.ratings,

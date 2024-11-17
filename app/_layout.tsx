@@ -12,7 +12,6 @@ import {
     type DeepPartial,
     DefaultTheme,
     MergeTheme,
-    PortalProvider,
     type Theme,
     ThemeProvider,
     createDefaultStyles,
@@ -196,14 +195,12 @@ export default function RootLayout() {
                         styles={createDefaultStyles(theme)}
                     >
                         <GestureHandlerRootView>
-                            <PortalProvider>
-                                <StatusBar
-                                    barStyle="default"
-                                    animated
-                                    translucent
-                                />
-                                <Slot />
-                            </PortalProvider>
+                            <StatusBar
+                                barStyle="default"
+                                animated
+                                translucent
+                            />
+                            <Slot />
                         </GestureHandlerRootView>
                     </ThemeProvider>
                 </RnThemeProvider>

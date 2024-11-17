@@ -108,7 +108,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                         x: "bottom",
                         y: "right",
                     },
-                    // biome-ignore lint/style/useNamingConvention: <explanation>
+                    // biome-ignore lint/style/useNamingConvention: victory native prop naming
                     formatXLabel: (value) => {
                         if (!value) return "";
                         return new Date(value).toLocaleString("default", {
@@ -128,6 +128,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                 }}
                 xKey="date"
                 yKeys={["count"]}
+                frame={{ lineColor: "transparent" }}
             >
                 {({ points, chartBounds }) => (
                     <Bar

@@ -57,18 +57,17 @@ const Profile: FC = () => {
             return;
         }
 
+        const knownVenueNames = [
+            ...new Set(
+                [...user.configuration.venues.knownVenueNames, venue].sort(),
+            ),
+        ];
+
         saveUser({
             userId: user.userId,
             configuration: MergeConfiguration(user.configuration, {
                 venues: {
-                    knownVenueNames: [
-                        ...new Set(
-                            [
-                                ...user.configuration.venues.knownVenueNames,
-                                venue,
-                            ].sort(),
-                        ),
-                    ],
+                    knownVenueNames,
                 },
             }),
         });

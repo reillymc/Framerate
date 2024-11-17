@@ -20,4 +20,3 @@ export { BlurIconAction } from "./blurIconAction";
 export { SegmentedControl } from "./segmentedControl";
 export { EmptyState } from "./emptyState";
 export { StarRating, StarRatingDisplay } from "./starRating";
-export { ControlledSelectionInput } from "./controlledSelectionInput";

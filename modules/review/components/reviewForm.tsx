@@ -1,7 +1,8 @@
-import { ControlledSelectionInput, StarRating } from "@/components";
+import { StarRating } from "@/components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
     DropdownInput,
+    SelectionInput,
     Text,
     TextInput,
     type ThemedStyles,
@@ -132,19 +133,19 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                         dropdownRef.current?.blur();
                     }
                 }}
-                style={styles.input}
+                containerStyle={styles.input}
                 clearButtonMode="while-editing"
                 items={venueOptions.map((venue) => ({
                     value: venue,
                     label: venue,
                 }))}
             />
-            <ControlledSelectionInput
+            <SelectionInput
                 label="Company"
                 selectionMode="multi"
                 selection={company}
                 items={companyOptions}
-                onPress={onCompanyPress}
+                onAdd={onCompanyPress}
                 containerStyle={styles.input}
             />
         </>
