@@ -49,7 +49,7 @@ export const SegmentedControl = <T extends string | number>({
                         fontWeight: "600",
                         color: theme.color.inputText,
                     }}
-                    backgroundColor={theme.color.inputBackground}
+                    // backgroundColor={theme.color.inputBackground} //TODO: Re-enable once background no longer overflows segmented control border
                     onChange={({ nativeEvent }) =>
                         onChange(options[nativeEvent.selectedSegmentIndex])
                     }

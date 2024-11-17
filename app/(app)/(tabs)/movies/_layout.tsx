@@ -18,7 +18,7 @@ const MoviesStack: FC = () => {
             <Stack.Screen
                 name="editWatch"
                 options={{
-                    presentation: "formSheet",
+                    presentation: "fullScreenModal",
                     sheetAllowedDetents: [0.3],
                 }}
             />

@@ -72,15 +72,15 @@ const Shows: FC = () => {
                 options={{
                     title: "Shows",
                     headerSearchBarOptions: {
-                        onChangeText: ({ nativeEvent }) =>
-                            setSearchValue(nativeEvent.text),
+                        ref: searchRef,
                         placeholder: "Search shows",
                         hideWhenScrolling: false,
                         barTintColor: theme.color.inputBackground,
-                        tintColor: theme.color.primary,
+                        tintColor: theme.color.secondary,
+                        onChangeText: ({ nativeEvent }) =>
+                            setSearchValue(nativeEvent.text),
                         onFocus: () => setIsSearching(true),
                         onCancelButtonPress: () => setIsSearching(false),
-                        ref: searchRef,
                         onSearchButtonPress: ({ nativeEvent }) =>
                             addSearch({ searchValue: nativeEvent.text }),
                     },

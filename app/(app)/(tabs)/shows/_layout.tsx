@@ -17,7 +17,10 @@ const ShowsStack: FC = () => {
             />
             <Stack.Screen
                 name="editWatch"
-                options={{ presentation: "formSheet" }}
+                options={{
+                    presentation: "fullScreenModal",
+                    sheetAllowedDetents: [0.3],
+                }}
             />
             <Stack.Screen name="watchlist" />
             <Stack.Screen
@@ -27,7 +30,7 @@ const ShowsStack: FC = () => {
             <Stack.Screen
                 name="season/editWatch"
                 options={{
-                    presentation: "formSheet",
+                    presentation: "fullScreenModal",
                     sheetAllowedDetents: [0.3],
                 }}
             />
