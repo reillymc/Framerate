@@ -8,6 +8,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { addMonths, isBefore } from "date-fns";
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
@@ -17,6 +18,8 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
+import { ShowEntryConstants } from "../constants";
+import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
 import type { ShowEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
@@ -51,24 +54,39 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
 
     const sectionData: Array<SectionListData<ShowEntry, unknown>> =
         useMemo(() => {
-            const endedShows = entries.filter(
-                ({ status, nextAirDate }) =>
-                    (status === undefined ||
-                        !ActiveStatuses.includes(status)) &&
-                    nextAirDate === undefined,
+            const currentlyAiringCutOff = addMonths(
+                new Date(),
+                ShowEntryConstants.currentMonthsAhead,
             );
+
+            const endedShows = entries
+                .filter(
+                    ({ status, nextAirDate }) =>
+                        (status === undefined ||
+                            !ActiveStatuses.includes(status)) &&
+                        nextAirDate === undefined,
+                )
+                .sort(SortEntriesByLastAirDate);
 
             const nonEndedShows = entries.filter(
                 (show) => !endedShows.includes(show),
             );
 
-            const currentShows = nonEndedShows.filter(
-                ({ nextAirDate }) => nextAirDate !== undefined,
-            );
+            const currentShows = nonEndedShows
+                .filter(
+                    ({ nextAirDate }) =>
+                        nextAirDate !== undefined &&
+                        isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+                )
+                .sort(SortEntriesByNextAirDate);
 
-            const upcomingShows = nonEndedShows.filter(
-                ({ nextAirDate }) => nextAirDate === undefined,
-            );
+            const upcomingShows = nonEndedShows
+                .filter(
+                    ({ nextAirDate }) =>
+                        nextAirDate === undefined ||
+                        !isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+                )
+                .sort(SortEntriesByNextAirDate);
 
             return [
                 {

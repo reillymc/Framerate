@@ -1,10 +1,10 @@
 import { useSession } from "@/modules/auth";
+import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
 import { useDeleteMovieEntry, useMovieEntry } from "@/modules/movieEntry";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
 import { ReviewForm, getRatingLabel } from "@/modules/review";
-import { useCurrentUserConfig, useUsers } from "@/modules/user";
-
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     Action,
     type ThemedStyles,
@@ -33,7 +33,7 @@ const EditReview: FC = () => {
     const { data: movie } = useMovie(movieId ?? review?.movie.id);
     const router = useRouter();
     const { mutate: saveReview } = useSaveMovieReview();
-    const { data: users = [] } = useUsers();
+    const { data: company = [] } = useCompany();
     const { configuration } = useCurrentUserConfig();
     const { mutate: deleteEntry } = useDeleteMovieEntry();
 
@@ -52,13 +52,13 @@ const EditReview: FC = () => {
     const [venue, setVenue] = useState(review?.venue);
 
     const companyItems = useMemo(() => {
-        const filteredUsers = users.filter((user) => user.userId !== userId);
+        const filteredUsers = company.filter((user) => user.userId !== userId);
 
         return filteredUsers.map((user) => ({
             value: user.userId,
             label: `${user.firstName} ${user.lastName}`,
         }));
-    }, [users, userId]);
+    }, [company, userId]);
 
     const initialCompany = useMemo(
         () =>
@@ -71,13 +71,14 @@ const EditReview: FC = () => {
         [review?.company],
     );
 
-    const { selectedItems: company, openSelectionModal } = useSelectionModal({
-        key: "company",
-        selectionMode: "multi",
-        label: "Company",
-        items: companyItems,
-        initialSelection: initialCompany,
-    });
+    const { selectedItems: selectedCompany, openSelectionModal } =
+        useSelectionModal({
+            key: "company",
+            selectionMode: "multi",
+            label: "Company",
+            items: companyItems,
+            initialSelection: initialCompany,
+        });
 
     const { data: watchlistEntry } = useMovieEntry(movieId);
 
@@ -104,7 +105,7 @@ const EditReview: FC = () => {
             venue,
             rating,
             description,
-            company: company.map(({ value }) => ({ userId: value })),
+            company: selectedCompany.map(({ value }) => ({ userId: value })),
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
@@ -149,7 +150,7 @@ const EditReview: FC = () => {
                     rating={rating}
                     includeDate={includeDate}
                     date={date}
-                    company={company}
+                    company={selectedCompany}
                     description={description}
                     venue={venue}
                     starCount={configuration.ratings.starCount}

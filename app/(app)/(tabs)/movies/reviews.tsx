@@ -26,6 +26,8 @@ const Reviews: FC = () => {
     const router = useRouter();
 
     const { userId } = useSession();
+    console.log(userId);
+
     const { configuration } = useCurrentUserConfig();
 
     const {
@@ -76,7 +78,7 @@ const Reviews: FC = () => {
                             <ReviewSortButton
                                 order={orderBy}
                                 sort={sort}
-                                mediaType={MediaType.Show}
+                                mediaType={MediaType.Movie}
                                 onChangeOrder={setOrderBy}
                                 onChangeSort={setSort}
                             />

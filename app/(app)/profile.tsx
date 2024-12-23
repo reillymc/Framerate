@@ -1,5 +1,5 @@
 import { SegmentedControl } from "@/components";
-import { useSaveUser, useUser, useUsers } from "@/modules/user";
+import { useSaveUser, useUser } from "@/modules/user";
 import { MergeConfiguration } from "@/modules/user";
 import {
     Action,
@@ -26,6 +26,11 @@ import {
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { useSession } from "@/modules/auth";
+import {
+    useCompany,
+    useDeleteCompany,
+    useSaveCompany,
+} from "@/modules/company";
 import { version } from "@/package.json";
 
 const Profile: FC = () => {
@@ -39,7 +44,10 @@ const Profile: FC = () => {
 
     const { data: user } = useUser(userId);
     const { mutate: saveUser } = useSaveUser();
-    const { data: users = [] } = useUsers();
+
+    const { data: users = [] } = useCompany();
+    const { mutate: saveCompany } = useSaveCompany();
+    const { mutate: deleteCompany } = useDeleteCompany();
 
     const [venuesCollapsed, setVenuesCollapsed] = useState(true);
     const [friendsCollapsed, setFriendsCollapsed] = useState(true);
@@ -53,13 +61,15 @@ const Profile: FC = () => {
     const addVenue = useCallback(() => {
         venueInputRef.current?.blur();
 
-        if (!(venue && user)) {
+        const newVenue = venue.trim();
+
+        if (!(newVenue && user)) {
             return;
         }
 
         const knownVenueNames = [
             ...new Set(
-                [...user.configuration.venues.knownVenueNames, venue].sort(),
+                [...user.configuration.venues.knownVenueNames, newVenue].sort(),
             ),
         ];
 
@@ -83,15 +93,13 @@ const Profile: FC = () => {
             return;
         }
 
-        // For now, save a new user and assume all users are friends. Configuration will be used in future to determine relationships.
-        saveUser({
-            firstName: trimmedFirstName,
-            lastName: trimmedLastName,
-        });
+        // Saves a 'non-authenticatable user' where company doesn't have a user account set up.
+        // Actual user accounts are saved to user's configuration.
+        saveCompany({ firstName: trimmedFirstName, lastName: trimmedLastName });
 
         setFirstName("");
         setLastName("");
-    }, [firstName, lastName, user, saveUser]);
+    }, [firstName, lastName, user, saveCompany]);
 
     const removeVenue = useCallback(
         (venue: string) => {
@@ -112,26 +120,6 @@ const Profile: FC = () => {
         },
         [saveUser, user],
     );
-
-    // const removeFriend = useCallback(
-    //     (userId: string) => {
-    //         if (!user) return;
-
-    //         saveUser({
-    //             userId: user.userId,
-    //             configuration: {
-    //                 ...user.configuration,
-    //                 company: {
-    //                     knownUserIds:
-    //                         user.configuration.company.knownUserIds.filter(
-    //                             (v) => v !== userId,
-    //                         ),
-    //                 },
-    //             },
-    //         });
-    //     },
-    //     [saveUser, user],
-    // );
 
     return (
         <>
@@ -303,10 +291,22 @@ const Profile: FC = () => {
                         >
                             {users
                                 .filter(({ userId }) => userId !== user.userId)
-                                .map((user) => (
-                                    <SwipeView key={user.userId}>
+                                .map(({ userId, firstName, lastName }) => (
+                                    <SwipeView
+                                        key={userId}
+                                        rightActions={[
+                                            <SwipeAction
+                                                key="delete"
+                                                iconName="delete"
+                                                variant="destructive"
+                                                onPress={() =>
+                                                    deleteCompany({ userId })
+                                                }
+                                            />,
+                                        ]}
+                                    >
                                         <View style={styles.listItem}>
-                                            <Text>{`${user.firstName} ${user.lastName}`}</Text>
+                                            <Text>{`${firstName} ${lastName}`}</Text>
                                         </View>
                                     </SwipeView>
                                 ))}

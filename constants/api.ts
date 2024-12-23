@@ -56,6 +56,20 @@ export const FRAMERATE_API = {
             endpoint: "auth/login",
         }),
     },
+    company: {
+        getCompany: () => ({
+            method: "GET",
+            endpoint: "company",
+        }),
+        saveCompany: (userId?: string) => ({
+            method: userId ? "PUT" : "POST",
+            endpoint: userId ? `company/${userId}` : "company",
+        }),
+        deleteCompany: (userId: string) => ({
+            method: "DELETE",
+            endpoint: `company/${userId}`,
+        }),
+    },
     movies: {
         getMovie: (movieId: number) => ({
             method: "GET",
@@ -106,6 +120,32 @@ export const FRAMERATE_API = {
                 : `movies/${movieId}/reviews`,
         }),
     },
+    seasons: {
+        getSeason: (showId: number, seasonNumber: number) => ({
+            method: "GET",
+            endpoint: `shows/${showId}/seasons/${seasonNumber}/details`,
+        }),
+    },
+    seasonReviews: {
+        getReviews: (showId: number, seasonNumber: number) => ({
+            method: "GET",
+            endpoint: `shows/${showId}/seasons/${seasonNumber}/reviews`,
+        }),
+        getReview: (id: string) => ({
+            method: "GET",
+            endpoint: `shows/seasons/reviews/${id}`,
+        }),
+        saveReview: (
+            showId: number,
+            seasonNumber: number,
+            reviewId?: string,
+        ) => ({
+            method: reviewId ? "PUT" : "POST",
+            endpoint: reviewId
+                ? `shows/${showId}/seasons/${seasonNumber}/reviews/${reviewId}`
+                : `shows/${showId}/seasons/${seasonNumber}/reviews`,
+        }),
+    },
     shows: {
         getShow: (showId: number) => ({
             method: "GET",
@@ -154,32 +194,6 @@ export const FRAMERATE_API = {
             endpoint: reviewId
                 ? `shows/${showId}/reviews/${reviewId}`
                 : `shows/${showId}/reviews`,
-        }),
-    },
-    seasons: {
-        getSeason: (showId: number, seasonNumber: number) => ({
-            method: "GET",
-            endpoint: `shows/${showId}/seasons/${seasonNumber}/details`,
-        }),
-    },
-    seasonReviews: {
-        getReviews: (showId: number, seasonNumber: number) => ({
-            method: "GET",
-            endpoint: `shows/${showId}/seasons/${seasonNumber}/reviews`,
-        }),
-        getReview: (id: string) => ({
-            method: "GET",
-            endpoint: `shows/seasons/reviews/${id}`,
-        }),
-        saveReview: (
-            showId: number,
-            seasonNumber: number,
-            reviewId?: string,
-        ) => ({
-            method: reviewId ? "PUT" : "POST",
-            endpoint: reviewId
-                ? `shows/${showId}/seasons/${seasonNumber}/reviews/${reviewId}`
-                : `shows/${showId}/seasons/${seasonNumber}/reviews`,
         }),
     },
     users: {

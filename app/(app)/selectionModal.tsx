@@ -176,6 +176,7 @@ const SelectionModal: FC = () => {
             <FlatList
                 data={items}
                 contentInsetAdjustmentBehavior="always"
+                contentContainerStyle={styles.list}
                 ListHeaderComponent={
                     selectionMode === "multi" ? (
                         <View style={styles.selectionDisplay}>
@@ -253,6 +254,9 @@ const createStyles = ({
     const styles = StyleSheet.create({
         headerAction: {
             marginHorizontal: padding.navigationActionHorizontal,
+        },
+        list: {
+            paddingBottom: padding.pageBottom,
         },
         tag: {
             marginVertical: 2,
