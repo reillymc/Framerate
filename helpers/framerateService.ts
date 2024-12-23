@@ -1,7 +1,9 @@
-import type { ApiDefinition, FramerateResponse } from "@/constants/api";
-
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-const LOG_CALLS = process.env.EXPO_PUBLIC_LOG_CALLS;
+import {
+    type ApiDefinition,
+    BASE_URL,
+    type FramerateResponse,
+    LOG_CALLS,
+} from "@/constants/api";
 
 type RequestOptions = {
     session: string | null;

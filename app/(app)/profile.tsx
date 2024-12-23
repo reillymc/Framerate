@@ -1,4 +1,11 @@
 import { SegmentedControl } from "@/components";
+import { useHealth } from "@/hooks";
+import { useSession } from "@/modules/auth";
+import {
+    useCompany,
+    useDeleteCompany,
+    useSaveCompany,
+} from "@/modules/company";
 import { useSaveUser, useUser } from "@/modules/user";
 import { MergeConfiguration } from "@/modules/user";
 import {
@@ -25,12 +32,6 @@ import {
 } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
-import { useSession } from "@/modules/auth";
-import {
-    useCompany,
-    useDeleteCompany,
-    useSaveCompany,
-} from "@/modules/company";
 import { version } from "@/package.json";
 
 const Profile: FC = () => {
@@ -41,6 +42,7 @@ const Profile: FC = () => {
     const queryClient = useQueryClient();
 
     const { userId } = useSession();
+    const { data: serverVersion } = useHealth();
 
     const { data: user } = useUser(userId);
     const { mutate: saveUser } = useSaveUser();
@@ -139,28 +141,31 @@ const Profile: FC = () => {
             >
                 {user ? (
                     <>
-                        <Text variant="title">Details</Text>
-                        <TextInput
-                            label="First Name"
-                            value={user.firstName}
-                            containerStyle={styles.sectionElement}
-                            disabled
-                        />
-                        <TextInput
-                            label="Last Name"
-                            value={user.lastName}
-                            containerStyle={styles.sectionElement}
-                            disabled
-                        />
-                        <TextInput
-                            label="Email"
-                            value={user.email}
-                            containerStyle={styles.sectionElement}
-                            disabled
-                        />
+                        <View style={styles.profileSection}>
+                            <Text variant="title">Details</Text>
+                            <TextInput
+                                label="First Name"
+                                value={user.firstName}
+                                containerStyle={styles.sectionElement}
+                                disabled
+                            />
+                            <TextInput
+                                label="Last Name"
+                                value={user.lastName}
+                                containerStyle={styles.sectionElement}
+                                disabled
+                            />
+                            <TextInput
+                                label="Email"
+                                value={user.email}
+                                containerStyle={styles.sectionElement}
+                                disabled
+                            />
+                        </View>
+
                         <Animated.View
                             layout={LinearTransition}
-                            style={styles.sectionElement}
+                            style={styles.profileSection}
                         >
                             <Text variant="title">Customisation</Text>
                             <SegmentedControl
@@ -254,92 +259,102 @@ const Profile: FC = () => {
                                     />
                                 </View>
                             </CollapsibleContainer>
-                        </Animated.View>
 
-                        <Animated.View
-                            layout={LinearTransition}
-                            style={styles.sectionElement}
-                        >
-                            <Pressable
-                                style={styles.collapsibleHeading}
-                                onPress={() =>
-                                    setFriendsCollapsed(!friendsCollapsed)
-                                }
+                            <Animated.View
+                                layout={LinearTransition}
+                                style={styles.sectionElement}
                             >
-                                <Text
-                                    variant="label"
-                                    style={styles.indentedElement}
-                                >
-                                    Saved Friends
-                                </Text>
-                                <IconActionV2
-                                    iconName={
-                                        friendsCollapsed
-                                            ? "chevron-down"
-                                            : "chevron-up"
-                                    }
+                                <Pressable
+                                    style={styles.collapsibleHeading}
                                     onPress={() =>
                                         setFriendsCollapsed(!friendsCollapsed)
                                     }
-                                />
-                            </Pressable>
-                        </Animated.View>
-                        <CollapsibleContainer
-                            collapsed={friendsCollapsed}
-                            direction="up"
-                            style={styles.sectionInternalContainer}
-                        >
-                            {users
-                                .filter(({ userId }) => userId !== user.userId)
-                                .map(({ userId, firstName, lastName }) => (
-                                    <SwipeView
-                                        key={userId}
-                                        rightActions={[
-                                            <SwipeAction
-                                                key="delete"
-                                                iconName="delete"
-                                                variant="destructive"
-                                                onPress={() =>
-                                                    deleteCompany({ userId })
-                                                }
-                                            />,
-                                        ]}
+                                >
+                                    <Text
+                                        variant="label"
+                                        style={styles.indentedElement}
                                     >
-                                        <View style={styles.listItem}>
-                                            <Text>{`${firstName} ${lastName}`}</Text>
-                                        </View>
-                                    </SwipeView>
-                                ))}
-                            <View style={styles.friendInputContainer}>
-                                <TextInput
-                                    placeholder="First name"
-                                    value={firstName}
-                                    onChangeText={setFirstName}
-                                    onSubmitEditing={() =>
-                                        lastNameRef.current?.focus()
-                                    }
-                                    returnKeyType="next"
-                                    style={styles.containerisedInput}
-                                />
-                                <TextInput
-                                    ref={lastNameRef}
-                                    placeholder="Last name"
-                                    value={lastName}
-                                    onChange={({ nativeEvent }) =>
-                                        setLastName(nativeEvent.text)
-                                    }
-                                    onSubmitEditing={addFriend}
-                                    style={styles.containerisedInput}
-                                />
-                                <IconActionV2
-                                    iconName="check"
-                                    onPress={addFriend}
-                                />
-                            </View>
-                        </CollapsibleContainer>
+                                        Saved Friends
+                                    </Text>
+                                    <IconActionV2
+                                        iconName={
+                                            friendsCollapsed
+                                                ? "chevron-down"
+                                                : "chevron-up"
+                                        }
+                                        onPress={() =>
+                                            setFriendsCollapsed(
+                                                !friendsCollapsed,
+                                            )
+                                        }
+                                    />
+                                </Pressable>
+                            </Animated.View>
+                            <CollapsibleContainer
+                                collapsed={friendsCollapsed}
+                                direction="up"
+                                style={styles.sectionInternalContainer}
+                            >
+                                {users
+                                    .filter(
+                                        ({ userId }) => userId !== user.userId,
+                                    )
+                                    .map(({ userId, firstName, lastName }) => (
+                                        <SwipeView
+                                            key={userId}
+                                            rightActions={[
+                                                <SwipeAction
+                                                    key="delete"
+                                                    iconName="delete"
+                                                    variant="destructive"
+                                                    onPress={() =>
+                                                        deleteCompany({
+                                                            userId,
+                                                        })
+                                                    }
+                                                />,
+                                            ]}
+                                        >
+                                            <View style={styles.listItem}>
+                                                <Text>{`${firstName} ${lastName}`}</Text>
+                                            </View>
+                                        </SwipeView>
+                                    ))}
+                                <View style={styles.friendInputContainer}>
+                                    <TextInput
+                                        placeholder="First name"
+                                        value={firstName}
+                                        onChangeText={setFirstName}
+                                        onSubmitEditing={() =>
+                                            lastNameRef.current?.focus()
+                                        }
+                                        returnKeyType="next"
+                                        style={styles.containerisedInput}
+                                    />
+                                    <TextInput
+                                        ref={lastNameRef}
+                                        placeholder="Last name"
+                                        value={lastName}
+                                        onChange={({ nativeEvent }) =>
+                                            setLastName(nativeEvent.text)
+                                        }
+                                        onSubmitEditing={addFriend}
+                                        style={styles.containerisedInput}
+                                    />
+                                    <IconActionV2
+                                        iconName="check"
+                                        onPress={addFriend}
+                                    />
+                                </View>
+                            </CollapsibleContainer>
+                        </Animated.View>
                     </>
                 ) : null}
-                <Animated.View layout={LinearTransition}>
+
+                <Animated.View
+                    layout={LinearTransition}
+                    style={styles.profileSection}
+                >
                     <Text variant="title">Account</Text>
                     <View style={styles.sectionContainer}>
                         <Button
@@ -386,7 +401,7 @@ const Profile: FC = () => {
                             onPress={() => queryClient.clear()}
                         />
                         <Text variant="caption" style={styles.actionButton}>
-                            Client Version: {version}
+                            Client: {version} / Server: {serverVersion}
                         </Text>
                     </View>
                 </Animated.View>
@@ -416,6 +431,9 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
         },
         sectionContainer: {
             marginLeft: padding.regular,
+        },
+        profileSection: {
+            marginBottom: padding.large * 2,
         },
         listItem: {
             paddingVertical: padding.small + padding.tiny,

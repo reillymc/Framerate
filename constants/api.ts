@@ -1,3 +1,6 @@
+export const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+export const LOG_CALLS = process.env.EXPO_PUBLIC_LOG_CALLS;
+
 export type ApiDefinition = {
     method: "GET" | "POST" | "PUT" | "DELETE";
     endpoint: string;
@@ -222,6 +225,12 @@ export const FRAMERATE_API = {
         saveWatchlist: (watchlistId?: string) => ({
             method: watchlistId ? "PUT" : "POST",
             endpoint: watchlistId ? `watchlists/${watchlistId}` : "watchlists",
+        }),
+    },
+    health: {
+        get: () => ({
+            method: "GET",
+            endpoint: "health",
         }),
     },
 } satisfies Api;
