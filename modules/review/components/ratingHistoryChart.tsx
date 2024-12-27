@@ -123,6 +123,9 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
             <CartesianChart
                 chartPressState={state}
                 data={chartData}
+                frame={{
+                    lineWidth: 0,
+                }}
                 axisOptions={{
                     font,
                     labelColor: theme.color.textPrimary,

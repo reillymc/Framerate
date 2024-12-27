@@ -22,6 +22,7 @@ import { TmdbImage } from "./tmdbImage";
 export interface PosterProps {
     imageUri?: string;
     heading?: string;
+    subHeading?: string;
     removeMargin?: boolean;
     style?: StyleProp<ViewStyle>;
     size?: "tiny" | "small" | "medium" | "large";
@@ -34,6 +35,7 @@ export interface PosterProps {
 
 export const Poster: React.FC<PosterProps> = ({
     heading,
+    subHeading,
     style,
     imageUri,
     removeMargin = false,
@@ -181,6 +183,26 @@ export const Poster: React.FC<PosterProps> = ({
                             </View>
                         </View>
                     )}
+                    {!!subHeading && (
+                        <View>
+                            <View
+                                style={[
+                                    styles.contentDecorator,
+                                    { opacity: 0 },
+                                ]}
+                            />
+                            <View
+                                style={[
+                                    styles.contentContainer,
+                                    pressed && { opacity: 0.5 },
+                                ]}
+                            >
+                                <Text variant="caption" numberOfLines={2}>
+                                    {subHeading}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
                 </>
             )}
         </Pressable>
@@ -242,7 +264,7 @@ const createStyles = (
                 : border.radius.loose,
         },
         contentContainer: {
-            paddingVertical: padding.small,
+            paddingTop: padding.small,
             paddingLeft: padding.regular,
             paddingRight: padding.small,
         },

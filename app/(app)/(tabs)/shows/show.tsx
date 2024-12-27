@@ -56,9 +56,14 @@ const Show: React.FC = () => {
         [reviews],
     );
 
-    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+    const { width: posterWidthMed, gap: posterGapMed } = usePosterDimensions({
         size: "medium",
     });
+
+    const { width: posterWidthSmall, gap: posterGapSmall } =
+        usePosterDimensions({
+            size: "small",
+        });
 
     const firstAirDate = show?.firstAirDate
         ? new Date(show.firstAirDate).toLocaleString("default", {
@@ -112,7 +117,7 @@ const Show: React.FC = () => {
                             showsHorizontalScrollIndicator={false}
                             snapToAlignment="start"
                             decelerationRate="fast"
-                            snapToInterval={posterWidth + posterGap}
+                            snapToInterval={posterWidthMed + posterGapMed}
                             renderItem={({ item }) => (
                                 <Poster
                                     size="medium"
@@ -183,6 +188,34 @@ const Show: React.FC = () => {
                         </View>
                     )}
                 </View>
+                {!!show?.credits?.cast.length && (
+                    <>
+                        <Text variant="title" style={styles.sectionHeading}>
+                            Cast
+                        </Text>
+                        <FlatList
+                            horizontal
+                            data={show.credits.cast}
+                            contentContainerStyle={styles.castList}
+                            snapToAlignment="start"
+                            decelerationRate="fast"
+                            snapToInterval={posterWidthSmall + posterGapSmall}
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item }) => (
+                                <Poster
+                                    key={item.id}
+                                    imageUri={item.profilePath}
+                                    heading={item.name}
+                                    subHeading={item.roles
+                                        ?.map((role) => role.character)
+                                        .join(", ")}
+                                    size="small"
+                                />
+                            )}
+                        />
+                    </>
+                )}
+
                 <MediaLinks
                     mediaType={MediaType.Show}
                     tmdbId={show?.id}
@@ -262,5 +295,13 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         },
         section: {
             marginTop: padding.large,
+        },
+        castList: {
+            marginTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
+        },
+        sectionHeading: {
+            marginTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
         },
     });

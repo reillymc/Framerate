@@ -14,6 +14,7 @@ import {
     ParallaxScrollView,
     Poster,
     TmdbImage,
+    usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
@@ -39,6 +40,9 @@ const Movie: React.FC = () => {
     }>();
 
     const movieId = idParam ? Number.parseInt(idParam, 10) : undefined;
+    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+        size: "small",
+    });
 
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
@@ -61,6 +65,16 @@ const Movie: React.FC = () => {
               day: "numeric",
           })
         : undefined;
+
+    const director = movie?.credits?.crew
+        .filter((crew) => crew.job === "Director")
+        .map((crew) => crew.name)
+        .join(", ");
+
+    const screenwriter = movie?.credits?.crew
+        .filter((crew) => crew.job === "Screenplay")
+        .map((crew) => crew.name)
+        .join(", ");
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -92,6 +106,17 @@ const Movie: React.FC = () => {
                 </View>
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
+                    {director && (
+                        <Text variant="bodyEmphasized" style={styles.section}>
+                            {`Directed by: ${director}`}
+                        </Text>
+                    )}
+                    {screenwriter && (
+                        <Text variant="bodyEmphasized" style={styles.section}>
+                            {`Screenplay by: ${screenwriter}`}
+                        </Text>
+                    )}
+
                     {releaseDate && (
                         <Text variant="bodyEmphasized" style={styles.section}>
                             {`Release Date: ${releaseDate}`}
@@ -136,6 +161,31 @@ const Movie: React.FC = () => {
                         </>
                     )}
                 </View>
+                {!!movie?.credits?.cast.length && (
+                    <>
+                        <Text variant="title" style={styles.sectionHeading}>
+                            Cast
+                        </Text>
+                        <FlatList
+                            horizontal
+                            data={movie.credits.cast}
+                            contentContainerStyle={styles.castList}
+                            snapToAlignment="start"
+                            decelerationRate="fast"
+                            snapToInterval={posterWidth + posterGap}
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item }) => (
+                                <Poster
+                                    key={item.id}
+                                    imageUri={item.profilePath}
+                                    heading={item.name}
+                                    subHeading={item.character}
+                                    size="small"
+                                />
+                            )}
+                        />
+                    </>
+                )}
                 <MediaLinks
                     mediaType={MediaType.Movie}
                     tmdbId={movie?.id}
@@ -176,7 +226,6 @@ export default Movie;
 const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
             paddingBottom: padding.pageBottom,
             backgroundColor: color.background,
@@ -203,11 +252,20 @@ const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
         },
         pageContent: {
             marginTop: 20,
+            paddingHorizontal: padding.pageHorizontal,
         },
         list: {
             marginTop: padding.large,
         },
         section: {
             marginTop: padding.large,
+        },
+        castList: {
+            marginTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
+        },
+        sectionHeading: {
+            marginTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
         },
     });
