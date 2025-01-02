@@ -3,7 +3,7 @@ import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
 import { useDeleteMovieEntry, useMovieEntry } from "@/modules/movieEntry";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
-import { ReviewForm, getRatingLabel } from "@/modules/review";
+import { ReviewForm } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     Action,
@@ -14,7 +14,7 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useEffect, useMemo, useState } from "react";
-import { ScrollView, StatusBar, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useSelectionModal } from "../../selectionModal";
 
 const EditReview: FC = () => {
@@ -27,38 +27,38 @@ const EditReview: FC = () => {
         ? Number.parseInt(movieIdParam, 10)
         : undefined;
 
+    const router = useRouter();
     const { userId } = useSession();
+    const { configuration } = useCurrentUserConfig();
 
     const { data: review } = useMovieReview(reviewId);
     const { data: movie } = useMovie(movieId ?? review?.movie.id);
-    const router = useRouter();
-    const { mutate: saveReview } = useSaveMovieReview();
     const { data: company = [] } = useCompany();
-    const { configuration } = useCurrentUserConfig();
+    const { data: watchlistEntry } = useMovieEntry(movieId);
+    const { mutate: saveReview } = useSaveMovieReview();
     const { mutate: deleteEntry } = useDeleteMovieEntry();
 
     const styles = useThemedStyles(createStyles, {});
 
-    const [date, setDate] = useState(
-        review?.date ? new Date(review.date) : new Date(),
-    );
-    const [rating, setRating] = useState(review?.rating ?? 0);
-    const [description, setDescription] = useState(review?.description ?? "");
-
-    const [includeDate, setIncludeDate] = useState(
-        review ? !!review.date : true,
-    );
+    const [includeDate, setIncludeDate] = useState(true);
+    const [includeReview, setIncludeReview] = useState(true);
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
-    const [venue, setVenue] = useState(review?.venue);
 
-    const companyItems = useMemo(() => {
-        const filteredUsers = company.filter((user) => user.userId !== userId);
+    const [date, setDate] = useState(new Date());
+    const [rating, setRating] = useState<number>();
+    const [description, setDescription] = useState<string>();
+    const [venue, setVenue] = useState<string>();
 
-        return filteredUsers.map((user) => ({
-            value: user.userId,
-            label: `${user.firstName} ${user.lastName}`,
-        }));
-    }, [company, userId]);
+    const companyItems = useMemo(
+        () =>
+            company
+                .filter((user) => user.userId !== userId)
+                .map(({ userId, firstName, lastName }) => ({
+                    value: userId,
+                    label: `${firstName} ${lastName}`,
+                })),
+        [company, userId],
+    );
 
     const initialCompany = useMemo(
         () =>
@@ -80,53 +80,50 @@ const EditReview: FC = () => {
             initialSelection: initialCompany,
         });
 
-    const { data: watchlistEntry } = useMovieEntry(movieId);
-
     useEffect(() => {
-        setDate(review?.date ? new Date(review.date) : new Date());
-        setRating(review?.rating ?? 0);
-        setDescription(review?.description ?? "");
+        if (!review) return;
+        setDate(review.date ? new Date(review.date) : new Date());
+        setRating(review.rating);
+        setDescription(review.description);
+        setIncludeDate(!!review.date);
+        setIncludeReview(!!review.rating || !!review.description);
+        setVenue(review.venue);
     }, [review]);
-
-    const handleClose = () => {
-        router.back();
-    };
 
     const handleSave = () => {
         const movieIdValue = movieId ?? review?.movie.id;
 
-        if (!(rating && movieIdValue)) return;
+        if (!movieIdValue) return;
 
         saveReview({
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
             movieId: movieIdValue,
-            venue,
-            rating,
-            description,
+            venue: venue?.trim() || undefined,
+            rating: includeReview ? rating || undefined : undefined,
+            description: includeReview
+                ? description?.trim() || undefined
+                : undefined,
             company: selectedCompany.map(({ value }) => ({ userId: value })),
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
             deleteEntry({ movieId: movieIdValue });
         }
-        handleClose();
+        router.back();
     };
 
     return (
         <>
             <Stack.Screen
                 options={{
-                    title: getRatingLabel(
-                        rating,
-                        configuration.ratings.starCount,
-                    ),
+                    title: review ? "Edit Watch" : "Add Watch",
                     headerLeft: () => (
                         <Action
                             label="Close"
                             style={styles.headerAction}
-                            onPress={handleClose}
+                            onPress={router.back}
                         />
                     ),
                     headerRight: () => (
@@ -138,9 +135,7 @@ const EditReview: FC = () => {
                     ),
                 }}
             />
-            <StatusBar barStyle="light-content" animated={true} />
             <ScrollView
-                scrollEnabled={false}
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
@@ -148,6 +143,7 @@ const EditReview: FC = () => {
                 <ReviewForm
                     companyOptions={companyItems}
                     rating={rating}
+                    includeReview={includeReview}
                     includeDate={includeDate}
                     date={date}
                     company={selectedCompany}
@@ -157,6 +153,7 @@ const EditReview: FC = () => {
                     venueOptions={configuration.venues.knownVenueNames}
                     onRatingChange={setRating}
                     onIncludeDateChange={setIncludeDate}
+                    onIncludeReviewChange={setIncludeReview}
                     onDateChange={setDate}
                     onDescriptionChange={setDescription}
                     onCompanyPress={openSelectionModal}
@@ -165,6 +162,7 @@ const EditReview: FC = () => {
                 {!!watchlistEntry && !reviewId && (
                     <ToggleInput
                         label="Mark as watched"
+                        iconVariant="check"
                         value={clearWatchlistEntry}
                         onChange={setClearWatchlistEntry}
                         helpText={`${movie?.title} is currently in your watchlist. ${
@@ -189,6 +187,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
-            paddingBottom: padding.pageBottom,
+            paddingBottom: padding.pageBottom * 2,
         },
     });

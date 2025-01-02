@@ -200,12 +200,6 @@ const Movie: React.FC = () => {
                         params: { movieId },
                     })
                 }
-                onAddWatch={() =>
-                    router.push({
-                        pathname: "/movies/editWatch",
-                        params: { movieId },
-                    })
-                }
                 onToggleWatchlist={() => {
                     if (!movieId) return;
 

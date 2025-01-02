@@ -230,12 +230,6 @@ const Show: React.FC = () => {
                         params: { showId },
                     })
                 }
-                onAddWatch={() =>
-                    router.push({
-                        pathname: "/shows/editWatch",
-                        params: { showId },
-                    })
-                }
                 onToggleWatchlist={() => {
                     if (!showId) return;
 

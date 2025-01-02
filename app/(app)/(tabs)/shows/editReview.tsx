@@ -1,10 +1,10 @@
 import { useSession } from "@/modules/auth";
-import { ReviewForm, getRatingLabel } from "@/modules/review";
+import { useCompany } from "@/modules/company";
+import { ReviewForm } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import { useDeleteShowEntry, useShowEntry } from "@/modules/showEntry";
 import { useSaveShowReview, useShowReview } from "@/modules/showReview";
-import { useCurrentUserConfig, useUsers } from "@/modules/user";
-
+import { useCurrentUserConfig } from "@/modules/user";
 import {
     Action,
     type ThemedStyles,
@@ -12,51 +12,51 @@ import {
     Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useEffect, useMemo, useState } from "react";
-import { ScrollView, StatusBar, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useSelectionModal } from "../../selectionModal";
 
 const EditReview: FC = () => {
-    const { reviewId, showId: showIdParam } = useGlobalSearchParams<{
+    const { reviewId, showId: showIdParam } = useLocalSearchParams<{
         reviewId: string;
         showId: string;
     }>();
 
     const showId = showIdParam ? Number.parseInt(showIdParam, 10) : undefined;
 
+    const router = useRouter();
     const { userId } = useSession();
+    const { configuration } = useCurrentUserConfig();
 
     const { data: review } = useShowReview(reviewId);
     const { data: show } = useShow(showId ?? review?.show.id);
-    const router = useRouter();
+    const { data: company = [] } = useCompany();
+    const { data: watchlistEntry } = useShowEntry(showId);
     const { mutate: saveReview } = useSaveShowReview();
-    const { data: users = [] } = useUsers();
-    const { configuration } = useCurrentUserConfig();
-    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
+    const { mutate: deleteEntry } = useDeleteShowEntry();
 
     const styles = useThemedStyles(createStyles, {});
 
-    const [date, setDate] = useState(
-        review?.date ? new Date(review.date) : new Date(),
-    );
-    const [rating, setRating] = useState(review?.rating ?? 0);
-    const [description, setDescription] = useState(review?.description ?? "");
-
-    const [includeDate, setIncludeDate] = useState(
-        review ? !!review.date : true,
-    );
+    const [includeDate, setIncludeDate] = useState(true);
+    const [includeReview, setIncludeReview] = useState(true);
     const [clearWatchlistEntry, setClearWatchlistEntry] = useState(true);
-    const [venue, setVenue] = useState(review?.venue);
 
-    const companyItems = useMemo(() => {
-        const filteredUsers = users.filter((user) => user.userId !== userId);
+    const [date, setDate] = useState(new Date());
+    const [rating, setRating] = useState<number>();
+    const [description, setDescription] = useState<string>();
+    const [venue, setVenue] = useState<string>();
 
-        return filteredUsers.map((user) => ({
-            value: user.userId,
-            label: `${user.firstName} ${user.lastName}`,
-        }));
-    }, [users, userId]);
+    const companyItems = useMemo(
+        () =>
+            company
+                .filter((user) => user.userId !== userId)
+                .map(({ userId, firstName, lastName }) => ({
+                    value: userId,
+                    label: `${firstName} ${lastName}`,
+                })),
+        [company, userId],
+    );
 
     const initialCompany = useMemo(
         () =>
@@ -69,61 +69,59 @@ const EditReview: FC = () => {
         [review?.company],
     );
 
-    const { selectedItems: company, openSelectionModal } = useSelectionModal({
-        key: "company",
-        selectionMode: "multi",
-        label: "Company",
-        items: companyItems,
-        initialSelection: initialCompany,
-    });
-
-    const { data: watchlistEntry } = useShowEntry(showId);
+    const { selectedItems: selectedCompany, openSelectionModal } =
+        useSelectionModal({
+            key: "company",
+            selectionMode: "multi",
+            label: "Company",
+            items: companyItems,
+            initialSelection: initialCompany,
+        });
 
     useEffect(() => {
-        setDate(review?.date ? new Date(review.date) : new Date());
-        setRating(review?.rating ?? 0);
-        setDescription(review?.description ?? "");
+        if (!review) return;
+        setDate(review.date ? new Date(review.date) : new Date());
+        setRating(review.rating);
+        setDescription(review.description);
+        setIncludeDate(!!review.date);
+        setIncludeReview(!!review.rating || !!review.description);
+        setVenue(review.venue);
     }, [review]);
-
-    const handleClose = () => {
-        router.back();
-    };
 
     const handleSave = () => {
         const showIdValue = showId ?? review?.show.id;
 
-        if (!(rating && showIdValue)) return;
+        if (!showIdValue) return;
 
         saveReview({
             ...review,
             reviewId,
             date: includeDate ? date.toISOString().split("T")[0] : undefined,
             showId: showIdValue,
-            venue,
-            rating,
-            description,
-            company: company.map(({ value }) => ({ userId: value })),
+            venue: venue?.trim() || undefined,
+            rating: includeReview ? rating || undefined : undefined,
+            description: includeReview
+                ? description?.trim() || undefined
+                : undefined,
+            company: selectedCompany.map(({ value }) => ({ userId: value })),
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {
-            deleteWatchlistEntry({ showId: showIdValue });
+            deleteEntry({ showId: showIdValue });
         }
-        handleClose();
+        router.back();
     };
 
     return (
         <>
             <Stack.Screen
                 options={{
-                    title: getRatingLabel(
-                        rating,
-                        configuration.ratings.starCount,
-                    ),
+                    title: review ? "Edit Watch" : "Add Watch",
                     headerLeft: () => (
                         <Action
                             label="Close"
                             style={styles.headerAction}
-                            onPress={handleClose}
+                            onPress={router.back}
                         />
                     ),
                     headerRight: () => (
@@ -135,9 +133,7 @@ const EditReview: FC = () => {
                     ),
                 }}
             />
-            <StatusBar barStyle="light-content" animated={true} />
             <ScrollView
-                scrollEnabled={false}
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
@@ -145,23 +141,26 @@ const EditReview: FC = () => {
                 <ReviewForm
                     companyOptions={companyItems}
                     rating={rating}
+                    includeReview={includeReview}
                     includeDate={includeDate}
                     date={date}
-                    company={company}
+                    company={selectedCompany}
                     description={description}
                     venue={venue}
                     starCount={configuration.ratings.starCount}
                     venueOptions={configuration.venues.knownVenueNames}
                     onRatingChange={setRating}
                     onIncludeDateChange={setIncludeDate}
+                    onIncludeReviewChange={setIncludeReview}
                     onDateChange={setDate}
-                    onCompanyPress={openSelectionModal}
                     onDescriptionChange={setDescription}
+                    onCompanyPress={openSelectionModal}
                     onVenueChange={setVenue}
                 />
                 {!!watchlistEntry && !reviewId && (
                     <ToggleInput
                         label="Mark as watched"
+                        iconVariant="check"
                         value={clearWatchlistEntry}
                         onChange={setClearWatchlistEntry}
                         helpText={`${show?.name} is currently in your watchlist. ${
@@ -186,6 +185,6 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
-            paddingBottom: padding.pageBottom,
+            paddingBottom: padding.pageBottom * 2,
         },
     });

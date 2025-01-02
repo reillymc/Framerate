@@ -31,6 +31,12 @@ const Watchlist: FC = () => {
                             },
                         })
                     }
+                    onAddReview={(showId) =>
+                        router.push({
+                            pathname: "/shows/editReview",
+                            params: { showId },
+                        })
+                    }
                     onRefresh={refetch}
                 />
             )}

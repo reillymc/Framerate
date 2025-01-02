@@ -183,12 +183,6 @@ const Season: React.FC = () => {
                         params: { showId, seasonNumber },
                     })
                 }
-                onAddWatch={() =>
-                    router.push({
-                        pathname: "/shows/season/editWatch",
-                        params: { showId, seasonNumber },
-                    })
-                }
             />
         </>
     );

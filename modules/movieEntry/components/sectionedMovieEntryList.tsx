@@ -76,6 +76,7 @@ interface SectionedMovieEntryListProps {
     onRefresh: () => void;
     onPressEntry: (item: MovieEntry) => void;
     onDeleteEntry: (movieId: number) => void;
+    onAddReview: (movieId: number) => void;
 }
 
 export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
@@ -84,6 +85,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     onRefresh,
     onDeleteEntry,
     onPressEntry,
+    onAddReview,
 }) => {
     const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<SectionList<MovieEntry> | null>(null);
@@ -159,6 +161,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     )}
                     onPress={() => onPressEntry(item)}
                     onToggleWatchlist={() => onDeleteEntry(item.movieId)}
+                    onAddReview={() => onAddReview(item.movieId)}
                     height={ITEM_HEIGHT}
                 />
             )}

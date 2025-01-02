@@ -1,9 +1,9 @@
-import { StarRating } from "@/components";
+import { Accordion, StarRating } from "@/components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
+    CollapsibleContainer,
     DropdownInput,
     SelectionInput,
-    Text,
     TextInput,
     type ThemedStyles,
     ToggleInput,
@@ -16,17 +16,19 @@ import { StyleSheet, View, type TextInput as rnTextInput } from "react-native";
 import { ratingToStars, starsToRating } from "../helpers";
 
 interface ReviewFormProps {
-    rating: number;
     includeDate: boolean;
+    includeReview: boolean;
+    rating: number | undefined;
     date: Date;
-    description: string;
+    description: string | undefined;
     venue: string | undefined;
     starCount: number;
     company: ValueItem[];
     companyOptions: ValueItem[];
     venueOptions: string[];
-    onRatingChange: (rating: number) => void;
+    onIncludeReviewChange: (includeReview: boolean) => void;
     onIncludeDateChange: (includeDate: boolean) => void;
+    onRatingChange: (rating: number) => void;
     onDateChange: (date: Date) => void;
     onDescriptionChange: (description: string) => void;
     onVenueChange: (venue: string) => void;
@@ -34,8 +36,9 @@ interface ReviewFormProps {
 }
 
 export const ReviewForm: FC<ReviewFormProps> = ({
+    includeReview,
     includeDate,
-    rating,
+    rating = 0,
     date,
     description,
     venue,
@@ -43,8 +46,9 @@ export const ReviewForm: FC<ReviewFormProps> = ({
     companyOptions,
     venueOptions,
     starCount,
-    onRatingChange,
+    onIncludeReviewChange,
     onIncludeDateChange,
+    onRatingChange,
     onDateChange,
     onDescriptionChange,
     onVenueChange,
@@ -57,69 +61,67 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 
     return (
         <>
-            <StarRating
-                style={styles.rating}
-                rating={ratingToStars(rating, starCount)}
-                enableHalfStar
-                maxStars={starCount}
-                starSize={260 / starCount}
-                onChange={(value) =>
-                    onRatingChange(starsToRating(value, starCount))
-                }
-                enableSwiping
-                animationConfig={{
-                    duration: 0,
-                    scale: 1,
-                }}
-            />
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: 12,
-                    marginVertical: 6,
-                }}
-            >
+            <View style={styles.dateRow}>
                 <ToggleInput
+                    label="Date"
                     value={includeDate}
-                    size="small"
-                    variant="secondary"
+                    iconVariant="check"
                     onChange={onIncludeDateChange}
                 />
-                {includeDate ? (
-                    <DateTimePicker
-                        value={date}
-                        mode="date"
-                        style={styles.dateInput}
-                        disabled={!includeDate}
-                        maximumDate={new Date()}
-                        onChange={(_, newDate) =>
-                            newDate && onDateChange(newDate)
-                        }
-                        accentColor={theme.color.primary}
-                        hitSlop={{
-                            top: 8,
-                            right: 8,
-                            bottom: 8,
-                            left: 0,
-                        }}
-                    />
-                ) : (
-                    <View style={styles.datePlaceholderContainer}>
-                        <Text variant="caption">No Date</Text>
-                    </View>
-                )}
+                <CollapsibleContainer
+                    collapsed={!includeDate}
+                    direction="right"
+                >
+                    {
+                        <DateTimePicker
+                            value={date}
+                            mode="date"
+                            style={styles.dateInput}
+                            disabled={!includeDate}
+                            maximumDate={new Date()}
+                            onChange={(_, newDate) =>
+                                newDate && onDateChange(newDate)
+                            }
+                            accentColor={theme.color.primary}
+                        />
+                    }
+                </CollapsibleContainer>
             </View>
-            <TextInput
+            <ToggleInput
                 label="Review"
-                value={description}
-                onChangeText={onDescriptionChange}
-                multiline
-                numberOfLines={3}
-                containerStyle={[styles.input, styles.reviewInputContainer]}
-                style={styles.reviewInput}
+                value={includeReview}
+                iconVariant="check"
+                onChange={onIncludeReviewChange}
             />
+            <Accordion
+                collapsed={includeReview}
+                style={styles.reviewInputContainer}
+            >
+                <StarRating
+                    style={styles.rating}
+                    rating={ratingToStars(rating, starCount)}
+                    enableHalfStar
+                    maxStars={starCount}
+                    starSize={240 / starCount}
+                    onChange={(value) =>
+                        onRatingChange(starsToRating(value, starCount))
+                    }
+                    enableSwiping
+                    animationConfig={{
+                        duration: 0,
+                        scale: 1,
+                    }}
+                />
+
+                <TextInput
+                    value={description}
+                    onChangeText={onDescriptionChange}
+                    multiline
+                    numberOfLines={3}
+                    containerStyle={styles.input}
+                    style={styles.reviewInput}
+                />
+            </Accordion>
             <DropdownInput
                 ref={dropdownRef}
                 label="Venue"
@@ -154,15 +156,27 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 
 ReviewForm.displayName = "ReviewForm";
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) => {
-    const dateInputHeight = 40;
-    const dateInputWidth = 120;
+const createStyles = ({
+    theme: { padding },
+    styles: { toggleInput },
+}: ThemedStyles) => {
     return StyleSheet.create({
+        dateRow: {
+            marginBottom: padding.regular,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            height: 38,
+        },
+        dateInput: {
+            flex: 1,
+        },
         input: {
             marginBottom: padding.regular,
         },
         reviewInputContainer: {
-            marginTop: -padding.large,
+            marginLeft:
+                toggleInput.label.gap + toggleInput.indicator.size.regular,
+            marginBottom: padding.regular,
         },
         reviewInput: {
             minHeight: 80,
@@ -170,18 +184,7 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) => {
         rating: {
             flex: 1,
             alignSelf: "center",
-            marginBottom: padding.large,
-        },
-        dateInput: {
-            height: dateInputHeight,
-            width: dateInputWidth,
-        },
-        datePlaceholderContainer: {
-            height: dateInputHeight,
-            width: dateInputWidth,
-            paddingLeft: padding.regular,
-            justifyContent: "center",
-            alignItems: "center",
+            marginVertical: padding.regular,
         },
     });
 };

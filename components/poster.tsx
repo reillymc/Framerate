@@ -101,11 +101,11 @@ export const Poster: React.FC<PosterProps> = ({
                                 onAddReview
                                     ? ({
                                           actionKey: "add-review",
-                                          actionTitle: "Add Review",
+                                          actionTitle: "Add Watch",
                                           icon: {
                                               type: "IMAGE_SYSTEM",
                                               imageValue: {
-                                                  systemName: "pencil",
+                                                  systemName: "plus",
                                               },
                                           },
                                       } satisfies MenuElementConfig)

@@ -324,8 +324,8 @@ const Shows: FC = () => {
                     )}
                     ListEmptyComponent={
                         <Text style={styles.reviewsEmptyMessage}>
-                            Nothing here yet. To save a review, search or pick a
-                            show then 'Add Review'
+                            Nothing here yet. To log a watch or save a review,
+                            search or pick a show then 'Add Watch'
                         </Text>
                     }
                     ListFooterComponent={

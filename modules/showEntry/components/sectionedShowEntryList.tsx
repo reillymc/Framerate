@@ -38,12 +38,14 @@ interface SectionedShowEntryListProps {
     onRefresh: () => void;
     onPressEntry: (item: ShowEntry) => void;
     onDeleteEntry: (showId: number) => void;
+    onAddReview: (showId: number) => void;
 }
 
 export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     entries,
     onDeleteEntry,
     onPressEntry,
+    onAddReview,
     onRefresh,
 }) => {
     const styles = useThemedStyles(createStyles, {});
@@ -99,6 +101,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                             releaseDate={item.nextAirDate}
                             onWatchlist
                             onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onAddReview={() => onAddReview(item.showId)}
                             onPress={() => onPressEntry(item)}
                         />
                     ),
@@ -113,6 +116,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                             releaseDate={item.nextAirDate}
                             onWatchlist
                             onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onAddReview={() => onAddReview(item.showId)}
                             onPress={() => onPressEntry(item)}
                         />
                     ),
@@ -127,12 +131,13 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                             releaseDate={item.status}
                             onWatchlist
                             onToggleWatchlist={() => onDeleteEntry(item.showId)}
+                            onAddReview={() => onAddReview(item.showId)}
                             onPress={() => onPressEntry(item)}
                         />
                     ),
                 },
             ];
-        }, [entries, onPressEntry, onDeleteEntry]);
+        }, [entries, onPressEntry, onDeleteEntry, onAddReview]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
