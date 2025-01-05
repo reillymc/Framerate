@@ -31,6 +31,7 @@ export const PosterCard: FC<PosterCardProps> = ({
                 paddingTop: theme.padding.regular,
                 flexDirection: "row",
                 paddingHorizontal: theme.padding.pageHorizontal,
+                backgroundColor: theme.color.background,
             }}
             onPress={onPress}
         >

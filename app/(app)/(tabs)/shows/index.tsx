@@ -6,18 +6,20 @@ import {
     useRecentSearches,
     useSearchShows,
 } from "@/modules/show";
-import {
-    useDeleteShowEntry,
-    useSaveShowEntry,
-    useShowEntries,
-} from "@/modules/showEntry";
+import { useShowCollections } from "@/modules/showCollection";
 import { useShowReviews } from "@/modules/showReview";
+import {
+    useDeleteShowWatchlistEntry,
+    useSaveShowWatchlistEntry,
+    useShowWatchlist,
+} from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     IconAction,
     IconActionV2,
     SwipeAction,
     SwipeView,
+    Tag,
     Text,
     type ThemedStyles,
     Undefined,
@@ -26,7 +28,13 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+    FlatList,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
 import type { SearchBarCommands } from "react-native-screens";
 
 const Shows: FC = () => {
@@ -47,10 +55,11 @@ const Shows: FC = () => {
     const [isSearching, setIsSearching] = useState(false);
     const { data: results } = useSearchShows(searchValue);
     const { data: popularShows } = usePopularShows();
-    const { data: watchlistEntries = [] } = useShowEntries();
-    const { mutate: saveWatchlistEntry } = useSaveShowEntry();
-    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
+    const { data: watchlist } = useShowWatchlist();
+    const { mutate: saveWatchlistEntry } = useSaveShowWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteShowWatchlistEntry();
     const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
+    const { data: collections = [] } = useShowCollections();
 
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
@@ -59,12 +68,12 @@ const Shows: FC = () => {
 
     const filteredPopularShows = useMemo(() => {
         const excludedMediaIds = [
-            ...watchlistEntries.map(({ showId }) => showId),
+            ...(watchlist?.entries?.map(({ showId }) => showId) ?? []),
             ...reviewList.map(({ show }) => show.id),
         ];
 
         return popularShows?.filter(({ id }) => !excludedMediaIds.includes(id));
-    }, [popularShows, watchlistEntries, reviewList]);
+    }, [popularShows, watchlist?.entries, reviewList]);
 
     return (
         <>
@@ -100,7 +109,7 @@ const Shows: FC = () => {
                     contentContainerStyle={styles.searchList}
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => {
-                        const onWatchlist = watchlistEntries.some(
+                        const onWatchlist = watchlist?.entries?.some(
                             ({ showId }) => showId === item.id,
                         );
 
@@ -205,7 +214,7 @@ const Shows: FC = () => {
                                 }
                             />
                             <Text style={styles.pageElement}>
-                                {watchlistEntries.length} shows in your
+                                {watchlist?.entries?.length ?? 0} shows in your
                                 watchlist
                             </Text>
                             <SectionHeading
@@ -229,9 +238,10 @@ const Shows: FC = () => {
                                 decelerationRate="fast"
                                 snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => {
-                                    const onWatchlist = watchlistEntries.some(
-                                        ({ showId }) => showId === item.id,
-                                    );
+                                    const onWatchlist =
+                                        watchlist?.entries?.some(
+                                            ({ showId }) => showId === item.id,
+                                        );
 
                                     return (
                                         <Poster
@@ -272,7 +282,35 @@ const Shows: FC = () => {
                                 }}
                             />
                             <SectionHeading
-                                title="My Reviews"
+                                title="My Collections"
+                                style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/shows/collections",
+                                    })
+                                }
+                            />
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={styles.collectionsList}
+                            >
+                                {collections?.map(({ collectionId, name }) => (
+                                    <Pressable
+                                        key={collectionId}
+                                        onPress={() =>
+                                            router.navigate({
+                                                pathname: "/shows/collection",
+                                                params: { collectionId },
+                                            })
+                                        }
+                                    >
+                                        <Tag label={name} variant="light" />
+                                    </Pressable>
+                                ))}
+                            </ScrollView>
+                            <SectionHeading
+                                title="My Watches"
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
@@ -380,5 +418,9 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             borderBottomWidth: 1,
             borderBottomColor: `${color.border}44`,
             backgroundColor: color.background,
+        },
+        collectionsList: {
+            paddingHorizontal: padding.pageHorizontal,
+            marginBottom: padding.regular,
         },
     });

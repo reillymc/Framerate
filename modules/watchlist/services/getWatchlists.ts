@@ -2,7 +2,13 @@ import { FRAMERATE_API, type FramerateService } from "@/constants/api";
 import { ExecuteRequest } from "@/helpers/framerateService";
 import type { Watchlist } from "../models";
 
-type GetWatchlists = FramerateService<Watchlist[]>;
+type GetWatchlistsRequest = {
+    mediaType: string;
+};
 
-export const getWatchlists: GetWatchlists = ({ session }) =>
-    ExecuteRequest(FRAMERATE_API.watchlists.getWatchlists(), { session });
+type GetWatchlists = FramerateService<Watchlist[], GetWatchlistsRequest>;
+
+export const getWatchlists: GetWatchlists = ({ mediaType, session }) =>
+    ExecuteRequest(FRAMERATE_API.watchlists.getWatchlists(mediaType), {
+        session,
+    });

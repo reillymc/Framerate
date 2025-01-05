@@ -6,5 +6,5 @@
  * - User
  */
 
-export { useWatchlist, useSaveWatchlist } from "./hooks";
+export { useDefaultWatchlist, useSaveWatchlist } from "./hooks";
 export { Watchlist } from "./models";

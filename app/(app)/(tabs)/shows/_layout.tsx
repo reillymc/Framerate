@@ -15,23 +15,17 @@ const ShowsStack: FC = () => {
                 name="editReview"
                 options={{ presentation: "formSheet" }}
             />
-            <Stack.Screen
-                name="editWatch"
-                options={{
-                    presentation: "fullScreenModal",
-                    sheetAllowedDetents: [0.3],
-                }}
-            />
             <Stack.Screen name="watchlist" />
             <Stack.Screen
                 name="season/editReview"
                 options={{ presentation: "formSheet" }}
             />
+            <Stack.Screen name="collections" />
+            <Stack.Screen name="collection" />
             <Stack.Screen
-                name="season/editWatch"
+                name="editCollection"
                 options={{
-                    presentation: "fullScreenModal",
-                    sheetAllowedDetents: [0.3],
+                    presentation: "modal",
                 }}
             />
         </Stack>

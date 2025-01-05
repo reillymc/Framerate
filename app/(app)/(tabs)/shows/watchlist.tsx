@@ -1,46 +1,51 @@
-import { MediaType } from "@/constants/mediaTypes";
+import { EmptyState, ScreenLayout } from "@/components";
 import {
     SectionedShowEntryList,
-    useDeleteShowEntry,
-    useShowEntries,
-} from "@/modules/showEntry";
-import { useWatchlist } from "@/modules/watchlist";
+    useDeleteShowWatchlistEntry,
+    useShowWatchlist,
+} from "@/modules/showWatchlist";
 import { Stack, useRouter } from "expo-router";
 import type { FC } from "react";
 
 const Watchlist: FC = () => {
     const router = useRouter();
-    const { data: watchlist } = useWatchlist(MediaType.Show);
-    const { data: entries = [], isLoading, refetch } = useShowEntries();
-    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
+    const { data: watchlist, isLoading, refetch } = useShowWatchlist();
+    const { mutate: deleteEntry } = useDeleteShowWatchlistEntry();
 
     return (
-        <>
-            <Stack.Screen options={{ title: watchlist?.name ?? "..." }} />
-            {!isLoading && (
-                <SectionedShowEntryList
-                    entries={entries}
-                    onDeleteEntry={(showId) => deleteWatchlistEntry({ showId })}
-                    onPressEntry={(item) =>
-                        router.push({
-                            pathname: "/shows/show",
-                            params: {
-                                id: item.showId,
-                                name: item.name,
-                                posterPath: item.posterPath,
-                            },
-                        })
-                    }
-                    onAddReview={(showId) =>
-                        router.push({
-                            pathname: "/shows/editReview",
-                            params: { showId },
-                        })
-                    }
-                    onRefresh={refetch}
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{ title: watchlist?.name ?? "Loading..." }}
                 />
-            )}
-        </>
+            }
+            isLoading={isLoading}
+            isEmpty={!watchlist?.entries?.length}
+            empty={<EmptyState heading="No shows on watchlist" />}
+            loading={<EmptyState heading="Loading..." />}
+        >
+            <SectionedShowEntryList
+                entries={watchlist?.entries ?? []}
+                onDeleteEntry={(showId) => deleteEntry({ showId })}
+                onPressEntry={(item) =>
+                    router.push({
+                        pathname: "/shows/show",
+                        params: {
+                            id: item.showId,
+                            name: item.name,
+                            posterPath: item.posterPath,
+                        },
+                    })
+                }
+                onAddReview={(showId) =>
+                    router.push({
+                        pathname: "/shows/editReview",
+                        params: { showId },
+                    })
+                }
+                onRefresh={refetch}
+            />
+        </ScreenLayout>
     );
 };
 

@@ -4,7 +4,7 @@ import {
     useDeleteMovieEntry,
     useMovieEntries,
 } from "@/modules/movieEntry";
-import { useWatchlist } from "@/modules/watchlist";
+import { useDefaultWatchlist } from "@/modules/watchlist";
 
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import type { FC } from "react";
@@ -13,7 +13,7 @@ const Watchlist: FC = () => {
     const { jumpToDate } = useLocalSearchParams<{ jumpToDate?: string }>();
 
     const router = useRouter();
-    const { data: watchlist } = useWatchlist(MediaType.Movie);
+    const { data: watchlist } = useDefaultWatchlist(MediaType.Movie);
     const { data: entries = [], isLoading, refetch } = useMovieEntries();
     const { mutate: deleteEntry } = useDeleteMovieEntry();
 

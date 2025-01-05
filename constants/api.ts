@@ -25,7 +25,9 @@ export type FramerateService<
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention
     TResponse extends
         | Record<string, string | number | object>
-        | Array<Record<string, string | number | object | undefined>>,
+        | Array<Record<string, string | number | object | undefined>>
+        | string
+        | Array<string>,
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention
     // biome-ignore lint/complexity/noBannedTypes: Default value
     TRequest extends Record<string, string | number | object> = {},
@@ -123,6 +125,56 @@ export const FRAMERATE_API = {
                 : `movies/${movieId}/reviews`,
         }),
     },
+    movieCollections: {
+        getCollections: () => ({
+            method: "GET",
+            endpoint: "movies/collections",
+        }),
+        getCollection: (collectionId: string) => ({
+            method: "GET",
+            endpoint: `movies/collections/${collectionId}`,
+        }),
+        getCollectionsForShow: (movieId: number) => ({
+            method: "GET",
+            endpoint: `movies/collections/movie/${movieId}`,
+        }),
+        saveCollection: (collectionId?: string) => ({
+            method: collectionId ? "PUT" : "POST",
+            endpoint: collectionId
+                ? `movies/collections/${collectionId}`
+                : "movies/collections",
+        }),
+        deleteCollection: (collectionId: string) => ({
+            method: "DELETE",
+            endpoint: `movies/collections/${collectionId}`,
+        }),
+        postEntry: (collectionId: string) => ({
+            method: "POST",
+            endpoint: `movies/collections/${collectionId}`,
+        }),
+        deleteEntry: (collectionId: string, movieId: number) => ({
+            method: "DELETE",
+            endpoint: `movies/collections/${collectionId}/${movieId}`,
+        }),
+    },
+    movieWatchlist: {
+        get: () => ({
+            method: "GET",
+            endpoint: "movies/watchlist",
+        }),
+        getEntry: (movieId: number) => ({
+            method: "GET",
+            endpoint: `movies/watchlist/${movieId}`,
+        }),
+        postEntry: () => ({
+            method: "POST",
+            endpoint: "movies/watchlist",
+        }),
+        deleteEntry: (movieId: number) => ({
+            method: "DELETE",
+            endpoint: `movies/watchlist/${movieId}`,
+        }),
+    },
     seasons: {
         getSeason: (showId: number, seasonNumber: number) => ({
             method: "GET",
@@ -163,22 +215,54 @@ export const FRAMERATE_API = {
             endpoint: `shows/search?query=${query}`,
         }),
     },
-    showEntries: {
-        getEntries: (watchlistId: string) => ({
+    showCollections: {
+        getCollections: () => ({
             method: "GET",
-            endpoint: `shows/entries/${watchlistId}`,
+            endpoint: "shows/collections",
         }),
-        getEntry: (watchlistId: string, showId: number) => ({
+        getCollection: (collectionId: string) => ({
             method: "GET",
-            endpoint: `shows/entries/${watchlistId}/${showId}`,
+            endpoint: `shows/collections/${collectionId}`,
         }),
-        postEntry: (watchlistId: string) => ({
-            method: "POST",
-            endpoint: `shows/entries/${watchlistId}`,
+        getCollectionsForShow: (showId: number) => ({
+            method: "GET",
+            endpoint: `shows/collections/show/${showId}`,
         }),
-        deleteEntry: (watchlistId: string, showId: number) => ({
+        saveCollection: (collectionId?: string) => ({
+            method: collectionId ? "PUT" : "POST",
+            endpoint: collectionId
+                ? `shows/collections/${collectionId}`
+                : "shows/collections",
+        }),
+        deleteCollection: (collectionId: string) => ({
             method: "DELETE",
-            endpoint: `shows/entries/${watchlistId}/${showId}`,
+            endpoint: `shows/collections/${collectionId}`,
+        }),
+        postEntry: (collectionId: string) => ({
+            method: "POST",
+            endpoint: `shows/collections/${collectionId}`,
+        }),
+        deleteEntry: (collectionId: string, showId: number) => ({
+            method: "DELETE",
+            endpoint: `shows/collections/${collectionId}/${showId}`,
+        }),
+    },
+    showWatchlist: {
+        get: () => ({
+            method: "GET",
+            endpoint: "shows/watchlist",
+        }),
+        getEntry: (showId: number) => ({
+            method: "GET",
+            endpoint: `shows/watchlist/${showId}`,
+        }),
+        postEntry: () => ({
+            method: "POST",
+            endpoint: "shows/watchlist",
+        }),
+        deleteEntry: (showId: number) => ({
+            method: "DELETE",
+            endpoint: `shows/watchlist/${showId}`,
         }),
     },
     showReviews: {
@@ -214,13 +298,17 @@ export const FRAMERATE_API = {
         }),
     },
     watchlists: {
-        getWatchlists: () => ({
+        getWatchlist: (watchlistId: string) => ({
             method: "GET",
-            endpoint: "watchlists",
+            endpoint: `watchlists/${watchlistId}`,
         }),
-        getWatchlist: (mediaType: string) => ({
+        getDefault: (mediaType: string) => ({
             method: "GET",
-            endpoint: `watchlists/${mediaType}`,
+            endpoint: `watchlists/type/${mediaType}/default`,
+        }),
+        getWatchlists: (mediaType: string) => ({
+            method: "GET",
+            endpoint: `watchlists/type/${mediaType}`,
         }),
         saveWatchlist: (watchlistId?: string) => ({
             method: watchlistId ? "PUT" : "POST",

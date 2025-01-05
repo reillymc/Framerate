@@ -1,35 +1,47 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { type FC, useMemo } from "react";
+import {
+    FlatList,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
 
 import {
-    Text,
-    type ThemedStyles,
-    Undefined,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-
-import {
+    ContextMenu,
     MediaFooterButtons,
     MediaLinks,
     ParallaxScrollView,
     Poster,
+    ScreenLayout,
     TmdbImage,
     usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
-import { useShowReviews } from "@/modules/showReview";
-import { useCurrentUserConfig } from "@/modules/user";
-
 import {
-    useDeleteShowEntry,
-    useSaveShowEntry,
-    useShowEntry,
-} from "@/modules/showEntry";
-import { useMemo } from "react";
+    useFilteredShowCollections,
+    useSaveShowCollectionEntry,
+} from "@/modules/showCollection";
+import { useShowReviews } from "@/modules/showReview";
+import {
+    useDeleteShowWatchlistEntry,
+    useSaveShowWatchlistEntry,
+    useShowWatchlistEntry,
+} from "@/modules/showWatchlist";
+import { useCurrentUserConfig } from "@/modules/user";
+import {
+    IconAction,
+    Tag,
+    Text,
+    type ThemedStyles,
+    Undefined,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
 
-const Show: React.FC = () => {
+const Show: FC = () => {
     const {
         id: idParam,
         name,
@@ -47,9 +59,12 @@ const Show: React.FC = () => {
     const { data: show } = useShow(showId);
     const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useShowReviews({ showId });
-    const { data: watchlistEntry } = useShowEntry(showId);
-    const { mutate: deleteWatchlistEntry } = useDeleteShowEntry();
-    const { mutate: saveWatchlistEntry } = useSaveShowEntry();
+    const { data: watchlistEntry } = useShowWatchlistEntry(showId);
+    const { mutate: deleteWatchlistEntry } = useDeleteShowWatchlistEntry();
+    const { mutate: saveWatchlistEntry } = useSaveShowWatchlistEntry();
+    const { mutate: saveCollectionEntry } = useSaveShowCollectionEntry();
+    const { collectionsContainingShow, collectionsNotContainingShow } =
+        useFilteredShowCollections(showId);
 
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
@@ -76,8 +91,9 @@ const Show: React.FC = () => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <>
-            <Stack.Screen options={{ title: show?.name ?? name }} />
+        <ScreenLayout
+            meta={<Stack.Screen options={{ title: show?.name ?? name }} />}
+        >
             <ParallaxScrollView
                 headerImage={
                     <TmdbImage type="backdrop" path={show?.backdropPath} />
@@ -101,6 +117,47 @@ const Show: React.FC = () => {
                         {show?.tagline}
                     </Text>
                 </View>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.collections}
+                >
+                    {collectionsContainingShow?.map(
+                        ({ name, collectionId }) => (
+                            <Tag
+                                key={collectionId}
+                                label={name}
+                                variant="light"
+                            />
+                        ),
+                    )}
+                    {!!collectionsNotContainingShow?.length && (
+                        <ContextMenu
+                            menuConfig={{
+                                menuTitle: "Select Collection",
+                                menuItems: collectionsNotContainingShow.map(
+                                    ({ collectionId, name }) => ({
+                                        actionKey: collectionId,
+                                        actionTitle: name,
+                                    }),
+                                ),
+                            }}
+                            onPressMenuAction={({ actionKey }) => {
+                                if (!show) return;
+                                saveCollectionEntry({
+                                    collectionId: actionKey,
+                                    showId: show.id,
+                                });
+                                return;
+                            }}
+                        >
+                            <IconAction
+                                iconName="book"
+                                label="Save to collection"
+                            />
+                        </ContextMenu>
+                    )}
+                </ScrollView>
                 <View style={styles.pageContent}>
                     <Text variant="body" style={styles.element}>
                         {show?.overview}
@@ -241,7 +298,7 @@ const Show: React.FC = () => {
                     saveWatchlistEntry({ showId });
                 }}
             />
-        </>
+        </ScreenLayout>
     );
 };
 
@@ -273,6 +330,11 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             width: "55%",
             height: 70,
             justifyContent: "center",
+        },
+        collections: {
+            paddingTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
+            alignItems: "center",
         },
         pageContent: {
             marginTop: 20,

@@ -2,8 +2,11 @@ import { useSession } from "@/modules/auth";
 import { useCompany } from "@/modules/company";
 import { ReviewForm } from "@/modules/review";
 import { useShow } from "@/modules/show";
-import { useDeleteShowEntry, useShowEntry } from "@/modules/showEntry";
 import { useSaveShowReview, useShowReview } from "@/modules/showReview";
+import {
+    useDeleteShowWatchlistEntry,
+    useShowWatchlistEntry,
+} from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
     Action,
@@ -32,9 +35,9 @@ const EditReview: FC = () => {
     const { data: review } = useShowReview(reviewId);
     const { data: show } = useShow(showId ?? review?.show.id);
     const { data: company = [] } = useCompany();
-    const { data: watchlistEntry } = useShowEntry(showId);
+    const { data: watchlistEntry } = useShowWatchlistEntry(showId);
     const { mutate: saveReview } = useSaveShowReview();
-    const { mutate: deleteEntry } = useDeleteShowEntry();
+    const { mutate: deleteEntry } = useDeleteShowWatchlistEntry();
 
     const styles = useThemedStyles(createStyles, {});
 

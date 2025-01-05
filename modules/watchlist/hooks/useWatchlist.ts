@@ -1,21 +1,18 @@
 import { useSession } from "@/modules/auth";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Watchlist } from "../models";
+import { useQuery } from "@tanstack/react-query";
 import { WatchlistsService } from "../services";
 
-export const useWatchlist = (mediaType: string | undefined) => {
-    const queryClient = useQueryClient();
+export const useWatchlist = (watchlistId: string | undefined) => {
     const { session } = useSession();
 
     return useQuery({
-        queryKey: ["watchlists", mediaType],
-        enabled: !!mediaType,
+        queryKey: ["watchlists", watchlistId],
+        enabled: !!watchlistId,
         queryFn: () =>
-            // biome-ignore lint/style/noNonNullAssertion: mediaType is guaranteed to be defined by the enabled flag
-            WatchlistsService.getWatchlist({ mediaType: mediaType!, session }),
-        placeholderData: () =>
-            queryClient
-                .getQueryData<Watchlist[]>(["watchlists"])
-                ?.find((d) => d.mediaType === mediaType),
+            WatchlistsService.getWatchlist({
+                // biome-ignore lint/style/noNonNullAssertion: watchlistId is guaranteed to be defined by the enabled flag
+                watchlistId: watchlistId!,
+                session,
+            }),
     });
 };
