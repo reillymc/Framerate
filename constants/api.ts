@@ -134,7 +134,7 @@ export const FRAMERATE_API = {
             method: "GET",
             endpoint: `movies/collections/${collectionId}`,
         }),
-        getCollectionsForShow: (movieId: number) => ({
+        getCollectionsForMovie: (movieId: number) => ({
             method: "GET",
             endpoint: `movies/collections/movie/${movieId}`,
         }),

@@ -37,7 +37,6 @@ interface FilterableReviewListProps<T extends Review> {
     renderItem: ListRenderItem<T>;
 }
 
-// TODO: Generic? T extends Review?
 export const FilterableReviewList = <T extends Review>({
     reviews,
     filters: {

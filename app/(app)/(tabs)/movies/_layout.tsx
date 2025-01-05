@@ -16,6 +16,14 @@ const MoviesStack: FC = () => {
                 options={{ presentation: "formSheet" }}
             />
             <Stack.Screen name="watchlist" />
+            <Stack.Screen name="collections" />
+            <Stack.Screen name="collection" />
+            <Stack.Screen
+                name="editCollection"
+                options={{
+                    presentation: "modal",
+                }}
+            />
         </Stack>
     );
 };

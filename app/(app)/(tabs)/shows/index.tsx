@@ -116,7 +116,7 @@ const Shows: FC = () => {
                         return (
                             <PosterCard
                                 heading={item.name}
-                                releaseDate={
+                                subHeading={
                                     item.firstAirDate
                                         ? new Date(item.firstAirDate)
                                               .getFullYear()

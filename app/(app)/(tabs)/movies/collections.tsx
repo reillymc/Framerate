@@ -1,41 +1,53 @@
 import { EmptyState, PosterCard, ScreenLayout } from "@/components";
 import {
-    useDeleteShowCollectionEntry,
-    useShowCollection,
-} from "@/modules/showCollection";
+    useDeleteMovieCollection,
+    useMovieCollections,
+} from "@/modules/movieCollection";
 import {
     IconActionV2,
     SwipeAction,
     SwipeView,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import type { FC } from "react";
-import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { Alert, RefreshControl } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 
-const Collection: FC = () => {
-    const { collectionId } = useLocalSearchParams<{ collectionId: string }>();
-
+const Collections: FC = () => {
     const router = useRouter();
-    const {
-        data: collection,
-        isLoading,
-        refetch,
-    } = useShowCollection(collectionId);
-    const { mutate: deleteCollectionEntry } = useDeleteShowCollectionEntry();
+    const { data: collections, isLoading, refetch } = useMovieCollections();
+    const { mutate: deleteCollection } = useDeleteMovieCollection();
+
+    const handleDeleteCollection = (collectionId: string) => {
+        Alert.alert(
+            "Are you sure you want to delete this collection?",
+            "This will remove all of your saved items and cannot be undone",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                },
+                {
+                    text: "OK",
+                    onPress: () => deleteCollection({ collectionId }),
+                },
+            ],
+        );
+    };
 
     return (
         <ScreenLayout
             meta={
                 <Stack.Screen
                     options={{
-                        title: collection?.name ?? "Loading...",
+                        title: "Collections",
                         headerRight: () => (
                             <IconActionV2
-                                iconName="pencil"
+                                iconName="plus"
                                 onPress={() =>
                                     router.push({
-                                        pathname: "/shows/editCollection",
-                                        params: { collectionId },
+                                        pathname: "/movies/editCollection",
                                     })
                                 }
                             />
@@ -44,19 +56,14 @@ const Collection: FC = () => {
                 />
             }
             isLoading={isLoading}
-            isEmpty={!collection?.entries?.length}
-            empty={
-                <EmptyState heading="There are no shows in this collection yet..." />
-            }
+            isEmpty={!collections?.length}
+            empty={<EmptyState heading="No collections" />}
             loading={<EmptyState heading="Loading..." />}
         >
             <FlatList
                 contentInsetAdjustmentBehavior="automatic"
-                data={collection?.entries ?? []}
-                keyExtractor={(show) => show.showId.toString()}
-                refreshControl={
-                    <RefreshControl refreshing={false} onRefresh={refetch} />
-                }
+                data={collections ?? []}
+                keyExtractor={(collection) => collection.collectionId}
                 renderItem={({ item }) => (
                     <SwipeView
                         rightActions={[
@@ -64,10 +71,7 @@ const Collection: FC = () => {
                                 key="delete"
                                 iconName="minus"
                                 onPress={() =>
-                                    deleteCollectionEntry({
-                                        collectionId,
-                                        showId: item.showId,
-                                    })
+                                    handleDeleteCollection(item.collectionId)
                                 }
                                 variant="destructive"
                             />,
@@ -75,24 +79,23 @@ const Collection: FC = () => {
                     >
                         <PosterCard
                             heading={item.name}
-                            imageUri={item.posterPath}
-                            subHeading={item.status}
                             onPress={() =>
                                 router.push({
-                                    pathname: "/shows/show",
+                                    pathname: "/movies/collection",
                                     params: {
-                                        id: item.showId,
-                                        name: item.name,
-                                        posterPath: item.posterPath,
+                                        collectionId: item.collectionId,
                                     },
                                 })
                             }
                         />
                     </SwipeView>
                 )}
+                refreshControl={
+                    <RefreshControl refreshing={false} onRefresh={refetch} />
+                }
             />
         </ScreenLayout>
     );
 };
 
-export default Collection;
+export default Collections;

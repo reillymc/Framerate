@@ -1,10 +1,11 @@
 import { Poster } from "@/components/poster";
 import { usePopularMovies } from "@/modules/movie";
 import {
-    useDeleteMovieEntry,
-    useMovieEntries,
-    useSaveMovieEntry,
-} from "@/modules/movieEntry";
+    useDeleteMovieWatchlistEntry,
+    useMovieWatchlist,
+    useSaveMovieWatchlistEntry,
+} from "@/modules/movieWatchlist";
+
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -16,9 +17,9 @@ import { FlatList, StyleSheet, View } from "react-native";
 const Browse: FC = () => {
     const router = useRouter();
     const { data: movies } = usePopularMovies();
-    const { data: watchlistEntries = [] } = useMovieEntries();
-    const { mutate: saveEntry } = useSaveMovieEntry();
-    const { mutate: deleteEntry } = useDeleteMovieEntry();
+    const { data: watchlist } = useMovieWatchlist();
+    const { mutate: saveEntry } = useSaveMovieWatchlistEntry();
+    const { mutate: deleteEntry } = useDeleteMovieWatchlistEntry();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -45,7 +46,7 @@ const Browse: FC = () => {
                 numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
-                    const onWatchlist = watchlistEntries.some(
+                    const onWatchlist = watchlist?.entries?.some(
                         ({ movieId }) => movieId === item.id,
                     );
 

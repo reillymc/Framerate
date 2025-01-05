@@ -1,7 +1,15 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import {
+    FlatList,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
 
 import {
+    IconAction,
+    Tag,
     Text,
     type ThemedStyles,
     Undefined,
@@ -9,6 +17,7 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
+    ContextMenu,
     MediaFooterButtons,
     MediaLinks,
     ParallaxScrollView,
@@ -18,12 +27,17 @@ import {
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useMovie } from "@/modules/movie";
+
 import {
-    useDeleteMovieEntry,
-    useMovieEntry,
-    useSaveMovieEntry,
-} from "@/modules/movieEntry";
+    useFilteredMovieCollections,
+    useSaveMovieCollectionEntry,
+} from "@/modules/movieCollection";
 import { useMovieReviews } from "@/modules/movieReview";
+import {
+    useDeleteMovieWatchlistEntry,
+    useMovieWatchlistEntry,
+    useSaveMovieWatchlistEntry,
+} from "@/modules/movieWatchlist";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import { useMemo } from "react";
@@ -47,10 +61,12 @@ const Movie: React.FC = () => {
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
     const { data: reviews, refetch } = useMovieReviews({ movieId });
-    const { data: watchlistEntry } = useMovieEntry(movieId);
-    const { mutate: deleteEntry } = useDeleteMovieEntry();
-    const { mutate: saveEntry } = useSaveMovieEntry();
-
+    const { data: watchlistEntry } = useMovieWatchlistEntry(movieId);
+    const { mutate: deleteWatchlistEntry } = useDeleteMovieWatchlistEntry();
+    const { mutate: saveWatchlistEntry } = useSaveMovieWatchlistEntry();
+    const { mutate: saveCollectionEntry } = useSaveMovieCollectionEntry();
+    const { collectionsContainingMovie, collectionsNotContainingMovie } =
+        useFilteredMovieCollections(movieId);
     const router = useRouter();
 
     const reviewList = useMemo(
@@ -104,6 +120,47 @@ const Movie: React.FC = () => {
                         {movie?.tagline}
                     </Text>
                 </View>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.collections}
+                >
+                    {collectionsContainingMovie?.map(
+                        ({ name, collectionId }) => (
+                            <Tag
+                                key={collectionId}
+                                label={name}
+                                variant="light"
+                            />
+                        ),
+                    )}
+                    {!!collectionsNotContainingMovie?.length && (
+                        <ContextMenu
+                            menuConfig={{
+                                menuTitle: "Select Collection",
+                                menuItems: collectionsNotContainingMovie.map(
+                                    ({ collectionId, name }) => ({
+                                        actionKey: collectionId,
+                                        actionTitle: name,
+                                    }),
+                                ),
+                            }}
+                            onPressMenuAction={({ actionKey }) => {
+                                if (!movie) return;
+                                saveCollectionEntry({
+                                    collectionId: actionKey,
+                                    movieId: movie.id,
+                                });
+                                return;
+                            }}
+                        >
+                            <IconAction
+                                iconName="book"
+                                label="Save to collection"
+                            />
+                        </ContextMenu>
+                    )}
+                </ScrollView>
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
                     {director && (
@@ -204,11 +261,11 @@ const Movie: React.FC = () => {
                     if (!movieId) return;
 
                     if (watchlistEntry) {
-                        deleteEntry({ movieId });
+                        deleteWatchlistEntry({ movieId });
                         return;
                     }
 
-                    saveEntry({ movieId });
+                    saveWatchlistEntry({ movieId });
                 }}
             />
         </>
@@ -243,6 +300,11 @@ const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
             width: "60%",
             height: 70,
             justifyContent: "center",
+        },
+        collections: {
+            paddingTop: padding.regular,
+            paddingHorizontal: padding.pageHorizontal,
+            alignItems: "center",
         },
         pageContent: {
             marginTop: 20,

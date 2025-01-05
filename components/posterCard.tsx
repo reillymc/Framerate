@@ -5,7 +5,7 @@ import { Poster, type PosterProps } from "./poster";
 
 interface PosterCardProps
     extends Pick<PosterProps, "onAddReview" | "onPress" | "heading"> {
-    releaseDate?: string;
+    subHeading?: string;
     imageUri?: string;
     height?: number;
     onWatchlist?: boolean;
@@ -14,7 +14,7 @@ interface PosterCardProps
 
 export const PosterCard: FC<PosterCardProps> = ({
     heading,
-    releaseDate,
+    subHeading,
     imageUri,
     height,
     onWatchlist,
@@ -46,7 +46,7 @@ export const PosterCard: FC<PosterCardProps> = ({
                 <Text variant="heading" numberOfLines={2}>
                     {heading}
                 </Text>
-                {releaseDate && <Text variant="caption">{releaseDate}</Text>}
+                {subHeading && <Text variant="caption">{subHeading}</Text>}
             </View>
         </Pressable>
     );

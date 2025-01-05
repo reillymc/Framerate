@@ -1,8 +1,11 @@
 import { useSession } from "@/modules/auth";
 import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
-import { useDeleteMovieEntry, useMovieEntry } from "@/modules/movieEntry";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
+import {
+    useDeleteMovieWatchlistEntry,
+    useMovieWatchlistEntry,
+} from "@/modules/movieWatchlist";
 import { ReviewForm } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
@@ -34,9 +37,9 @@ const EditReview: FC = () => {
     const { data: review } = useMovieReview(reviewId);
     const { data: movie } = useMovie(movieId ?? review?.movie.id);
     const { data: company = [] } = useCompany();
-    const { data: watchlistEntry } = useMovieEntry(movieId);
+    const { data: watchlistEntry } = useMovieWatchlistEntry(movieId);
     const { mutate: saveReview } = useSaveMovieReview();
-    const { mutate: deleteEntry } = useDeleteMovieEntry();
+    const { mutate: deleteEntry } = useDeleteMovieWatchlistEntry();
 
     const styles = useThemedStyles(createStyles, {});
 

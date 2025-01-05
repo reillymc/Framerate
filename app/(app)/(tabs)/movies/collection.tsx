@@ -1,8 +1,8 @@
 import { EmptyState, PosterCard, ScreenLayout } from "@/components";
 import {
-    useDeleteShowCollectionEntry,
-    useShowCollection,
-} from "@/modules/showCollection";
+    useDeleteMovieCollectionEntry,
+    useMovieCollection,
+} from "@/modules/movieCollection";
 import {
     IconActionV2,
     SwipeAction,
@@ -20,8 +20,8 @@ const Collection: FC = () => {
         data: collection,
         isLoading,
         refetch,
-    } = useShowCollection(collectionId);
-    const { mutate: deleteCollectionEntry } = useDeleteShowCollectionEntry();
+    } = useMovieCollection(collectionId);
+    const { mutate: deleteCollectionEntry } = useDeleteMovieCollectionEntry();
 
     return (
         <ScreenLayout
@@ -34,7 +34,7 @@ const Collection: FC = () => {
                                 iconName="pencil"
                                 onPress={() =>
                                     router.push({
-                                        pathname: "/shows/editCollection",
+                                        pathname: "/movies/editCollection",
                                         params: { collectionId },
                                     })
                                 }
@@ -46,14 +46,14 @@ const Collection: FC = () => {
             isLoading={isLoading}
             isEmpty={!collection?.entries?.length}
             empty={
-                <EmptyState heading="There are no shows in this collection yet..." />
+                <EmptyState heading="There are no movies in this collection yet..." />
             }
             loading={<EmptyState heading="Loading..." />}
         >
             <FlatList
                 contentInsetAdjustmentBehavior="automatic"
                 data={collection?.entries ?? []}
-                keyExtractor={(show) => show.showId.toString()}
+                keyExtractor={(movie) => movie.movieId.toString()}
                 refreshControl={
                     <RefreshControl refreshing={false} onRefresh={refetch} />
                 }
@@ -66,7 +66,7 @@ const Collection: FC = () => {
                                 onPress={() =>
                                     deleteCollectionEntry({
                                         collectionId,
-                                        showId: item.showId,
+                                        movieId: item.movieId,
                                     })
                                 }
                                 variant="destructive"
@@ -74,15 +74,15 @@ const Collection: FC = () => {
                         ]}
                     >
                         <PosterCard
-                            heading={item.name}
+                            heading={item.title}
                             imageUri={item.posterPath}
-                            subHeading={item.status}
+                            subHeading={item.releaseDate}
                             onPress={() =>
                                 router.push({
-                                    pathname: "/shows/show",
+                                    pathname: "/movies/movie",
                                     params: {
-                                        id: item.showId,
-                                        name: item.name,
+                                        id: item.movieId,
+                                        name: item.title,
                                         posterPath: item.posterPath,
                                     },
                                 })

@@ -5,14 +5,15 @@ import {
     useRecentSearches,
     useSearchMovies,
 } from "@/modules/movie";
+import { useMovieCollections } from "@/modules/movieCollection";
+import { useMovieReviews } from "@/modules/movieReview";
 import {
     MovieEntriesChart,
     MovieEntriesSummary,
-    useDeleteMovieEntry,
-    useMovieEntries,
-    useSaveMovieEntry,
-} from "@/modules/movieEntry";
-import { useMovieReviews } from "@/modules/movieReview";
+    useDeleteMovieWatchlistEntry,
+    useMovieWatchlist,
+    useSaveMovieWatchlistEntry,
+} from "@/modules/movieWatchlist";
 import { ReviewSummaryCard } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 import {
@@ -20,6 +21,7 @@ import {
     IconActionV2,
     SwipeAction,
     SwipeView,
+    Tag,
     Text,
     type ThemedStyles,
     Undefined,
@@ -28,7 +30,13 @@ import {
 } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+    FlatList,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
 import Animated, {
     LinearTransition,
     ZoomInLeft,
@@ -53,10 +61,11 @@ const Movies: FC = () => {
     const [isSearching, setIsSearching] = useState(false);
     const { data: results } = useSearchMovies(searchValue);
     const { data: popularMovies } = usePopularMovies();
-    const { data: watchlistEntries = [] } = useMovieEntries();
-    const { mutate: saveEntry } = useSaveMovieEntry();
-    const { mutate: deleteEntry } = useDeleteMovieEntry();
+    const { data: watchlist } = useMovieWatchlist();
+    const { mutate: saveWatchlistEntry } = useSaveMovieWatchlistEntry();
+    const { mutate: deleteWatchlistEntry } = useDeleteMovieWatchlistEntry();
     const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
+    const { data: collections = [] } = useMovieCollections();
 
     const reviewList = useMemo(
         () => reviews?.pages.flat().filter(Undefined) ?? [],
@@ -65,14 +74,14 @@ const Movies: FC = () => {
 
     const filteredPopularMovies = useMemo(() => {
         const excludedMediaIds = [
-            ...watchlistEntries.map(({ movieId }) => movieId),
+            ...(watchlist?.entries?.map(({ movieId }) => movieId) ?? []),
             ...reviewList.map(({ movie }) => movie.id),
         ];
 
         return popularMovies?.filter(
             ({ id }) => !excludedMediaIds.includes(id),
         );
-    }, [popularMovies, watchlistEntries, reviewList]);
+    }, [popularMovies, watchlist?.entries, reviewList]);
 
     const handlePressDate = useCallback(
         (date?: Date) =>
@@ -117,14 +126,14 @@ const Movies: FC = () => {
                     contentContainerStyle={styles.searchList}
                     keyboardDismissMode="on-drag"
                     renderItem={({ item }) => {
-                        const onWatchlist = watchlistEntries.some(
+                        const onWatchlist = watchlist?.entries?.some(
                             ({ movieId }) => movieId === item.id,
                         );
 
                         return (
                             <PosterCard
                                 heading={item.title}
-                                releaseDate={
+                                subHeading={
                                     item.releaseDate
                                         ? new Date(item.releaseDate)
                                               .getFullYear()
@@ -152,8 +161,12 @@ const Movies: FC = () => {
                                 }
                                 onToggleWatchlist={() =>
                                     onWatchlist
-                                        ? deleteEntry({ movieId: item.id })
-                                        : saveEntry({ movieId: item.id })
+                                        ? deleteWatchlistEntry({
+                                              movieId: item.id,
+                                          })
+                                        : saveWatchlistEntry({
+                                              movieId: item.id,
+                                          })
                                 }
                             />
                         );
@@ -225,7 +238,9 @@ const Movies: FC = () => {
                                     style={styles.watchlistSectionItem}
                                 >
                                     <MovieEntriesSummary
-                                        watchlistEntries={watchlistEntries}
+                                        watchlistEntries={
+                                            watchlist?.entries ?? []
+                                        }
                                         onPressEntry={(item) =>
                                             router.push({
                                                 pathname: "/movies/movie",
@@ -244,7 +259,7 @@ const Movies: FC = () => {
                                             })
                                         }
                                         onRemoveFromWatchlist={({ movieId }) =>
-                                            deleteEntry({ movieId })
+                                            deleteWatchlistEntry({ movieId })
                                         }
                                     />
                                 </Animated.View>
@@ -253,7 +268,7 @@ const Movies: FC = () => {
                                         styles.watchlistSectionItem,
                                         styles.watchlistChart,
                                     ]}
-                                    entries={watchlistEntries}
+                                    entries={watchlist?.entries ?? []}
                                     onPressDate={handlePressDate}
                                 />
                             </View>
@@ -278,9 +293,11 @@ const Movies: FC = () => {
                                 decelerationRate="fast"
                                 snapToInterval={posterWidth + posterGap}
                                 renderItem={({ item }) => {
-                                    const onWatchlist = watchlistEntries.some(
-                                        ({ movieId }) => movieId === item.id,
-                                    );
+                                    const onWatchlist =
+                                        watchlist?.entries?.some(
+                                            ({ movieId }) =>
+                                                movieId === item.id,
+                                        );
 
                                     return (
                                         <Poster
@@ -311,10 +328,10 @@ const Movies: FC = () => {
                                             }
                                             onToggleWatchlist={() =>
                                                 onWatchlist
-                                                    ? deleteEntry({
+                                                    ? deleteWatchlistEntry({
                                                           movieId: item.id,
                                                       })
-                                                    : saveEntry({
+                                                    : saveWatchlistEntry({
                                                           movieId: item.id,
                                                       })
                                             }
@@ -323,7 +340,35 @@ const Movies: FC = () => {
                                 }}
                             />
                             <SectionHeading
-                                title="My Reviews"
+                                title="My Collections"
+                                style={styles.pageElement}
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: "/movies/collections",
+                                    })
+                                }
+                            />
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={styles.collectionsList}
+                            >
+                                {collections?.map(({ collectionId, name }) => (
+                                    <Pressable
+                                        key={collectionId}
+                                        onPress={() =>
+                                            router.navigate({
+                                                pathname: "/movies/collection",
+                                                params: { collectionId },
+                                            })
+                                        }
+                                    >
+                                        <Tag label={name} variant="light" />
+                                    </Pressable>
+                                ))}
+                            </ScrollView>
+                            <SectionHeading
+                                title="My Watches"
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
@@ -443,5 +488,9 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             borderBottomWidth: 1,
             borderBottomColor: `${color.border}44`,
             backgroundColor: color.background,
+        },
+        collectionsList: {
+            paddingHorizontal: padding.pageHorizontal,
+            marginBottom: padding.regular,
         },
     });

@@ -8,6 +8,7 @@ import {
     SwipeView,
     Text,
     type ThemedStyles,
+    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -43,6 +44,8 @@ interface SectionedShowEntryListProps {
     onAddReview: (showId: number) => void;
 }
 
+type ShowEntrySection = SectionListData<ShowEntry, { title?: string }>;
+
 export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     entries,
     onDeleteEntry,
@@ -56,90 +59,101 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     const { width } = useWindowDimensions();
     const { theme } = useTheme();
 
-    const sectionData: Array<SectionListData<ShowEntry, unknown>> =
-        useMemo(() => {
-            const currentlyAiringCutOff = addMonths(
-                new Date(),
-                ShowEntryConstants.currentMonthsAhead,
-            );
+    const sectionData: Array<ShowEntrySection> = useMemo(() => {
+        const currentlyAiringCutOff = addMonths(
+            new Date(),
+            ShowEntryConstants.currentMonthsAhead,
+        );
 
-            const endedShows = entries
-                .filter(
-                    ({ status, nextAirDate }) =>
-                        (status === undefined ||
-                            !ActiveStatuses.includes(status)) &&
-                        nextAirDate === undefined,
-                )
-                .sort(SortEntriesByLastAirDate);
+        const endedShows = entries
+            .filter(
+                ({ status, nextAirDate }) =>
+                    (status === undefined ||
+                        !ActiveStatuses.includes(status)) &&
+                    nextAirDate === undefined,
+            )
+            .sort(SortEntriesByLastAirDate);
 
-            const nonEndedShows = entries.filter(
-                (show) => !endedShows.includes(show),
-            );
+        const nonEndedShows = entries.filter(
+            (show) => !endedShows.includes(show),
+        );
 
-            const currentShows = nonEndedShows
-                .filter(
-                    ({ nextAirDate }) =>
-                        nextAirDate !== undefined &&
-                        isBefore(new Date(nextAirDate), currentlyAiringCutOff),
-                )
-                .sort(SortEntriesByNextAirDate);
+        const currentShows = nonEndedShows
+            .filter(
+                ({ nextAirDate }) =>
+                    nextAirDate !== undefined &&
+                    isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+            )
+            .sort(SortEntriesByNextAirDate);
 
-            const upcomingShows = nonEndedShows
-                .filter(
-                    ({ nextAirDate }) =>
-                        nextAirDate === undefined ||
-                        !isBefore(new Date(nextAirDate), currentlyAiringCutOff),
-                )
-                .sort(SortEntriesByNextAirDate);
+        const upcomingShows = nonEndedShows
+            .filter(
+                ({ nextAirDate }) =>
+                    nextAirDate === undefined ||
+                    !isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+            )
+            .sort(SortEntriesByNextAirDate);
 
-            return [
-                {
-                    data: upcomingShows,
-                    title: "Upcoming",
-                    renderItem: ({ item }) => (
-                        <PosterCard
-                            heading={item.name}
-                            imageUri={item.posterPath}
-                            releaseDate={item.nextAirDate}
-                            onWatchlist
-                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
-                            onAddReview={() => onAddReview(item.showId)}
-                            onPress={() => onPressEntry(item)}
-                        />
-                    ),
-                },
-                {
-                    data: currentShows,
-                    title: "Current",
-                    renderItem: ({ item }) => (
-                        <PosterCard
-                            heading={item.name}
-                            imageUri={item.posterPath}
-                            releaseDate={item.nextAirDate}
-                            onWatchlist
-                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
-                            onAddReview={() => onAddReview(item.showId)}
-                            onPress={() => onPressEntry(item)}
-                        />
-                    ),
-                },
-                {
-                    data: endedShows,
-                    title: "Concluded",
-                    renderItem: ({ item }) => (
-                        <PosterCard
-                            heading={item.name}
-                            imageUri={item.posterPath}
-                            releaseDate={item.status}
-                            onWatchlist
-                            onToggleWatchlist={() => onDeleteEntry(item.showId)}
-                            onAddReview={() => onAddReview(item.showId)}
-                            onPress={() => onPressEntry(item)}
-                        />
-                    ),
-                },
-            ];
-        }, [entries, onPressEntry, onDeleteEntry, onAddReview]);
+        return [
+            upcomingShows.length
+                ? ({
+                      data: upcomingShows,
+                      title: "Upcoming",
+                      renderItem: ({ item }) => (
+                          <PosterCard
+                              heading={item.name}
+                              imageUri={item.posterPath}
+                              subHeading={item.nextAirDate}
+                              onWatchlist
+                              onToggleWatchlist={() =>
+                                  onDeleteEntry(item.showId)
+                              }
+                              onAddReview={() => onAddReview(item.showId)}
+                              onPress={() => onPressEntry(item)}
+                          />
+                      ),
+                  } satisfies ShowEntrySection)
+                : undefined,
+            currentShows.length
+                ? ({
+                      data: currentShows,
+                      title: "Current",
+                      renderItem: ({ item }) => (
+                          <PosterCard
+                              heading={item.name}
+                              imageUri={item.posterPath}
+                              subHeading={item.nextAirDate}
+                              onWatchlist
+                              onToggleWatchlist={() =>
+                                  onDeleteEntry(item.showId)
+                              }
+                              onAddReview={() => onAddReview(item.showId)}
+                              onPress={() => onPressEntry(item)}
+                          />
+                      ),
+                  } satisfies ShowEntrySection)
+                : undefined,
+            endedShows.length
+                ? ({
+                      data: endedShows,
+                      title: "Concluded",
+                      renderItem: ({ item }) => (
+                          <PosterCard
+                              heading={item.name}
+                              imageUri={item.posterPath}
+                              subHeading={item.status}
+                              onWatchlist
+                              onToggleWatchlist={() =>
+                                  onDeleteEntry(item.showId)
+                              }
+                              onAddReview={() => onAddReview(item.showId)}
+                              onPress={() => onPressEntry(item)}
+                          />
+                      ),
+                  } satisfies ShowEntrySection)
+                : undefined,
+        ].filter(Undefined);
+    }, [entries, onPressEntry, onDeleteEntry, onAddReview]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
