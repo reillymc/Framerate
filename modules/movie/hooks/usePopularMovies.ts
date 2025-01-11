@@ -1,14 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks/useFramerateServices";
 import { useQuery } from "@tanstack/react-query";
-import { MoviesService } from "../services";
 import { MovieKeys } from "./keys";
 
 export const usePopularMovies = () => {
-    const { session } = useSession();
+    const { movies } = useFramerateServices();
 
     return useQuery({
         queryKey: MovieKeys.popular(),
-        queryFn: () => MoviesService.getPopularMovies({ session }),
-        enabled: !!session,
+        enabled: !!movies,
+        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+        queryFn: () => movies!.popular(),
     });
 };

@@ -1,0 +1,10 @@
+.openapi-generator-ignore
+apis/index.ts
+apis/movieApi.ts
+index.ts
+models/cast.ts
+models/credits.ts
+models/crew.ts
+models/index.ts
+models/movie.ts
+runtime.ts

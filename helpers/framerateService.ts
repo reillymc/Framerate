@@ -42,13 +42,9 @@ export const ExecuteRequest = async (
 
     if (!response.ok) {
         try {
-            const { message } = (await response.json()) as FramerateResponse;
-
             if ((silenceWarnings as number[])?.includes(response.status)) {
                 return null;
             }
-
-            console.warn(message);
         } catch {
             console.warn("Network response was not ok");
         }
@@ -56,8 +52,7 @@ export const ExecuteRequest = async (
     }
 
     try {
-        const { data, message } = (await response.json()) as FramerateResponse;
-        if (message) console.warn(message);
+        const data = (await response.json()) as FramerateResponse;
 
         if (processor) return processor(data);
 

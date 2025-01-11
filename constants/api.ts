@@ -16,10 +16,7 @@ export type BaseRequestParams = {
     session: string | null;
 };
 
-export type FramerateResponse = {
-    message?: string;
-    data?: unknown;
-};
+export type FramerateResponse = unknown;
 
 export type FramerateService<
     // biome-ignore lint/style/useNamingConvention: Generic type naming convention

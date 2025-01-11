@@ -1,6 +1,7 @@
 import "react-native-reanimated";
 import { Font } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks";
+import { ServiceProvider } from "@/hooks/useFramerateServices";
 import { SessionProvider } from "@/modules/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -189,21 +190,23 @@ export default function RootLayout() {
             onSuccess={() => queryClient.resumePausedMutations()}
         >
             <SessionProvider>
-                <RnThemeProvider value={navigationTheme}>
-                    <ThemeProvider
-                        theme={theme}
-                        styles={createDefaultStyles(theme)}
-                    >
-                        <GestureHandlerRootView>
-                            <StatusBar
-                                barStyle="default"
-                                animated
-                                translucent
-                            />
-                            <Slot />
-                        </GestureHandlerRootView>
-                    </ThemeProvider>
-                </RnThemeProvider>
+                <ServiceProvider>
+                    <RnThemeProvider value={navigationTheme}>
+                        <ThemeProvider
+                            theme={theme}
+                            styles={createDefaultStyles(theme)}
+                        >
+                            <GestureHandlerRootView>
+                                <StatusBar
+                                    barStyle="default"
+                                    animated
+                                    translucent
+                                />
+                                <Slot />
+                            </GestureHandlerRootView>
+                        </ThemeProvider>
+                    </RnThemeProvider>
+                </ServiceProvider>
             </SessionProvider>
 
             {__DEV__ && DevToolsBubble && <DevToolsBubble />}

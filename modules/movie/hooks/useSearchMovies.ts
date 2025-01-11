@@ -1,17 +1,16 @@
 import { useDebounce } from "@/hooks/useDebounce";
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks/useFramerateServices";
 import { useQuery } from "@tanstack/react-query";
-import { MoviesService } from "../services";
 import { MovieKeys } from "./keys";
 
 export const useSearchMovies = (query: string) => {
+    const { movies } = useFramerateServices();
     const searchQuery = useDebounce(query.trim(), 400);
-    const { session } = useSession();
 
     return useQuery({
         queryKey: MovieKeys.search(searchQuery),
-        enabled: searchQuery.length > 2,
-        queryFn: () =>
-            MoviesService.searchMovies({ query: searchQuery, session }),
+        enabled: !!movies && searchQuery.length > 2,
+        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+        queryFn: () => movies!.search({ query }),
     });
 };

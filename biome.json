@@ -4,7 +4,7 @@
         "enabled": true
     },
     "files": {
-        "ignore": ["*.d.ts", ".expo"]
+        "ignore": ["*.d.ts", ".expo", "services/**"]
     },
     "formatter": {
         "enabled": true,
