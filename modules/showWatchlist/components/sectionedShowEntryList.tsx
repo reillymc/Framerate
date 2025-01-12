@@ -82,7 +82,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             .filter(
                 ({ nextAirDate }) =>
                     nextAirDate !== undefined &&
-                    isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+                    isBefore(nextAirDate, currentlyAiringCutOff),
             )
             .sort(SortEntriesByNextAirDate);
 
@@ -90,7 +90,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             .filter(
                 ({ nextAirDate }) =>
                     nextAirDate === undefined ||
-                    !isBefore(new Date(nextAirDate), currentlyAiringCutOff),
+                    !isBefore(nextAirDate, currentlyAiringCutOff),
             )
             .sort(SortEntriesByNextAirDate);
 

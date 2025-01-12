@@ -19,6 +19,7 @@ import {
     usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
+import { displayFull } from "@/helpers/dateHelper";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import {
@@ -80,13 +81,7 @@ const Show: FC = () => {
             size: "small",
         });
 
-    const firstAirDate = show?.firstAirDate
-        ? new Date(show.firstAirDate).toLocaleString("default", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-          })
-        : undefined;
+    const firstAirDate = displayFull(show?.firstAirDate);
 
     const styles = useThemedStyles(createStyles, {});
 

@@ -45,7 +45,7 @@ const nthNumber = (number: number) => {
     }
 };
 
-const formatItemDate = (rawDate: string | undefined, isOlder?: boolean) => {
+const formatItemDate = (rawDate: Date | undefined, isOlder?: boolean) => {
     if (!rawDate) return "Unknown";
 
     const date = new Date(rawDate);

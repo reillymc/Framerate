@@ -1,5 +1,6 @@
 import { PosterCard, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
+import { displayYear } from "@/helpers/dateHelper";
 import { ReviewSummaryCard } from "@/modules/review";
 import {
     usePopularShows,
@@ -116,13 +117,7 @@ const Shows: FC = () => {
                         return (
                             <PosterCard
                                 heading={item.name}
-                                subHeading={
-                                    item.firstAirDate
-                                        ? new Date(item.firstAirDate)
-                                              .getFullYear()
-                                              .toString()
-                                        : "Unknown"
-                                }
+                                subHeading={displayYear(item.firstAirDate)}
                                 imageUri={item.posterPath}
                                 onWatchlist={onWatchlist}
                                 onPress={() => {

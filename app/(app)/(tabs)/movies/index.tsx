@@ -139,10 +139,8 @@ const Movies: FC = () => {
                                     heading={item.title}
                                     subHeading={
                                         item.releaseDate
-                                            ? new Date(item.releaseDate)
-                                                  .getFullYear()
-                                                  .toString()
-                                            : "Unknown"
+                                            ?.getFullYear()
+                                            .toString() ?? "Unknown"
                                     }
                                     imageUri={item.posterPath}
                                     onWatchlist={onWatchlist}
