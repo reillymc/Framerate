@@ -13,7 +13,8 @@
                     "withInterfaces": true,
                     "fileNaming": "camelCase",
                     "legacyDiscriminatorBehavior": false,
-                    "nullSafeAdditionalProps": true
+                    "nullSafeAdditionalProps": true,
+                    "prefixParameterInterfaces": true
                 }
             }
         }

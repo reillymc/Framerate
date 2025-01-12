@@ -1,17 +1,16 @@
 import { useDebounce } from "@/hooks/useDebounce";
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks/useFramerateServices";
 import { useQuery } from "@tanstack/react-query";
-import { ShowsService } from "../services";
 import { ShowKeys } from "./keys";
 
 export const useSearchShows = (query: string) => {
+    const { shows } = useFramerateServices();
     const searchQuery = useDebounce(query.trim(), 400);
-    const { session } = useSession();
 
     return useQuery({
         queryKey: ShowKeys.search(searchQuery),
-        enabled: searchQuery.length > 2,
-        queryFn: () =>
-            ShowsService.searchShows({ query: searchQuery, session }),
+        enabled: !!shows && searchQuery.length > 2,
+        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+        queryFn: () => shows!.search({ query: searchQuery }),
     });
 };

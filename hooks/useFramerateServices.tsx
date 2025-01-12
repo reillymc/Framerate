@@ -6,13 +6,21 @@ import {
     useContext,
     useMemo,
 } from "react";
-import { Configuration, MovieApi, type MovieApiInterface } from "../services";
+import {
+    Configuration,
+    MovieApi,
+    type MovieApiInterface,
+    ShowApi,
+    type ShowApiInterface,
+} from "../services";
 type ServiceContextType = {
-    movies?: MovieApiInterface;
+    movies: MovieApiInterface | undefined;
+    shows: ShowApiInterface | undefined;
 };
 
 const ServiceContext = createContext<ServiceContextType>({
     movies: undefined,
+    shows: undefined,
 });
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
@@ -23,14 +31,15 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
     const { session } = useSession();
 
     const services: ServiceContextType = useMemo(() => {
-        const movies = new MovieApi(
-            new Configuration({
-                accessToken: session ?? undefined,
-                basePath: BASE_URL,
-            }),
-        );
+        const serviceConfiguration = new Configuration({
+            accessToken: session ?? undefined,
+            basePath: BASE_URL,
+        });
 
-        return { movies };
+        const movies = new MovieApi(serviceConfiguration);
+        const shows = new ShowApi(serviceConfiguration);
+
+        return { movies, shows };
     }, [session]);
 
     return (

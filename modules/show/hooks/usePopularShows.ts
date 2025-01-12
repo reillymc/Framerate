@@ -1,14 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks/useFramerateServices";
 import { useQuery } from "@tanstack/react-query";
-import { ShowsService } from "../services";
 import { ShowKeys } from "./keys";
 
 export const usePopularShows = () => {
-    const { session } = useSession();
+    const { shows } = useFramerateServices();
 
     return useQuery({
         queryKey: ShowKeys.popular(),
-        queryFn: () => ShowsService.getPopularShows({ session }),
-        enabled: !!session,
+        enabled: !!shows,
+        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+        queryFn: () => shows!.popular(),
     });
 };

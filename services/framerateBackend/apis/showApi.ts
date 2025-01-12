@@ -15,80 +15,80 @@
 
 import * as runtime from '../runtime';
 import type {
-  Movie,
+  Show,
 } from '../models/index';
 import {
-    MovieFromJSON,
-    MovieToJSON,
+    ShowFromJSON,
+    ShowToJSON,
 } from '../models/index';
 
-export interface MovieApiDetailsRequest {
-    movieId: number;
+export interface ShowApiDetailsRequest {
+    showId: number;
 }
 
-export interface MovieApiSearchRequest {
+export interface ShowApiSearchRequest {
     query: string;
 }
 
 /**
- * MovieApi - interface
+ * ShowApi - interface
  * 
  * @export
- * @interface MovieApiInterface
+ * @interface ShowApiInterface
  */
-export interface MovieApiInterface {
+export interface ShowApiInterface {
     /**
      * 
-     * @param {number} movieId 
+     * @param {number} showId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof MovieApiInterface
+     * @memberof ShowApiInterface
      */
-    detailsRaw(requestParameters: MovieApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Movie>>;
+    detailsRaw(requestParameters: ShowApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Show>>;
 
     /**
      */
-    details(requestParameters: MovieApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Movie>;
+    details(requestParameters: ShowApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Show>;
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof MovieApiInterface
+     * @memberof ShowApiInterface
      */
-    popularRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Movie>>>;
+    popularRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Show>>>;
 
     /**
      */
-    popular(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Movie>>;
+    popular(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Show>>;
 
     /**
      * 
      * @param {string} query 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof MovieApiInterface
+     * @memberof ShowApiInterface
      */
-    searchRaw(requestParameters: MovieApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Movie>>>;
+    searchRaw(requestParameters: ShowApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Show>>>;
 
     /**
      */
-    search(requestParameters: MovieApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Movie>>;
+    search(requestParameters: ShowApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Show>>;
 
 }
 
 /**
  * 
  */
-export class MovieApi extends runtime.BaseAPI implements MovieApiInterface {
+export class ShowApi extends runtime.BaseAPI implements ShowApiInterface {
 
     /**
      */
-    async detailsRaw(requestParameters: MovieApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Movie>> {
-        if (requestParameters['movieId'] == null) {
+    async detailsRaw(requestParameters: ShowApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Show>> {
+        if (requestParameters['showId'] == null) {
             throw new runtime.RequiredError(
-                'movieId',
-                'Required parameter "movieId" was null or undefined when calling details().'
+                'showId',
+                'Required parameter "showId" was null or undefined when calling details().'
             );
         }
 
@@ -105,25 +105,25 @@ export class MovieApi extends runtime.BaseAPI implements MovieApiInterface {
             }
         }
         const response = await this.request({
-            path: `/api/v1/movies/{movie_id}/details`.replace(`{${"movie_id"}}`, encodeURIComponent(String(requestParameters['movieId']))),
+            path: `/api/v1/shows/{show_id}/details`.replace(`{${"show_id"}}`, encodeURIComponent(String(requestParameters['showId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MovieFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShowFromJSON(jsonValue));
     }
 
     /**
      */
-    async details(requestParameters: MovieApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Movie> {
+    async details(requestParameters: ShowApiDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Show> {
         const response = await this.detailsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async popularRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Movie>>> {
+    async popularRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Show>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -137,25 +137,25 @@ export class MovieApi extends runtime.BaseAPI implements MovieApiInterface {
             }
         }
         const response = await this.request({
-            path: `/api/v1/movies/popular`,
+            path: `/api/v1/shows/popular`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(MovieFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ShowFromJSON));
     }
 
     /**
      */
-    async popular(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Movie>> {
+    async popular(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Show>> {
         const response = await this.popularRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async searchRaw(requestParameters: MovieApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Movie>>> {
+    async searchRaw(requestParameters: ShowApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Show>>> {
         if (requestParameters['query'] == null) {
             throw new runtime.RequiredError(
                 'query',
@@ -180,18 +180,18 @@ export class MovieApi extends runtime.BaseAPI implements MovieApiInterface {
             }
         }
         const response = await this.request({
-            path: `/api/v1/movies/search`,
+            path: `/api/v1/shows/search`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(MovieFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ShowFromJSON));
     }
 
     /**
      */
-    async search(requestParameters: MovieApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Movie>> {
+    async search(requestParameters: ShowApiSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Show>> {
         const response = await this.searchRaw(requestParameters, initOverrides);
         return await response.value();
     }
