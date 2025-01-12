@@ -13,7 +13,7 @@ interface ReviewSummaryCardProps {
     review: Review;
     starCount: number;
     mediaTitle: string;
-    mediaDate?: string;
+    mediaDate?: Date;
     mediaPosterPath?: string;
     onPress: () => void;
     onOpenReview: () => void;
@@ -38,7 +38,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
         ? ratingToStars(review.rating, starCount)
         : undefined;
 
-    const releaseYear = mediaDate ? new Date(mediaDate).getFullYear() : null;
+    const releaseYear = null; // TODO: mediaDate?.getFullYear() ?? null;
 
     return (
         <Pressable onPress={onPress} style={styles.container}>

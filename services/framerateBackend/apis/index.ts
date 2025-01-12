@@ -6,6 +6,8 @@ export * from './movieCollectionApi';
 export * from './movieReviewApi';
 export * from './movieWatchlistApi';
 export * from './seasonApi';
+export * from './seasonReviewApi';
 export * from './showApi';
 export * from './showCollectionApi';
+export * from './showReviewApi';
 export * from './showWatchlistApi';

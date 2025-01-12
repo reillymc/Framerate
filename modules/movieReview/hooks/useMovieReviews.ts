@@ -4,7 +4,7 @@ import type {
     MovieReviewApiFindByMovieIdRequest,
 } from "@/services";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { ReviewKeys } from "./keys";
+import { MovieReviewKeys } from "./keys";
 
 export const useMovieReviews = (
     params:
@@ -14,7 +14,7 @@ export const useMovieReviews = (
     const { movieReviews } = useFramerateServices();
 
     return useInfiniteQuery({
-        queryKey: ReviewKeys.list(params),
+        queryKey: MovieReviewKeys.list(params),
         enabled: !!movieReviews,
         queryFn: ({ pageParam = 1 }) =>
             "movieId" in params

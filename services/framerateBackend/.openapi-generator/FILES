@@ -6,8 +6,10 @@ apis/movieCollectionApi.ts
 apis/movieReviewApi.ts
 apis/movieWatchlistApi.ts
 apis/seasonApi.ts
+apis/seasonReviewApi.ts
 apis/showApi.ts
 apis/showCollectionApi.ts
+apis/showReviewApi.ts
 apis/showWatchlistApi.ts
 index.ts
 models/authUser.ts
@@ -34,9 +36,12 @@ models/role.ts
 models/saveMovieCollectionEntryRequest.ts
 models/saveMovieReviewRequest.ts
 models/saveMovieWatchlistEntryRequest.ts
+models/saveSeasonReviewRequest.ts
 models/saveShowCollectionEntryRequest.ts
+models/saveShowReviewRequest.ts
 models/saveShowWatchlistEntryRequest.ts
 models/season.ts
+models/seasonReviewResponse.ts
 models/secret.ts
 models/show.ts
 models/showCast.ts
@@ -44,6 +49,7 @@ models/showCollection.ts
 models/showCredits.ts
 models/showCrew.ts
 models/showEntry.ts
+models/showReviewResponse.ts
 models/showWatchlist.ts
 models/showWatchlistEntry.ts
 models/updatedCollection.ts

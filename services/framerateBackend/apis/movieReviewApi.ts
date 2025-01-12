@@ -31,8 +31,8 @@ export interface MovieReviewApiCreateRequest {
 }
 
 export interface MovieReviewApiFindAllRequest {
-    orderBy?: FindAllOrderByEnum;
-    sort?: FindAllSortEnum;
+    orderBy?: string;
+    sort?: string;
     page?: number;
     pageSize?: number;
     ratingMin?: number;
@@ -78,8 +78,8 @@ export interface MovieReviewApiInterface {
 
     /**
      * 
-     * @param {'rating' | 'date' | 'mediaTitle' | 'mediaReleaseDate'} [orderBy] 
-     * @param {'asc' | 'desc'} [sort] 
+     * @param {string} [orderBy] 
+     * @param {string} [sort] 
      * @param {number} [page] 
      * @param {number} [pageSize] 
      * @param {number} [ratingMin] 
@@ -392,22 +392,3 @@ export class MovieReviewApi extends runtime.BaseAPI implements MovieReviewApiInt
     }
 
 }
-
-/**
- * @export
- */
-export const FindAllOrderByEnum = {
-    Rating: 'rating',
-    Date: 'date',
-    MediaTitle: 'mediaTitle',
-    MediaReleaseDate: 'mediaReleaseDate'
-} as const;
-export type FindAllOrderByEnum = typeof FindAllOrderByEnum[keyof typeof FindAllOrderByEnum];
-/**
- * @export
- */
-export const FindAllSortEnum = {
-    Asc: 'asc',
-    Desc: 'desc'
-} as const;
-export type FindAllSortEnum = typeof FindAllSortEnum[keyof typeof FindAllSortEnum];

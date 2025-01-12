@@ -1,21 +1,27 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type {
+    ShowReviewApiFindAllRequest,
+    ShowReviewApiFindByShowIdRequest,
+} from "@/services";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { type GetShowReviewsRequest, ShowReviewService } from "../services";
-import { ReviewKeys } from "./keys";
+import { ShowReviewKeys } from "./keys";
 
 export const useShowReviews = (
-    params?: Omit<GetShowReviewsRequest, "page">,
+    params:
+        | Omit<ShowReviewApiFindAllRequest, "page">
+        | Partial<ShowReviewApiFindByShowIdRequest> = {},
 ) => {
-    const { session } = useSession();
+    const { showReviews } = useFramerateServices();
 
     return useInfiniteQuery({
-        queryKey: ReviewKeys.list(params),
+        queryKey: ShowReviewKeys.list(params),
+        enabled: !!showReviews,
         queryFn: ({ pageParam = 1 }) =>
-            ShowReviewService.getShowReviews({
-                ...params,
-                page: pageParam,
-                session,
-            }),
+            "showId" in params
+                ? // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                  showReviews!.findByShowId({ showId: params.showId! })
+                : // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                  showReviews!.findAll({ ...params, page: pageParam }),
         initialPageParam: 1,
         getNextPageParam: (lastPage, _, lastPageParam) => {
             if (lastPage?.length === 0) return;

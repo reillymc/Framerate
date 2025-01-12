@@ -1,22 +1,20 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ShowReview } from "../models";
-import { ShowReviewService } from "../services";
-import { ReviewKeys } from "./keys";
+import { ShowReviewKeys } from "./keys";
 
 export const useShowReview = (reviewId: string | undefined) => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showReviews } = useFramerateServices();
 
     return useQuery({
-        queryKey: ReviewKeys.details(reviewId),
-        enabled: !!reviewId,
-        queryFn: () =>
-            // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
-            ShowReviewService.getShowReview({ reviewId: reviewId!, session }),
+        queryKey: ShowReviewKeys.details(reviewId),
+        enabled: !!showReviews && !!reviewId,
+        // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
+        queryFn: () => showReviews!.findByReviewId({ reviewId: reviewId! }),
         placeholderData: () =>
             queryClient
-                .getQueryData<ShowReview[]>(["reviews"])
-                ?.find((d) => d.reviewId === reviewId),
+                .getQueryData<ShowReview[]>(ShowReviewKeys.base)
+                ?.find((showReview) => showReview.reviewId === reviewId),
     });
 };

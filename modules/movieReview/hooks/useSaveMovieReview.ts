@@ -11,7 +11,7 @@ import type {
 } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MovieReview } from "../models";
-import { ReviewKeys } from "./keys";
+import { MovieReviewKeys } from "./keys";
 
 type MovieReviewSaveRequest = BuildSaveRequest<
     MovieReviewApiCreateRequest,
@@ -48,13 +48,13 @@ export const useSaveMovieReview = () => {
                   }),
         onSuccess: () =>
             queryClient.invalidateQueries({
-                queryKey: ReviewKeys.base,
+                queryKey: MovieReviewKeys.base,
             }),
         onMutate: ({ reviewId, movieId, ...params }) => {
             if (!reviewId) return;
             // Snapshot the previous value
             const previousEntry = queryClient.getQueryData<MovieReview>(
-                ReviewKeys.details(reviewId),
+                MovieReviewKeys.details(reviewId),
             );
 
             const movieDetails = queryClient.getQueryData<Movie>(
@@ -68,7 +68,7 @@ export const useSaveMovieReview = () => {
             if (movieDetails) {
                 // Optimistically update to the new value
                 queryClient.setQueryData<MovieReview>(
-                    ReviewKeys.details(reviewId),
+                    MovieReviewKeys.details(reviewId),
                     {
                         ...params,
                         reviewId,
@@ -96,7 +96,7 @@ export const useSaveMovieReview = () => {
             if (!(context && params.reviewId)) return;
 
             queryClient.setQueryData<MovieReview>(
-                ReviewKeys.details(params.reviewId),
+                MovieReviewKeys.details(params.reviewId),
                 context.previousEntry,
             );
         },
