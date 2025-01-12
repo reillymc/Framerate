@@ -1,25 +1,21 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ShowWatchlist } from "../models";
-import { ShowWatchlistService } from "../services";
 import { ShowWatchlistKeys } from "./keys";
 
 export const useShowWatchlistEntry = (showId: number | undefined) => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showWatchlist } = useFramerateServices();
 
     return useQuery({
         queryKey: ShowWatchlistKeys.entry(showId),
-        enabled: !!showId,
-        queryFn: () =>
-            ShowWatchlistService.getEntry({
-                // biome-ignore lint/style/noNonNullAssertion: showId is guaranteed to be defined by the enabled flag
-                showId: showId!,
-                session,
-            }),
+        enabled: !!showWatchlist && !!showId,
+        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+        queryFn: () => showWatchlist!.findEntry({ showId: showId! }),
         placeholderData: () =>
             queryClient
-                .getQueryData<ShowWatchlist>(["show", "watchlist"])
+                .getQueryData<ShowWatchlist>(ShowWatchlistKeys.base)
                 ?.entries?.find((d) => d.showId === showId),
+        retry: false,
     });
 };

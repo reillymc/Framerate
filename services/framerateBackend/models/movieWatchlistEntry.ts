@@ -61,12 +61,6 @@ export interface MovieWatchlistEntry {
      * @memberof MovieWatchlistEntry
      */
     updatedAt: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof MovieWatchlistEntry
-     */
-    userId: string;
 }
 
 /**
@@ -76,7 +70,6 @@ export function instanceOfMovieWatchlistEntry(value: object): value is MovieWatc
     if (!('movieId' in value) || value['movieId'] === undefined) return false;
     if (!('title' in value) || value['title'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
-    if (!('userId' in value) || value['userId'] === undefined) return false;
     return true;
 }
 
@@ -97,7 +90,6 @@ export function MovieWatchlistEntryFromJSONTyped(json: any, ignoreDiscriminator:
         'status': json['status'] == null ? undefined : json['status'],
         'title': json['title'],
         'updatedAt': (new Date(json['updatedAt'])),
-        'userId': json['userId'],
     };
 }
 
@@ -119,7 +111,6 @@ export function MovieWatchlistEntryToJSONTyped(value?: MovieWatchlistEntry | nul
         'status': value['status'],
         'title': value['title'],
         'updatedAt': ((value['updatedAt']).toISOString().substring(0,10)),
-        'userId': value['userId'],
     };
 }
 

@@ -1,8 +1,8 @@
 import { Fade, PosterCard } from "@/components";
+import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ActiveStatuses } from "@/modules/show";
-import type { ShowEntry } from "@/modules/showCollection";
 import {
     SwipeAction,
     SwipeView,
@@ -24,27 +24,28 @@ import {
 } from "react-native";
 import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
+import type { ShowWatchlistEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
 const ITEM_HEIGHT = 92;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 
-const buildGetItemLayout = getItemLayout<ShowEntry>({
+const buildGetItemLayout = getItemLayout<ShowWatchlistEntry>({
     getItemHeight: ITEM_HEIGHT,
     getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
     getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
 });
 
 interface SectionedShowEntryListProps {
-    entries: ShowEntry[];
+    entries: ShowWatchlistEntry[];
     onRefresh: () => void;
-    onPressEntry: (item: ShowEntry) => void;
+    onPressEntry: (item: ShowWatchlistEntry) => void;
     onDeleteEntry: (showId: number) => void;
     onAddReview: (showId: number) => void;
 }
 
-type ShowEntrySection = SectionListData<ShowEntry, { title?: string }>;
+type ShowEntrySection = SectionListData<ShowWatchlistEntry, { title?: string }>;
 
 export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     entries,
@@ -54,7 +55,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     onRefresh,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const listRef = useRef<SectionList<ShowEntry> | null>(null);
+    const listRef = useRef<SectionList<ShowWatchlistEntry> | null>(null);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
     const { theme } = useTheme();
@@ -103,7 +104,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                           <PosterCard
                               heading={item.name}
                               imageUri={item.posterPath}
-                              subHeading={item.nextAirDate}
+                              subHeading={displayFull(item.nextAirDate)}
                               onWatchlist
                               onToggleWatchlist={() =>
                                   onDeleteEntry(item.showId)
@@ -122,7 +123,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                           <PosterCard
                               heading={item.name}
                               imageUri={item.posterPath}
-                              subHeading={item.nextAirDate}
+                              subHeading={displayWithWeek(item.nextAirDate)}
                               onWatchlist
                               onToggleWatchlist={() =>
                                   onDeleteEntry(item.showId)

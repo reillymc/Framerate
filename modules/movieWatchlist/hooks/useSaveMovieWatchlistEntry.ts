@@ -1,5 +1,4 @@
 import { useFramerateServices } from "@/hooks";
-import { useSession } from "@/modules/auth";
 import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
 import type { MovieWatchlistApiCreateEntryRequest } from "@/services";
@@ -18,7 +17,6 @@ type MovieWatchlistEntrySaveRequest =
 export const useSaveMovieWatchlistEntry = () => {
     const queryClient = useQueryClient();
     const { movieWatchlist } = useFramerateServices();
-    const { userId = "" } = useSession();
 
     return useMutation<
         MovieWatchlistEntry | null,
@@ -56,7 +54,6 @@ export const useSaveMovieWatchlistEntry = () => {
             const newEntry = {
                 ...movieDetails,
                 movieId,
-                userId,
                 updatedAt: new Date(),
                 title: movieDetails?.title ?? "Loading...",
             } satisfies MovieWatchlistEntry;

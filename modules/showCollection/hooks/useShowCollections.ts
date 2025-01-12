@@ -1,13 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { ShowCollectionService } from "../services";
 import { ShowCollectionKeys } from "./keys";
 
 export const useShowCollections = () => {
-    const { session } = useSession();
+    const { showCollections } = useFramerateServices();
 
     return useQuery({
         queryKey: ShowCollectionKeys.base,
-        queryFn: () => ShowCollectionService.getShowCollections({ session }),
+        enabled: !!showCollections,
+        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+        queryFn: () => showCollections!.findAll(),
     });
 };

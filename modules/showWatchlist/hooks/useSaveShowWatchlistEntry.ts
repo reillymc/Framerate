@@ -1,30 +1,43 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import type { Show } from "@/modules/show";
 import { ShowKeys } from "@/modules/show/hooks/keys";
-import type { ShowEntry } from "@/modules/showCollection";
+import type { ShowWatchlistApiCreateEntryRequest } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { ShowWatchlist } from "../models";
-import { type SaveEntryRequest, ShowWatchlistService } from "../services";
+import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 import { ShowWatchlistKeys } from "./keys";
 
-type Context = { previousWatchlist?: ShowWatchlist; previousEntry?: ShowEntry };
+type Context = {
+    previousWatchlist?: ShowWatchlist;
+    previousEntry?: ShowWatchlistEntry;
+};
+
+type ShowWatchlistEntrySaveRequest =
+    ShowWatchlistApiCreateEntryRequest["saveShowWatchlistEntryRequest"];
 
 export const useSaveShowWatchlistEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showWatchlist } = useFramerateServices();
 
-    return useMutation<ShowEntry | null, unknown, SaveEntryRequest, Context>({
-        mutationFn: (params) =>
-            ShowWatchlistService.saveEntry({ session, ...params }),
+    return useMutation<
+        ShowWatchlistEntry | null,
+        unknown,
+        ShowWatchlistEntrySaveRequest,
+        Context
+    >({
+        mutationFn: (saveShowWatchlistEntryRequest) =>
+            // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+            showWatchlist!.createEntry({ saveShowWatchlistEntryRequest }),
         onSuccess: (_response) =>
-            queryClient.invalidateQueries({ queryKey: ShowWatchlistKeys.base }),
+            queryClient.invalidateQueries({
+                queryKey: ShowWatchlistKeys.base,
+            }),
         onMutate: ({ showId }) => {
             // Snapshot the previous value
             const previousWatchlist = queryClient.getQueryData<ShowWatchlist>(
                 ShowWatchlistKeys.base,
             );
 
-            const previousEntry = queryClient.getQueryData<ShowEntry>(
+            const previousEntry = queryClient.getQueryData<ShowWatchlistEntry>(
                 ShowWatchlistKeys.entry(showId),
             );
 
@@ -41,8 +54,9 @@ export const useSaveShowWatchlistEntry = () => {
             const newEntry = {
                 ...showDetails,
                 showId,
+                updatedAt: new Date(),
                 name: showDetails?.name ?? "Loading...",
-            } satisfies ShowEntry;
+            } satisfies ShowWatchlistEntry;
 
             // Optimistically update to the new value
             if (previousWatchlist) {
@@ -58,7 +72,7 @@ export const useSaveShowWatchlistEntry = () => {
                 );
             }
 
-            queryClient.setQueryData<ShowEntry>(
+            queryClient.setQueryData<ShowWatchlistEntry>(
                 ShowWatchlistKeys.entry(showId),
                 newEntry,
             );
@@ -75,7 +89,7 @@ export const useSaveShowWatchlistEntry = () => {
                 context.previousWatchlist,
             );
 
-            queryClient.setQueryData<ShowEntry>(
+            queryClient.setQueryData<ShowWatchlistEntry>(
                 ShowWatchlistKeys.entry(params.showId),
                 context.previousEntry,
             );

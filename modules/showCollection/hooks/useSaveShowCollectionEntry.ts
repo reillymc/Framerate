@@ -1,12 +1,10 @@
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import type { Show } from "@/modules/show";
 import { ShowKeys } from "@/modules/show/hooks/keys";
+import type { ShowCollectionApiCreateEntryRequest } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ShowCollection, ShowEntry } from "../models";
-import {
-    type SaveShowCollectionEntryRequest,
-    ShowCollectionService,
-} from "../services";
 import { ShowCollectionKeys } from "./keys";
 
 type Context = {
@@ -14,20 +12,28 @@ type Context = {
     previousShowCollections?: string[];
 };
 
+type ShowCollectionEntrySaveRequest = Pick<
+    ShowCollectionApiCreateEntryRequest,
+    "collectionId"
+> &
+    ShowCollectionApiCreateEntryRequest["saveShowCollectionEntryRequest"];
+
 export const useSaveShowCollectionEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showCollections } = useFramerateServices();
+    const { userId = "" } = useSession();
 
     return useMutation<
         ShowEntry | null,
         unknown,
-        SaveShowCollectionEntryRequest,
+        ShowCollectionEntrySaveRequest,
         Context
     >({
         mutationFn: (params) =>
-            ShowCollectionService.saveShowCollectionEntry({
-                session,
+            // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+            showCollections!.createEntry({
                 ...params,
+                saveShowCollectionEntryRequest: params,
             }),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
@@ -55,7 +61,10 @@ export const useSaveShowCollectionEntry = () => {
 
             const newEntry: ShowEntry = {
                 ...showDetails,
+                collectionId,
                 showId,
+                userId,
+                updatedAt: new Date(),
                 name: showDetails?.name ?? "Loading...",
             };
 

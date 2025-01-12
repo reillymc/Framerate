@@ -1,11 +1,10 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type {
+    DeleteResponse,
+    ShowCollectionApiDeleteEntryRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ShowCollection } from "../models";
-import {
-    type DeleteShowCollectionEntryRequest,
-    type DeleteShowCollectionEntryResponse,
-    ShowCollectionService,
-} from "../services";
 import { ShowCollectionKeys } from "./keys";
 
 type Context = {
@@ -15,19 +14,16 @@ type Context = {
 
 export const useDeleteShowCollectionEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showCollections } = useFramerateServices();
 
     return useMutation<
-        DeleteShowCollectionEntryResponse | null,
+        DeleteResponse | null,
         unknown,
-        DeleteShowCollectionEntryRequest,
+        ShowCollectionApiDeleteEntryRequest,
         Context
     >({
-        mutationFn: (params) =>
-            ShowCollectionService.deleteShowCollectionEntry({
-                session,
-                ...params,
-            }),
+        // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+        mutationFn: (params) => showCollections!.deleteEntry(params),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: ShowCollectionKeys.base,

@@ -1,10 +1,12 @@
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
+import type {
+    BuildSaveRequest,
+    ShowCollectionApiCreateRequest,
+    ShowCollectionApiUpdateRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ShowCollection } from "../models";
-import {
-    type SaveShowCollectionRequest,
-    ShowCollectionService,
-} from "../services";
 import { ShowCollectionKeys } from "./keys";
 
 type Context = {
@@ -12,18 +14,35 @@ type Context = {
     previousCollection?: ShowCollection;
 };
 
+type ShowCollectionSaveRequest = BuildSaveRequest<
+    ShowCollectionApiCreateRequest,
+    ShowCollectionApiUpdateRequest,
+    never,
+    "collectionId",
+    "newShowCollection",
+    "updatedCollection"
+>;
+
 export const useSaveShowCollection = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showCollections } = useFramerateServices();
+    const { userId = "" } = useSession();
 
     return useMutation<
         ShowCollection | null,
         unknown,
-        SaveShowCollectionRequest,
+        ShowCollectionSaveRequest,
         Context
     >({
-        mutationFn: (params) =>
-            ShowCollectionService.saveShowCollection({ session, ...params }),
+        mutationFn: ({ collectionId, ...collection }) =>
+            collectionId
+                ? // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  showCollections!.update({
+                      collectionId,
+                      updatedCollection: collection,
+                  })
+                : // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  showCollections!.create({ newShowCollection: collection }),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: ShowCollectionKeys.base,
@@ -68,11 +87,15 @@ export const useSaveShowCollection = () => {
                                   collection.collectionId ===
                                   params.collectionId
                               ) {
-                                  return { collectionId: "", ...params };
+                                  return {
+                                      collectionId: "",
+                                      userId,
+                                      ...params,
+                                  };
                               }
                               return collection;
                           })
-                        : [{ collectionId: "", ...params }],
+                        : [{ collectionId: "", userId, ...params }],
                 );
             }
 

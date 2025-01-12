@@ -1,13 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { ShowWatchlistService } from "../services";
 import { ShowWatchlistKeys } from "./keys";
 
 export const useShowWatchlist = () => {
-    const { session } = useSession();
+    const { showWatchlist } = useFramerateServices();
 
     return useQuery({
         queryKey: ShowWatchlistKeys.base,
-        queryFn: () => ShowWatchlistService.getWatchlist({ session }),
+        enabled: !!showWatchlist,
+        // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+        queryFn: () => showWatchlist!.find(),
     });
 };

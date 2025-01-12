@@ -12,6 +12,16 @@ export const displayFull = (date: Date | undefined) => {
     });
 };
 
+export const displayWithWeek = (date: Date | undefined) => {
+    if (!date) return undefined;
+    return date.toLocaleString("default", {
+        year: undefined,
+        month: "long",
+        weekday: "long",
+        day: "numeric",
+    });
+};
+
 export const displayFullNumeric = (date: Date | undefined) => {
     if (!date) return undefined;
     return date.toLocaleString("default", {

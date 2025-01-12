@@ -1,28 +1,29 @@
-import { useSession } from "@/modules/auth";
-import type { ShowEntry } from "@/modules/showCollection";
+import { useFramerateServices } from "@/hooks";
+import type {
+    DeleteResponse,
+    ShowWatchlistApiDeleteEntryRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { ShowWatchlist } from "../models";
-import {
-    type DeleteEntryRequest,
-    type DeleteEntryResponse,
-    ShowWatchlistService,
-} from "../services";
+import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 import { ShowWatchlistKeys } from "./keys";
 
-type Context = { previousWatchlist?: ShowWatchlist; previousEntry?: ShowEntry };
+type Context = {
+    previousWatchlist?: ShowWatchlist;
+    previousEntry?: ShowWatchlistEntry;
+};
 
 export const useDeleteShowWatchlistEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { showWatchlist } = useFramerateServices();
 
     return useMutation<
-        DeleteEntryResponse | null,
+        DeleteResponse | null,
         unknown,
-        DeleteEntryRequest,
+        ShowWatchlistApiDeleteEntryRequest,
         Context
     >({
-        mutationFn: (params) =>
-            ShowWatchlistService.deleteEntry({ session, ...params }),
+        // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+        mutationFn: (params) => showWatchlist!.deleteEntry(params),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: ShowWatchlistKeys.base,
@@ -33,7 +34,7 @@ export const useDeleteShowWatchlistEntry = () => {
                 ShowWatchlistKeys.base,
             );
 
-            const previousEntry = queryClient.getQueryData<ShowEntry>(
+            const previousEntry = queryClient.getQueryData<ShowWatchlistEntry>(
                 ShowWatchlistKeys.entry(showId),
             );
 
@@ -64,7 +65,7 @@ export const useDeleteShowWatchlistEntry = () => {
                 context.previousWatchlist,
             );
 
-            queryClient.setQueryData<ShowEntry>(
+            queryClient.setQueryData<ShowWatchlistEntry>(
                 ShowWatchlistKeys.entry(params.showId),
                 context.previousEntry,
             );

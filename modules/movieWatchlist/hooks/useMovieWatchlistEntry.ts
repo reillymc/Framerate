@@ -16,5 +16,6 @@ export const useMovieWatchlistEntry = (movieId: number | undefined) => {
             queryClient
                 .getQueryData<MovieWatchlist>(MovieWatchlistKeys.base)
                 ?.entries?.find((d) => d.movieId === movieId),
+        retry: false,
     });
 };
