@@ -1,4 +1,5 @@
 import { StarRatingDisplay } from "@/components";
+import { displayFull } from "@/helpers/dateHelper";
 import {
     Text,
     type ThemedStyles,
@@ -48,7 +49,7 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
                 {review.date && (
                     <>
                         <Text variant="body">on </Text>
-                        {review.date}
+                        {displayFull(review.date)}
                     </>
                 )}
                 {!!review.venue && (

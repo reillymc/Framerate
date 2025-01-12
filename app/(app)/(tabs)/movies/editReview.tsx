@@ -101,7 +101,7 @@ const EditReview: FC = () => {
         saveReview({
             ...review,
             reviewId,
-            date: includeDate ? date.toISOString().split("T")[0] : undefined,
+            date: includeDate ? date : undefined,
             movieId: movieIdValue,
             venue: venue?.trim() || undefined,
             rating: includeReview ? rating || undefined : undefined,

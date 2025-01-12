@@ -1,19 +1,17 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { MovieReview } from "../models";
-import { MovieReviewService } from "../services";
 import { ReviewKeys } from "./keys";
 
 export const useMovieReview = (reviewId: string | undefined) => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieReviews } = useFramerateServices();
 
     return useQuery({
         queryKey: ReviewKeys.details(reviewId),
-        enabled: !!reviewId,
-        queryFn: () =>
-            // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
-            MovieReviewService.getMovieReview({ reviewId: reviewId!, session }),
+        enabled: !!movieReviews && !!reviewId,
+        // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
+        queryFn: () => movieReviews!.findByReviewId({ reviewId: reviewId! }),
         placeholderData: () =>
             queryClient
                 .getQueryData<MovieReview[]>(["reviews"])

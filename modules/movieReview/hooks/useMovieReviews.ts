@@ -1,21 +1,27 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type {
+    MovieReviewApiFindAllRequest,
+    MovieReviewApiFindByMovieIdRequest,
+} from "@/services";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { type GetMovieReviewsRequest, MovieReviewService } from "../services";
 import { ReviewKeys } from "./keys";
 
 export const useMovieReviews = (
-    params?: Omit<GetMovieReviewsRequest, "page">,
+    params:
+        | Omit<MovieReviewApiFindAllRequest, "page">
+        | Partial<MovieReviewApiFindByMovieIdRequest> = {},
 ) => {
-    const { session } = useSession();
+    const { movieReviews } = useFramerateServices();
 
     return useInfiniteQuery({
         queryKey: ReviewKeys.list(params),
+        enabled: !!movieReviews,
         queryFn: ({ pageParam = 1 }) =>
-            MovieReviewService.getMovieReviews({
-                ...params,
-                page: pageParam,
-                session,
-            }),
+            "movieId" in params
+                ? // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                  movieReviews!.findByMovieId({ movieId: params.movieId! })
+                : // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                  movieReviews!.findAll({ ...params, page: pageParam }),
         initialPageParam: 1,
         getNextPageParam: (lastPage, _, lastPageParam) => {
             if (lastPage?.length === 0) return;

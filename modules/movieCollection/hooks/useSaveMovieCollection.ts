@@ -17,6 +17,7 @@ type Context = {
 type MovieCollectionSaveRequest = BuildSaveRequest<
     MovieCollectionApiCreateRequest,
     MovieCollectionApiUpdateRequest,
+    never,
     "collectionId",
     "newMovieCollection",
     "updatedCollection"

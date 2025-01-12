@@ -8,8 +8,9 @@ import {
     startOfMonth,
     subMonths,
 } from "date-fns";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useCallback, useMemo } from "react";
 import { type StyleProp, View, type ViewStyle } from "react-native";
+import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
@@ -79,12 +80,25 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
         [chartData],
     );
 
-    useEffect(() => {
-        if (!state.x.value.value) return;
+    const handlePressDate = useCallback(
+        (rawDate: number) => {
+            const date = addDays(new Date(rawDate), 1);
+            onPressDate?.(date);
+        },
+        [onPressDate],
+    );
 
-        const date = addDays(new Date(state.x.value.value), 1);
-        onPressDate?.(date);
-    }, [state.x.value.value, onPressDate]);
+    useAnimatedReaction(
+        () => {
+            return state.x.value.value;
+        },
+        (result) => {
+            if (result) {
+                runOnJS(handlePressDate)(result);
+            }
+        },
+        [],
+    );
 
     if (!(chartData.length && largestCount)) return null;
 

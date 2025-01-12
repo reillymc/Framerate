@@ -15,11 +15,11 @@ import {
     View,
 } from "react-native";
 import { getRatingLabel } from "../helpers";
-import { AbsoluteRatingScale, type Review } from "../models";
+import { AbsoluteRatingScale } from "../models";
 
 const TenStarOptions = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
-interface FilterableReviewListProps<T extends Review> {
+interface FilterableReviewListProps<T> {
     reviews: T[] | undefined;
     filters: {
         rating: number | undefined;
@@ -37,7 +37,7 @@ interface FilterableReviewListProps<T extends Review> {
     renderItem: ListRenderItem<T>;
 }
 
-export const FilterableReviewList = <T extends Review>({
+export const FilterableReviewList = <T extends { reviewId: string }>({
     reviews,
     filters: {
         company,

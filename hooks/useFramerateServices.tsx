@@ -12,6 +12,8 @@ import {
     type MovieApiInterface,
     MovieCollectionApi,
     type MovieCollectionApiInterface,
+    MovieReviewApi,
+    type MovieReviewApiInterface,
     MovieWatchlistApi,
     type MovieWatchlistApiInterface,
     SeasonApi,
@@ -21,6 +23,7 @@ import {
 } from "../services";
 type ServiceContextType = {
     movieCollections: MovieCollectionApiInterface;
+    movieReviews: MovieReviewApiInterface;
     movies: MovieApiInterface;
     movieWatchlist: MovieWatchlistApiInterface;
     seasons: SeasonApiInterface;
@@ -44,6 +47,7 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
 
         return {
             movieCollections: new MovieCollectionApi(serviceConfiguration),
+            movieReviews: new MovieReviewApi(serviceConfiguration),
             movies: new MovieApi(serviceConfiguration),
             movieWatchlist: new MovieWatchlistApi(serviceConfiguration),
             seasons: new SeasonApi(serviceConfiguration),
