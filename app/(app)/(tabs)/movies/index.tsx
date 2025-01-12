@@ -1,4 +1,4 @@
-import { PosterCard, SectionHeading } from "@/components";
+import { PosterCard, ScreenLayout, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import {
     usePopularMovies,
@@ -93,356 +93,351 @@ const Movies: FC = () => {
     );
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: "Movies",
-                    headerSearchBarOptions: {
-                        ref: searchRef,
-                        placeholder: "Search movies",
-                        hideWhenScrolling: false,
-                        barTintColor: theme.color.inputBackground,
-                        tintColor: theme.color.secondary,
-                        onChangeText: ({ nativeEvent }) =>
-                            setSearchValue(nativeEvent.text),
-                        onFocus: () => setIsSearching(true),
-                        onCancelButtonPress: () => setIsSearching(false),
-                        onSearchButtonPress: ({ nativeEvent }) =>
-                            addSearch({ searchValue: nativeEvent.text }),
-                    },
-                    headerRight: () => (
-                        <IconActionV2
-                            iconName="person"
-                            onPress={() =>
-                                router.push({ pathname: "/profile" })
-                            }
-                        />
-                    ),
-                }}
-            />
-            {isSearching && !!searchValue && (
-                <FlatList
-                    data={results}
-                    contentContainerStyle={styles.searchList}
-                    keyboardDismissMode="on-drag"
-                    renderItem={({ item }) => {
-                        const onWatchlist = watchlist?.entries?.some(
-                            ({ movieId }) => movieId === item.id,
-                        );
-
-                        return (
-                            <PosterCard
-                                heading={item.title}
-                                subHeading={
-                                    item.releaseDate
-                                        ? new Date(item.releaseDate)
-                                              .getFullYear()
-                                              .toString()
-                                        : "Unknown"
-                                }
-                                imageUri={item.posterPath}
-                                onWatchlist={onWatchlist}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: "/movies/movie",
-                                        params: {
-                                            id: item.id,
-                                            title: item.title,
-                                            posterPath: item.posterPath,
-                                        },
-                                    });
-                                    addSearch({ searchValue: item.title });
-                                }}
-                                onAddReview={() =>
-                                    router.push({
-                                        pathname: "/movies/editReview",
-                                        params: { movieId: item.id },
-                                    })
-                                }
-                                onToggleWatchlist={() =>
-                                    onWatchlist
-                                        ? deleteWatchlistEntry({
-                                              movieId: item.id,
-                                          })
-                                        : saveWatchlistEntry({
-                                              movieId: item.id,
-                                          })
+        <ScreenLayout
+            isSearching={isSearching}
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: "Movies",
+                        headerSearchBarOptions: {
+                            ref: searchRef,
+                            placeholder: "Search movies",
+                            hideWhenScrolling: false,
+                            barTintColor: theme.color.inputBackground,
+                            tintColor: theme.color.secondary,
+                            onChangeText: ({ nativeEvent }) =>
+                                setSearchValue(nativeEvent.text),
+                            onFocus: () => setIsSearching(true),
+                            onCancelButtonPress: () => setIsSearching(false),
+                            onSearchButtonPress: ({ nativeEvent }) =>
+                                addSearch({ searchValue: nativeEvent.text }),
+                        },
+                        headerRight: () => (
+                            <IconActionV2
+                                iconName="person"
+                                onPress={() =>
+                                    router.push({ pathname: "/profile" })
                                 }
                             />
-                        );
+                        ),
                     }}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentInsetAdjustmentBehavior="always"
-                    keyboardShouldPersistTaps="handled"
                 />
-            )}
-            {isSearching && !searchValue && (
-                <FlatList
-                    data={recentSearches}
-                    contentContainerStyle={styles.searchList}
-                    keyboardDismissMode="on-drag"
-                    renderItem={({ item, index }) => (
-                        <SwipeView
-                            rightActions={[
-                                <SwipeAction
-                                    key="delete"
-                                    variant="destructive"
-                                    iconName="close"
-                                    onPress={() => deleteSearch(index)}
-                                />,
-                            ]}
-                        >
-                            <Pressable
-                                onPress={() => {
-                                    searchRef.current?.setText(
-                                        item.searchValue,
-                                    );
-                                    setSearchValue(item.searchValue);
-                                    addSearch(item);
-                                }}
-                                style={[
-                                    styles.searchSuggestion,
-                                    index === recentSearches.length - 1 && {
-                                        borderBottomWidth: 0,
-                                    },
+            }
+            search={
+                searchValue ? (
+                    <FlatList
+                        data={results}
+                        contentContainerStyle={styles.searchList}
+                        keyboardDismissMode="on-drag"
+                        renderItem={({ item }) => {
+                            const onWatchlist = watchlist?.entries?.some(
+                                ({ movieId }) => movieId === item.id,
+                            );
+
+                            return (
+                                <PosterCard
+                                    heading={item.title}
+                                    subHeading={
+                                        item.releaseDate
+                                            ? new Date(item.releaseDate)
+                                                  .getFullYear()
+                                                  .toString()
+                                            : "Unknown"
+                                    }
+                                    imageUri={item.posterPath}
+                                    onWatchlist={onWatchlist}
+                                    onPress={() => {
+                                        router.push({
+                                            pathname: "/movies/movie",
+                                            params: {
+                                                id: item.id,
+                                                title: item.title,
+                                                posterPath: item.posterPath,
+                                            },
+                                        });
+                                        addSearch({
+                                            searchValue: item.title,
+                                        });
+                                    }}
+                                    onAddReview={() =>
+                                        router.push({
+                                            pathname: "/movies/editReview",
+                                            params: { movieId: item.id },
+                                        })
+                                    }
+                                    onToggleWatchlist={() =>
+                                        onWatchlist
+                                            ? deleteWatchlistEntry({
+                                                  movieId: item.id,
+                                              })
+                                            : saveWatchlistEntry({
+                                                  movieId: item.id,
+                                              })
+                                    }
+                                />
+                            );
+                        }}
+                        keyExtractor={(item) => item.id.toString()}
+                        contentInsetAdjustmentBehavior="always"
+                        keyboardShouldPersistTaps="handled"
+                    />
+                ) : (
+                    <FlatList
+                        data={recentSearches}
+                        contentContainerStyle={styles.searchList}
+                        keyboardDismissMode="on-drag"
+                        renderItem={({ item, index }) => (
+                            <SwipeView
+                                rightActions={[
+                                    <SwipeAction
+                                        key="delete"
+                                        variant="destructive"
+                                        iconName="close"
+                                        onPress={() => deleteSearch(index)}
+                                    />,
                                 ]}
                             >
-                                <Text>{item.searchValue}</Text>
-                            </Pressable>
-                        </SwipeView>
-                    )}
-                    keyExtractor={(item) => item.searchValue}
-                    contentInsetAdjustmentBehavior="always"
-                    keyboardShouldPersistTaps="handled"
-                />
-            )}
-            {!isSearching && (
-                <FlatList
-                    contentInsetAdjustmentBehavior="automatic"
-                    ListHeaderComponent={
-                        <>
-                            <SectionHeading
-                                title="Watchlist"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/movies/watchlist",
-                                    })
-                                }
-                            />
-                            <View style={styles.watchlistSectionContainer}>
-                                <Animated.View
-                                    entering={ZoomInLeft.springify().mass(0.55)}
-                                    exiting={ZoomOutLeft.springify().mass(0.55)}
-                                    layout={LinearTransition}
-                                    style={styles.watchlistSectionItem}
+                                <Pressable
+                                    onPress={() => {
+                                        searchRef.current?.setText(
+                                            item.searchValue,
+                                        );
+                                        setSearchValue(item.searchValue);
+                                        addSearch(item);
+                                    }}
+                                    style={[
+                                        styles.searchSuggestion,
+                                        index === recentSearches.length - 1 && {
+                                            borderBottomWidth: 0,
+                                        },
+                                    ]}
                                 >
-                                    <MovieEntriesSummary
-                                        watchlistEntries={
-                                            watchlist?.entries ?? []
-                                        }
-                                        onPressEntry={(item) =>
+                                    <Text>{item.searchValue}</Text>
+                                </Pressable>
+                            </SwipeView>
+                        )}
+                        keyExtractor={(item) => item.searchValue}
+                        contentInsetAdjustmentBehavior="always"
+                        keyboardShouldPersistTaps="handled"
+                    />
+                )
+            }
+        >
+            <FlatList
+                contentInsetAdjustmentBehavior="automatic"
+                ListHeaderComponent={
+                    <>
+                        <SectionHeading
+                            title="Watchlist"
+                            style={styles.pageElement}
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: "/movies/watchlist",
+                                })
+                            }
+                        />
+                        <View style={styles.watchlistSectionContainer}>
+                            <Animated.View
+                                entering={ZoomInLeft.springify().mass(0.55)}
+                                exiting={ZoomOutLeft.springify().mass(0.55)}
+                                layout={LinearTransition}
+                                style={styles.watchlistSectionItem}
+                            >
+                                <MovieEntriesSummary
+                                    watchlistEntries={watchlist?.entries ?? []}
+                                    onPressEntry={(item) =>
+                                        router.push({
+                                            pathname: "/movies/movie",
+                                            params: {
+                                                id: item.movieId,
+                                                title: item.title,
+                                                posterPath: item.posterPath,
+                                            },
+                                        })
+                                    }
+                                    onPress={handlePressDate}
+                                    onAddReview={({ movieId }) =>
+                                        router.push({
+                                            pathname: "/movies/editReview",
+                                            params: { movieId },
+                                        })
+                                    }
+                                    onRemoveFromWatchlist={({ movieId }) =>
+                                        deleteWatchlistEntry({ movieId })
+                                    }
+                                />
+                            </Animated.View>
+                            <MovieEntriesChart
+                                style={[
+                                    styles.watchlistSectionItem,
+                                    styles.watchlistChart,
+                                ]}
+                                entries={watchlist?.entries ?? []}
+                                onPressDate={handlePressDate}
+                            />
+                        </View>
+                        <SectionHeading
+                            title="Popular"
+                            style={styles.pageElement}
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: "/movies/browse",
+                                })
+                            }
+                        />
+                        <FlatList
+                            data={filteredPopularMovies}
+                            horizontal
+                            contentContainerStyle={[
+                                styles.pageElement,
+                                styles.moviesList,
+                            ]}
+                            snapToAlignment="start"
+                            showsHorizontalScrollIndicator={false}
+                            decelerationRate="fast"
+                            snapToInterval={posterWidth + posterGap}
+                            renderItem={({ item }) => {
+                                const onWatchlist = watchlist?.entries?.some(
+                                    ({ movieId }) => movieId === item.id,
+                                );
+
+                                return (
+                                    <Poster
+                                        key={item.id}
+                                        heading={item.title}
+                                        imageUri={item.posterPath}
+                                        size="large"
+                                        onWatchlist={onWatchlist}
+                                        onPress={() =>
                                             router.push({
                                                 pathname: "/movies/movie",
                                                 params: {
-                                                    id: item.movieId,
+                                                    id: item.id,
                                                     title: item.title,
                                                     posterPath: item.posterPath,
                                                 },
                                             })
                                         }
-                                        onPress={handlePressDate}
-                                        onAddReview={({ movieId }) =>
+                                        onAddReview={() =>
                                             router.push({
                                                 pathname: "/movies/editReview",
-                                                params: { movieId },
+                                                params: {
+                                                    movieId: item.id,
+                                                },
                                             })
                                         }
-                                        onRemoveFromWatchlist={({ movieId }) =>
-                                            deleteWatchlistEntry({ movieId })
+                                        onToggleWatchlist={() =>
+                                            onWatchlist
+                                                ? deleteWatchlistEntry({
+                                                      movieId: item.id,
+                                                  })
+                                                : saveWatchlistEntry({
+                                                      movieId: item.id,
+                                                  })
                                         }
                                     />
-                                </Animated.View>
-                                <MovieEntriesChart
-                                    style={[
-                                        styles.watchlistSectionItem,
-                                        styles.watchlistChart,
-                                    ]}
-                                    entries={watchlist?.entries ?? []}
-                                    onPressDate={handlePressDate}
-                                />
-                            </View>
-                            <SectionHeading
-                                title="Popular"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/movies/browse",
-                                    })
-                                }
-                            />
-                            <FlatList
-                                data={filteredPopularMovies}
-                                horizontal
-                                contentContainerStyle={[
-                                    styles.pageElement,
-                                    styles.moviesList,
-                                ]}
-                                snapToAlignment="start"
-                                showsHorizontalScrollIndicator={false}
-                                decelerationRate="fast"
-                                snapToInterval={posterWidth + posterGap}
-                                renderItem={({ item }) => {
-                                    const onWatchlist =
-                                        watchlist?.entries?.some(
-                                            ({ movieId }) =>
-                                                movieId === item.id,
-                                        );
-
-                                    return (
-                                        <Poster
-                                            key={item.id}
-                                            heading={item.title}
-                                            imageUri={item.posterPath}
-                                            size="large"
-                                            onWatchlist={onWatchlist}
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname: "/movies/movie",
-                                                    params: {
-                                                        id: item.id,
-                                                        title: item.title,
-                                                        posterPath:
-                                                            item.posterPath,
-                                                    },
-                                                })
-                                            }
-                                            onAddReview={() =>
-                                                router.push({
-                                                    pathname:
-                                                        "/movies/editReview",
-                                                    params: {
-                                                        movieId: item.id,
-                                                    },
-                                                })
-                                            }
-                                            onToggleWatchlist={() =>
-                                                onWatchlist
-                                                    ? deleteWatchlistEntry({
-                                                          movieId: item.id,
-                                                      })
-                                                    : saveWatchlistEntry({
-                                                          movieId: item.id,
-                                                      })
-                                            }
-                                        />
-                                    );
-                                }}
-                            />
-                            <SectionHeading
-                                title="My Collections"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/movies/collections",
-                                    })
-                                }
-                            />
-                            <ScrollView
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={styles.collectionsList}
-                            >
-                                {collections?.map(({ collectionId, name }) => (
-                                    <Pressable
-                                        key={collectionId}
-                                        onPress={() =>
-                                            router.navigate({
-                                                pathname: "/movies/collection",
-                                                params: { collectionId },
-                                            })
-                                        }
-                                    >
-                                        <Tag label={name} variant="light" />
-                                    </Pressable>
-                                ))}
-                            </ScrollView>
-                            <SectionHeading
-                                title="My Watches"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/movies/reviews",
-                                    })
-                                }
-                            />
-                        </>
-                    }
-                    data={reviewList}
-                    CellRendererComponent={({
-                        children,
-                        cellKey,
-                        onLayout,
-                    }) => (
-                        <View
-                            key={cellKey}
-                            onLayout={onLayout}
+                                );
+                            }}
+                        />
+                        <SectionHeading
+                            title="My Collections"
                             style={styles.pageElement}
-                        >
-                            {children}
-                        </View>
-                    )}
-                    renderItem={({ item }) => (
-                        <ReviewSummaryCard
-                            key={item.reviewId}
-                            review={item}
-                            mediaTitle={item.movie.title}
-                            mediaDate={item.movie.releaseDate}
-                            mediaPosterPath={item.movie.posterPath}
-                            starCount={configuration.ratings.starCount}
                             onPress={() =>
-                                router.push({
-                                    pathname: "/movies/movie",
-                                    params: {
-                                        id: item.movie.id,
-                                        title: item.movie.title,
-                                        posterPath: item.movie.posterPath,
-                                    },
-                                })
-                            }
-                            onOpenReview={() =>
-                                router.push({
-                                    pathname: "/movies/review",
-                                    params: { reviewId: item.reviewId },
+                                router.navigate({
+                                    pathname: "/movies/collections",
                                 })
                             }
                         />
-                    )}
-                    ListEmptyComponent={
-                        <Text style={styles.reviewsEmptyMessage}>
-                            Nothing here yet. To log a watch or save a review,
-                            search or pick a movie then 'Add Watch'
-                        </Text>
-                    }
-                    ListFooterComponent={
-                        reviewList.length ? (
-                            <IconAction
-                                containerStyle={styles.reviewFooter}
-                                iconName="right"
-                                labelPosition="left"
-                                size="small"
-                                label="All"
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/movies/reviews",
-                                    })
-                                }
-                            />
-                        ) : null
-                    }
-                />
-            )}
-        </>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.collectionsList}
+                        >
+                            {collections?.map(({ collectionId, name }) => (
+                                <Pressable
+                                    key={collectionId}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/movies/collection",
+                                            params: { collectionId },
+                                        })
+                                    }
+                                >
+                                    <Tag label={name} variant="light" />
+                                </Pressable>
+                            ))}
+                        </ScrollView>
+                        <SectionHeading
+                            title="My Watches"
+                            style={styles.pageElement}
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: "/movies/reviews",
+                                })
+                            }
+                        />
+                    </>
+                }
+                data={reviewList}
+                CellRendererComponent={({ children, cellKey, onLayout }) => (
+                    <View
+                        key={cellKey}
+                        onLayout={onLayout}
+                        style={styles.pageElement}
+                    >
+                        {children}
+                    </View>
+                )}
+                renderItem={({ item }) => (
+                    <ReviewSummaryCard
+                        key={item.reviewId}
+                        review={item}
+                        mediaTitle={item.movie.title}
+                        mediaDate={item.movie.releaseDate}
+                        mediaPosterPath={item.movie.posterPath}
+                        starCount={configuration.ratings.starCount}
+                        onPress={() =>
+                            router.push({
+                                pathname: "/movies/movie",
+                                params: {
+                                    id: item.movie.id,
+                                    title: item.movie.title,
+                                    posterPath: item.movie.posterPath,
+                                },
+                            })
+                        }
+                        onOpenReview={() =>
+                            router.push({
+                                pathname: "/movies/review",
+                                params: { reviewId: item.reviewId },
+                            })
+                        }
+                    />
+                )}
+                ListEmptyComponent={
+                    <Text style={styles.reviewsEmptyMessage}>
+                        Nothing here yet. To log a watch or save a review,
+                        search or pick a movie then 'Add Watch'
+                    </Text>
+                }
+                ListFooterComponent={
+                    reviewList.length ? (
+                        <IconAction
+                            containerStyle={styles.reviewFooter}
+                            iconName="right"
+                            labelPosition="left"
+                            size="small"
+                            label="All"
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: "/movies/reviews",
+                                })
+                            }
+                        />
+                    ) : null
+                }
+            />
+        </ScreenLayout>
     );
 };
 

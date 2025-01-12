@@ -5,9 +5,11 @@ interface ScreenLayoutProps {
     isLoading?: boolean;
     isErrored?: boolean;
     isEmpty?: boolean;
+    isSearching?: boolean;
     loading?: ReactNode;
     errored?: ReactNode;
     empty?: ReactNode;
+    search?: ReactNode;
     children: ReactNode;
 }
 
@@ -16,10 +18,12 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     empty,
     errored,
     loading,
+    search,
     children,
     isEmpty,
     isErrored,
     isLoading,
+    isSearching,
 }) => {
     if (isLoading) {
         return (
@@ -44,6 +48,15 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
             <>
                 {meta}
                 {empty}
+            </>
+        );
+    }
+
+    if (isSearching) {
+        return (
+            <>
+                {meta}
+                {search}
             </>
         );
     }
