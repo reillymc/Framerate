@@ -1,14 +1,14 @@
 import { useStorageState } from "@/hooks/useStorageState";
+import { type AuthUser, AuthenticationApi, Configuration } from "@/services";
 import {
     type FC,
     type PropsWithChildren,
     createContext,
     useContext,
 } from "react";
-import { AuthService, type LoginRequest } from "./services";
 
 const SessionContext = createContext<{
-    signIn: (credentials: LoginRequest) => void;
+    signIn: (credentials: AuthUser) => void;
     signOut: () => void;
     session: string | null;
     userId: string | undefined;
@@ -21,6 +21,12 @@ const SessionContext = createContext<{
     isLoading: false,
 });
 
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
+const authenticationService = new AuthenticationApi(
+    new Configuration({ basePath: BASE_URL }),
+);
+
 // This hook can be used to access the user info.
 export const useSession = () => useContext(SessionContext);
 
@@ -32,15 +38,15 @@ export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <SessionContext.Provider
             value={{
-                signIn: (credentials: LoginRequest) =>
-                    AuthService.login({ ...credentials, session: null }).then(
-                        (response) => {
+                signIn: (authUser: AuthUser) =>
+                    authenticationService
+                        .login({ authUser })
+                        .then((response) => {
                             if (!response) return;
 
                             setSession(response.token);
                             setUserId(response.userId);
-                        },
-                    ),
+                        }),
                 signOut: () => {
                     setSession(null);
                     setUserId(null);

@@ -295,7 +295,7 @@ const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingTagline: {
-            left: padding.pageHorizontal + 125,
+            left: padding.pageHorizontal + 140,
             top: -10,
             width: "60%",
             height: 70,

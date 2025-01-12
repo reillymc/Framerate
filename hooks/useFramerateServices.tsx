@@ -10,18 +10,18 @@ import {
     Configuration,
     MovieApi,
     type MovieApiInterface,
+    SeasonApi,
+    type SeasonApiInterface,
     ShowApi,
     type ShowApiInterface,
 } from "../services";
 type ServiceContextType = {
-    movies: MovieApiInterface | undefined;
-    shows: ShowApiInterface | undefined;
+    movies: MovieApiInterface;
+    seasons: SeasonApiInterface;
+    shows: ShowApiInterface;
 };
 
-const ServiceContext = createContext<ServiceContextType>({
-    movies: undefined,
-    shows: undefined,
-});
+const ServiceContext = createContext<Partial<ServiceContextType>>({});
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
@@ -38,8 +38,9 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
 
         const movies = new MovieApi(serviceConfiguration);
         const shows = new ShowApi(serviceConfiguration);
+        const seasons = new SeasonApi(serviceConfiguration);
 
-        return { movies, shows };
+        return { movies, shows, seasons };
     }, [session]);
 
     return (
