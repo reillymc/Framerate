@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useEffect } from "react";
+import type { FC, ReactNode } from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import Animated, {
     Easing,
@@ -32,9 +32,6 @@ export const Accordion: FC<AccordionProps> = ({
     const bodyStyle = useAnimatedStyle(() => ({
         height: derivedHeight.value,
     }));
-    useEffect(() => {
-        console.log(collapsed);
-    }, [collapsed]);
 
     return (
         <Animated.View style={[bodyStyle, styles.animatedView, style]}>

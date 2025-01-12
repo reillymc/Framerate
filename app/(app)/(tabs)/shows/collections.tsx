@@ -25,7 +25,6 @@ const Collections: FC = () => {
             [
                 {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
                     style: "cancel",
                 },
                 {

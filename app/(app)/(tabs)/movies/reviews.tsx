@@ -26,7 +26,6 @@ const Reviews: FC = () => {
     const router = useRouter();
 
     const { userId } = useSession();
-    console.log(userId);
 
     const { configuration } = useCurrentUserConfig();
 

@@ -9,11 +9,11 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { Poster, usePosterDimensions } from "@/components";
-import type { MovieEntry } from "@/modules/movieCollection";
 import type { FC } from "react";
+import type { MovieWatchlistEntry } from "../models";
 
 export interface MovieEntryStackedPosterProps
-    extends Pick<MovieEntry, "posterPath"> {
+    extends Pick<MovieWatchlistEntry, "posterPath"> {
     index?: number;
     scrollValue?: SharedValue<number>;
     onPress?: () => void;

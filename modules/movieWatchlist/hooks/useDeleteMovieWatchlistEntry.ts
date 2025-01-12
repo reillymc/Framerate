@@ -1,31 +1,29 @@
-import { useSession } from "@/modules/auth";
-import type { MovieEntry } from "@/modules/movieCollection";
+import { useFramerateServices } from "@/hooks";
+import type {
+    DeleteResponse,
+    MovieWatchlistApiDeleteEntryRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MovieWatchlist } from "../models";
-import {
-    type DeleteEntryRequest,
-    type DeleteEntryResponse,
-    MovieWatchlistService,
-} from "../services";
+import type { MovieWatchlist, MovieWatchlistEntry } from "../models";
 import { MovieWatchlistKeys } from "./keys";
 
 type Context = {
     previousWatchlist?: MovieWatchlist;
-    previousEntry?: MovieEntry;
+    previousEntry?: MovieWatchlistEntry;
 };
 
 export const useDeleteMovieWatchlistEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieWatchlist } = useFramerateServices();
 
     return useMutation<
-        DeleteEntryResponse | null,
+        DeleteResponse | null,
         unknown,
-        DeleteEntryRequest,
+        MovieWatchlistApiDeleteEntryRequest,
         Context
     >({
-        mutationFn: (params) =>
-            MovieWatchlistService.deleteEntry({ session, ...params }),
+        // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+        mutationFn: (params) => movieWatchlist!.deleteEntry(params),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: MovieWatchlistKeys.base,
@@ -36,7 +34,7 @@ export const useDeleteMovieWatchlistEntry = () => {
                 MovieWatchlistKeys.base,
             );
 
-            const previousEntry = queryClient.getQueryData<MovieEntry>(
+            const previousEntry = queryClient.getQueryData<MovieWatchlistEntry>(
                 MovieWatchlistKeys.entry(movieId),
             );
 
@@ -67,7 +65,7 @@ export const useDeleteMovieWatchlistEntry = () => {
                 context.previousWatchlist,
             );
 
-            queryClient.setQueryData<MovieEntry>(
+            queryClient.setQueryData<MovieWatchlistEntry>(
                 MovieWatchlistKeys.entry(params.movieId),
                 context.previousEntry,
             );

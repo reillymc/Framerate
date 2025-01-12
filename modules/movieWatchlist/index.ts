@@ -4,7 +4,6 @@
  * Depends on:
  * - Auth
  * - Movie
- * - MovieCollection
  */
 
 export {

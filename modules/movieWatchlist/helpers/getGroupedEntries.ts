@@ -1,15 +1,15 @@
-import type { MovieEntry } from "@/modules/movieCollection";
 import { addYears, lastDayOfMonth, startOfMonth, subMonths } from "date-fns";
 import { MovieEntryConstants } from "../constants";
+import type { MovieWatchlistEntry } from "../models";
 
 type GroupedWatchlistEntries = {
     monthTitle?: string;
     yearTitle?: string;
-    data: MovieEntry[];
+    data: MovieWatchlistEntry[];
     date: Date;
 };
 
-export const getGroupedEntries = (entries: MovieEntry[]) => {
+export const getGroupedEntries = (entries: MovieWatchlistEntry[]) => {
     const now = new Date();
 
     const sections = Object.values(

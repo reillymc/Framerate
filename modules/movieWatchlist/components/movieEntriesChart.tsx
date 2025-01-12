@@ -1,5 +1,4 @@
 import { FontResources } from "@/assets/fonts";
-import type { MovieEntry } from "@/modules/movieCollection";
 import { useTheme } from "@reillymc/react-native-components";
 import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
 import {
@@ -13,6 +12,7 @@ import { type FC, useEffect, useMemo } from "react";
 import { type StyleProp, View, type ViewStyle } from "react-native";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
 import { MovieEntryConstants } from "../constants";
+import type { MovieWatchlistEntry } from "../models";
 
 const totalMonthCount =
     MovieEntryConstants.monthsBack + MovieEntryConstants.monthsAhead + 1;
@@ -23,7 +23,7 @@ interface ChartData extends Record<string, unknown> {
 }
 
 interface MovieEntriesChartProps {
-    entries: Array<MovieEntry>;
+    entries: Array<MovieWatchlistEntry>;
     style?: StyleProp<ViewStyle>;
     onPressDate?: (date: Date) => void;
 }

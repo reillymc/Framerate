@@ -1,12 +1,10 @@
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
+import type { MovieCollectionApiCreateEntryRequest } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MovieCollection, MovieEntry } from "../models";
-import {
-    MovieCollectionService,
-    type SaveMovieCollectionEntryRequest,
-} from "../services";
 import { MovieCollectionKeys } from "./keys";
 
 type Context = {
@@ -14,20 +12,28 @@ type Context = {
     previousMovieCollections?: string[];
 };
 
+type MovieCollectionEntrySaveRequest = Pick<
+    MovieCollectionApiCreateEntryRequest,
+    "collectionId"
+> &
+    MovieCollectionApiCreateEntryRequest["saveMovieCollectionEntryRequest"];
+
 export const useSaveMovieCollectionEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieCollections } = useFramerateServices();
+    const { userId = "" } = useSession();
 
     return useMutation<
         MovieEntry | null,
         unknown,
-        SaveMovieCollectionEntryRequest,
+        MovieCollectionEntrySaveRequest,
         Context
     >({
         mutationFn: (params) =>
-            MovieCollectionService.saveMovieCollectionEntry({
-                session,
+            // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+            movieCollections!.createEntry({
                 ...params,
+                saveMovieCollectionEntryRequest: params,
             }),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
@@ -56,7 +62,10 @@ export const useSaveMovieCollectionEntry = () => {
 
             const newEntry: MovieEntry = {
                 ...movieDetails,
+                collectionId,
                 movieId,
+                userId,
+                updatedAt: new Date(),
                 title: movieDetails?.title ?? "Loading...",
             };
 

@@ -10,13 +10,19 @@ import {
     Configuration,
     MovieApi,
     type MovieApiInterface,
+    MovieCollectionApi,
+    type MovieCollectionApiInterface,
+    MovieWatchlistApi,
+    type MovieWatchlistApiInterface,
     SeasonApi,
     type SeasonApiInterface,
     ShowApi,
     type ShowApiInterface,
 } from "../services";
 type ServiceContextType = {
+    movieCollections: MovieCollectionApiInterface;
     movies: MovieApiInterface;
+    movieWatchlist: MovieWatchlistApiInterface;
     seasons: SeasonApiInterface;
     shows: ShowApiInterface;
 };
@@ -36,11 +42,13 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
             basePath: BASE_URL,
         });
 
-        const movies = new MovieApi(serviceConfiguration);
-        const shows = new ShowApi(serviceConfiguration);
-        const seasons = new SeasonApi(serviceConfiguration);
-
-        return { movies, shows, seasons };
+        return {
+            movieCollections: new MovieCollectionApi(serviceConfiguration),
+            movies: new MovieApi(serviceConfiguration),
+            movieWatchlist: new MovieWatchlistApi(serviceConfiguration),
+            seasons: new SeasonApi(serviceConfiguration),
+            shows: new ShowApi(serviceConfiguration),
+        };
     }, [session]);
 
     return (

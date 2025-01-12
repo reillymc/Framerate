@@ -1,11 +1,10 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type {
+    DeleteResponse,
+    MovieCollectionApiDeleteEntryRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MovieCollection } from "../models";
-import {
-    type DeleteMovieCollectionEntryRequest,
-    type DeleteMovieCollectionEntryResponse,
-    MovieCollectionService,
-} from "../services";
 import { MovieCollectionKeys } from "./keys";
 
 type Context = {
@@ -15,19 +14,16 @@ type Context = {
 
 export const useDeleteMovieCollectionEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieCollections } = useFramerateServices();
 
     return useMutation<
-        DeleteMovieCollectionEntryResponse | null,
+        DeleteResponse | null,
         unknown,
-        DeleteMovieCollectionEntryRequest,
+        MovieCollectionApiDeleteEntryRequest,
         Context
     >({
-        mutationFn: (params) =>
-            MovieCollectionService.deleteMovieCollectionEntry({
-                session,
-                ...params,
-            }),
+        // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+        mutationFn: (params) => movieCollections!.deleteEntry(params),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: MovieCollectionKeys.base,

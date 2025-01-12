@@ -1,24 +1,34 @@
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
-import type { MovieEntry } from "@/modules/movieCollection";
+import type { MovieWatchlistApiCreateEntryRequest } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MovieWatchlist } from "../models";
-import { MovieWatchlistService, type SaveEntryRequest } from "../services";
+import type { MovieWatchlist, MovieWatchlistEntry } from "../models";
 import { MovieWatchlistKeys } from "./keys";
 
 type Context = {
     previousWatchlist?: MovieWatchlist;
-    previousEntry?: MovieEntry;
+    previousEntry?: MovieWatchlistEntry;
 };
+
+type MovieWatchlistEntrySaveRequest =
+    MovieWatchlistApiCreateEntryRequest["saveMovieWatchlistEntryRequest"];
 
 export const useSaveMovieWatchlistEntry = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieWatchlist } = useFramerateServices();
+    const { userId = "" } = useSession();
 
-    return useMutation<MovieEntry | null, unknown, SaveEntryRequest, Context>({
-        mutationFn: (params) =>
-            MovieWatchlistService.saveEntry({ session, ...params }),
+    return useMutation<
+        MovieWatchlistEntry | null,
+        unknown,
+        MovieWatchlistEntrySaveRequest,
+        Context
+    >({
+        mutationFn: (saveMovieWatchlistEntryRequest) =>
+            // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+            movieWatchlist!.createEntry({ saveMovieWatchlistEntryRequest }),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: MovieWatchlistKeys.base,
@@ -29,7 +39,7 @@ export const useSaveMovieWatchlistEntry = () => {
                 MovieWatchlistKeys.base,
             );
 
-            const previousEntry = queryClient.getQueryData<MovieEntry>(
+            const previousEntry = queryClient.getQueryData<MovieWatchlistEntry>(
                 MovieWatchlistKeys.entry(movieId),
             );
 
@@ -46,8 +56,10 @@ export const useSaveMovieWatchlistEntry = () => {
             const newEntry = {
                 ...movieDetails,
                 movieId,
+                userId,
+                updatedAt: new Date(),
                 title: movieDetails?.title ?? "Loading...",
-            } satisfies MovieEntry;
+            } satisfies MovieWatchlistEntry;
 
             // Optimistically update to the new value
             if (previousWatchlist) {
@@ -63,7 +75,7 @@ export const useSaveMovieWatchlistEntry = () => {
                 );
             }
 
-            queryClient.setQueryData<MovieEntry>(
+            queryClient.setQueryData<MovieWatchlistEntry>(
                 MovieWatchlistKeys.entry(movieId),
                 newEntry,
             );
@@ -80,7 +92,7 @@ export const useSaveMovieWatchlistEntry = () => {
                 context.previousWatchlist,
             );
 
-            queryClient.setQueryData<MovieEntry>(
+            queryClient.setQueryData<MovieWatchlistEntry>(
                 MovieWatchlistKeys.entry(params.movieId),
                 context.previousEntry,
             );

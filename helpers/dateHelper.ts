@@ -11,3 +11,13 @@ export const displayFull = (date: Date | undefined) => {
         day: "numeric",
     });
 };
+
+export const displayFullNumeric = (date: Date | undefined) => {
+    if (!date) return undefined;
+    return date.toLocaleString("default", {
+        day: "2-digit",
+        weekday: undefined,
+        month: "2-digit",
+        year: "numeric",
+    });
+};

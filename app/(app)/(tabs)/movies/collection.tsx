@@ -1,4 +1,5 @@
 import { EmptyState, PosterCard, ScreenLayout } from "@/components";
+import { displayFullNumeric } from "@/helpers/dateHelper";
 import {
     useDeleteMovieCollectionEntry,
     useMovieCollection,
@@ -76,7 +77,7 @@ const Collection: FC = () => {
                         <PosterCard
                             heading={item.title}
                             imageUri={item.posterPath}
-                            subHeading={item.releaseDate}
+                            subHeading={displayFullNumeric(item.releaseDate)}
                             onPress={() =>
                                 router.push({
                                     pathname: "/movies/movie",

@@ -1,7 +1,7 @@
 import { Fade, PosterCard } from "@/components";
+import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import type { MovieEntry } from "@/modules/movieCollection";
 import {
     Text,
     type ThemedStyles,
@@ -17,13 +17,14 @@ import {
     useWindowDimensions,
 } from "react-native";
 import { getGroupedEntries } from "../helpers";
+import type { MovieWatchlistEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
 const ITEM_HEIGHT = 92;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 
-const buildGetItemLayout = getItemLayout<MovieEntry>({
+const buildGetItemLayout = getItemLayout<MovieWatchlistEntry>({
     getItemHeight: ITEM_HEIGHT,
     getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
     getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
@@ -51,12 +52,7 @@ const formatItemDate = (rawDate: Date | undefined, isOlder?: boolean) => {
     const date = new Date(rawDate);
 
     if (isOlder) {
-        return date.toLocaleDateString("en-AU", {
-            day: "2-digit",
-            weekday: undefined,
-            month: "2-digit",
-            year: "numeric",
-        });
+        return displayFullNumeric(date);
     }
 
     const dateString = date.toLocaleDateString("en-AU", {
@@ -71,10 +67,10 @@ const formatItemDate = (rawDate: Date | undefined, isOlder?: boolean) => {
     return `${dateString.replace(" ", ", ")}${ordinalSuffix}`;
 };
 interface SectionedMovieEntryListProps {
-    entries: MovieEntry[];
+    entries: MovieWatchlistEntry[];
     jumpToDate?: Date;
     onRefresh: () => void;
-    onPressEntry: (item: MovieEntry) => void;
+    onPressEntry: (item: MovieWatchlistEntry) => void;
     onDeleteEntry: (movieId: number) => void;
     onAddReview: (movieId: number) => void;
 }
@@ -88,7 +84,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     onAddReview,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const listRef = useRef<SectionList<MovieEntry> | null>(null);
+    const listRef = useRef<SectionList<MovieWatchlistEntry> | null>(null);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
     const { theme } = useTheme();

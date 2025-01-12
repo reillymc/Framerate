@@ -1,10 +1,12 @@
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
+import type {
+    BuildSaveRequest,
+    MovieCollectionApiCreateRequest,
+    MovieCollectionApiUpdateRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MovieCollection } from "../models";
-import {
-    MovieCollectionService,
-    type SaveMovieCollectionRequest,
-} from "../services";
 import { MovieCollectionKeys } from "./keys";
 
 type Context = {
@@ -12,18 +14,34 @@ type Context = {
     previousCollection?: MovieCollection;
 };
 
+type MovieCollectionSaveRequest = BuildSaveRequest<
+    MovieCollectionApiCreateRequest,
+    MovieCollectionApiUpdateRequest,
+    "collectionId",
+    "newMovieCollection",
+    "updatedCollection"
+>;
+
 export const useSaveMovieCollection = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { movieCollections } = useFramerateServices();
+    const { userId = "" } = useSession();
 
     return useMutation<
         MovieCollection | null,
         unknown,
-        SaveMovieCollectionRequest,
+        MovieCollectionSaveRequest,
         Context
     >({
-        mutationFn: (params) =>
-            MovieCollectionService.saveMovieCollection({ session, ...params }),
+        mutationFn: ({ collectionId, ...collection }) =>
+            collectionId
+                ? // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  movieCollections!.update({
+                      collectionId,
+                      updatedCollection: collection,
+                  })
+                : // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  movieCollections!.create({ newMovieCollection: collection }),
         onSuccess: (_response) =>
             queryClient.invalidateQueries({
                 queryKey: MovieCollectionKeys.base,
@@ -69,11 +87,15 @@ export const useSaveMovieCollection = () => {
                                   collection.collectionId ===
                                   params.collectionId
                               ) {
-                                  return { collectionId: "", ...params };
+                                  return {
+                                      collectionId: "",
+                                      userId,
+                                      ...params,
+                                  };
                               }
                               return collection;
                           })
-                        : [{ collectionId: "", ...params }],
+                        : [{ collectionId: "", userId, ...params }],
                 );
             }
 

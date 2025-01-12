@@ -3,7 +3,6 @@ import {
     AnimatedFlatList,
     type AnimatedFlatListProps,
 } from "@/components/animatedFlatList";
-import type { MovieEntry } from "@/modules/movieCollection";
 import {
     Icon,
     Text,
@@ -25,13 +24,14 @@ import Animated, {
     useSharedValue,
 } from "react-native-reanimated";
 import { MovieEntryConstants } from "../constants";
+import type { MovieWatchlistEntry } from "../models";
 import { MovieEntryStackedPoster } from "./movieEntryStackedPoster";
 
 interface MovieEntriesSummaryProps {
-    watchlistEntries: MovieEntry[];
-    onPressEntry: (item: MovieEntry) => void;
-    onRemoveFromWatchlist: (item: MovieEntry) => void;
-    onAddReview: (item: MovieEntry) => void;
+    watchlistEntries: MovieWatchlistEntry[];
+    onPressEntry: (item: MovieWatchlistEntry) => void;
+    onRemoveFromWatchlist: (item: MovieWatchlistEntry) => void;
+    onAddReview: (item: MovieWatchlistEntry) => void;
     onPress: (date?: Date) => void;
 }
 
@@ -86,25 +86,22 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
         });
     }, [filteredItems]);
 
-    const keyExtractor: AnimatedFlatListProps<MovieEntry>["keyExtractor"] = (
-        item,
-    ) => item.movieId.toString();
+    const keyExtractor: AnimatedFlatListProps<MovieWatchlistEntry>["keyExtractor"] =
+        (item) => item.movieId.toString();
 
-    const renderItem: AnimatedFlatListProps<MovieEntry>["renderItem"] = ({
-        item,
-        index,
-    }) => (
-        <MovieEntryStackedPoster
-            index={index}
-            posterPath={item.posterPath}
-            scrollValue={scrollValue}
-            onPress={() => onPressEntry(item)}
-            onAddReview={() => onAddReview(item)}
-            onRemoveFromWatchlist={() => onRemoveFromWatchlist(item)}
-        />
-    );
+    const renderItem: AnimatedFlatListProps<MovieWatchlistEntry>["renderItem"] =
+        ({ item, index }) => (
+            <MovieEntryStackedPoster
+                index={index}
+                posterPath={item.posterPath}
+                scrollValue={scrollValue}
+                onPress={() => onPressEntry(item)}
+                onAddReview={() => onAddReview(item)}
+                onRemoveFromWatchlist={() => onRemoveFromWatchlist(item)}
+            />
+        );
 
-    const onScrollToIndexFailed: AnimatedFlatListProps<MovieEntry>["onScrollToIndexFailed"] =
+    const onScrollToIndexFailed: AnimatedFlatListProps<MovieWatchlistEntry>["onScrollToIndexFailed"] =
         ({ index }) => {
             const wait = new Promise((resolve) => setTimeout(resolve, 10));
             wait.then(() => {
@@ -115,20 +112,17 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
             });
         };
 
-    const getItemLayout: AnimatedFlatListProps<MovieEntry>["getItemLayout"] = (
-        _,
-        index,
-    ) => ({
-        index,
-        length: width,
-        offset: width * index,
-    });
+    const getItemLayout: AnimatedFlatListProps<MovieWatchlistEntry>["getItemLayout"] =
+        (_, index) => ({
+            index,
+            length: width,
+            offset: width * index,
+        });
 
-    const cellStyle: AnimatedFlatListProps<MovieEntry>["cellStyle"] = ({
-        index,
-    }) => ({
-        zIndex: filteredItems.length - index,
-    });
+    const cellStyle: AnimatedFlatListProps<MovieWatchlistEntry>["cellStyle"] =
+        ({ index }) => ({
+            zIndex: filteredItems.length - index,
+        });
 
     return (
         <>

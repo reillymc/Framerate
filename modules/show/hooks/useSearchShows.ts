@@ -1,5 +1,5 @@
+import { useFramerateServices } from "@/hooks";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useFramerateServices } from "@/hooks/useFramerateServices";
 import { useQuery } from "@tanstack/react-query";
 import { ShowKeys } from "./keys";
 

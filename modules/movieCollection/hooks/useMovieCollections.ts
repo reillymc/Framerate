@@ -1,13 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { MovieCollectionService } from "../services";
 import { MovieCollectionKeys } from "./keys";
 
 export const useMovieCollections = () => {
-    const { session } = useSession();
+    const { movieCollections } = useFramerateServices();
 
     return useQuery({
         queryKey: MovieCollectionKeys.base,
-        queryFn: () => MovieCollectionService.getMovieCollections({ session }),
+        enabled: !!movieCollections,
+        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+        queryFn: () => movieCollections!.findAll(),
     });
 };
