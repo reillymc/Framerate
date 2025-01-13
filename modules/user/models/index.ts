@@ -1,10 +1,5 @@
 import type { DeepPartial } from "@reillymc/react-native-components";
-
-export type User = {
-    id: string;
-    firstName: string;
-    lastName: string;
-};
+export { User } from "../../../services";
 
 export type Configuration = {
     company: {

@@ -1,8 +1,7 @@
 /**
  * Company
  *
- * Depends on:
- * - Auth
+ * No Dependencies
  */
 
 export { Company } from "./models";

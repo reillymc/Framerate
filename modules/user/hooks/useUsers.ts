@@ -1,14 +1,14 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { UsersService } from "../services";
 import { UserKeys } from "./keys";
 
 export const useUsers = () => {
-    const { session } = useSession();
+    const { users } = useFramerateServices();
 
     return useQuery({
         queryKey: UserKeys.list(),
-        queryFn: () => UsersService.getUsers({ session }),
-        select: (data) => data ?? undefined,
+        enabled: !!users,
+        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+        queryFn: () => users!.findAll(),
     });
 };

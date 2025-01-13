@@ -1,8 +1,7 @@
 /**
  * Season
  *
- * Depends on:
- * - Auth
+ * No Dependencies
  */
 
 export { useSeason } from "./hooks";

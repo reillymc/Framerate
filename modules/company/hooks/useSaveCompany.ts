@@ -1,24 +1,39 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type {
+    BuildSaveRequest,
+    CompanyApiCreateRequest,
+    CompanyApiUpdateRequest,
+} from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Company } from "../models";
-import { CompanyService, type SaveCompanyRequest } from "../services";
 import { CompanyKeys } from "./keys";
+
+type CompanySaveRequest = BuildSaveRequest<
+    CompanyApiCreateRequest,
+    CompanyApiUpdateRequest,
+    never,
+    "userId",
+    "saveCompany",
+    "saveCompany"
+>;
+
+type Context = {
+    previousCompanyList?: Company[];
+};
 
 export const useSaveCompany = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { company } = useFramerateServices();
 
-    return useMutation<
-        Company | null,
-        unknown,
-        SaveCompanyRequest,
-        {
-            previousCompanyList?: Company[];
-        }
-    >({
+    return useMutation<Company | null, unknown, CompanySaveRequest, Context>({
         mutationKey: CompanyKeys.mutate,
-        mutationFn: (params) =>
-            CompanyService.saveCompany({ session, ...params }),
+        mutationFn: ({ userId, ...params }) =>
+            userId
+                ? // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  company!.update({ userId, saveCompany: params })
+                : // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+                  company!.create({ saveCompany: params }),
+
         onError: (error, _, context) => {
             console.warn(error);
 
@@ -61,7 +76,8 @@ export const useSaveCompany = () => {
                     {
                         ...params,
                         userId: params.userId ?? "",
-                    },
+                        dateCreated: new Date(),
+                    } satisfies Company,
                 ]);
             }
 

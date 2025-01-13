@@ -2,7 +2,7 @@ import { Fade, PosterCard } from "@/components";
 import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { ActiveStatuses } from "@/modules/show";
+import { ActiveStatuses, type ShowStatus } from "@/modules/show";
 import {
     SwipeAction,
     SwipeView,
@@ -70,7 +70,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             .filter(
                 ({ status, nextAirDate }) =>
                     (status === undefined ||
-                        !ActiveStatuses.includes(status)) &&
+                        !ActiveStatuses.includes(status as ShowStatus)) &&
                     nextAirDate === undefined,
             )
             .sort(SortEntriesByLastAirDate);

@@ -8,10 +8,14 @@
                 "generatorName": "typescript-fetch",
                 "output": "services/framerateBackend",
                 "inputSpec": "services/openapi.json",
+                "reservedWordsMappings": {
+                    "configuration": "configuration",
+                    "public": "public"
+                },
+                "skipValidateSpec": true,
                 "additionalProperties": {
                     "supportsES6": true,
                     "withInterfaces": true,
-                    "fileNaming": "camelCase",
                     "legacyDiscriminatorBehavior": false,
                     "nullSafeAdditionalProps": true,
                     "prefixParameterInterfaces": true

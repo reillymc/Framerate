@@ -8,6 +8,8 @@ import {
     useMemo,
 } from "react";
 import {
+    CompanyApi,
+    type CompanyApiInterface,
     Configuration,
     type Middleware,
     MovieApi,
@@ -30,9 +32,12 @@ import {
     type ShowReviewApiInterface,
     ShowWatchlistApi,
     type ShowWatchlistApiInterface,
+    UserApi,
+    type UserApiInterface,
 } from "../services";
 
 type ServiceContextType = {
+    company: CompanyApiInterface;
     movieCollections: MovieCollectionApiInterface;
     movieReviews: MovieReviewApiInterface;
     movies: MovieApiInterface;
@@ -43,6 +48,7 @@ type ServiceContextType = {
     showReviews: ShowReviewApiInterface;
     shows: ShowApiInterface;
     showWatchlist: ShowWatchlistApiInterface;
+    users: UserApiInterface;
 };
 
 const LoggerMiddleware: Middleware = {
@@ -96,6 +102,8 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
             showReviews: new ShowReviewApi(serviceConfiguration),
             shows: new ShowApi(serviceConfiguration),
             showWatchlist: new ShowWatchlistApi(serviceConfiguration),
+            company: new CompanyApi(serviceConfiguration),
+            users: new UserApi(serviceConfiguration),
         };
     }, [session]);
 

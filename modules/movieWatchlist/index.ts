@@ -2,7 +2,6 @@
  * Movie Watchlist
  *
  * Depends on:
- * - Auth
  * - Movie
  */
 

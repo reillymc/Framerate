@@ -1,24 +1,26 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type { CompanyApiDeleteRequest, DeleteResponse } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Company } from "../models";
-import { CompanyService, type DeleteCompanyRequest } from "../services";
 import { CompanyKeys } from "./keys";
+
+type Context = {
+    previousCompanyList?: Company[];
+};
 
 export const useDeleteCompany = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { company } = useFramerateServices();
 
     return useMutation<
-        Company | null,
+        DeleteResponse | null,
         unknown,
-        DeleteCompanyRequest,
-        {
-            previousCompanyList?: Company[];
-        }
+        CompanyApiDeleteRequest,
+        Context
     >({
         mutationKey: CompanyKeys.mutate,
-        mutationFn: (params) =>
-            CompanyService.deleteCompany({ session, ...params }),
+        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+        mutationFn: (params) => company!._delete(params),
         onError: (error, _, context) => {
             console.warn(error);
 

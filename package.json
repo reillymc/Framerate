@@ -1,7 +1,7 @@
 {
     "name": "framerate",
     "main": "index",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "scripts": {
         "start": "expo start",
         "android": "expo run:android",
@@ -13,6 +13,7 @@
         "typecheck": "tsc --noEmit",
         "format": "biome format --write .",
         "depcruise:modules": "depcruise modules --include-only '^modules' --collapse 2 --output-type dot | dot -T svg > docs/module-dependency-graph.svg",
+        "openapi:update": "curl http://localhost:3000/api-docs/openapi.json > services/openapi.json",
         "openapi:generate": "rm -rf services/framerateBackend && openapi-generator-cli generate --generator-key typescript-fetch"
     },
     "jest": {

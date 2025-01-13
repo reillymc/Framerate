@@ -2,7 +2,7 @@
  * Review
  *
  * Depends on:
- * - User
+ * - Company
  */
 
 export { ratingToStars, starsToRating, getRatingLabel } from "./helpers";

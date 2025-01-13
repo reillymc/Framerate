@@ -3,8 +3,8 @@
  *
  * Depends on:
  * - Auth
+ * - Company
  * - Show
- * - Review
  */
 
 export {

@@ -4,7 +4,7 @@
  * Depends on:
  * - Auth
  * - Movie
- * - Review
+ * - Company
  */
 
 export {

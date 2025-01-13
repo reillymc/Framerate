@@ -1,13 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-export * from './authenticationApi';
-export * from './movieApi';
-export * from './movieCollectionApi';
-export * from './movieReviewApi';
-export * from './movieWatchlistApi';
-export * from './seasonApi';
-export * from './seasonReviewApi';
-export * from './showApi';
-export * from './showCollectionApi';
-export * from './showReviewApi';
-export * from './showWatchlistApi';
+export * from './AuthenticationApi';
+export * from './CompanyApi';
+export * from './MovieApi';
+export * from './MovieCollectionApi';
+export * from './MovieReviewApi';
+export * from './MovieWatchlistApi';
+export * from './SeasonApi';
+export * from './SeasonReviewApi';
+export * from './ShowApi';
+export * from './ShowCollectionApi';
+export * from './ShowReviewApi';
+export * from './ShowWatchlistApi';
+export * from './UserApi';

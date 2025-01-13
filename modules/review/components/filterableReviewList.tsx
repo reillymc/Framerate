@@ -1,5 +1,5 @@
 import { ContextMenu, EmptyState } from "@/components";
-import type { UserSummary } from "@/modules/user/services";
+import type { Company } from "@/modules/company";
 import {
     Tag,
     Text,
@@ -24,12 +24,12 @@ interface FilterableReviewListProps<T> {
     filters: {
         rating: number | undefined;
         venue: string | undefined;
-        company: UserSummary | undefined;
+        company: Company | undefined;
         onChangeRating: (rating: number | undefined) => void;
         onChangeVenue: (venue: string | undefined) => void;
         onChangeCompany: (userId: string | undefined) => void;
     };
-    companyOptions: UserSummary[];
+    companyOptions: Company[];
     venueOptions: string[];
     starCount: number;
     onRefresh: () => void;

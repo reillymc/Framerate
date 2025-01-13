@@ -2,9 +2,7 @@
  * Show Watchlist
  *
  * Depends on:
- * - Auth
  * - Show
- * - ShowCollection
  */
 
 export {

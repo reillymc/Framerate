@@ -1,39 +1,34 @@
-import { useSession } from "@/modules/auth";
+import { useFramerateServices } from "@/hooks";
+import type { UserApiUpdateRequest } from "@/services";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-    type SaveUserRequest,
-    type SaveUserResponse,
-    type UserDetails,
-    type UserSummary,
-    UsersService,
-} from "../services";
+import type { User } from "../models";
 import { UserKeys } from "./keys";
+
+type UserUpdateRequest = Pick<UserApiUpdateRequest, "userId"> &
+    UserApiUpdateRequest["updatedUser"];
 
 export const useSaveUser = () => {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { users } = useFramerateServices();
 
     return useMutation<
-        SaveUserResponse | null,
+        User | null,
         unknown,
-        SaveUserRequest,
-        { previousUserDetails?: UserDetails; previousUsersList?: UserSummary[] }
+        UserUpdateRequest,
+        { previousUserDetails?: User }
     >({
         mutationKey: UserKeys.mutate,
-        mutationFn: (params) => UsersService.saveUser({ session, ...params }),
+        mutationFn: ({ userId, ...updatedUser }) =>
+            // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
+            users!.update({ userId, updatedUser }),
         onError: (error, params, context) => {
             console.warn(error);
 
             if (!context) return;
 
-            queryClient.setQueryData<UserDetails>(
+            queryClient.setQueryData<User>(
                 UserKeys.details(params.userId),
                 context.previousUserDetails,
-            );
-
-            queryClient.setQueryData<UserSummary[]>(
-                UserKeys.list(),
-                context.previousUsersList,
             );
         },
         onSuccess: (_response, params) => {
@@ -46,13 +41,13 @@ export const useSaveUser = () => {
         },
         onMutate: (params) => {
             // Snapshot the previous value
-            const previousUserDetails = queryClient.getQueryData<UserDetails>(
+            const previousUserDetails = queryClient.getQueryData<User>(
                 UserKeys.details(params.userId),
             );
 
             // Optimistically update to the new value
             if (previousUserDetails) {
-                queryClient.setQueryData<UserDetails>(
+                queryClient.setQueryData<User>(
                     UserKeys.details(params.userId),
                     {
                         ...previousUserDetails,
@@ -61,40 +56,8 @@ export const useSaveUser = () => {
                 );
             }
 
-            const previousUsersList = queryClient.getQueryData<UserSummary[]>(
-                UserKeys.list(),
-            );
-
-            const userSummary = previousUsersList?.find(
-                (user) => user.userId === params.userId,
-            );
-
-            if (userSummary) {
-                queryClient.setQueryData<UserSummary[]>(
-                    UserKeys.list(),
-                    previousUsersList?.map((user) =>
-                        user.userId === params.userId
-                            ? {
-                                  ...user,
-                                  ...params,
-                              }
-                            : user,
-                    ),
-                );
-            } else {
-                queryClient.setQueryData<UserSummary[]>(UserKeys.list(), [
-                    ...(previousUsersList ?? []),
-                    {
-                        ...params,
-                        userId: params.userId ?? "",
-                        firstName: params.firstName ?? "",
-                        lastName: params.lastName ?? "",
-                    },
-                ]);
-            }
-
             // Return snapshot so we can rollback in case of failure
-            return { previousUserDetails, previousUsersList };
+            return { previousUserDetails };
         },
     });
 };

@@ -6,7 +6,7 @@ import {
     useDeleteCompany,
     useSaveCompany,
 } from "@/modules/company";
-import { useSaveUser, useUser } from "@/modules/user";
+import { useCurrentUserConfig, useSaveUser, useUser } from "@/modules/user";
 import { MergeConfiguration } from "@/modules/user";
 import {
     Action,
@@ -45,6 +45,7 @@ const Profile: FC = () => {
     const { data: serverVersion } = useHealth();
 
     const { data: user } = useUser(userId);
+    const { configuration } = useCurrentUserConfig();
     const { mutate: saveUser } = useSaveUser();
 
     const { data: users = [] } = useCompany();
@@ -65,19 +66,19 @@ const Profile: FC = () => {
 
         const newVenue = venue.trim();
 
-        if (!(newVenue && user)) {
+        if (!(userId && newVenue)) {
             return;
         }
 
         const knownVenueNames = [
             ...new Set(
-                [...user.configuration.venues.knownVenueNames, newVenue].sort(),
+                [...configuration.venues.knownVenueNames, newVenue].sort(),
             ),
         ];
 
         saveUser({
-            userId: user.userId,
-            configuration: MergeConfiguration(user.configuration, {
+            userId,
+            configuration: MergeConfiguration(configuration, {
                 venues: {
                     knownVenueNames,
                 },
@@ -85,13 +86,13 @@ const Profile: FC = () => {
         });
 
         setVenue("");
-    }, [saveUser, user, venue]);
+    }, [saveUser, userId, configuration, venue]);
 
     const addFriend = useCallback(() => {
         lastNameRef.current?.blur();
         const trimmedFirstName = firstName.trim();
         const trimmedLastName = lastName.trim();
-        if (!(trimmedFirstName && trimmedLastName && user)) {
+        if (!(trimmedFirstName && trimmedLastName)) {
             return;
         }
 
@@ -101,26 +102,26 @@ const Profile: FC = () => {
 
         setFirstName("");
         setLastName("");
-    }, [firstName, lastName, user, saveCompany]);
+    }, [firstName, lastName, saveCompany]);
 
     const removeVenue = useCallback(
         (venue: string) => {
-            if (!user) return;
+            if (!(userId && configuration)) return;
 
             saveUser({
-                userId: user.userId,
+                userId: userId,
                 configuration: {
-                    ...user.configuration,
+                    ...configuration,
                     venues: {
                         knownVenueNames:
-                            user.configuration.venues.knownVenueNames.filter(
+                            configuration.venues.knownVenueNames.filter(
                                 (v) => v !== venue,
                             ),
                     },
                 },
             });
         },
-        [saveUser, user],
+        [saveUser, userId, configuration],
     );
 
     return (
@@ -176,13 +177,13 @@ const Profile: FC = () => {
                                         { label: "10 Star", value: 10 },
                                     ] as const
                                 }
-                                value={user.configuration.ratings.starCount}
+                                value={configuration.ratings.starCount}
                                 style={styles.sectionElement}
                                 onChange={({ value }) =>
                                     saveUser({
                                         userId: user.userId,
                                         configuration: MergeConfiguration(
-                                            user.configuration,
+                                            configuration,
                                             {
                                                 ratings: {
                                                     starCount: value,
@@ -220,7 +221,7 @@ const Profile: FC = () => {
                                 direction="up"
                                 style={styles.sectionInternalContainer}
                             >
-                                {user.configuration.venues.knownVenueNames.map(
+                                {configuration.venues.knownVenueNames.map(
                                     (venue) => (
                                         <SwipeView
                                             key={venue}
@@ -295,11 +296,8 @@ const Profile: FC = () => {
                                 direction="up"
                                 style={styles.sectionInternalContainer}
                             >
-                                {users
-                                    .filter(
-                                        ({ userId }) => userId !== user.userId,
-                                    )
-                                    .map(({ userId, firstName, lastName }) => (
+                                {users.map(
+                                    ({ userId, firstName, lastName }) => (
                                         <SwipeView
                                             key={userId}
                                             rightActions={[
@@ -319,7 +317,8 @@ const Profile: FC = () => {
                                                 <Text>{`${firstName} ${lastName}`}</Text>
                                             </View>
                                         </SwipeView>
-                                    ))}
+                                    ),
+                                )}
                                 <View style={styles.friendInputContainer}>
                                     <TextInput
                                         placeholder="First name"

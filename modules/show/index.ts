@@ -3,7 +3,6 @@
  *
  * Depends on:
  * - Auth
- * - Season
  */
 
 export {
