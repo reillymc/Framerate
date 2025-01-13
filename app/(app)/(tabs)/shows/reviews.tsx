@@ -1,5 +1,5 @@
 import { MediaType } from "@/constants/mediaTypes";
-import { useSession } from "@/modules/auth";
+import { useCompany } from "@/modules/company";
 import {
     AbsoluteRatingScale,
     FilterableReviewList,
@@ -9,7 +9,7 @@ import {
     ReviewSummaryCard,
 } from "@/modules/review";
 import { useShowReviews } from "@/modules/showReview";
-import { useCurrentUserConfig, useUsers } from "@/modules/user";
+import { useCurrentUserConfig } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useMemo, useState } from "react";
@@ -25,7 +25,6 @@ const Reviews: FC = () => {
 
     const router = useRouter();
 
-    const { userId } = useSession();
     const { configuration } = useCurrentUserConfig();
 
     const {
@@ -46,22 +45,16 @@ const Reviews: FC = () => {
         orderBy,
     });
 
-    // TODO: update with user configuration knownUsers when implemented
-    const { data: users = [] } = useUsers();
+    const { data: company = [] } = useCompany();
 
     const reviewList = useMemo(
         () => reviews?.pages?.flat().filter(Undefined),
         [reviews],
     );
 
-    const selectedUser = useMemo(
-        () => users.find(({ userId }) => userId === withCompany),
-        [users, withCompany],
-    );
-
-    const filteredUsers = useMemo(
-        () => users.filter((user) => user.userId !== userId),
-        [users, userId],
+    const selectedCompany = useMemo(
+        () => company.find(({ companyId }) => companyId === withCompany),
+        [company, withCompany],
     );
 
     return (
@@ -88,9 +81,9 @@ const Reviews: FC = () => {
                 reviews={reviewList}
                 venueOptions={configuration.venues.knownVenueNames}
                 starCount={configuration.ratings.starCount}
-                companyOptions={filteredUsers}
+                companyOptions={company}
                 filters={{
-                    company: selectedUser,
+                    company: selectedCompany,
                     rating,
                     venue: atVenue,
                     onChangeCompany: setWithCompany,

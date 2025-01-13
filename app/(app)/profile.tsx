@@ -48,7 +48,7 @@ const Profile: FC = () => {
     const { configuration } = useCurrentUserConfig();
     const { mutate: saveUser } = useSaveUser();
 
-    const { data: users = [] } = useCompany();
+    const { data: company = [] } = useCompany();
     const { mutate: saveCompany } = useSaveCompany();
     const { mutate: deleteCompany } = useDeleteCompany();
 
@@ -296,10 +296,10 @@ const Profile: FC = () => {
                                 direction="up"
                                 style={styles.sectionInternalContainer}
                             >
-                                {users.map(
-                                    ({ userId, firstName, lastName }) => (
+                                {company.map(
+                                    ({ companyId, firstName, lastName }) => (
                                         <SwipeView
-                                            key={userId}
+                                            key={companyId}
                                             rightActions={[
                                                 <SwipeAction
                                                     key="delete"
@@ -307,7 +307,7 @@ const Profile: FC = () => {
                                                     variant="destructive"
                                                     onPress={() =>
                                                         deleteCompany({
-                                                            userId,
+                                                            companyId,
                                                         })
                                                     }
                                                 />,

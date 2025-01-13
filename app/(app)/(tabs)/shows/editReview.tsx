@@ -1,4 +1,3 @@
-import { useSession } from "@/modules/auth";
 import { useCompany } from "@/modules/company";
 import { ReviewForm } from "@/modules/review";
 import { useShow } from "@/modules/show";
@@ -29,7 +28,6 @@ const EditReview: FC = () => {
     const showId = showIdParam ? Number.parseInt(showIdParam, 10) : undefined;
 
     const router = useRouter();
-    const { userId } = useSession();
     const { configuration } = useCurrentUserConfig();
 
     const { data: review } = useShowReview(reviewId);
@@ -52,21 +50,19 @@ const EditReview: FC = () => {
 
     const companyItems = useMemo(
         () =>
-            company
-                .filter((user) => user.userId !== userId)
-                .map(({ userId, firstName, lastName }) => ({
-                    value: userId,
-                    label: `${firstName} ${lastName}`,
-                })),
-        [company, userId],
+            company.map(({ companyId, firstName, lastName }) => ({
+                value: companyId,
+                label: `${firstName} ${lastName}`,
+            })),
+        [company],
     );
 
     const initialCompany = useMemo(
         () =>
             review?.company
-                ?.map((user) => ({
-                    value: user.userId,
-                    label: `${user.firstName} ${user.lastName}`,
+                ?.map(({ companyId, firstName, lastName }) => ({
+                    value: companyId,
+                    label: `${firstName} ${lastName}`,
                 }))
                 .filter(Undefined),
         [review?.company],
@@ -106,7 +102,7 @@ const EditReview: FC = () => {
             description: includeReview
                 ? description?.trim() || undefined
                 : undefined,
-            company: selectedCompany.map(({ value }) => ({ userId: value })),
+            company: selectedCompany.map(({ value }) => ({ companyId: value })),
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {

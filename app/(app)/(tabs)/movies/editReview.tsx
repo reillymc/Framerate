@@ -1,4 +1,3 @@
-import { useSession } from "@/modules/auth";
 import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
@@ -31,7 +30,6 @@ const EditReview: FC = () => {
         : undefined;
 
     const router = useRouter();
-    const { userId } = useSession();
     const { configuration } = useCurrentUserConfig();
 
     const { data: review } = useMovieReview(reviewId);
@@ -54,20 +52,18 @@ const EditReview: FC = () => {
 
     const companyItems = useMemo(
         () =>
-            company
-                .filter((user) => user.userId !== userId)
-                .map(({ userId, firstName, lastName }) => ({
-                    value: userId,
-                    label: `${firstName} ${lastName}`,
-                })),
-        [company, userId],
+            company.map(({ companyId, firstName, lastName }) => ({
+                value: companyId,
+                label: `${firstName} ${lastName}`,
+            })),
+        [company],
     );
 
     const initialCompany = useMemo(
         () =>
             review?.company
                 ?.map((user) => ({
-                    value: user.userId,
+                    value: user.companyId,
                     label: `${user.firstName} ${user.lastName}`,
                 }))
                 .filter(Undefined),
@@ -108,7 +104,7 @@ const EditReview: FC = () => {
             description: includeReview
                 ? description?.trim() || undefined
                 : undefined,
-            company: selectedCompany.map(({ value }) => ({ userId: value })),
+            company: selectedCompany.map(({ value }) => ({ companyId: value })),
         });
 
         if (watchlistEntry && clearWatchlistEntry && !reviewId) {

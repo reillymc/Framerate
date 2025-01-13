@@ -76,7 +76,8 @@ export const useSaveMovieReview = () => {
                         movie: movieDetails,
                         company: params.company?.map((companyItem) => {
                             const matchedCompany = companyList?.find(
-                                ({ userId }) => userId === companyItem.userId,
+                                ({ companyId }) =>
+                                    companyId === companyItem.companyId,
                             );
                             return {
                                 ...companyItem,

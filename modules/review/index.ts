@@ -20,6 +20,4 @@ export {
     ReviewSort,
     AbsoluteRatingScale,
     Review,
-    ReviewCompanyDetails,
-    ReviewCompanySummary,
 } from "./models";

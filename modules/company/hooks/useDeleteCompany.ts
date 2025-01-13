@@ -44,7 +44,7 @@ export const useDeleteCompany = () => {
             queryClient.setQueryData<Company[]>(
                 CompanyKeys.list(),
                 previousCompanyList?.filter(
-                    ({ userId }) => userId !== params.userId,
+                    ({ companyId }) => companyId !== params.companyId,
                 ),
             );
 

@@ -163,11 +163,15 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                                 menuConfig={{
                                     menuTitle: "Company",
                                     menuItems: companyOptions.map(
-                                        ({ userId, firstName, lastName }) => ({
-                                            actionKey: userId,
+                                        ({
+                                            companyId,
+                                            firstName,
+                                            lastName,
+                                        }) => ({
+                                            actionKey: companyId,
                                             actionTitle: `${firstName} ${lastName}`,
                                             menuState:
-                                                company?.userId === userId
+                                                company?.companyId === companyId
                                                     ? "on"
                                                     : "off",
                                         }),
@@ -175,7 +179,7 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                                 }}
                                 onPressMenuAction={({ actionKey }) => {
                                     onChangeCompany(
-                                        company?.userId !== actionKey
+                                        company?.companyId !== actionKey
                                             ? actionKey
                                             : undefined,
                                     );

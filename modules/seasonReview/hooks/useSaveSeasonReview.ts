@@ -78,7 +78,8 @@ export const useSaveSeasonReview = () => {
                         season: seasonDetails,
                         company: params.company?.map((companyItem) => {
                             const matchedCompany = companyList?.find(
-                                ({ userId }) => userId === companyItem.userId,
+                                ({ companyId }) =>
+                                    companyId === companyItem.companyId,
                             );
                             return {
                                 ...companyItem,

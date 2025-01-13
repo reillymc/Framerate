@@ -65,8 +65,8 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
                 )}
             </Text>
             {!!review.company?.length &&
-                review.company?.map(({ userId, firstName, lastName }) => (
-                    <Text key={userId} variant="bodyEmphasized">
+                review.company?.map(({ companyId, firstName, lastName }) => (
+                    <Text key={companyId} variant="bodyEmphasized">
                         {`    - ${firstName ?? "..."} ${lastName ?? "..."}`}
                     </Text>
                 ))}

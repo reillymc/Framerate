@@ -1,4 +1,5 @@
 import { useFramerateServices } from "@/hooks";
+import { useSession } from "@/modules/auth";
 import type {
     BuildSaveRequest,
     CompanyApiCreateRequest,
@@ -12,7 +13,7 @@ type CompanySaveRequest = BuildSaveRequest<
     CompanyApiCreateRequest,
     CompanyApiUpdateRequest,
     never,
-    "userId",
+    "companyId",
     "saveCompany",
     "saveCompany"
 >;
@@ -24,13 +25,14 @@ type Context = {
 export const useSaveCompany = () => {
     const queryClient = useQueryClient();
     const { company } = useFramerateServices();
+    const { userId = "" } = useSession();
 
     return useMutation<Company | null, unknown, CompanySaveRequest, Context>({
         mutationKey: CompanyKeys.mutate,
-        mutationFn: ({ userId, ...params }) =>
-            userId
+        mutationFn: ({ companyId, ...params }) =>
+            companyId
                 ? // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
-                  company!.update({ userId, saveCompany: params })
+                  company!.update({ companyId, saveCompany: params })
                 : // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
                   company!.create({ saveCompany: params }),
 
@@ -55,14 +57,14 @@ export const useSaveCompany = () => {
             );
 
             const companySummary = previousCompanyList?.find(
-                (company) => company.userId === params.userId,
+                (company) => company.companyId === params.companyId,
             );
 
             if (companySummary) {
                 queryClient.setQueryData<Company[]>(
                     CompanyKeys.list(),
                     previousCompanyList?.map((company) =>
-                        company.userId === params.userId
+                        company.companyId === params.companyId
                             ? {
                                   ...company,
                                   ...params,
@@ -75,7 +77,8 @@ export const useSaveCompany = () => {
                     ...(previousCompanyList ?? []),
                     {
                         ...params,
-                        userId: params.userId ?? "",
+                        companyId: params.companyId ?? "",
+                        createdBy: userId,
                         dateCreated: new Date(),
                     } satisfies Company,
                 ]);
