@@ -42,7 +42,7 @@ const Watchlist: FC = () => {
                 }
                 onAddReview={(movieId) =>
                     router.push({
-                        pathname: "/movies/editReview",
+                        pathname: "/movies/editWatch",
                         params: { movieId },
                     })
                 }

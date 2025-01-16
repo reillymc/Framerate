@@ -179,7 +179,7 @@ const Season: React.FC = () => {
             <MediaFooterButtons
                 onAddReview={() =>
                     router.push({
-                        pathname: "/shows/season/editReview",
+                        pathname: "/shows/season/editWatch",
                         params: { showId, seasonNumber },
                     })
                 }

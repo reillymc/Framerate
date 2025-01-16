@@ -3,6 +3,8 @@ import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import {
+    SwipeAction,
+    SwipeView,
     Text,
     type ThemedStyles,
     useTheme,
@@ -190,16 +192,27 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                         fadeOffset={0}
                         height={45}
                         width={width}
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                        }}
+                        style={styles.headerFade}
                         color={theme.color.background}
                     />
                 </View>
             }
+            CellRendererComponent={({ item, children }) => (
+                <SwipeView
+                    rightActions={[
+                        <SwipeAction
+                            key="delete"
+                            iconName="minus"
+                            onPress={() => {
+                                onDeleteEntry(item.movieId);
+                            }}
+                            variant="destructive"
+                        />,
+                    ]}
+                >
+                    {children}
+                </SwipeView>
+            )}
             keyExtractor={(item) => item.movieId.toString()}
             contentInsetAdjustmentBehavior="automatic"
             contentInset={{ top: HEADER_HEIGHT }}
@@ -233,5 +246,11 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         header: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.large,
+        },
+        headerFade: {
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
         },
     });

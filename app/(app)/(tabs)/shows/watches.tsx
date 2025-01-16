@@ -1,6 +1,5 @@
 import { MediaType } from "@/constants/mediaTypes";
 import { useCompany } from "@/modules/company";
-import { useMovieReviews } from "@/modules/movieReview";
 import {
     AbsoluteRatingScale,
     FilterableReviewList,
@@ -9,6 +8,7 @@ import {
     ReviewSortButton,
     ReviewSummaryCard,
 } from "@/modules/review";
+import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
@@ -31,7 +31,7 @@ const Reviews: FC = () => {
         data: reviews,
         refetch,
         fetchNextPage,
-    } = useMovieReviews({
+    } = useShowReviews({
         atVenue,
         withCompany,
         ratingMax:
@@ -61,7 +61,7 @@ const Reviews: FC = () => {
         <>
             <Stack.Screen
                 options={{
-                    title: "My Reviews",
+                    title: "My Watches",
                     headerRight: () =>
                         reviewList?.length ||
                         withCompany ||
@@ -70,7 +70,7 @@ const Reviews: FC = () => {
                             <ReviewSortButton
                                 order={orderBy}
                                 sort={sort}
-                                mediaType={MediaType.Movie}
+                                mediaType={MediaType.Show}
                                 onChangeOrder={setOrderBy}
                                 onChangeSort={setSort}
                             />
@@ -96,23 +96,23 @@ const Reviews: FC = () => {
                     <ReviewSummaryCard
                         key={item.reviewId}
                         review={item}
-                        mediaTitle={item.movie.title}
-                        mediaPosterPath={item.movie.posterPath}
-                        mediaDate={item.movie.releaseDate}
+                        mediaTitle={item.show.name}
+                        mediaPosterPath={item.show.posterPath}
+                        mediaDate={item.show.firstAirDate}
                         starCount={configuration.ratings.starCount}
                         onPress={() =>
                             router.push({
-                                pathname: "/movies/movie",
+                                pathname: "/shows/show",
                                 params: {
-                                    id: item.movie.id,
-                                    title: item.movie.title,
-                                    posterPath: item.movie.posterPath,
+                                    id: item.show.id,
+                                    name: item.show.name,
+                                    posterPath: item.show.posterPath,
                                 },
                             })
                         }
                         onOpenReview={() =>
                             router.push({
-                                pathname: "/movies/review",
+                                pathname: "/shows/watch",
                                 params: { reviewId: item.reviewId },
                             })
                         }

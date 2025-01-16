@@ -227,7 +227,7 @@ const Show: FC = () => {
                                         }
                                         onPress={() =>
                                             router.push({
-                                                pathname: "/shows/review",
+                                                pathname: "/shows/watch",
                                                 params: {
                                                     reviewId: item.reviewId,
                                                 },
@@ -278,7 +278,7 @@ const Show: FC = () => {
                 onWatchlist={!!watchlistEntry}
                 onAddReview={() =>
                     router.push({
-                        pathname: "/shows/editReview",
+                        pathname: "/shows/editWatch",
                         params: { showId },
                     })
                 }

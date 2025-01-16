@@ -9,6 +9,6 @@ export {
     useMovie,
     usePopularMovies,
     useSearchMovies,
-    useRecentSearches,
+    useRecentMovieSearches,
 } from "./hooks";
 export { Movie } from "./models";

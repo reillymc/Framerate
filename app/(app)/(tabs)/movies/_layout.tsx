@@ -9,10 +9,10 @@ const MoviesStack: FC = () => {
         <Stack screenOptions={screenOptions} initialRouteName="index">
             <Stack.Screen name="index" />
             <Stack.Screen name="movie" />
-            <Stack.Screen name="reviews" />
+            <Stack.Screen name="watches" />
             <Stack.Screen name="browse" />
             <Stack.Screen
-                name="editReview"
+                name="editWatch"
                 options={{ presentation: "formSheet" }}
             />
             <Stack.Screen name="watchlist" />

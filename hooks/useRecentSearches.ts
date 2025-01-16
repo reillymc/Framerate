@@ -1,35 +1,27 @@
-import { useSession } from "@/modules/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-type RecentSearch = {
+export type RecentSearch = {
     searchValue: string;
 };
 
-export const useRecentSearches = () => {
-    const { userId } = useSession();
-
-    const storageKey = useMemo(() => {
-        if (!userId) return;
-        return `${userId}-show-searches`;
-    }, [userId]);
-
-    const [recentSearches, setRecentSearches] = useState<RecentSearch[]>();
+export const useRecentSearches = (key: string | undefined) => {
+    const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
 
     useEffect(() => {
-        if (!recentSearches && storageKey) {
-            AsyncStorage.getItem(storageKey).then(
+        if (!recentSearches && key) {
+            AsyncStorage.getItem(key).then(
                 (searches) =>
                     searches && setRecentSearches(JSON.parse(searches)),
             );
         }
 
         return () => {
-            if (!(recentSearches && storageKey)) return;
+            if (!(recentSearches && key)) return;
 
-            AsyncStorage.setItem(storageKey, JSON.stringify(recentSearches));
+            AsyncStorage.setItem(key, JSON.stringify(recentSearches));
         };
-    }, [recentSearches, storageKey]);
+    }, [recentSearches, key]);
 
     const deleteSearch = useCallback((index: number) => {
         setRecentSearches((prev) => [...(prev ?? [])].toSpliced(index, 1));
@@ -48,9 +40,5 @@ export const useRecentSearches = () => {
         [],
     );
 
-    return {
-        recentSearches: recentSearches ?? [],
-        deleteSearch,
-        addSearch,
-    };
+    return { recentSearches, deleteSearch, addSearch };
 };

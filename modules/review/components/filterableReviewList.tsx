@@ -137,12 +137,14 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                             <ContextMenu
                                 menuConfig={{
                                     menuTitle: "Venue",
-                                    menuItems: venueOptions.map((name) => ({
-                                        actionKey: name,
-                                        actionTitle: name,
-                                        menuState:
-                                            venue === name ? "on" : "off",
-                                    })),
+                                    menuItems: venueOptions
+                                        .sort((a, b) => a.localeCompare(b))
+                                        .map((name) => ({
+                                            actionKey: name,
+                                            actionTitle: name,
+                                            menuState:
+                                                venue === name ? "on" : "off",
+                                        })),
                                 }}
                                 onPressMenuAction={({ actionKey }) => {
                                     onChangeVenue(
@@ -162,20 +164,27 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                             <ContextMenu
                                 menuConfig={{
                                     menuTitle: "Company",
-                                    menuItems: companyOptions.map(
-                                        ({
-                                            companyId,
-                                            firstName,
-                                            lastName,
-                                        }) => ({
-                                            actionKey: companyId,
-                                            actionTitle: `${firstName} ${lastName}`,
-                                            menuState:
-                                                company?.companyId === companyId
-                                                    ? "on"
-                                                    : "off",
-                                        }),
-                                    ),
+                                    menuItems: companyOptions
+                                        .sort((a, b) =>
+                                            a.firstName.localeCompare(
+                                                b.firstName,
+                                            ),
+                                        )
+                                        .map(
+                                            ({
+                                                companyId,
+                                                firstName,
+                                                lastName,
+                                            }) => ({
+                                                actionKey: companyId,
+                                                actionTitle: `${firstName} ${lastName}`,
+                                                menuState:
+                                                    company?.companyId ===
+                                                    companyId
+                                                        ? "on"
+                                                        : "off",
+                                            }),
+                                        ),
                                 }}
                                 onPressMenuAction={({ actionKey }) => {
                                     onChangeCompany(
@@ -202,7 +211,7 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                         <Text style={styles.pageElement}>
                             {reviews?.length} review
                             {reviews?.length === 1 ? "" : "s"}
-                            {rating &&
+                            {rating !== undefined &&
                                 ` of ${getRatingLabel(rating, starCount)}`}
                             {venue && ` at ${venue}`}
                             {company &&

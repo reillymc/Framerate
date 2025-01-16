@@ -1,15 +1,16 @@
-import { PosterCard, SectionHeading } from "@/components";
+import { PosterCard, RecentSearchList, SectionHeading } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { displayYear } from "@/helpers/dateHelper";
 import { ReviewSummaryCard } from "@/modules/review";
 import {
     usePopularShows,
-    useRecentSearches,
+    useRecentShowSearches,
     useSearchShows,
 } from "@/modules/show";
 import { useShowCollections } from "@/modules/showCollection";
 import { useShowReviews } from "@/modules/showReview";
 import {
+    ShowUpNextList,
     useDeleteShowWatchlistEntry,
     useSaveShowWatchlistEntry,
     useShowWatchlist,
@@ -18,8 +19,6 @@ import { useCurrentUserConfig } from "@/modules/user";
 import {
     IconAction,
     IconActionV2,
-    SwipeAction,
-    SwipeView,
     Tag,
     Text,
     type ThemedStyles,
@@ -59,7 +58,7 @@ const Shows: FC = () => {
     const { data: watchlist } = useShowWatchlist();
     const { mutate: saveWatchlistEntry } = useSaveShowWatchlistEntry();
     const { mutate: deleteWatchlistEntry } = useDeleteShowWatchlistEntry();
-    const { recentSearches, addSearch, deleteSearch } = useRecentSearches();
+    const { recentSearches, addSearch, deleteSearch } = useRecentShowSearches();
     const { data: collections = [] } = useShowCollections();
 
     const reviewList = useMemo(
@@ -133,7 +132,7 @@ const Shows: FC = () => {
                                 }}
                                 onAddReview={() =>
                                     router.push({
-                                        pathname: "/shows/editReview",
+                                        pathname: "/shows/editWatch",
                                         params: { showId: item.id },
                                     })
                                 }
@@ -155,43 +154,14 @@ const Shows: FC = () => {
                 />
             )}
             {isSearching && !searchValue && (
-                <FlatList
-                    data={recentSearches}
-                    contentContainerStyle={styles.searchList}
-                    keyboardDismissMode="on-drag"
-                    renderItem={({ item, index }) => (
-                        <SwipeView
-                            rightActions={[
-                                <SwipeAction
-                                    key="delete"
-                                    variant="destructive"
-                                    iconName="close"
-                                    onPress={() => deleteSearch(index)}
-                                />,
-                            ]}
-                        >
-                            <Pressable
-                                onPress={() => {
-                                    searchRef.current?.setText(
-                                        item.searchValue,
-                                    );
-                                    setSearchValue(item.searchValue);
-                                    addSearch(item);
-                                }}
-                                style={[
-                                    styles.searchSuggestion,
-                                    index === recentSearches.length - 1 && {
-                                        borderBottomWidth: 0,
-                                    },
-                                ]}
-                            >
-                                <Text>{item.searchValue}</Text>
-                            </Pressable>
-                        </SwipeView>
-                    )}
-                    keyExtractor={(item) => item.searchValue}
-                    contentInsetAdjustmentBehavior="always"
-                    keyboardShouldPersistTaps="handled"
+                <RecentSearchList
+                    recentSearches={recentSearches}
+                    onDeleteSearchItem={deleteSearch}
+                    onPressSearchItem={(item) => {
+                        searchRef.current?.setText(item.searchValue);
+                        setSearchValue(item.searchValue);
+                        addSearch(item);
+                    }}
                 />
             )}
             {!isSearching && (
@@ -208,10 +178,19 @@ const Shows: FC = () => {
                                     })
                                 }
                             />
-                            <Text style={styles.pageElement}>
-                                {watchlist?.entries?.length ?? 0} shows in your
-                                watchlist
-                            </Text>
+                            <ShowUpNextList
+                                watchlist={watchlist}
+                                onPressShow={({ name, showId, posterPath }) =>
+                                    router.push({
+                                        pathname: "/shows/show",
+                                        params: {
+                                            id: showId,
+                                            name,
+                                            posterPath,
+                                        },
+                                    })
+                                }
+                            />
                             <SectionHeading
                                 title="Popular"
                                 style={styles.pageElement}
@@ -259,7 +238,7 @@ const Shows: FC = () => {
                                             onAddReview={() =>
                                                 router.push({
                                                     pathname:
-                                                        "/shows/editReview",
+                                                        "/shows/editWatch",
                                                     params: { showId: item.id },
                                                 })
                                             }
@@ -277,7 +256,7 @@ const Shows: FC = () => {
                                 }}
                             />
                             <SectionHeading
-                                title="My Collections"
+                                title="Collections"
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
@@ -309,7 +288,7 @@ const Shows: FC = () => {
                                 style={styles.pageElement}
                                 onPress={() =>
                                     router.navigate({
-                                        pathname: "/shows/reviews",
+                                        pathname: "/shows/watches",
                                     })
                                 }
                             />
@@ -349,7 +328,7 @@ const Shows: FC = () => {
                             }
                             onOpenReview={() =>
                                 router.push({
-                                    pathname: "/shows/review",
+                                    pathname: "/shows/watch",
                                     params: { reviewId: item.reviewId },
                                 })
                             }
@@ -371,7 +350,7 @@ const Shows: FC = () => {
                                 label="All"
                                 onPress={() =>
                                     router.navigate({
-                                        pathname: "/shows/reviews",
+                                        pathname: "/shows/watches",
                                     })
                                 }
                             />

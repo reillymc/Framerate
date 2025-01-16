@@ -113,7 +113,7 @@ export const Poster: React.FC<PosterProps> = ({
                                 onOpenReview
                                     ? ({
                                           actionKey: "open-review",
-                                          actionTitle: "Open Review",
+                                          actionTitle: "Open Watch",
                                           icon: {
                                               type: "IMAGE_SYSTEM",
                                               imageValue: {

@@ -306,7 +306,7 @@ export class SeasonReviewApi extends runtime.BaseAPI implements SeasonReviewApiI
             }
         }
         const response = await this.request({
-            path: `/api/v1shows/{show_id}/seasons/{season_number}/reviews/{review_id}`.replace(`{${"show_id"}}`, encodeURIComponent(String(requestParameters['showId']))).replace(`{${"season_number"}}`, encodeURIComponent(String(requestParameters['seasonNumber']))).replace(`{${"review_id"}}`, encodeURIComponent(String(requestParameters['reviewId']))),
+            path: `/api/v1/shows/{show_id}/seasons/{season_number}/reviews/{review_id}`.replace(`{${"show_id"}}`, encodeURIComponent(String(requestParameters['showId']))).replace(`{${"season_number"}}`, encodeURIComponent(String(requestParameters['seasonNumber']))).replace(`{${"review_id"}}`, encodeURIComponent(String(requestParameters['reviewId']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

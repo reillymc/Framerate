@@ -1,3 +1,4 @@
+import { ScreenLayout } from "@/components";
 import { useMovieReview } from "@/modules/movieReview";
 import { ReviewDisplay, getRatingLabel } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
@@ -20,28 +21,31 @@ const Review: FC = () => {
     const { data: review } = useMovieReview(reviewId);
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: review?.rating
-                        ? getRatingLabel(
-                              review.rating,
-                              configuration.ratings.starCount,
-                          )
-                        : "Watched",
-                    headerRight: () => (
-                        <IconActionV2
-                            iconName="pencil"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/movies/editReview",
-                                    params: { reviewId },
-                                })
-                            }
-                        />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: review?.rating
+                            ? getRatingLabel(
+                                  review.rating,
+                                  configuration.ratings.starCount,
+                              )
+                            : "Watched",
+                        headerRight: () => (
+                            <IconActionV2
+                                iconName="pencil"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/editWatch",
+                                        params: { reviewId },
+                                    })
+                                }
+                            />
+                        ),
+                    }}
+                />
+            }
+        >
             <ScrollView
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
@@ -54,7 +58,7 @@ const Review: FC = () => {
                     />
                 )}
             </ScrollView>
-        </>
+        </ScreenLayout>
     );
 };
 

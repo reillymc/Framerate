@@ -12,4 +12,4 @@ export {
     useShowWatchlistEntry,
 } from "./hooks";
 export { ShowWatchlist } from "./models";
-export { SectionedShowEntryList } from "./components";
+export { SectionedShowEntryList, ShowUpNextList } from "./components";

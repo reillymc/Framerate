@@ -1,3 +1,4 @@
+import { ScreenLayout } from "@/components";
 import { Poster } from "@/components/poster";
 import { usePopularMovies } from "@/modules/movie";
 import {
@@ -24,12 +25,9 @@ const Browse: FC = () => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: "Popular Movies",
-                }}
-            />
+        <ScreenLayout
+            meta={<Stack.Screen options={{ title: "Popular Movies" }} />}
+        >
             <FlatList
                 data={movies}
                 contentInsetAdjustmentBehavior="automatic"
@@ -69,7 +67,7 @@ const Browse: FC = () => {
                             }
                             onAddReview={() =>
                                 router.push({
-                                    pathname: "/movies/editReview",
+                                    pathname: "/movies/editWatch",
                                     params: { movieId: item.id },
                                 })
                             }
@@ -82,7 +80,7 @@ const Browse: FC = () => {
                     );
                 }}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

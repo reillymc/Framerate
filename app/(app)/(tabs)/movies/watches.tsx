@@ -1,5 +1,7 @@
+import { ScreenLayout } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useCompany } from "@/modules/company";
+import { useMovieReviews } from "@/modules/movieReview";
 import {
     AbsoluteRatingScale,
     FilterableReviewList,
@@ -8,7 +10,6 @@ import {
     ReviewSortButton,
     ReviewSummaryCard,
 } from "@/modules/review";
-import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
 import { Undefined } from "@reillymc/react-native-components";
 import { Stack, useRouter } from "expo-router";
@@ -31,7 +32,7 @@ const Reviews: FC = () => {
         data: reviews,
         refetch,
         fetchNextPage,
-    } = useShowReviews({
+    } = useMovieReviews({
         atVenue,
         withCompany,
         ratingMax:
@@ -57,26 +58,29 @@ const Reviews: FC = () => {
         [company, withCompany],
     );
 
+    const showSortButton =
+        reviewList?.length || withCompany || atVenue || rating;
+
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: "My Reviews",
-                    headerRight: () =>
-                        reviewList?.length ||
-                        withCompany ||
-                        atVenue ||
-                        rating ? (
-                            <ReviewSortButton
-                                order={orderBy}
-                                sort={sort}
-                                mediaType={MediaType.Show}
-                                onChangeOrder={setOrderBy}
-                                onChangeSort={setSort}
-                            />
-                        ) : undefined,
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: "My Watches",
+                        headerRight: () =>
+                            showSortButton && (
+                                <ReviewSortButton
+                                    order={orderBy}
+                                    sort={sort}
+                                    mediaType={MediaType.Movie}
+                                    onChangeOrder={setOrderBy}
+                                    onChangeSort={setSort}
+                                />
+                            ),
+                    }}
+                />
+            }
+        >
             <FilterableReviewList
                 reviews={reviewList}
                 venueOptions={configuration.venues.knownVenueNames}
@@ -96,30 +100,30 @@ const Reviews: FC = () => {
                     <ReviewSummaryCard
                         key={item.reviewId}
                         review={item}
-                        mediaTitle={item.show.name}
-                        mediaPosterPath={item.show.posterPath}
-                        mediaDate={item.show.firstAirDate}
+                        mediaTitle={item.movie.title}
+                        mediaPosterPath={item.movie.posterPath}
+                        mediaDate={item.movie.releaseDate}
                         starCount={configuration.ratings.starCount}
                         onPress={() =>
                             router.push({
-                                pathname: "/shows/show",
+                                pathname: "/movies/movie",
                                 params: {
-                                    id: item.show.id,
-                                    name: item.show.name,
-                                    posterPath: item.show.posterPath,
+                                    id: item.movie.id,
+                                    title: item.movie.title,
+                                    posterPath: item.movie.posterPath,
                                 },
                             })
                         }
                         onOpenReview={() =>
                             router.push({
-                                pathname: "/shows/review",
+                                pathname: "/movies/watch",
                                 params: { reviewId: item.reviewId },
                             })
                         }
                     />
                 )}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

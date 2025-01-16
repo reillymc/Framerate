@@ -22,6 +22,7 @@ import {
     MediaLinks,
     ParallaxScrollView,
     Poster,
+    ScreenLayout,
     TmdbImage,
     usePosterDimensions,
 } from "@/components";
@@ -95,8 +96,9 @@ const Movie: React.FC = () => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <>
-            <Stack.Screen options={{ title: movie?.title ?? title }} />
+        <ScreenLayout
+            meta={<Stack.Screen options={{ title: movie?.title ?? title }} />}
+        >
             <ParallaxScrollView
                 headerImage={
                     <TmdbImage type="backdrop" path={movie?.backdropPath} />
@@ -205,7 +207,7 @@ const Movie: React.FC = () => {
                                         }
                                         onPress={() =>
                                             router.push({
-                                                pathname: "/movies/review",
+                                                pathname: "/movies/watch",
                                                 params: {
                                                     reviewId: item.reviewId,
                                                 },
@@ -253,7 +255,7 @@ const Movie: React.FC = () => {
                 onWatchlist={!!watchlistEntry}
                 onAddReview={() =>
                     router.push({
-                        pathname: "/movies/editReview",
+                        pathname: "/movies/editWatch",
                         params: { movieId },
                     })
                 }
@@ -268,7 +270,7 @@ const Movie: React.FC = () => {
                     saveWatchlistEntry({ movieId });
                 }}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

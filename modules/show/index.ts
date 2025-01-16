@@ -9,7 +9,7 @@ export {
     useShow,
     usePopularShows,
     useSearchShows,
-    useRecentSearches,
+    useRecentShowSearches,
 } from "./hooks";
 export { Show, ShowType } from "./models";
 export { ActiveStatuses, ShowStatus } from "./constants";
