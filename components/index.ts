@@ -24,3 +24,4 @@ export { StarRating, StarRatingDisplay } from "./starRating";
 export { ScreenLayout } from "./screenLayout";
 export { ScreenSection } from "./screenSection";
 export { RecentSearchList } from "./recentSearchList";
+export { Logo } from "./logo";

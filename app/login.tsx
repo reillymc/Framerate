@@ -1,12 +1,29 @@
+import { Logo, ScreenLayout } from "@/components";
 import { useSession } from "@/modules/auth";
-import { Button, Form, TextInput } from "@reillymc/react-native-components";
+import {
+    Action,
+    Button,
+    Form,
+    IconActionV2,
+    Text,
+    TextInput,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
 import { useRouter } from "expo-router";
 import { type FC, useCallback, useRef, useState } from "react";
-import { StyleSheet, type TextInput as rnTextInput } from "react-native";
+import {
+    Platform,
+    StyleSheet,
+    View,
+    type TextInput as rnTextInput,
+} from "react-native";
 
 const LoginScreen: FC = () => {
     const router = useRouter();
     const { signIn } = useSession();
+
+    const styles = useThemedStyles(createStyles, {});
 
     const passwordRef = useRef<rnTextInput>(null);
 
@@ -21,72 +38,106 @@ const LoginScreen: FC = () => {
     }, [router, email, password, signIn]);
 
     return (
-        <Form style={styles.form}>
-            <TextInput
-                label="Email"
-                placeholder="Email..."
-                width="large"
-                textContentType="username"
-                autoCapitalize="none"
-                value={email}
-                clearButtonMode="while-editing"
-                mandatory
-                containerStyle={styles.inputItem}
-                onChangeText={setEmail}
-                onSubmitEditing={() => passwordRef.current?.focus()}
-                blurOnSubmit={false}
-            />
-            <TextInput
-                ref={passwordRef}
-                label="Password"
-                placeholder="Password..."
-                width="large"
-                textContentType="password"
-                secureTextEntry={true}
-                value={password}
-                clearButtonMode="while-editing"
-                mandatory
-                containerStyle={styles.inputItem}
-                onChangeText={setPassword}
-                onSubmitEditing={handleLogin}
-            />
-            <Button
-                label="Login"
-                onPress={handleLogin}
-                style={styles.confirmButton}
-                size="regular"
-                disabled={!(email && password)}
-            />
-        </Form>
+        <ScreenLayout
+            meta={
+                <View style={styles.settingsButton}>
+                    <IconActionV2 iconName="gear" variant="flat" size="large" />
+                </View>
+            }
+        >
+            <Form style={styles.container}>
+                <View style={styles.titleContainer}>
+                    {Platform.OS === "web" ? (
+                        <Text variant="title">Log In or Register</Text>
+                    ) : (
+                        <>
+                            <Logo />
+                            <Text variant="display">Framerate</Text>
+                        </>
+                    )}
+                </View>
+
+                <View style={styles.form}>
+                    <TextInput
+                        label="Email"
+                        width="full"
+                        textContentType="username"
+                        autoCapitalize="none"
+                        value={email}
+                        clearButtonMode="while-editing"
+                        onChangeText={setEmail}
+                        onSubmitEditing={() => passwordRef.current?.focus()}
+                        submitBehavior="submit"
+                    />
+                    <TextInput
+                        ref={passwordRef}
+                        label="Password"
+                        width="full"
+                        textContentType="password"
+                        secureTextEntry={true}
+                        value={password}
+                        clearButtonMode="while-editing"
+                        onChangeText={setPassword}
+                        onSubmitEditing={handleLogin}
+                    />
+                    <Button
+                        label="Login"
+                        onPress={handleLogin}
+                        style={styles.confirmButton}
+                        size="large"
+                        disabled={!(email && password)}
+                    />
+                </View>
+                <View style={styles.signUpContainer}>
+                    <Text>Don't have an account? </Text>
+                    <Action
+                        onPress={() => null}
+                        label="Sign up"
+                        variant="primary"
+                    />
+                </View>
+            </Form>
+        </ScreenLayout>
     );
 };
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({
-    titleContainer: {
-        marginTop: 80,
-        marginLeft: 16,
-    },
-    title: {
-        fontSize: 40,
-        lineHeight: 48,
-    },
-    form: {
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        marginTop: 80,
-    },
-    inputItem: {
-        marginBottom: 20,
-    },
-    confirmButton: {
-        marginTop: 16,
-    },
-    switchButton: {
-        position: "absolute",
-        bottom: 48,
-    },
-});
+const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+    StyleSheet.create({
+        container: {
+            marginVertical: "30%",
+            flex: 1,
+        },
+        titleContainer: {
+            marginBottom: 48,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            justifyContent: "center",
+        },
+        signUpContainer: {
+            flexDirection: "row",
+            gap: padding.tiny,
+            marginTop: padding.large,
+            width: Platform.OS === "web" ? "100%" : "70%",
+            alignSelf: "center",
+        },
+        form: {
+            alignItems: "center",
+            width: Platform.OS === "web" ? "100%" : "70%",
+            alignSelf: "center",
+            gap: padding.regular,
+        },
+        confirmButton: {
+            marginTop: padding.large,
+        },
+        settingsButton: {
+            position: "absolute",
+            bottom: Platform.OS === "web" ? 32 : 64,
+            width: Platform.OS === "web" ? "100%" : "70%",
+            alignItems: "flex-end",
+            marginRight: Platform.OS === "web" ? 64 : 0,
+            alignSelf: "center",
+        },
+    });

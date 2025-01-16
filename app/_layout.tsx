@@ -1,5 +1,5 @@
 import "react-native-reanimated";
-import { Font } from "@/assets/fonts";
+import { Font, FontResources } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks";
 import { ServiceProvider } from "@/hooks/useFramerateServices";
 import { SessionProvider } from "@/modules/auth";
@@ -21,7 +21,9 @@ import {
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, onlineManager } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
+import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { setOptions } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
@@ -31,6 +33,8 @@ setOptions({
     duration: 250,
     fade: true,
 });
+
+preventAutoHideAsync();
 
 let DevToolsBubble: FC | undefined = undefined;
 if (__DEV__) {
@@ -63,12 +67,26 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
     const { fontScale } = useWindowDimensions();
 
+    const [loaded, error] = useFonts({
+        [Font.Light]: FontResources.light,
+        [Font.Regular]: FontResources.regular,
+        [Font.Medium]: FontResources.medium,
+        [Font.SemiBold]: FontResources.semiBold,
+        [Font.Bold]: FontResources.bold,
+    });
+
     useEffect(() => {
         return NetInfo.addEventListener((state) => {
             const status = !!state.isConnected;
             onlineManager.setOnline(status);
         });
     }, []);
+
+    useEffect(() => {
+        if (loaded || error) {
+            hideAsync();
+        }
+    }, [loaded, error]);
 
     const baseTheme: DeepPartial<Theme> = useMemo(
         () => ({

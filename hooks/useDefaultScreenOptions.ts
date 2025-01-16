@@ -3,6 +3,7 @@ import { useMemo } from "react";
 // biome-ignore lint/style/useImportType: transitive dependency
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { useTheme } from "@reillymc/react-native-components";
+import { Platform } from "react-native";
 
 export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
     const { theme } = useTheme();
@@ -12,6 +13,7 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
             headerLargeTitleShadowVisible: false,
             headerLargeTitle: true,
             headerTransparent: true,
+            headerShown: Platform.OS !== "web",
             headerBlurEffect: "regular",
             headerLargeTitleStyle: {
                 color: theme.color.textPrimary,
@@ -28,7 +30,8 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
                 color: theme.color.textPrimary,
             },
             contentStyle: {
-                paddingTop: theme.padding.screenContentTop,
+                paddingTop:
+                    Platform.OS === "web" ? 0 : theme.padding.screenContentTop,
             },
         }),
         [theme],
