@@ -1,4 +1,5 @@
 .openapi-generator-ignore
+apis/AdministrationApi.ts
 apis/AuthenticationApi.ts
 apis/CompanyApi.ts
 apis/MovieApi.ts

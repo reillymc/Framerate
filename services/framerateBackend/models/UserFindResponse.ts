@@ -44,6 +44,12 @@ export interface UserFindResponse {
     firstName: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof UserFindResponse
+     */
+    isAdmin: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof UserFindResponse
      */
@@ -63,6 +69,7 @@ export function instanceOfUserFindResponse(value: object): value is UserFindResp
     if (!('configuration' in value) || value['configuration'] === undefined) return false;
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
+    if (!('isAdmin' in value) || value['isAdmin'] === undefined) return false;
     if (!('lastName' in value) || value['lastName'] === undefined) return false;
     if (!('userId' in value) || value['userId'] === undefined) return false;
     return true;
@@ -82,6 +89,7 @@ export function UserFindResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
         'configuration': json['configuration'],
         'email': json['email'],
         'firstName': json['firstName'],
+        'isAdmin': json['isAdmin'],
         'lastName': json['lastName'],
         'userId': json['userId'],
     };
@@ -102,6 +110,7 @@ export function UserFindResponseToJSONTyped(value?: UserFindResponse | null, ign
         'configuration': value['configuration'],
         'email': value['email'],
         'firstName': value['firstName'],
+        'isAdmin': value['isAdmin'],
         'lastName': value['lastName'],
         'userId': value['userId'],
     };

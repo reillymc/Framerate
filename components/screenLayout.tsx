@@ -6,7 +6,7 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import type { FC, ReactNode } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Logo } from "./logo";
@@ -43,6 +43,10 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     const styles = useThemedStyles(createStyles, {});
     const router = useRouter();
     const { session } = useSession();
+
+    const segments = useSegments();
+
+    const profileActive = segments.at(-1) === "profile";
 
     if (isLoading) {
         return (
@@ -94,6 +98,10 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
                             iconName="person"
                             onPress={() =>
                                 router.push({ pathname: "/profile" })
+                            }
+                            disabled={profileActive}
+                            iconStyle={
+                                profileActive ? styles.iconSelected : undefined
                             }
                         />
                     )}
@@ -156,5 +164,8 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             zIndex: 1,
             width: 480,
             maxWidth: "90%",
+        },
+        iconSelected: {
+            color: color.primary,
         },
     });

@@ -1,20 +1,11 @@
-import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
-import { useQuery } from "@tanstack/react-query";
-import { type Configuration, DefaultConfiguration } from "../models";
-import { UserKeys } from "./keys";
+import { DefaultConfiguration } from "../models";
+import { useUser } from "./useUser";
 
 export const useCurrentUserConfig = () => {
     const { userId } = useSession();
-    const { users } = useFramerateServices();
 
-    const { data } = useQuery({
-        queryKey: UserKeys.details(userId),
-        enabled: !!users && !!userId,
-        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => users!.find({ userId: userId! }),
-        select: (data) => data?.configuration as Configuration,
-    });
+    const { data } = useUser(userId);
 
-    return { configuration: data ?? DefaultConfiguration };
+    return { configuration: data?.configuration ?? DefaultConfiguration };
 };

@@ -15,27 +15,17 @@
 import * as runtime from '../runtime';
 import type {
   AuthUser,
-  InviteDetails,
   LoginResponse,
   RegisteringUser,
-  Secret,
 } from '../models/index';
 import {
     AuthUserFromJSON,
     AuthUserToJSON,
-    InviteDetailsFromJSON,
-    InviteDetailsToJSON,
     LoginResponseFromJSON,
     LoginResponseToJSON,
     RegisteringUserFromJSON,
     RegisteringUserToJSON,
-    SecretFromJSON,
-    SecretToJSON,
 } from '../models/index';
-
-export interface AuthenticationApiInviteRequest {
-    inviteDetails: InviteDetails;
-}
 
 export interface AuthenticationApiLoginRequest {
     authUser: AuthUser;
@@ -45,10 +35,6 @@ export interface AuthenticationApiRegisterRequest {
     registeringUser: RegisteringUser;
 }
 
-export interface AuthenticationApiSetupRequest {
-    secret: Secret;
-}
-
 /**
  * AuthenticationApi - interface
  * 
@@ -56,19 +42,6 @@ export interface AuthenticationApiSetupRequest {
  * @interface AuthenticationApiInterface
  */
 export interface AuthenticationApiInterface {
-    /**
-     * 
-     * @param {InviteDetails} inviteDetails 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthenticationApiInterface
-     */
-    inviteRaw(requestParameters: AuthenticationApiInviteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
-
-    /**
-     */
-    invite(requestParameters: AuthenticationApiInviteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
-
     /**
      * 
      * @param {AuthUser} authUser 
@@ -95,71 +68,12 @@ export interface AuthenticationApiInterface {
      */
     register(requestParameters: AuthenticationApiRegisterRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LoginResponse>;
 
-    /**
-     * 
-     * @param {Secret} secret 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthenticationApiInterface
-     */
-    setupRaw(requestParameters: AuthenticationApiSetupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
-
-    /**
-     */
-    setup(requestParameters: AuthenticationApiSetupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
-
 }
 
 /**
  * 
  */
 export class AuthenticationApi extends runtime.BaseAPI implements AuthenticationApiInterface {
-
-    /**
-     */
-    async inviteRaw(requestParameters: AuthenticationApiInviteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
-        if (requestParameters['inviteDetails'] == null) {
-            throw new runtime.RequiredError(
-                'inviteDetails',
-                'Required parameter "inviteDetails" was null or undefined when calling invite().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/v1/auth/invite`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: InviteDetailsToJSON(requestParameters['inviteDetails']),
-        }, initOverrides);
-
-        if (this.isJsonMime(response.headers.get('content-type'))) {
-            return new runtime.JSONApiResponse<string>(response);
-        } else {
-            return new runtime.TextApiResponse(response) as any;
-        }
-    }
-
-    /**
-     */
-    async invite(requestParameters: AuthenticationApiInviteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.inviteRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      */
@@ -186,7 +100,7 @@ export class AuthenticationApi extends runtime.BaseAPI implements Authentication
             }
         }
         const response = await this.request({
-            path: `/api/v1/auth/login`,
+            path: `/api/v1/authentication/login`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -228,7 +142,7 @@ export class AuthenticationApi extends runtime.BaseAPI implements Authentication
             }
         }
         const response = await this.request({
-            path: `/api/v1/auth/register`,
+            path: `/api/v1/authentication/register`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -242,52 +156,6 @@ export class AuthenticationApi extends runtime.BaseAPI implements Authentication
      */
     async register(requestParameters: AuthenticationApiRegisterRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LoginResponse> {
         const response = await this.registerRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async setupRaw(requestParameters: AuthenticationApiSetupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
-        if (requestParameters['secret'] == null) {
-            throw new runtime.RequiredError(
-                'secret',
-                'Required parameter "secret" was null or undefined when calling setup().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/v1/auth/setup`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: SecretToJSON(requestParameters['secret']),
-        }, initOverrides);
-
-        if (this.isJsonMime(response.headers.get('content-type'))) {
-            return new runtime.JSONApiResponse<string>(response);
-        } else {
-            return new runtime.TextApiResponse(response) as any;
-        }
-    }
-
-    /**
-     */
-    async setup(requestParameters: AuthenticationApiSetupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.setupRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

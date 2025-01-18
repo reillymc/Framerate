@@ -1,4 +1,4 @@
-import { SegmentedControl } from "@/components";
+import { ScreenLayout, SegmentedControl } from "@/components";
 import { useHealth } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import {
@@ -124,16 +124,23 @@ const Profile: FC = () => {
         [saveUser, userId, configuration],
     );
 
+    const showAdminButton = user && "isAdmin" in user && user.isAdmin;
+
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: user ? `${user.firstName} ${user.lastName}` : "...",
-                    headerLeft: () => (
-                        <Action label="Done" onPress={router.back} />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: user
+                            ? `${user.firstName} ${user.lastName}`
+                            : "...",
+                        headerLeft: () => (
+                            <Action label="Done" onPress={router.back} />
+                        ),
+                    }}
+                />
+            }
+        >
             <ScrollView
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
@@ -153,12 +160,6 @@ const Profile: FC = () => {
                             <TextInput
                                 label="Last Name"
                                 value={user.lastName}
-                                containerStyle={styles.sectionElement}
-                                disabled
-                            />
-                            <TextInput
-                                label="Email"
-                                value={user.email}
                                 containerStyle={styles.sectionElement}
                                 disabled
                             />
@@ -383,6 +384,16 @@ const Profile: FC = () => {
                 >
                     <Text variant="title">Framerate</Text>
                     <View style={styles.sectionContainer}>
+                        {showAdminButton && (
+                            <Button
+                                label="Administration"
+                                variant="flat"
+                                size="small"
+                                contentAlign="left"
+                                style={styles.actionButton}
+                                onPress={() => router.push("/administration")}
+                            />
+                        )}
                         <Button
                             label="Credits"
                             variant="flat"
@@ -405,7 +416,7 @@ const Profile: FC = () => {
                     </View>
                 </Animated.View>
             </ScrollView>
-        </>
+        </ScreenLayout>
     );
 };
 
@@ -460,7 +471,7 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
         },
         actionButton: {
             marginTop: padding.large,
-            marginBottom: padding.regular,
+            marginBottom: padding.large,
             width: "100%",
         },
     });

@@ -7,6 +7,8 @@ import {
     useMemo,
 } from "react";
 import {
+    AdministrationApi,
+    type AdministrationApiInterface,
     CompanyApi,
     type CompanyApiInterface,
     Configuration,
@@ -37,6 +39,7 @@ import {
 } from "../services";
 
 type ServiceContextType = {
+    administration: AdministrationApiInterface;
     company: CompanyApiInterface;
     movieCollections: MovieCollectionApiInterface;
     movieReviews: MovieReviewApiInterface;
@@ -68,6 +71,8 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
         });
 
         return {
+            administration: new AdministrationApi(serviceConfiguration),
+            company: new CompanyApi(serviceConfiguration),
             movieCollections: new MovieCollectionApi(serviceConfiguration),
             movieReviews: new MovieReviewApi(serviceConfiguration),
             movies: new MovieApi(serviceConfiguration),
@@ -78,7 +83,6 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
             showReviews: new ShowReviewApi(serviceConfiguration),
             shows: new ShowApi(serviceConfiguration),
             showWatchlist: new ShowWatchlistApi(serviceConfiguration),
-            company: new CompanyApi(serviceConfiguration),
             users: new UserApi(serviceConfiguration),
         };
     }, [session, host]);
