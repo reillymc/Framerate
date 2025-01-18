@@ -1,17 +1,18 @@
 import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
+import { useSession } from "@/modules/auth";
 import {
-    Action,
-    Text,
+    IconActionV2,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import type { FC, ReactNode } from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Logo } from "./logo";
 
 interface ScreenLayoutProps {
     meta?: ReactNode;
+    tail?: ReactNode;
     isLoading?: boolean;
     isErrored?: boolean;
     isEmpty?: boolean;
@@ -25,6 +26,7 @@ interface ScreenLayoutProps {
 
 export const ScreenLayout: FC<ScreenLayoutProps> = ({
     meta,
+    tail,
     empty,
     errored,
     loading,
@@ -36,6 +38,8 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     isSearching,
 }) => {
     const styles = useThemedStyles(createStyles, {});
+    const router = useRouter();
+    const { session } = useSession();
 
     if (isLoading) {
         return (
@@ -78,24 +82,28 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
             {meta}
             {Platform.OS === "web" ? (
                 <View style={styles.navigationBar}>
-                    <Logo />
-                    <Pressable
+                    <Logo
+                        withTitle
                         onPress={() => router.navigate("/(app)/(tabs)/movies")}
-                    >
-                        <Text variant="display">Framerate</Text>
-                    </Pressable>
-                    <Action />
+                    />
+                    {session && (
+                        <IconActionV2
+                            iconName="person"
+                            onPress={() =>
+                                router.push({ pathname: "/profile" })
+                            }
+                        />
+                    )}
                 </View>
             ) : null}
             {Platform.OS === "web" ? (
                 <View style={styles.body}>
-                    <View style={styles.outerColumns} />
                     <View style={styles.main}>{children}</View>
-                    <View style={styles.outerColumns} />
                 </View>
             ) : (
                 children
             )}
+            {tail}
         </>
     );
 };
@@ -104,23 +112,21 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
     StyleSheet.create({
         navigationBar: {
             height: NAVIGATION_BAR_HEIGHT,
-            alignItems: "center",
-            paddingLeft: padding.large,
             flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: padding.large,
             gap: padding.regular,
             borderBottomColor: color.border,
             borderBottomWidth: 2,
             backgroundColor: color.foreground,
         },
         body: {
+            flex: 1,
             flexDirection: "row",
-            flex: 1,
-        },
-        outerColumns: {
-            flex: 1,
+            justifyContent: "center",
         },
         main: {
-            flex: 2,
-            maxWidth: 400,
+            flex: 1,
         },
     });

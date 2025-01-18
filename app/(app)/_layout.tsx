@@ -12,7 +12,7 @@ const RootLayoutNavigator = () => {
     }
 
     if (!(session && userId)) {
-        return <Redirect href="/login" />;
+        return <Redirect href="/(auth)" />;
     }
 
     return (

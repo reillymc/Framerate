@@ -124,13 +124,17 @@ export default function RootLayout() {
         () =>
             MergeTheme(baseTheme, {
                 color: {
-                    primary: "gold",
+                    primary: "#F69F40",
                     primaryHighlight: "goldenrod",
+                    primaryDisabled: "#F9C48D",
                     textOnSecondary: "#F4EDEA",
                     textOnPrimary: "#fff",
                     border: "#d5d5d5",
                     shadow: "#000",
                     textSecondary: "#BBB",
+                    inputBackgroundDisabled: "#00000008",
+                    red: "#bb2124",
+                    textHighlight: "#613505",
                 },
             }),
         [baseTheme],
@@ -156,7 +160,7 @@ export default function RootLayout() {
                     primaryHighlight: "goldenrod",
                     textOnSecondary: "#12263A",
                     textOnPrimary: "#fff",
-                    primaryDisabled: "#ff7e8c",
+                    primaryDisabled: "goldenrod",
                     primary: "gold",
                 },
             }),

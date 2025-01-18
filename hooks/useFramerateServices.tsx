@@ -1,4 +1,3 @@
-import { LOG_CALLS } from "@/constants/api";
 import { useSession } from "@/modules/auth";
 import {
     type FC,
@@ -11,7 +10,7 @@ import {
     CompanyApi,
     type CompanyApiInterface,
     Configuration,
-    type Middleware,
+    LoggerMiddleware,
     MovieApi,
     type MovieApiInterface,
     MovieCollectionApi,
@@ -32,6 +31,7 @@ import {
     type ShowReviewApiInterface,
     ShowWatchlistApi,
     type ShowWatchlistApiInterface,
+    SignalMiddleware,
     UserApi,
     type UserApiInterface,
 } from "../services";
@@ -51,30 +51,6 @@ type ServiceContextType = {
     users: UserApiInterface;
 };
 
-const LoggerMiddleware: Middleware = {
-    pre: (context) => {
-        if (LOG_CALLS) {
-            console.debug(context.init.method, context.url);
-        }
-
-        return new Promise((resolve) => resolve(context));
-    },
-    onError: (context) => {
-        console.warn(`Network response was not ok for ${context.url}`);
-        return new Promise((resolve) => resolve(context.response));
-    },
-};
-
-const SignalMiddleware: Middleware = {
-    pre: (context) => {
-        const controller = new AbortController();
-        setTimeout(() => controller.abort(), 3000);
-        context.init.signal = controller.signal;
-
-        return new Promise((resolve) => resolve(context));
-    },
-};
-
 const ServiceContext = createContext<Partial<ServiceContextType>>({});
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
@@ -82,12 +58,12 @@ const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 export const useFramerateServices = () => useContext(ServiceContext);
 
 export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
-    const { session } = useSession();
+    const { session, host } = useSession();
 
     const services: ServiceContextType = useMemo(() => {
         const serviceConfiguration = new Configuration({
-            accessToken: session ?? undefined,
-            basePath: BASE_URL,
+            accessToken: session || undefined,
+            basePath: host || BASE_URL,
             middleware: [LoggerMiddleware, SignalMiddleware],
         });
 
@@ -105,7 +81,7 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
             company: new CompanyApi(serviceConfiguration),
             users: new UserApi(serviceConfiguration),
         };
-    }, [session]);
+    }, [session, host]);
 
     return (
         <ServiceContext.Provider value={services}>

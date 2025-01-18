@@ -34,12 +34,10 @@ export async function setStorageItemAsync(key: string, value: string | null) {
     }
 }
 
-export function useStorageState(key: string): UseStateHook<string> {
-    // Public
+export function useStorageState(key: string) {
     const [state, setState] = useAsyncState<string>();
 
-    // Get
-    useEffect(() => {
+    const refetch = useCallback(() => {
         if (Platform.OS === "web") {
             try {
                 if (typeof localStorage !== "undefined") {
@@ -55,7 +53,10 @@ export function useStorageState(key: string): UseStateHook<string> {
         }
     }, [key, setState]);
 
-    // Set
+    useEffect(() => {
+        refetch();
+    }, [refetch]);
+
     const setValue = useCallback(
         (value: string | null) => {
             setState(value);
@@ -64,5 +65,5 @@ export function useStorageState(key: string): UseStateHook<string> {
         [key, setState],
     );
 
-    return [state, setValue];
+    return [state[1], setValue, { loading: state[0], refetch }] as const;
 }
