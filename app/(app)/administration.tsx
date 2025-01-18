@@ -12,6 +12,8 @@ import { setStringAsync, setUrlAsync } from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useEffect, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import app from "../../app.json";
+
 const Profile: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
@@ -34,7 +36,7 @@ const Profile: FC = () => {
         administration
             .generateInvite({ inviteDetails: { email } })
             .then((inviteCode) => {
-                const inviteLink = `framerate://register?inviteCode=${inviteCode}`;
+                const inviteLink = `${app.expo.scheme}://register?inviteCode=${inviteCode}`;
                 if (Platform.OS === "ios") {
                     setUrlAsync(inviteLink);
                 } else {

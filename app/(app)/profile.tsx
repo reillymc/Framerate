@@ -425,6 +425,7 @@ const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
         container: {
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
+            paddingBottom: padding.pageBottom,
         },
         indentedElement: {
             paddingLeft: padding.small,

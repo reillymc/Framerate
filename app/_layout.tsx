@@ -28,6 +28,7 @@ import { setOptions } from "expo-splash-screen";
 import { type FC, useEffect, useMemo } from "react";
 import { Platform, StatusBar, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { version } from "../package.json";
 
 setOptions({
     duration: 250,
@@ -60,6 +61,8 @@ const queryClient = new QueryClient({
 
 const persister = createAsyncStoragePersister({
     storage: AsyncStorage,
+    // Clear cache when app version is updated (avoid cache causing issues when breaking changes are introduced)
+    key: `FRAMERATE-${version}-RQ-CACHE`,
     throttleTime: 3000,
 });
 
