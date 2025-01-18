@@ -1,5 +1,5 @@
 import { ScreenLayout } from "@/components";
-import { WebPageLayout } from "@/constants/layout";
+import { WebPageModal } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
     Action,
@@ -32,9 +32,11 @@ const ServerScreen: FC = () => {
                     }}
                 />
             }
+            options={{ web: { modal: true } }}
         >
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
+                style={WebPageModal}
                 contentContainerStyle={styles.container}
             >
                 {Platform.OS === "web" && (
@@ -66,7 +68,6 @@ export default ServerScreen;
 const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            ...WebPageLayout,
             alignItems: "center",
             justifyContent: "center",
             marginHorizontal: padding.pageHorizontal + padding.regular,

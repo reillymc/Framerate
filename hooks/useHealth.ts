@@ -1,17 +1,14 @@
-import { BASE_URL, FRAMERATE_API } from "@/constants/api";
 import { useSession } from "@/modules/auth";
 import { useQuery } from "@tanstack/react-query";
 
 export const useHealth = () => {
-    const { session } = useSession();
+    const { session, host, defaultHost } = useSession();
 
     return useQuery({
         queryKey: ["health"],
         queryFn: async () => {
-            const { method, endpoint } = FRAMERATE_API.health.get();
-
             const options = {
-                method,
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     accept: "application/json",
@@ -20,7 +17,7 @@ export const useHealth = () => {
                 },
             };
 
-            const url = `${BASE_URL}/${endpoint}`;
+            const url = `${host || defaultHost}/health`;
 
             const response = await fetch(url, options);
 

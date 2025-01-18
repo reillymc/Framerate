@@ -1,11 +1,10 @@
-import { HostActions, Logo, ScreenLayout } from "@/components";
+import { ErrorIndicator, HostActions, Logo, ScreenLayout } from "@/components";
 import { WebPageLayout } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
     Action,
     Button,
     Form,
-    Icon,
     Text,
     TextInput,
     type ThemedStyles,
@@ -23,7 +22,8 @@ import {
 
 const LoginScreen: FC = () => {
     const router = useRouter();
-    const { signIn, error, host, isLoading, isSigningIn } = useSession();
+    const { signIn, error, host, clearError, isLoading, isSigningIn } =
+        useSession();
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -39,10 +39,13 @@ const LoginScreen: FC = () => {
     }, [email, password, signIn]);
 
     useEffect(() => {
-        if (isSigningIn) return;
+        if (isSigningIn) {
+            clearError();
+            return;
+        }
 
         setPassword("");
-    }, [isSigningIn]);
+    }, [isSigningIn, clearError]);
 
     return (
         <ScreenLayout
@@ -68,20 +71,7 @@ const LoginScreen: FC = () => {
                             <Logo withTitle />
                         )}
                     </View>
-                    {error && (
-                        <View style={styles.errorContainer}>
-                            <Icon
-                                iconName="exclamationcircle"
-                                style={styles.hostWarningIcon}
-                            />
-                            <Text
-                                variant="bodyEmphasized"
-                                style={styles.errorText}
-                            >
-                                {error}
-                            </Text>
-                        </View>
-                    )}
+                    <ErrorIndicator error={error} />
                     <TextInput
                         label="Email"
                         width="full"
@@ -118,7 +108,13 @@ const LoginScreen: FC = () => {
                     <View style={styles.signUpContainer}>
                         <Text>Don't have an account? </Text>
                         <Action
-                            onPress={() => router.push("/(auth)/register")}
+                            onPress={() => {
+                                clearError();
+                                router.push({
+                                    pathname: "/(auth)/register",
+                                    params: { email },
+                                });
+                            }}
                             label="Sign up"
                             variant="primary"
                         />
@@ -131,7 +127,7 @@ const LoginScreen: FC = () => {
 
 export default LoginScreen;
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { padding } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingTop: "15%",
@@ -140,9 +136,6 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         titleContainer: {
             marginBottom: padding.regular,
             alignItems: "center",
-        },
-        errorText: {
-            color: color.red,
         },
         signUpContainer: {
             flexDirection: "row",
@@ -165,13 +158,5 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             bottom: Platform.OS === "web" ? 32 : 64,
             right: Platform.OS === "web" ? 64 : "10%",
             left: Platform.OS === "web" ? 64 : "10%",
-        },
-        errorContainer: {
-            flexDirection: "row",
-            alignItems: "center",
-            gap: padding.small,
-        },
-        hostWarningIcon: {
-            color: color.destructive,
         },
     });

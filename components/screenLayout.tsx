@@ -1,6 +1,7 @@
 import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
+    IconAction,
     IconActionV2,
     type ThemedStyles,
     useThemedStyles,
@@ -21,6 +22,7 @@ interface ScreenLayoutProps {
     errored?: ReactNode;
     empty?: ReactNode;
     search?: ReactNode;
+    options?: { web: { modal: boolean } };
     children: ReactNode;
 }
 
@@ -35,6 +37,7 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     isEmpty,
     isErrored,
     isLoading,
+    options,
     isSearching,
 }) => {
     const styles = useThemedStyles(createStyles, {});
@@ -80,7 +83,7 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     return (
         <>
             {meta}
-            {Platform.OS === "web" ? (
+            {Platform.OS === "web" && !options?.web.modal && (
                 <View style={styles.navigationBar}>
                     <Logo
                         withTitle
@@ -95,7 +98,19 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
                         />
                     )}
                 </View>
-            ) : null}
+            )}
+            {Platform.OS === "web" && options?.web.modal && (
+                <>
+                    <View style={styles.modalBackdrop} />
+                    <View style={styles.modalControlsContainer}>
+                        <IconAction
+                            iconName="closecircle"
+                            containerStyle={{ margin: 20 }}
+                            onPress={router.back}
+                        />
+                    </View>
+                </>
+            )}
             {Platform.OS === "web" ? (
                 <View style={styles.body}>
                     <View style={styles.main}>{children}</View>
@@ -128,5 +143,18 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         },
         main: {
             flex: 1,
+        },
+        modalBackdrop: {
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: "#00000055",
+        },
+        modalControlsContainer: {
+            position: "absolute",
+            alignSelf: "center",
+            alignItems: "flex-end",
+            top: 140,
+            zIndex: 1,
+            width: 480,
+            maxWidth: "90%",
         },
     });

@@ -35,7 +35,11 @@ export const HostActions: FC<HostActionsProps> = ({
                         iconName="infocirlce"
                         style={styles.hostWarningIcon}
                     />
-                    <Text variant="caption" numberOfLines={1}>
+                    <Text
+                        variant="caption"
+                        numberOfLines={1}
+                        style={styles.text}
+                    >
                         Connecting to: {host}
                     </Text>
                 </View>
@@ -44,7 +48,7 @@ export const HostActions: FC<HostActionsProps> = ({
     );
 };
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
     StyleSheet.create({
         settings: {
             flex: 1,
@@ -55,10 +59,16 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
         },
         hostWarningContainer: {
             flexDirection: "row",
-            maxWidth: "70%",
+            maxWidth: "80%",
             gap: padding.small,
+            backgroundColor: color.background,
+            borderRadius: border.radius.loose,
+            padding: padding.tiny + 2,
         },
         hostWarningIcon: {
             color: color.destructive,
+        },
+        text: {
+            flex: 1,
         },
     });

@@ -3,6 +3,11 @@ import type React from "react";
 
 import { useDefaultScreenOptions } from "@/hooks";
 import { useSession } from "@/modules/auth";
+import { Platform } from "react-native";
+
+export const unstable_settings = {
+    initialRouteName: "index",
+};
 
 const AuthenticationStack: React.FC = () => {
     const screenOptions = useDefaultScreenOptions();
@@ -27,7 +32,10 @@ const AuthenticationStack: React.FC = () => {
                 name="server"
                 options={{
                     headerLargeTitle: false,
-                    presentation: "formSheet",
+                    presentation:
+                        Platform.OS === "web"
+                            ? "transparentModal"
+                            : "formSheet",
                     sheetAllowedDetents: [0.2],
                 }}
             />
