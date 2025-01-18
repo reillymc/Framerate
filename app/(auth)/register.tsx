@@ -1,4 +1,4 @@
-import { ErrorIndicator, HostActions, ScreenLayout } from "@/components";
+import { HostActions, ScreenLayout, StatusIndicator } from "@/components";
 import { WebPageLayout } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
@@ -85,6 +85,7 @@ const RegisterScreen: FC = () => {
         >
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
+                keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
             >
                 <Form style={styles.form}>
@@ -93,13 +94,14 @@ const RegisterScreen: FC = () => {
                             <Text variant="title">Register Account</Text>
                         </View>
                     )}
-                    <ErrorIndicator error={error} />
+                    <StatusIndicator error={error} />
                     <TextInput
                         autoCapitalize="none"
                         clearButtonMode="while-editing"
                         label="Email"
                         submitBehavior="submit"
                         textContentType="emailAddress"
+                        keyboardType="email-address"
                         width="full"
                         value={email}
                         onChangeText={setEmail}

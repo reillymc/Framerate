@@ -32,7 +32,7 @@ export const HostActions: FC<HostActionsProps> = ({
             {host && (
                 <View style={styles.hostWarningContainer}>
                     <Icon
-                        iconName="infocirlce"
+                        iconName="exclamationcircle"
                         style={styles.hostWarningIcon}
                     />
                     <Text
@@ -66,7 +66,7 @@ const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
             padding: padding.tiny + 2,
         },
         hostWarningIcon: {
-            color: color.destructive,
+            color: color.red,
         },
         text: {
             flex: 1,

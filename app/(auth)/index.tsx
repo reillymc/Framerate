@@ -1,4 +1,4 @@
-import { ErrorIndicator, HostActions, Logo, ScreenLayout } from "@/components";
+import { HostActions, Logo, ScreenLayout, StatusIndicator } from "@/components";
 import { WebPageLayout } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
@@ -71,7 +71,7 @@ const LoginScreen: FC = () => {
                             <Logo withTitle />
                         )}
                     </View>
-                    <ErrorIndicator error={error} />
+                    <StatusIndicator error={error} />
                     <TextInput
                         label="Email"
                         width="full"

@@ -1,4 +1,4 @@
-import { ErrorIndicator, ScreenLayout } from "@/components";
+import { ScreenLayout, StatusIndicator } from "@/components";
 import { useFramerateServices } from "@/hooks";
 import {
     Action,
@@ -8,19 +8,43 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { setUrlAsync } from "expo-clipboard";
+import { setStringAsync, setUrlAsync } from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
-import { type FC, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { type FC, useCallback, useEffect, useState } from "react";
+import { Platform, ScrollView, StyleSheet, View } from "react-native";
 const Profile: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
     const { administration } = useFramerateServices();
 
     const [email, setEmail] = useState("");
-    const [status, setStatus] = useState<"pending" | "errored" | "success">(
-        "pending",
-    );
+    const [status, setStatus] = useState<
+        "pending" | "errored" | "success" | "loading"
+    >("pending");
+
+    useEffect(() => {
+        console.log(status);
+    }, [status]);
+
+    const onGenerateLink = useCallback(() => {
+        if (!(administration && email)) return;
+
+        setStatus("loading");
+
+        administration
+            .generateInvite({ inviteDetails: { email } })
+            .then((inviteCode) => {
+                const inviteLink = `framerate://register?inviteCode=${inviteCode}`;
+                if (Platform.OS === "ios") {
+                    setUrlAsync(inviteLink);
+                } else {
+                    setStringAsync(inviteLink);
+                }
+                setEmail("");
+                setStatus("success");
+            })
+            .catch(() => setStatus("errored"));
+    }, [administration, email]);
 
     return (
         <ScreenLayout
@@ -38,38 +62,41 @@ const Profile: FC = () => {
             <ScrollView
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
-                automaticallyAdjustKeyboardInsets
                 contentContainerStyle={styles.container}
             >
-                <View>
-                    <Text variant="title">Create Invite Link</Text>
+                <Text variant="title">Create Invite Link</Text>
+                <View style={styles.section}>
                     <TextInput
-                        label="User Email"
+                        disabled={status === "loading"}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        label="Recipient Email"
+                        textContentType="emailAddress"
                         value={email}
                         onChangeText={setEmail}
+                        onFocus={() => setStatus("pending")}
+                        onSubmitEditing={onGenerateLink}
                         containerStyle={styles.sectionElement}
                     />
                     <Button
                         label="Submit"
-                        onPress={() =>
-                            administration
-                                ?.generateInvite({ inviteDetails: { email } })
-                                .then((inviteCode) => {
-                                    const inviteLink = `framerate://register?inviteCode=${inviteCode}`;
-                                    setUrlAsync(inviteLink);
-                                    setEmail("");
-                                    setStatus("success");
-                                })
-                                .catch(() => setStatus("errored"))
+                        onPress={onGenerateLink}
+                        size="regular"
+                        disabled={!email || status === "loading"}
+                        style={styles.submitButton}
+                    />
+                    <StatusIndicator
+                        error={
+                            status === "errored"
+                                ? "An error occurred when generating the invite link"
+                                : undefined
+                        }
+                        success={
+                            status === "success"
+                                ? "Invitation link copied to clipboard"
+                                : undefined
                         }
                     />
-                    {status === "errored" && (
-                        <ErrorIndicator
-                            error={
-                                "An error occurred when generating the requested invite code"
-                            }
-                        />
-                    )}
                 </View>
             </ScrollView>
         </ScreenLayout>
@@ -82,8 +109,14 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             paddingHorizontal: padding.pageHorizontal,
             paddingTop: padding.pageTop,
         },
+        section: {
+            marginLeft: padding.regular,
+        },
         sectionElement: {
             marginTop: padding.regular,
+        },
+        submitButton: {
+            marginTop: padding.large,
             marginBottom: padding.regular,
         },
     });
