@@ -6,6 +6,7 @@
         "generators": {
             "typescript-fetch": {
                 "generatorName": "typescript-fetch",
+                "templateDir": "services/templates/typescript-fetch",
                 "output": "services/framerateBackend",
                 "inputSpec": "services/openapi.json",
                 "reservedWordsMappings": {

@@ -19,6 +19,7 @@ models/Company.ts
 models/DeleteResponse.ts
 models/Episode.ts
 models/ExternalIds.ts
+models/InviteDetails.ts
 models/Job.ts
 models/LoginResponse.ts
 models/Movie.ts
@@ -33,6 +34,7 @@ models/MovieWatchlistEntry.ts
 models/NewMovieCollection.ts
 models/NewShowCollection.ts
 models/NewUser.ts
+models/RegisteringUser.ts
 models/ReviewCompanyDetails.ts
 models/ReviewCompanySummary.ts
 models/Role.ts

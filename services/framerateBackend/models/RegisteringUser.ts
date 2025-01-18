@@ -15,57 +15,45 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface NewUser
+ * @interface RegisteringUser
  */
-export interface NewUser {
+export interface RegisteringUser {
     /**
      * 
      * @type {string}
-     * @memberof NewUser
-     */
-    avatarUri?: string;
-    /**
-     * 
-     * @type {any}
-     * @memberof NewUser
-     */
-    configuration?: any | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof NewUser
+     * @memberof RegisteringUser
      */
     email: string;
     /**
      * 
      * @type {string}
-     * @memberof NewUser
+     * @memberof RegisteringUser
      */
     firstName: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof NewUser
+     * @type {string}
+     * @memberof RegisteringUser
      */
-    isAdmin?: boolean;
+    inviteCode?: string;
     /**
      * 
      * @type {string}
-     * @memberof NewUser
+     * @memberof RegisteringUser
      */
     lastName: string;
     /**
      * 
      * @type {string}
-     * @memberof NewUser
+     * @memberof RegisteringUser
      */
     password: string;
 }
 
 /**
- * Check if a given object implements the NewUser interface.
+ * Check if a given object implements the RegisteringUser interface.
  */
-export function instanceOfNewUser(value: object): value is NewUser {
+export function instanceOfRegisteringUser(value: object): value is RegisteringUser {
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
     if (!('lastName' in value) || value['lastName'] === undefined) return false;
@@ -73,42 +61,38 @@ export function instanceOfNewUser(value: object): value is NewUser {
     return true;
 }
 
-export function NewUserFromJSON(json: any): NewUser {
-    return NewUserFromJSONTyped(json, false);
+export function RegisteringUserFromJSON(json: any): RegisteringUser {
+    return RegisteringUserFromJSONTyped(json, false);
 }
 
-export function NewUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): NewUser {
+export function RegisteringUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegisteringUser {
     if (json == null) {
         return json;
     }
     return {
         
-        'avatarUri': json['avatarUri'] == null ? undefined : json['avatarUri'],
-        'configuration': json['configuration'] == null ? undefined : json['configuration'],
         'email': json['email'],
         'firstName': json['firstName'],
-        'isAdmin': json['isAdmin'] == null ? undefined : json['isAdmin'],
+        'inviteCode': json['inviteCode'] == null ? undefined : json['inviteCode'],
         'lastName': json['lastName'],
         'password': json['password'],
     };
 }
 
-export function NewUserToJSON(json: any): NewUser {
-    return NewUserToJSONTyped(json, false);
+export function RegisteringUserToJSON(json: any): RegisteringUser {
+    return RegisteringUserToJSONTyped(json, false);
 }
 
-export function NewUserToJSONTyped(value?: NewUser | null, ignoreDiscriminator: boolean = false): any {
+export function RegisteringUserToJSONTyped(value?: RegisteringUser | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'avatarUri': value['avatarUri'],
-        'configuration': value['configuration'],
         'email': value['email'],
         'firstName': value['firstName'],
-        'isAdmin': value['isAdmin'],
+        'inviteCode': value['inviteCode'],
         'lastName': value['lastName'],
         'password': value['password'],
     };
