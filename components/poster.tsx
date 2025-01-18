@@ -1,5 +1,5 @@
-import type React from "react";
 import {
+    Platform,
     Pressable,
     type StyleProp,
     StyleSheet,
@@ -15,7 +15,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { useMemo } from "react";
+import { type FC, useMemo } from "react";
 import { ContextMenu, type MenuElementConfig } from "./contextMenu";
 import { TmdbImage } from "./tmdbImage";
 
@@ -33,7 +33,7 @@ export interface PosterProps {
     onOpenReview?: () => void;
 }
 
-export const Poster: React.FC<PosterProps> = ({
+export const Poster: FC<PosterProps> = ({
     heading,
     subHeading,
     style,
@@ -218,6 +218,19 @@ export const usePosterDimensions: UsePosterDimensionsParams = ({ size }) => {
     const { theme } = useTheme();
 
     const itemWidth = useMemo(() => {
+        if (Platform.OS === "web") {
+            switch (size) {
+                case "large":
+                    return 270;
+                case "medium":
+                    return 180;
+                case "small":
+                    return 120;
+                case "tiny":
+                    return 60;
+            }
+        }
+
         switch (size) {
             case "large":
                 return (width - theme.padding.pageHorizontal * 2) * (2 / 3);

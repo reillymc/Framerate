@@ -1,4 +1,4 @@
-import React, { type ForwardedRef, forwardRef } from "react";
+import { type ForwardedRef, forwardRef, useMemo } from "react";
 import {
     type CellRendererProps,
     FlatList,
@@ -67,7 +67,7 @@ export const AnimatedFlatList = forwardRef(
                 : styles.verticallyInverted
             : undefined;
 
-        const cellRenderer = React.useMemo(
+        const cellRenderer = useMemo(
             () =>
                 createCellRenderer(
                     itemLayoutAnimation,

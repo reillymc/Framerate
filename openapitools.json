@@ -9,6 +9,10 @@
                 "templateDir": "services/templates/typescript-fetch",
                 "output": "services/framerateBackend",
                 "inputSpec": "services/openapi.json",
+                "typeMappings": {
+                    "DateTime": "string",
+                    "Date": "string"
+                },
                 "reservedWordsMappings": {
                     "configuration": "configuration",
                     "public": "public"

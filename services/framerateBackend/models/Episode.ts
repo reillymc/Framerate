@@ -20,10 +20,10 @@ import { mapValues } from '../runtime';
 export interface Episode {
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Episode
      */
-    airDate?: Date;
+    airDate?: string;
     /**
      * 
      * @type {number}
@@ -68,7 +68,7 @@ export function EpisodeFromJSONTyped(json: any, ignoreDiscriminator: boolean): E
     }
     return {
         
-        'airDate': json['airDate'] == null ? undefined : (new Date(json['airDate'])),
+        'airDate': json['airDate'] == null ? undefined : json['airDate'],
         'episodeNumber': json['episodeNumber'],
         'name': json['name'] == null ? undefined : json['name'],
         'overview': json['overview'] == null ? undefined : json['overview'],
@@ -87,7 +87,7 @@ export function EpisodeToJSONTyped(value?: Episode | null, ignoreDiscriminator: 
 
     return {
         
-        'airDate': value['airDate'] == null ? undefined : ((value['airDate']).toISOString().substring(0,10)),
+        'airDate': value['airDate'],
         'episodeNumber': value['episodeNumber'],
         'name': value['name'],
         'overview': value['overview'],

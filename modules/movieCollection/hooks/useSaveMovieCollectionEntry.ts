@@ -65,7 +65,7 @@ export const useSaveMovieCollectionEntry = () => {
                 collectionId,
                 movieId,
                 userId,
-                updatedAt: new Date(),
+                updatedAt: new Date().toISOString(),
                 title: movieDetails?.title ?? "Loading...",
             };
 

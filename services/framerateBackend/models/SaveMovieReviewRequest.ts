@@ -34,10 +34,10 @@ export interface SaveMovieReviewRequest {
     company?: Array<ReviewCompanySummary>;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof SaveMovieReviewRequest
      */
-    date?: Date;
+    date?: string;
     /**
      * 
      * @type {string}
@@ -82,7 +82,7 @@ export function SaveMovieReviewRequestFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'company': json['company'] == null ? undefined : ((json['company'] as Array<any>).map(ReviewCompanySummaryFromJSON)),
-        'date': json['date'] == null ? undefined : (new Date(json['date'])),
+        'date': json['date'] == null ? undefined : json['date'],
         'description': json['description'] == null ? undefined : json['description'],
         'rating': json['rating'] == null ? undefined : json['rating'],
         'title': json['title'] == null ? undefined : json['title'],
@@ -102,7 +102,7 @@ export function SaveMovieReviewRequestToJSONTyped(value?: SaveMovieReviewRequest
     return {
         
         'company': value['company'] == null ? undefined : ((value['company'] as Array<any>).map(ReviewCompanySummaryToJSON)),
-        'date': value['date'] == null ? undefined : ((value['date']).toISOString().substring(0,10)),
+        'date': value['date'],
         'description': value['description'],
         'rating': value['rating'],
         'title': value['title'],

@@ -1,10 +1,10 @@
 import { CustomTabBar } from "@/components";
 import { Tabs, useSegments } from "expo-router";
-import type React from "react";
+import type { FC } from "react";
 
 const MAIN_TABS = ["movies", "shows", "browse"];
 
-const TabLayout: React.FC = () => {
+const TabLayout: FC = () => {
     const segments = useSegments();
 
     const lastSegment = segments.at(-1);

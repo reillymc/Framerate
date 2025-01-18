@@ -41,10 +41,10 @@ export interface ShowReviewResponse {
     company?: Array<ReviewCompanyDetails>;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof ShowReviewResponse
      */
-    date?: Date;
+    date?: string;
     /**
      * 
      * @type {string}
@@ -110,7 +110,7 @@ export function ShowReviewResponseFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'company': json['company'] == null ? undefined : ((json['company'] as Array<any>).map(ReviewCompanyDetailsFromJSON)),
-        'date': json['date'] == null ? undefined : (new Date(json['date'])),
+        'date': json['date'] == null ? undefined : json['date'],
         'description': json['description'] == null ? undefined : json['description'],
         'rating': json['rating'] == null ? undefined : json['rating'],
         'reviewId': json['reviewId'],
@@ -133,7 +133,7 @@ export function ShowReviewResponseToJSONTyped(value?: ShowReviewResponse | null,
     return {
         
         'company': value['company'] == null ? undefined : ((value['company'] as Array<any>).map(ReviewCompanyDetailsToJSON)),
-        'date': value['date'] == null ? undefined : ((value['date']).toISOString().substring(0,10)),
+        'date': value['date'],
         'description': value['description'],
         'rating': value['rating'],
         'reviewId': value['reviewId'],

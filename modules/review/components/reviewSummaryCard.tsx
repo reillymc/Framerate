@@ -13,7 +13,7 @@ interface ReviewSummaryCardProps {
     review: Review;
     starCount: number;
     mediaTitle: string;
-    mediaDate?: Date;
+    mediaDate?: string;
     mediaPosterPath?: string;
     onPress: () => void;
     onOpenReview: () => void;
@@ -38,8 +38,11 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
         ? ratingToStars(review.rating, starCount)
         : undefined;
 
-    const releaseYear = null; // TODO: mediaDate?.getFullYear() ?? null;
+    const releaseYear = mediaDate
+        ? new Date(mediaDate).getFullYear()
+        : undefined;
 
+    const hasRating = rating !== undefined;
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.topContainer}>
@@ -71,6 +74,20 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             starSize={24}
                         />
                     )}
+                    {!(rating || review.description) && (
+                        <View style={styles.compactInformationSection}>
+                            <Text
+                                variant="caption"
+                                style={styles.numericRating}
+                            >
+                                {"Watched"}
+                            </Text>
+                            <Text variant="caption">
+                                {review.date &&
+                                    new Date(review.date).toDateString()}
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </View>
             {!!review.description && (
@@ -90,26 +107,28 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                     </Text>
                 </View>
             )}
-            <View style={styles.informationSection}>
-                {review.description ? (
-                    <View />
-                ) : (
-                    <View style={styles.altInformationInnerContainer}>
-                        <Text
-                            variant="heading"
-                            adjustsFontSizeToFit
-                            numberOfLines={1}
-                            style={[styles.numericRating, styles.altRating]}
-                        >
-                            {rating ? `${rating}/${starCount}` : "Watched"}
-                        </Text>
-                    </View>
-                )}
+            {hasRating && (
+                <View style={styles.informationSection}>
+                    {review.description ? (
+                        <View />
+                    ) : (
+                        <View style={styles.altInformationInnerContainer}>
+                            <Text
+                                variant="heading"
+                                adjustsFontSizeToFit
+                                numberOfLines={1}
+                                style={[styles.numericRating, styles.altRating]}
+                            >
+                                {rating ? `${rating}/${starCount}` : "Watched"}
+                            </Text>
+                        </View>
+                    )}
 
-                <Text variant="caption">
-                    {review.date && new Date(review.date).toDateString()}
-                </Text>
-            </View>
+                    <Text variant="caption">
+                        {review.date && new Date(review.date).toDateString()}
+                    </Text>
+                </View>
+            )}
         </Pressable>
     );
 };
@@ -184,7 +203,15 @@ const createStyles = (
             justifyContent: "space-between",
             marginTop: padding.regular,
             marginBottom: padding.small,
-            marginHorizontal: padding.small,
+            marginLeft: padding.small,
+            marginRight: padding.tiny,
+        },
+        compactInformationSection: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: padding.small,
+            marginRight: padding.tiny,
         },
         altInformationInnerContainer: {
             flexDirection: "row",

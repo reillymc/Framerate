@@ -60,10 +60,10 @@ export interface Show {
     externalIds?: ExternalIds;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Show
      */
-    firstAirDate?: Date;
+    firstAirDate?: string;
     /**
      * 
      * @type {number}
@@ -72,10 +72,10 @@ export interface Show {
     id: number;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Show
      */
-    lastAirDate?: Date;
+    lastAirDate?: string;
     /**
      * 
      * @type {string}
@@ -84,10 +84,10 @@ export interface Show {
     name: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Show
      */
-    nextAirDate?: Date;
+    nextAirDate?: string;
     /**
      * 
      * @type {string}
@@ -148,11 +148,11 @@ export function ShowFromJSONTyped(json: any, ignoreDiscriminator: boolean): Show
         'backdropPath': json['backdropPath'] == null ? undefined : json['backdropPath'],
         'credits': json['credits'] == null ? undefined : ShowCreditsFromJSON(json['credits']),
         'externalIds': json['externalIds'] == null ? undefined : ExternalIdsFromJSON(json['externalIds']),
-        'firstAirDate': json['firstAirDate'] == null ? undefined : (new Date(json['firstAirDate'])),
+        'firstAirDate': json['firstAirDate'] == null ? undefined : json['firstAirDate'],
         'id': json['id'],
-        'lastAirDate': json['lastAirDate'] == null ? undefined : (new Date(json['lastAirDate'])),
+        'lastAirDate': json['lastAirDate'] == null ? undefined : json['lastAirDate'],
         'name': json['name'],
-        'nextAirDate': json['nextAirDate'] == null ? undefined : (new Date(json['nextAirDate'])),
+        'nextAirDate': json['nextAirDate'] == null ? undefined : json['nextAirDate'],
         'overview': json['overview'] == null ? undefined : json['overview'],
         'popularity': json['popularity'] == null ? undefined : json['popularity'],
         'posterPath': json['posterPath'] == null ? undefined : json['posterPath'],
@@ -176,11 +176,11 @@ export function ShowToJSONTyped(value?: Show | null, ignoreDiscriminator: boolea
         'backdropPath': value['backdropPath'],
         'credits': ShowCreditsToJSON(value['credits']),
         'externalIds': ExternalIdsToJSON(value['externalIds']),
-        'firstAirDate': value['firstAirDate'] == null ? undefined : ((value['firstAirDate']).toISOString().substring(0,10)),
+        'firstAirDate': value['firstAirDate'],
         'id': value['id'],
-        'lastAirDate': value['lastAirDate'] == null ? undefined : ((value['lastAirDate']).toISOString().substring(0,10)),
+        'lastAirDate': value['lastAirDate'],
         'name': value['name'],
-        'nextAirDate': value['nextAirDate'] == null ? undefined : ((value['nextAirDate']).toISOString().substring(0,10)),
+        'nextAirDate': value['nextAirDate'],
         'overview': value['overview'],
         'popularity': value['popularity'],
         'posterPath': value['posterPath'],

@@ -6,7 +6,7 @@ export const AbsoluteRatingScale = 100;
 
 export type Review = {
     reviewId: string;
-    date?: Date;
+    date?: string;
     rating?: number;
     title?: string;
     description?: string;

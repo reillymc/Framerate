@@ -54,7 +54,7 @@ export const useSaveShowWatchlistEntry = () => {
             const newEntry = {
                 ...showDetails,
                 showId,
-                updatedAt: new Date(),
+                updatedAt: new Date().toISOString(),
                 name: showDetails?.name ?? "Loading...",
             } satisfies ShowWatchlistEntry;
 

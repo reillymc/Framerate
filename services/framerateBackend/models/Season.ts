@@ -28,10 +28,10 @@ import {
 export interface Season {
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Season
      */
-    airDate?: Date;
+    airDate?: string;
     /**
      * 
      * @type {number}
@@ -95,7 +95,7 @@ export function SeasonFromJSONTyped(json: any, ignoreDiscriminator: boolean): Se
     }
     return {
         
-        'airDate': json['airDate'] == null ? undefined : (new Date(json['airDate'])),
+        'airDate': json['airDate'] == null ? undefined : json['airDate'],
         'episodeCount': json['episodeCount'] == null ? undefined : json['episodeCount'],
         'episodes': json['episodes'] == null ? undefined : ((json['episodes'] as Array<any>).map(EpisodeFromJSON)),
         'name': json['name'] == null ? undefined : json['name'],
@@ -117,7 +117,7 @@ export function SeasonToJSONTyped(value?: Season | null, ignoreDiscriminator: bo
 
     return {
         
-        'airDate': value['airDate'] == null ? undefined : ((value['airDate']).toISOString().substring(0,10)),
+        'airDate': value['airDate'],
         'episodeCount': value['episodeCount'],
         'episodes': value['episodes'] == null ? undefined : ((value['episodes'] as Array<any>).map(EpisodeToJSON)),
         'name': value['name'],

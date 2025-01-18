@@ -5,6 +5,7 @@ import { useDefaultScreenOptions } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import { Platform } from "react-native";
 
+// biome-ignore lint/style/useNamingConvention: expo unstable naming
 export const unstable_settings = {
     initialRouteName: "index",
 };

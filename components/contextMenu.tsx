@@ -1,5 +1,4 @@
-import type React from "react";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import type {
     MenuActionConfig,
@@ -17,5 +16,4 @@ export interface ContextMenuProps {
     children?: ReactNode;
 }
 
-export const ContextMenu: React.FunctionComponent<ContextMenuProps> = () =>
-    null;
+export const ContextMenu: FC<ContextMenuProps> = ({ children }) => children;

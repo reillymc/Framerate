@@ -6,6 +6,7 @@ import {
     SectionHeading,
 } from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
+import { displayYear } from "@/helpers/dateHelper";
 import {
     usePopularMovies,
     useRecentMovieSearches,
@@ -36,6 +37,7 @@ import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useMemo, useRef, useState } from "react";
 import {
     FlatList,
+    Platform,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -142,11 +144,7 @@ const Movies: FC = () => {
                             return (
                                 <PosterCard
                                     heading={item.title}
-                                    subHeading={
-                                        item.releaseDate
-                                            ?.getFullYear()
-                                            .toString() ?? "Unknown"
-                                    }
+                                    subHeading={displayYear(item.releaseDate)}
                                     imageUri={item.posterPath}
                                     onWatchlist={onWatchlist}
                                     onPress={() => {
@@ -268,7 +266,10 @@ const Movies: FC = () => {
                                     styles.moviesList,
                                 ]}
                                 snapToAlignment="start"
-                                showsHorizontalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={
+                                    Platform.OS === "web"
+                                }
+                                scrollIndicatorInsets={{ left: 20, right: 20 }}
                                 decelerationRate="fast"
                                 snapToInterval={posterWidth + posterGap}
                                 keyExtractor={(item) => item.id.toString()}

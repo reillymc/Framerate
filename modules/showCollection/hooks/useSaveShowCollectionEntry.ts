@@ -64,7 +64,7 @@ export const useSaveShowCollectionEntry = () => {
                 collectionId,
                 showId,
                 userId,
-                updatedAt: new Date(),
+                updatedAt: new Date().toISOString(),
                 name: showDetails?.name ?? "Loading...",
             };
 

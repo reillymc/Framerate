@@ -13,6 +13,7 @@ import {
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
+    Platform,
     SectionList,
     StyleSheet,
     View,
@@ -22,7 +23,7 @@ import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
-const ITEM_HEIGHT = 92;
+const ITEM_HEIGHT = Platform.OS === "web" ? 116 : 92;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 
@@ -48,14 +49,14 @@ const nthNumber = (number: number) => {
     }
 };
 
-const formatItemDate = (rawDate: Date | undefined, isOlder?: boolean) => {
+const formatItemDate = (rawDate: string | undefined, isOlder?: boolean) => {
     if (!rawDate) return "Unknown";
 
-    const date = new Date(rawDate);
-
     if (isOlder) {
-        return displayFullNumeric(date);
+        return displayFullNumeric(rawDate);
     }
+
+    const date = new Date(rawDate);
 
     const dateString = date.toLocaleDateString("en-AU", {
         day: "2-digit",

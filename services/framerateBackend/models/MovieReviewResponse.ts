@@ -41,10 +41,10 @@ export interface MovieReviewResponse {
     company?: Array<ReviewCompanyDetails>;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof MovieReviewResponse
      */
-    date?: Date;
+    date?: string;
     /**
      * 
      * @type {string}
@@ -110,7 +110,7 @@ export function MovieReviewResponseFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'company': json['company'] == null ? undefined : ((json['company'] as Array<any>).map(ReviewCompanyDetailsFromJSON)),
-        'date': json['date'] == null ? undefined : (new Date(json['date'])),
+        'date': json['date'] == null ? undefined : json['date'],
         'description': json['description'] == null ? undefined : json['description'],
         'movie': MovieFromJSON(json['movie']),
         'rating': json['rating'] == null ? undefined : json['rating'],
@@ -133,7 +133,7 @@ export function MovieReviewResponseToJSONTyped(value?: MovieReviewResponse | nul
     return {
         
         'company': value['company'] == null ? undefined : ((value['company'] as Array<any>).map(ReviewCompanyDetailsToJSON)),
-        'date': value['date'] == null ? undefined : ((value['date']).toISOString().substring(0,10)),
+        'date': value['date'],
         'description': value['description'],
         'movie': MovieToJSON(value['movie']),
         'rating': value['rating'],

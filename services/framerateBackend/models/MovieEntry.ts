@@ -44,10 +44,10 @@ export interface MovieEntry {
     posterPath?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof MovieEntry
      */
-    releaseDate?: Date;
+    releaseDate?: string;
     /**
      * 
      * @type {string}
@@ -62,10 +62,10 @@ export interface MovieEntry {
     title: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof MovieEntry
      */
-    updatedAt: Date;
+    updatedAt: string;
     /**
      * 
      * @type {string}
@@ -100,10 +100,10 @@ export function MovieEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'imdbId': json['imdbId'] == null ? undefined : json['imdbId'],
         'movieId': json['movieId'],
         'posterPath': json['posterPath'] == null ? undefined : json['posterPath'],
-        'releaseDate': json['releaseDate'] == null ? undefined : (new Date(json['releaseDate'])),
+        'releaseDate': json['releaseDate'] == null ? undefined : json['releaseDate'],
         'status': json['status'] == null ? undefined : json['status'],
         'title': json['title'],
-        'updatedAt': (new Date(json['updatedAt'])),
+        'updatedAt': json['updatedAt'],
         'userId': json['userId'],
     };
 }
@@ -123,10 +123,10 @@ export function MovieEntryToJSONTyped(value?: MovieEntry | null, ignoreDiscrimin
         'imdbId': value['imdbId'],
         'movieId': value['movieId'],
         'posterPath': value['posterPath'],
-        'releaseDate': value['releaseDate'] == null ? undefined : ((value['releaseDate']).toISOString().substring(0,10)),
+        'releaseDate': value['releaseDate'],
         'status': value['status'],
         'title': value['title'],
-        'updatedAt': ((value['updatedAt']).toISOString().substring(0,10)),
+        'updatedAt': value['updatedAt'],
         'userId': value['userId'],
     };
 }

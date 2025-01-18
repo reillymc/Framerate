@@ -70,10 +70,10 @@ export interface Movie {
     posterPath?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Movie
      */
-    releaseDate?: Date;
+    releaseDate?: string;
     /**
      * 
      * @type {number}
@@ -126,7 +126,7 @@ export function MovieFromJSONTyped(json: any, ignoreDiscriminator: boolean): Mov
         'overview': json['overview'] == null ? undefined : json['overview'],
         'popularity': json['popularity'] == null ? undefined : json['popularity'],
         'posterPath': json['posterPath'] == null ? undefined : json['posterPath'],
-        'releaseDate': json['releaseDate'] == null ? undefined : (new Date(json['releaseDate'])),
+        'releaseDate': json['releaseDate'] == null ? undefined : json['releaseDate'],
         'runtime': json['runtime'] == null ? undefined : json['runtime'],
         'status': json['status'] == null ? undefined : json['status'],
         'tagline': json['tagline'] == null ? undefined : json['tagline'],
@@ -152,7 +152,7 @@ export function MovieToJSONTyped(value?: Movie | null, ignoreDiscriminator: bool
         'overview': value['overview'],
         'popularity': value['popularity'],
         'posterPath': value['posterPath'],
-        'releaseDate': value['releaseDate'] == null ? undefined : ((value['releaseDate']).toISOString().substring(0,10)),
+        'releaseDate': value['releaseDate'],
         'runtime': value['runtime'],
         'status': value['status'],
         'tagline': value['tagline'],

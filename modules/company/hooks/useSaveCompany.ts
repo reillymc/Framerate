@@ -79,7 +79,7 @@ export const useSaveCompany = () => {
                         ...params,
                         companyId: params.companyId ?? "",
                         createdBy: userId,
-                        dateCreated: new Date(),
+                        dateCreated: new Date().toISOString(),
                     } satisfies Company,
                 ]);
             }

@@ -1,3 +1,4 @@
+import { formatForSave } from "@/helpers/dateHelper";
 import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
 import { useMovieReview, useSaveMovieReview } from "@/modules/movieReview";
@@ -97,7 +98,7 @@ const EditReview: FC = () => {
         saveReview({
             ...review,
             reviewId,
-            date: includeDate ? date : undefined,
+            date: formatForSave(date),
             movieId: movieIdValue,
             venue: venue?.trim() || undefined,
             rating: includeReview ? rating || undefined : undefined,

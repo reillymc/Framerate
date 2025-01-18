@@ -54,7 +54,7 @@ export const useSaveMovieWatchlistEntry = () => {
             const newEntry = {
                 ...movieDetails,
                 movieId,
-                updatedAt: new Date(),
+                updatedAt: new Date().toISOString(),
                 title: movieDetails?.title ?? "Loading...",
             } satisfies MovieWatchlistEntry;
 

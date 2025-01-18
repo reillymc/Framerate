@@ -1,3 +1,4 @@
+import { formatForSave } from "@/helpers/dateHelper";
 import { useCompany } from "@/modules/company";
 import { ReviewForm } from "@/modules/review";
 import { useSaveSeasonReview, useSeasonReview } from "@/modules/seasonReview";
@@ -95,7 +96,7 @@ const EditReview: FC = () => {
         saveReview({
             ...review,
             reviewId,
-            date: includeDate ? date : undefined,
+            date: formatForSave(date),
             showId: showIdValue,
             seasonNumber: seasonNumberValue,
             venue: venue?.trim() || undefined,

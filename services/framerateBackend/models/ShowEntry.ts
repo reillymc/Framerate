@@ -26,10 +26,10 @@ export interface ShowEntry {
     collectionId: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof ShowEntry
      */
-    firstAirDate?: Date;
+    firstAirDate?: string;
     /**
      * 
      * @type {string}
@@ -38,10 +38,10 @@ export interface ShowEntry {
     imdbId?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof ShowEntry
      */
-    lastAirDate?: Date;
+    lastAirDate?: string;
     /**
      * 
      * @type {string}
@@ -50,10 +50,10 @@ export interface ShowEntry {
     name: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof ShowEntry
      */
-    nextAirDate?: Date;
+    nextAirDate?: string;
     /**
      * 
      * @type {string}
@@ -74,10 +74,10 @@ export interface ShowEntry {
     status?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof ShowEntry
      */
-    updatedAt: Date;
+    updatedAt: string;
     /**
      * 
      * @type {string}
@@ -109,15 +109,15 @@ export function ShowEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     return {
         
         'collectionId': json['collectionId'],
-        'firstAirDate': json['firstAirDate'] == null ? undefined : (new Date(json['firstAirDate'])),
+        'firstAirDate': json['firstAirDate'] == null ? undefined : json['firstAirDate'],
         'imdbId': json['imdbId'] == null ? undefined : json['imdbId'],
-        'lastAirDate': json['lastAirDate'] == null ? undefined : (new Date(json['lastAirDate'])),
+        'lastAirDate': json['lastAirDate'] == null ? undefined : json['lastAirDate'],
         'name': json['name'],
-        'nextAirDate': json['nextAirDate'] == null ? undefined : (new Date(json['nextAirDate'])),
+        'nextAirDate': json['nextAirDate'] == null ? undefined : json['nextAirDate'],
         'posterPath': json['posterPath'] == null ? undefined : json['posterPath'],
         'showId': json['showId'],
         'status': json['status'] == null ? undefined : json['status'],
-        'updatedAt': (new Date(json['updatedAt'])),
+        'updatedAt': json['updatedAt'],
         'userId': json['userId'],
     };
 }
@@ -134,15 +134,15 @@ export function ShowEntryToJSONTyped(value?: ShowEntry | null, ignoreDiscriminat
     return {
         
         'collectionId': value['collectionId'],
-        'firstAirDate': value['firstAirDate'] == null ? undefined : ((value['firstAirDate']).toISOString().substring(0,10)),
+        'firstAirDate': value['firstAirDate'],
         'imdbId': value['imdbId'],
-        'lastAirDate': value['lastAirDate'] == null ? undefined : ((value['lastAirDate']).toISOString().substring(0,10)),
+        'lastAirDate': value['lastAirDate'],
         'name': value['name'],
-        'nextAirDate': value['nextAirDate'] == null ? undefined : ((value['nextAirDate']).toISOString().substring(0,10)),
+        'nextAirDate': value['nextAirDate'],
         'posterPath': value['posterPath'],
         'showId': value['showId'],
         'status': value['status'],
-        'updatedAt': ((value['updatedAt']).toISOString().substring(0,10)),
+        'updatedAt': value['updatedAt'],
         'userId': value['userId'],
     };
 }

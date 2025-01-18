@@ -41,9 +41,9 @@ import {
 } from "@/modules/movieWatchlist";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-import { useMemo } from "react";
+import { type FC, useMemo } from "react";
 
-const Movie: React.FC = () => {
+const Movie: FC = () => {
     const {
         id: idParam,
         title,

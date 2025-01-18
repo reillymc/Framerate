@@ -32,10 +32,10 @@ export interface Company {
     createdBy: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Company
      */
-    dateCreated: Date;
+    dateCreated: string;
     /**
      * 
      * @type {string}
@@ -80,7 +80,7 @@ export function CompanyFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         
         'companyId': json['companyId'],
         'createdBy': json['createdBy'],
-        'dateCreated': (new Date(json['dateCreated'])),
+        'dateCreated': json['dateCreated'],
         'firstName': json['firstName'],
         'lastName': json['lastName'],
         'userId': json['userId'] == null ? undefined : json['userId'],
@@ -100,7 +100,7 @@ export function CompanyToJSONTyped(value?: Company | null, ignoreDiscriminator: 
         
         'companyId': value['companyId'],
         'createdBy': value['createdBy'],
-        'dateCreated': ((value['dateCreated']).toISOString()),
+        'dateCreated': value['dateCreated'],
         'firstName': value['firstName'],
         'lastName': value['lastName'],
         'userId': value['userId'],

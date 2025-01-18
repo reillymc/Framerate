@@ -38,10 +38,10 @@ export interface User {
     createdBy?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof User
      */
-    dateCreated: Date;
+    dateCreated: string;
     /**
      * 
      * @type {string}
@@ -112,7 +112,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'avatarUri': json['avatarUri'] == null ? undefined : json['avatarUri'],
         'configuration': json['configuration'],
         'createdBy': json['createdBy'] == null ? undefined : json['createdBy'],
-        'dateCreated': (new Date(json['dateCreated'])),
+        'dateCreated': json['dateCreated'],
         'email': json['email'],
         'firstName': json['firstName'],
         'lastName': json['lastName'],
@@ -136,7 +136,7 @@ export function UserToJSONTyped(value?: User | null, ignoreDiscriminator: boolea
         'avatarUri': value['avatarUri'],
         'configuration': value['configuration'],
         'createdBy': value['createdBy'],
-        'dateCreated': ((value['dateCreated']).toISOString()),
+        'dateCreated': value['dateCreated'],
         'email': value['email'],
         'firstName': value['firstName'],
         'lastName': value['lastName'],
