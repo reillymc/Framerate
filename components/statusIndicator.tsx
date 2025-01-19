@@ -23,15 +23,15 @@ export const StatusIndicator: FC<StatusIndicatorProps> = ({
 
     const { icon, color } = useMemo(() => {
         if (error) {
-            return { icon: "x-circle-fill" as const, color: theme.color.red };
+            return { icon: "x-circle-fill" as const, color: theme.color.error };
         }
         if (success) {
             return {
                 icon: "check-circle-fill" as const,
-                color: theme.color.green,
+                color: theme.color.success,
             };
         }
-        return { icon: "info" as const, color: theme.color.orange };
+        return { icon: "info" as const, color: theme.color.warning };
     }, [error, success, theme.color]);
 
     if (!(error || success)) return null;
@@ -46,11 +46,11 @@ export const StatusIndicator: FC<StatusIndicatorProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         errorContainer: {
             flexDirection: "row",
             alignItems: "center",
-            gap: padding.small,
+            gap: spacing.small,
         },
     });

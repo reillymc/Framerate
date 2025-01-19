@@ -83,7 +83,9 @@ export const ReviewTimelineItem: FC<ReviewTimelineItemProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding, color, font } }: ThemedStyles) =>
+const createStyles = ({
+    theme: { spacing, color, font, border },
+}: ThemedStyles) =>
     StyleSheet.create({
         container: {
             flex: 1,
@@ -103,31 +105,31 @@ const createStyles = ({ theme: { padding, color, font } }: ThemedStyles) =>
             borderColor: color.primary,
             width: 1,
             flex: 1,
-            borderWidth: 2,
+            borderWidth: border.width.regular,
             borderStyle: "dashed",
             marginTop: -1,
         },
         dateContainer: {
             alignItems: "center",
             justifyContent: "center",
-            padding: padding.tiny,
+            padding: spacing.tiny,
         },
         date: {
-            color: color.primaryHighlight,
+            color: color.primary,
             fontFamily: font.familyWeight.bold800,
         },
         dateYear: {
-            color: color.primaryHighlight,
+            color: color.primary,
             fontFamily: font.familyWeight.bold600,
         },
         datePlaceholder: {
             color: color.textSecondary,
             fontFamily: font.familyWeight.bold600,
-            marginTop: padding.small,
-            marginBottom: padding.tiny,
+            marginTop: spacing.small,
+            marginBottom: spacing.tiny,
         },
         reviewContainer: {
-            marginBottom: padding.large * 2,
+            marginBottom: spacing.large * 2,
             flex: 1,
         },
         topContainer: {
@@ -140,7 +142,7 @@ const createStyles = ({ theme: { padding, color, font } }: ThemedStyles) =>
             justifyContent: "space-between",
         },
         bodyContainer: {
-            marginTop: padding.small,
+            marginTop: spacing.small,
             flexDirection: "row",
         },
         numericRating: {

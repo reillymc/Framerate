@@ -105,21 +105,21 @@ const Profile: FC = () => {
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
         },
         section: {
-            marginLeft: padding.regular,
+            marginLeft: spacing.medium,
         },
         sectionElement: {
-            marginTop: padding.regular,
+            marginTop: spacing.medium,
         },
         submitButton: {
-            marginTop: padding.large,
-            marginBottom: padding.regular,
+            marginTop: spacing.large,
+            marginBottom: spacing.medium,
         },
     });
 

@@ -40,13 +40,13 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                 style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    marginVertical: theme.padding.large,
+                    marginVertical: theme.spacing.large,
                     position: "absolute",
                     bottom: -bottom,
-                    paddingBottom: bottom + theme.padding.regular,
+                    paddingBottom: bottom + theme.spacing.medium,
                     gap: 12,
-                    paddingTop: theme.padding.regular,
-                    paddingHorizontal: theme.padding.pageHorizontal / 1.5,
+                    paddingTop: theme.spacing.medium,
+                    paddingHorizontal: theme.spacing.pageHorizontal / 1.5,
                 }}
             >
                 {onToggleWatchlist && (
@@ -54,11 +54,11 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                         style={{
                             backgroundColor: theme.color.primary,
                             borderRadius: 24,
-                            paddingVertical: theme.padding.tiny,
+                            paddingVertical: theme.spacing.tiny,
                             flexDirection: "row",
                             alignItems: "center",
                             flex: 1,
-                            paddingLeft: theme.padding.small,
+                            paddingLeft: theme.spacing.small,
                         }}
                         onPress={onToggleWatchlist}
                     >
@@ -81,11 +81,11 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                         style={{
                             backgroundColor: theme.color.primary,
                             borderRadius: 24,
-                            paddingVertical: theme.padding.tiny,
+                            paddingVertical: theme.spacing.tiny,
                             flexDirection: "row",
                             alignItems: "center",
                             flex: 1,
-                            paddingLeft: theme.padding.small,
+                            paddingLeft: theme.spacing.small,
                         }}
                         onPress={onAddReview}
                     >

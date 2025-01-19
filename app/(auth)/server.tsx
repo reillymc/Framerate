@@ -65,21 +65,21 @@ const ServerScreen: FC = () => {
 
 export default ServerScreen;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             alignItems: "center",
             justifyContent: "center",
-            marginHorizontal: padding.pageHorizontal + padding.regular,
+            marginHorizontal: spacing.pageHorizontal + spacing.medium,
         },
         titleContainer: {
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
             flexDirection: "row",
             alignItems: "center",
-            gap: padding.small,
+            gap: spacing.small,
             justifyContent: "center",
         },
         hostInput: {
-            marginTop: padding.small,
+            marginTop: spacing.small,
         },
     });

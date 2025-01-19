@@ -62,17 +62,17 @@ const Credits: FC = () => {
     );
 };
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
         },
         sectionHeading: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         sectionElement: {
-            paddingTop: padding.small,
+            paddingTop: spacing.small,
         },
         tmdbAttribution: {
             flexDirection: "row",
@@ -81,7 +81,7 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         },
         tmdbText: {
             flexWrap: "wrap",
-            marginLeft: padding.regular,
+            marginLeft: spacing.medium,
             flexShrink: 1,
         },
     });

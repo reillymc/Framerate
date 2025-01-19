@@ -1,4 +1,5 @@
 import { FontResources } from "@/assets/fonts";
+import { useColorScheme } from "@/hooks";
 import { useTheme } from "@reillymc/react-native-components";
 import {
     Circle,
@@ -10,7 +11,7 @@ import {
 } from "@shopify/react-native-skia";
 import { subYears } from "date-fns";
 import { type FC, useMemo } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View } from "react-native";
 import {
     type SharedValue,
     runOnJS,
@@ -35,13 +36,11 @@ interface ChartData extends Record<string, unknown> {
 interface RatingHistoryChartProps {
     reviews: Array<Pick<Review, "date" | "rating">>;
     starCount: number;
-    chartHeight?: number;
 }
 
 export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     reviews,
     starCount,
-    chartHeight = 240,
 }) => {
     const font = useFont(FontResources.regular, 12);
     const { state, isActive } = useChartPressState({
@@ -55,7 +54,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
         [reviews],
     );
 
-    const { width } = useWindowDimensions();
+    const scheme = useColorScheme();
 
     const chartData: ChartData[] = useMemo(() => {
         const sorted = [...(reviews ?? [])]
@@ -119,7 +118,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     if (chartData.length < 2) return null;
 
     return (
-        <View style={{ height: chartHeight }}>
+        <View style={{ height: 160 }}>
             <CartesianChart
                 chartPressState={state}
                 data={chartData}
@@ -144,27 +143,21 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                         });
                     },
                     tickCount: {
-                        x: 3,
+                        x: 0,
                         y: 0,
                     },
-                    labelOffset: 8,
+                    labelOffset: theme.spacing.small,
                     lineColor: {
-                        grid: theme.color.border,
+                        grid: "transparent",
                         frame: "transparent",
                     },
                 }}
                 domainPadding={{
-                    left: theme.padding.regular,
-                    right: theme.padding.regular,
-                }}
-                padding={{
-                    top: 0,
-                    left: 12,
-                    right: theme.padding.regular,
-                    bottom: 0,
+                    left: theme.spacing.medium,
+                    right: theme.spacing.medium,
                 }}
                 xKey="date"
-                domain={{ y: [0, 114] }}
+                domain={{ y: [0, 124] }}
                 yKeys={["rating", "filteredRatings"]}
                 renderOutside={({ chartBounds }) => (
                     <>
@@ -178,7 +171,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                                 filteredValue={state.y.filteredRatings.value}
                                 activeDate={state.x.value}
                                 lineColor={theme.color.primary}
-                                textColor={theme.color.primaryHighlight}
+                                textColor={theme.color.primaryDark}
                                 starCount={starCount}
                             />
                         )}
@@ -189,10 +182,9 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                     <>
                         <Line
                             points={points.rating}
-                            color={theme.color.primary}
                             curveType="cardinal50"
-                            strokeWidth={2}
-                            opacity={0.75}
+                            strokeWidth={theme.border.width.regular}
+                            color={theme.color.primary}
                             animate={{ type: "spring" }}
                             strokeCap="round"
                         >
@@ -202,20 +194,29 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                                     end={vec(60, 0)}
                                     colors={[
                                         `${theme.color.background}00`,
-                                        theme.color.primaryHighlight,
+                                        scheme === "light"
+                                            ? theme.color.primary
+                                            : theme.color.primaryDark,
                                     ]}
                                 />
                             ) : (
                                 <LinearGradient
                                     start={vec(0, 0)}
                                     end={vec(
-                                        width / 2,
+                                        0,
                                         chartBounds.bottom - chartBounds.top,
                                     )}
-                                    colors={[
-                                        theme.color.primary,
-                                        theme.color.primaryHighlight,
-                                    ]}
+                                    colors={
+                                        scheme === "light"
+                                            ? [
+                                                  theme.color.primaryLight,
+                                                  theme.color.primary,
+                                              ]
+                                            : [
+                                                  theme.color.primary,
+                                                  theme.color.primaryDark,
+                                              ]
+                                    }
                                 />
                             )}
                         </Line>
@@ -225,20 +226,12 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                             radius={5}
                             style="fill"
                             animate={{ type: "spring" }}
-                            color={theme.color.primary}
-                        >
-                            <LinearGradient
-                                start={vec(0, 0)}
-                                end={vec(
-                                    0,
-                                    chartBounds.bottom - chartBounds.top,
-                                )}
-                                colors={[
-                                    theme.color.primary,
-                                    theme.color.primaryHighlight,
-                                ]}
-                            />
-                        </Scatter>
+                            color={
+                                scheme === "light"
+                                    ? theme.color.primaryDark
+                                    : theme.color.primaryLight
+                            }
+                        />
                     </>
                 )}
             </CartesianChart>

@@ -31,10 +31,10 @@ export const ScreenSection: FC<ScreenSectionProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         sectionHeading: {
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
     });
 

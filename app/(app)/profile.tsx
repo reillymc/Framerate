@@ -420,59 +420,59 @@ const Profile: FC = () => {
     );
 };
 
-const createStyles = ({ theme: { padding, color, border } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
-            paddingBottom: padding.pageBottom,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
+            paddingBottom: spacing.pageBottom,
         },
         indentedElement: {
-            paddingLeft: padding.small,
+            paddingLeft: spacing.small,
         },
         collapsibleHeading: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingVertical: padding.regular,
+            paddingVertical: spacing.medium,
         },
         sectionInternalContainer: {
             borderRadius: border.radius.regular,
             overflow: "hidden",
         },
         sectionContainer: {
-            marginLeft: padding.regular,
+            marginLeft: spacing.medium,
         },
         profileSection: {
-            marginBottom: padding.large * 2,
+            marginBottom: spacing.large * 2,
         },
         listItem: {
-            paddingVertical: padding.small + padding.tiny,
+            paddingVertical: spacing.small + spacing.tiny,
             borderBottomWidth: 1,
             borderBottomColor: color.border,
             backgroundColor: color.inputBackground,
-            paddingLeft: padding.small,
+            paddingLeft: spacing.small,
         },
         sectionElement: {
-            marginTop: padding.regular,
+            marginTop: spacing.medium,
         },
         containerisedInput: {
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
             borderBottomLeftRadius: border.radius.loose,
             borderBottomRightRadius: border.radius.loose,
-            paddingLeft: padding.small,
+            paddingLeft: spacing.small,
             height: 48,
         },
         friendInputContainer: {
             flexDirection: "row",
             alignItems: "center",
             backgroundColor: color.inputBackground,
-            paddingRight: padding.regular,
+            paddingRight: spacing.medium,
         },
         actionButton: {
-            marginTop: padding.large,
-            marginBottom: padding.large,
+            marginTop: spacing.large,
+            marginBottom: spacing.large,
             width: "100%",
         },
     });

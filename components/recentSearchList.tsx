@@ -58,17 +58,17 @@ export const RecentSearchList: FC<RecentSearchListProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         searchList: {
-            paddingTop: padding.small,
-            paddingBottom: padding.pageBottom,
+            paddingTop: spacing.small,
+            paddingBottom: spacing.pageBottom,
         },
         searchSuggestion: {
-            marginLeft: padding.pageHorizontal,
-            paddingVertical: padding.regular,
-            borderBottomWidth: 1,
-            borderBottomColor: `${color.border}44`,
+            marginLeft: spacing.pageHorizontal,
+            paddingVertical: spacing.medium,
+            borderBottomWidth: border.width.thin,
+            borderBottomColor: color.border,
             backgroundColor: color.background,
         },
     });

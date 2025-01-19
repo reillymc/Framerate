@@ -1,3 +1,4 @@
+import { useTheme } from "@reillymc/react-native-components";
 import React from "react";
 import {
     Animated,
@@ -109,7 +110,6 @@ type StarRatingProps = {
     animationConfig?: AnimationConfig;
 };
 
-const defaultColor = "#fdd835";
 const defaultAnimationConfig: Required<AnimationConfig> = {
     easing: Easing.elastic(2),
     duration: 300,
@@ -122,7 +122,7 @@ export const StarRating = ({
     maxStars = 5,
     starSize = 32,
     onChange,
-    color = defaultColor,
+    color,
     emptyColor = color,
     enableHalfStar = true,
     enableSwiping = true,
@@ -132,6 +132,8 @@ export const StarRating = ({
     style,
     starStyle,
 }: StarRatingProps) => {
+    const { theme } = useTheme();
+
     const width = React.useRef<number>();
     const [isInteracting, setInteracting] = React.useState(false);
 
@@ -223,7 +225,10 @@ export const StarRating = ({
                                 type={starType}
                                 size={starSize}
                                 color={
-                                    starType === "empty" ? emptyColor : color
+                                    starType === "empty"
+                                        ? (emptyColor ??
+                                          theme.color.primaryLight)
+                                        : (color ?? theme.color.primaryLight)
                                 }
                             />
                         </AnimatedIcon>

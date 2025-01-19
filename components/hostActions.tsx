@@ -48,25 +48,25 @@ export const HostActions: FC<HostActionsProps> = ({
     );
 };
 
-const createStyles = ({ theme: { color, padding, border } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
     StyleSheet.create({
         settings: {
             flex: 1,
             flexDirection: "row-reverse",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: padding.large,
+            gap: spacing.large,
         },
         hostWarningContainer: {
             flexDirection: "row",
             maxWidth: "80%",
-            gap: padding.small,
+            gap: spacing.small,
             backgroundColor: color.background,
             borderRadius: border.radius.loose,
-            padding: padding.tiny + 2,
+            padding: spacing.tiny + 2,
         },
         hostWarningIcon: {
-            color: color.red,
+            color: color.warning,
         },
         text: {
             flex: 1,

@@ -131,17 +131,17 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     );
 };
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
     StyleSheet.create({
         navigationBar: {
             height: NAVIGATION_BAR_HEIGHT,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingHorizontal: padding.large,
-            gap: padding.regular,
+            paddingHorizontal: spacing.large,
+            gap: spacing.medium,
             borderBottomColor: color.border,
-            borderBottomWidth: 2,
+            borderBottomWidth: border.width.regular,
             backgroundColor: color.foreground,
         },
         body: {

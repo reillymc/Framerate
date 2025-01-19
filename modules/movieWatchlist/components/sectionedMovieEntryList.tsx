@@ -1,7 +1,7 @@
 import { Fade, PosterCard } from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/hooks";
 import {
     SwipeAction,
     SwipeView,
@@ -23,7 +23,7 @@ import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
 
 const HEADER_HEIGHT = 96;
-const ITEM_HEIGHT = Platform.OS === "web" ? 116 : 92;
+const ITEM_HEIGHT = Platform.OS === "web" ? 116 : 102;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 
@@ -222,10 +222,10 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingBottom: padding.large,
+            paddingBottom: spacing.large,
             backgroundColor: color.background,
         },
         sectionHeaderContainer: {
@@ -233,7 +233,7 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             justifyContent: "space-between",
             alignItems: "flex-end",
             height: SECTION_HEADER_HEIGHT,
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
             borderBottomWidth: 1,
             borderBottomColor: color.border,
         },
@@ -245,8 +245,8 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             height: HEADER_HEIGHT,
         },
         header: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.large,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.large,
         },
         headerFade: {
             position: "absolute",

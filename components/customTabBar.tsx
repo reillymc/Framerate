@@ -115,15 +115,15 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
 };
 
 const createStyles = (
-    { theme: { color, padding } }: ThemedStyles,
+    { theme: { color, spacing } }: ThemedStyles,
     props: { bottom: number },
 ) =>
     StyleSheet.create({
         tabBar: {
             position: "absolute",
             bottom: props.bottom,
-            marginLeft: padding.pageHorizontal / 2,
-            marginRight: padding.pageHorizontal / 2,
+            marginLeft: spacing.pageHorizontal / 2,
+            marginRight: spacing.pageHorizontal / 2,
             zIndex: 999,
             alignSelf: "center",
             shadowColor: color.shadow,
@@ -139,11 +139,11 @@ const createStyles = (
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            gap: padding.large,
+            gap: spacing.large,
             borderRadius: 40,
             overflow: "hidden",
-            paddingHorizontal: padding.large,
-            paddingVertical: padding.small + padding.tiny,
+            paddingHorizontal: spacing.large,
+            paddingVertical: spacing.small + spacing.tiny,
         },
         tab: {
             justifyContent: "center",

@@ -69,13 +69,13 @@ const Browse: FC = () => {
 
 export default Browse;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
-            paddingTop: padding.regular,
-            paddingBottom: padding.large,
+            paddingTop: spacing.medium,
+            paddingBottom: spacing.large,
         },
         pageElement: {
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
     });

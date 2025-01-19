@@ -239,16 +239,16 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
-            paddingTop: padding.regular,
+            paddingTop: spacing.medium,
         },
         pageElement: {
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         filterList: {
-            paddingBottom: padding.regular,
+            paddingBottom: spacing.medium,
         },
         sortIcon: {
             transform: [{ rotateZ: "90deg" }],

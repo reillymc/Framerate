@@ -425,10 +425,10 @@ const Movies: FC = () => {
 
 export default Movies;
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         pageElement: {
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         watchlistSectionContainer: {
             flexDirection: "row",
@@ -439,35 +439,28 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         watchlistChart: {
             flex: 1,
             height: 171,
-            paddingTop: padding.tiny,
-            marginRight: padding.pageHorizontal,
+            paddingTop: spacing.tiny,
+            marginRight: spacing.pageHorizontal,
         },
         moviesList: {
-            marginBottom: padding.small,
-            paddingTop: padding.tiny,
+            marginBottom: spacing.small,
+            paddingTop: spacing.tiny,
         },
         reviewFooter: {
             alignSelf: "flex-end",
-            paddingHorizontal: padding.pageHorizontal,
-            marginBottom: padding.pageBottom,
+            paddingHorizontal: spacing.pageHorizontal,
+            marginBottom: spacing.pageBottom,
         },
         reviewsEmptyMessage: {
-            paddingHorizontal: padding.pageHorizontal,
-            marginBottom: padding.pageBottom,
+            paddingHorizontal: spacing.pageHorizontal,
+            marginBottom: spacing.pageBottom,
         },
         searchList: {
-            paddingTop: padding.small,
-            paddingBottom: padding.pageBottom,
-        },
-        searchSuggestion: {
-            marginLeft: padding.pageHorizontal,
-            paddingVertical: padding.regular,
-            borderBottomWidth: 1,
-            borderBottomColor: `${color.border}44`,
-            backgroundColor: color.background,
+            paddingTop: spacing.small,
+            paddingBottom: spacing.pageBottom,
         },
         collectionsList: {
-            paddingHorizontal: padding.pageHorizontal,
-            marginBottom: padding.regular,
+            paddingHorizontal: spacing.pageHorizontal,
+            marginBottom: spacing.medium,
         },
     });

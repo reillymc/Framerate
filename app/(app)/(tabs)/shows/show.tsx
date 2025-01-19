@@ -299,18 +299,18 @@ const Show: FC = () => {
 
 export default Show;
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingTop: padding.pageTop,
-            paddingBottom: 80,
+            paddingTop: spacing.pageTop,
+            paddingBottom: spacing.pageBottom,
             backgroundColor: color.background,
-            borderRadius: 16,
+            borderRadius: border.radius.loose,
         },
         floatingPoster: {
             position: "absolute",
             top: -95,
-            left: padding.pageHorizontal + padding.small,
+            left: spacing.pageHorizontal + spacing.small,
             shadowColor: color.shadow,
             shadowOffset: {
                 width: 0,
@@ -320,39 +320,39 @@ const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingTagline: {
-            left: padding.pageHorizontal + 140,
+            left: spacing.pageHorizontal + 140,
             top: -10,
             width: "55%",
             height: 70,
             justifyContent: "center",
         },
         collections: {
-            paddingTop: padding.regular,
-            paddingHorizontal: padding.pageHorizontal,
+            paddingTop: spacing.medium,
+            paddingHorizontal: spacing.pageHorizontal,
             alignItems: "center",
         },
         pageContent: {
-            marginTop: 20,
+            marginTop: spacing.medium,
         },
         seasonsList: {
-            paddingTop: padding.large,
-            paddingHorizontal: padding.pageHorizontal,
+            paddingTop: spacing.large,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         list: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         element: {
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         section: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         castList: {
-            marginTop: padding.regular,
-            paddingHorizontal: padding.pageHorizontal,
+            marginTop: spacing.medium,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         sectionHeading: {
-            marginTop: padding.regular,
-            paddingHorizontal: padding.pageHorizontal,
+            marginTop: spacing.medium,
+            paddingHorizontal: spacing.pageHorizontal,
         },
     });

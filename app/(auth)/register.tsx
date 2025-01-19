@@ -176,7 +176,7 @@ const RegisterScreen: FC = () => {
 
 export default RegisterScreen;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingBottom: "100%",
@@ -186,31 +186,31 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             alignItems: "center",
             width: "100%",
             paddingHorizontal:
-                Platform.OS === "web" ? undefined : padding.pageHorizontal,
+                Platform.OS === "web" ? undefined : spacing.pageHorizontal,
             alignSelf: "center",
-            paddingTop: Platform.OS === "web" ? undefined : padding.regular,
-            gap: padding.regular,
+            paddingTop: Platform.OS === "web" ? undefined : spacing.medium,
+            gap: spacing.medium,
         },
         titleContainer: {
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
             flexDirection: "row",
             alignItems: "center",
-            gap: padding.small,
+            gap: spacing.small,
             justifyContent: "center",
         },
         nameInputContainer: {
             flexDirection: "row",
-            gap: padding.regular,
+            gap: spacing.medium,
             width: "100%",
         },
         confirmButton: {
-            marginTop: padding.large,
-            marginBottom: padding.regular,
+            marginTop: spacing.large,
+            marginBottom: spacing.medium,
         },
         logInContainer: {
             flexDirection: "row",
-            gap: padding.tiny,
-            marginTop: padding.large,
+            gap: spacing.tiny,
+            marginTop: spacing.large,
             width: "100%",
             alignSelf: "flex-start",
         },

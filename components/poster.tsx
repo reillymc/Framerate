@@ -233,30 +233,30 @@ export const usePosterDimensions: UsePosterDimensionsParams = ({ size }) => {
 
         switch (size) {
             case "large":
-                return (width - theme.padding.pageHorizontal * 2) * (2 / 3);
+                return (width - theme.spacing.pageHorizontal * 2) * (2 / 3);
             case "medium":
                 return (
                     (width -
-                        theme.padding.pageHorizontal * 2 -
-                        theme.padding.pageHorizontal / 2) *
+                        theme.spacing.pageHorizontal * 2 -
+                        theme.spacing.pageHorizontal / 2) *
                     (1 / 2)
                 );
             case "small":
-                return (width - theme.padding.pageHorizontal * 3) * (1 / 3);
+                return (width - theme.spacing.pageHorizontal * 3) * (1 / 3);
             case "tiny":
-                return (width - theme.padding.pageHorizontal * 4) * (1 / 6);
+                return (width - theme.spacing.pageHorizontal * 4) * (1 / 6);
         }
-    }, [size, width, theme.padding.pageHorizontal]);
+    }, [size, width, theme.spacing.pageHorizontal]);
 
     return {
         width: itemWidth,
         height: itemWidth * (3 / 2),
-        gap: theme.padding.pageHorizontal / 2,
+        gap: theme.spacing.pageHorizontal / 2,
     };
 };
 
 const createStyles = (
-    { styles: { listItem }, theme: { padding, color, border } }: ThemedStyles,
+    { styles: { listItem }, theme: { spacing, color, border } }: ThemedStyles,
     {
         width,
         size,
@@ -277,17 +277,17 @@ const createStyles = (
                 : border.radius.loose,
         },
         contentContainer: {
-            paddingTop: padding.small,
-            paddingLeft: padding.regular,
-            paddingRight: padding.small,
+            paddingTop: spacing.small,
+            paddingLeft: spacing.medium,
+            paddingRight: spacing.small,
         },
         contentDecorator: {
-            backgroundColor: color.white,
+            backgroundColor: color.foreground,
             width: 4,
-            borderRadius: 5,
+            borderRadius: 4,
             position: "absolute",
             top: 6,
-            bottom: 6,
+            bottom: 0,
         },
         contentItem: {
             flexDirection: "row",

@@ -82,7 +82,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                             onChange={(_, newDate) =>
                                 newDate && onDateChange(newDate)
                             }
-                            accentColor={theme.color.primary}
+                            accentColor={theme.color.primaryLight}
                         />
                     }
                 </CollapsibleContainer>
@@ -157,12 +157,12 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 ReviewForm.displayName = "ReviewForm";
 
 const createStyles = ({
-    theme: { padding },
+    theme: { spacing },
     styles: { toggleInput },
 }: ThemedStyles) => {
     return StyleSheet.create({
         dateRow: {
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
             flexDirection: "row",
             justifyContent: "space-between",
             height: 38,
@@ -171,12 +171,12 @@ const createStyles = ({
             flex: 1,
         },
         input: {
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
         },
         reviewInputContainer: {
             marginLeft:
                 toggleInput.label.gap + toggleInput.indicator.size.regular,
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
         },
         reviewInput: {
             minHeight: 80,
@@ -184,7 +184,7 @@ const createStyles = ({
         rating: {
             flex: 1,
             alignSelf: "center",
-            marginVertical: padding.regular,
+            marginVertical: spacing.medium,
         },
     });
 };

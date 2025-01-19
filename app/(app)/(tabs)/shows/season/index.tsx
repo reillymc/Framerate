@@ -191,7 +191,7 @@ const Season: React.FC = () => {
 export default Season;
 
 const createStyles = (
-    { theme: { padding, border } }: ThemedStyles,
+    { theme: { spacing, border } }: ThemedStyles,
     { fontScale, width }: { fontScale: number; width: number },
 ) => {
     const imageAspect = 5 / 7;
@@ -201,17 +201,17 @@ const createStyles = (
     return StyleSheet.create({
         container: {
             paddingBottom: 80,
-            paddingHorizontal: padding.pageHorizontal,
+            paddingHorizontal: spacing.pageHorizontal,
         },
         topMargin: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         list: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         episode: {
-            marginVertical: padding.regular,
-            gap: padding.small,
+            marginVertical: spacing.medium,
+            gap: spacing.small,
         },
         episodeImage: {
             width: imageWidth,
@@ -223,7 +223,7 @@ const createStyles = (
         },
         episodeDetails: {
             flex: 1,
-            marginLeft: padding.small,
+            marginLeft: spacing.small,
             justifyContent: "space-between",
         },
     });

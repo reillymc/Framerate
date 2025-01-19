@@ -1,4 +1,5 @@
 import { FontResources } from "@/assets/fonts";
+import { useColorScheme } from "@/hooks";
 import { useTheme } from "@reillymc/react-native-components";
 import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
 import {
@@ -35,6 +36,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
     onPressDate,
 }) => {
     const font = useFont(FontResources.bold, 12);
+    const scheme = useColorScheme();
 
     const { state } = useChartPressState({
         x: 0,
@@ -133,12 +135,12 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                         x: chartData.map(({ date }) => date),
                         y: [0, largestCount],
                     },
-                    labelOffset: 10,
+                    labelOffset: theme.spacing.small,
                     lineColor: "transparent",
                 }}
                 domainPadding={{
-                    left: theme.padding.regular,
-                    right: theme.padding.regular,
+                    left: theme.spacing.medium,
+                    right: theme.spacing.medium,
                 }}
                 xKey="date"
                 yKeys={["count"]}
@@ -148,11 +150,9 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                     <Bar
                         points={points.count}
                         chartBounds={chartBounds}
-                        color={theme.color.primary}
-                        opacity={0.7}
                         animate={{ type: "spring" }}
                         barCount={totalMonthCount}
-                        innerPadding={0.1}
+                        innerPadding={0.16}
                         blendMode="color"
                         roundedCorners={{
                             topLeft: theme.border.radius.loose,
@@ -164,10 +164,17 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                         <LinearGradient
                             start={vec(0, chartBounds.bottom - chartBounds.top)}
                             end={vec(0, 0)}
-                            colors={[
-                                theme.color.primaryHighlight,
-                                theme.color.primary,
-                            ]}
+                            colors={
+                                scheme === "light"
+                                    ? [
+                                          theme.color.primary,
+                                          theme.color.primaryLight,
+                                      ]
+                                    : [
+                                          theme.color.primaryDark,
+                                          theme.color.primary,
+                                      ]
+                            }
                         />
                     </Bar>
                 )}

@@ -127,20 +127,20 @@ const LoginScreen: FC = () => {
 
 export default LoginScreen;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingTop: "15%",
             ...WebPageLayout,
         },
         titleContainer: {
-            marginBottom: padding.regular,
+            marginBottom: spacing.medium,
             alignItems: "center",
         },
         signUpContainer: {
             flexDirection: "row",
-            gap: padding.tiny,
-            marginTop: padding.large,
+            gap: spacing.tiny,
+            marginTop: spacing.large,
             width: "100%",
             alignSelf: "center",
         },
@@ -148,10 +148,10 @@ const createStyles = ({ theme: { padding } }: ThemedStyles) =>
             alignItems: "center",
             width: Platform.OS === "web" ? "100%" : "80%",
             alignSelf: "center",
-            gap: padding.regular,
+            gap: spacing.medium,
         },
         confirmButton: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
         },
         settings: {
             position: "absolute",

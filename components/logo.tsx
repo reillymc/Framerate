@@ -45,11 +45,11 @@ export const Logo: FC<LogoProps> = ({
         </Pressable>
     );
 };
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         logoContainer: {
             flexDirection: "row",
             alignItems: "center",
-            gap: padding.small,
+            gap: spacing.small,
         },
     });

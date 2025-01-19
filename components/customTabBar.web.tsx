@@ -80,17 +80,17 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
     );
 };
 
-const createStyles = ({ theme: { color, padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { color, spacing } }: ThemedStyles) =>
     StyleSheet.create({
         tabBar: {
             position: "absolute",
             left: 290,
             height: NAVIGATION_BAR_HEIGHT,
-            paddingTop: padding.tiny,
+            paddingTop: spacing.tiny,
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            gap: padding.regular,
+            gap: spacing.medium,
         },
         tabLabelFocussed: {
             color: color.primary,

@@ -96,7 +96,7 @@ const EditReview: FC = () => {
         saveReview({
             ...review,
             reviewId,
-            date: formatForSave(date),
+            date: includeDate ? formatForSave(date) : undefined,
             showId: showIdValue,
             venue: venue?.trim() || undefined,
             rating: includeReview ? rating || undefined : undefined,
@@ -177,14 +177,14 @@ const EditReview: FC = () => {
 
 export default EditReview;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         headerAction: {
-            marginHorizontal: padding.navigationActionHorizontal,
+            marginHorizontal: spacing.navigationActionHorizontal,
         },
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
-            paddingBottom: padding.pageBottom * 2,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
+            paddingBottom: spacing.pageBottom * 2,
         },
     });

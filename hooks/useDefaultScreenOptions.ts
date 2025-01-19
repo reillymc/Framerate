@@ -31,7 +31,7 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
             },
             contentStyle: {
                 paddingTop:
-                    Platform.OS === "web" ? 0 : theme.padding.screenContentTop,
+                    Platform.OS === "web" ? 0 : theme.spacing.screenContentTop,
             },
         }),
         [theme],

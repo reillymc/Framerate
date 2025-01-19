@@ -85,14 +85,14 @@ const EditCollection: FC = () => {
 
 export default EditCollection;
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         headerAction: {
-            marginHorizontal: padding.navigationActionHorizontal,
+            marginHorizontal: spacing.navigationActionHorizontal,
         },
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
-            paddingBottom: padding.pageBottom * 2,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
+            paddingBottom: spacing.pageBottom * 2,
         },
     });

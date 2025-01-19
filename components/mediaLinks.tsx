@@ -39,12 +39,12 @@ export const MediaLinks: FC<MediaLinksProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         linksContainer: {
-            marginTop: padding.large,
+            marginTop: spacing.large,
             justifyContent: "center",
             flexDirection: "row",
-            gap: padding.regular,
+            gap: spacing.medium,
         },
     });

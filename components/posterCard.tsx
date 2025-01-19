@@ -28,9 +28,9 @@ export const PosterCard: FC<PosterCardProps> = ({
         <Pressable
             style={{
                 height,
-                paddingTop: theme.padding.regular,
+                paddingTop: theme.spacing.medium,
                 flexDirection: "row",
-                paddingHorizontal: theme.padding.pageHorizontal,
+                paddingHorizontal: theme.spacing.pageHorizontal,
                 backgroundColor: theme.color.background,
             }}
             onPress={onPress}

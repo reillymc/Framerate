@@ -1,3 +1,4 @@
+import { useTheme } from "@reillymc/react-native-components";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import { getStars } from "./helpers";
 import { StarIcon } from "./starIcon";
@@ -47,17 +48,16 @@ type Props = {
     starStyle?: StyleProp<ViewStyle>;
 };
 
-const defaultColor = "#fdd835";
-
 export const StarRatingDisplay = ({
     rating,
     maxStars = 5,
     starSize = 32,
-    color = defaultColor,
+    color,
     emptyColor = color,
     style,
     starStyle,
 }: Props) => {
+    const { theme } = useTheme();
     return (
         <View
             style={[styles.starRating, style]}
@@ -71,7 +71,11 @@ export const StarRatingDisplay = ({
                             index={i}
                             type={starType}
                             size={starSize}
-                            color={starType === "empty" ? emptyColor : color}
+                            color={
+                                starType === "empty"
+                                    ? (emptyColor ?? theme.color.primaryLight)
+                                    : (color ?? theme.color.primaryLight)
+                            }
                         />
                     </View>
                 );

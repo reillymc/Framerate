@@ -56,12 +56,18 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                     <View style={styles.headingTitleContainer}>
                         <Text
                             variant="title"
+                            compactLineHeight
                             style={styles.title}
                             numberOfLines={1}
                         >
                             {mediaTitle}
                         </Text>
-                        <Text key="date" variant="label" style={styles.date}>
+                        <Text
+                            key="date"
+                            variant="label"
+                            compactLineHeight
+                            alignLineHeightWithVariant="title"
+                        >
                             {releaseYear}
                         </Text>
                     </View>
@@ -134,7 +140,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
 };
 
 const createStyles = (
-    { theme: { padding, border, color }, styles: { text } }: ThemedStyles,
+    { theme: { spacing, border, color } }: ThemedStyles,
     {
         starCount,
         posterWidth,
@@ -143,11 +149,11 @@ const createStyles = (
     StyleSheet.create({
         container: {
             flex: 1,
-            marginTop: padding.tiny,
-            marginBottom: padding.small,
+            marginTop: spacing.tiny,
+            marginBottom: spacing.small,
             backgroundColor: color.foreground,
             borderRadius: border.radius.loose,
-            padding: padding.small,
+            padding: spacing.small,
         },
         topContainer: {
             flexDirection: "row",
@@ -155,39 +161,34 @@ const createStyles = (
         },
         headingContainer: {
             flex: 1,
-            gap: padding.small,
-            marginLeft: padding.small,
-            marginRight: padding.tiny,
+            gap: spacing.small,
+            marginLeft: spacing.small,
+            marginRight: spacing.tiny,
         },
         headingTitleContainer: {
             flexDirection: "row",
             alignItems: "flex-end",
             justifyContent: "space-between",
-            gap: padding.small,
+            gap: spacing.small,
         },
         title: {
-            // TODO a 'compact' options in RNC that excludes the LINE_HEIGHT_MODIFIER
-            lineHeight: text.lineHeight.title - 14,
             flexShrink: 1,
         },
-        date: {
-            // TODO an 'alignTop' option in RNC that takes another text variant to grab line height from
-            lineHeight: text.lineHeight.label - 3,
-        },
+
         stars: {
             marginHorizontal: -1,
             flexDirection: "row",
             justifyContent: starCount >= 10 ? "space-between" : "flex-start",
-            gap: starCount <= 5 ? padding.small : 0,
+            gap: starCount <= 5 ? spacing.small : 0,
         },
         body: {
-            marginTop: padding.small,
+            marginTop: spacing.small,
             flexDirection: "row",
         },
         bodyDecoration: {
             width: posterWidth + 2,
             paddingHorizontal: 1,
-            marginRight: padding.tiny,
+            marginRight: spacing.tiny,
             alignItems: "center",
         },
         numericRating: {
@@ -195,23 +196,23 @@ const createStyles = (
         },
         description: {
             flexShrink: 1,
-            marginLeft: padding.tiny,
+            marginLeft: spacing.tiny,
         },
         informationSection: {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginTop: padding.regular,
-            marginBottom: padding.small,
-            marginLeft: padding.small,
-            marginRight: padding.tiny,
+            marginTop: spacing.medium,
+            marginBottom: spacing.small,
+            marginLeft: spacing.small,
+            marginRight: spacing.tiny,
         },
         compactInformationSection: {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginTop: padding.small,
-            marginRight: padding.tiny,
+            marginTop: spacing.small,
+            marginRight: spacing.tiny,
         },
         altInformationInnerContainer: {
             flexDirection: "row",
@@ -220,7 +221,7 @@ const createStyles = (
         },
         altRating: {
             width: 40,
-            marginRight: 8,
+            marginRight: spacing.small,
             marginBottom: -3,
         },
     });

@@ -193,25 +193,25 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         list: {
-            paddingBottom: padding.large,
-            paddingTop: padding.tiny,
+            paddingBottom: spacing.large,
+            paddingTop: spacing.tiny,
         },
         listContent: {
-            paddingLeft: padding.pageHorizontal,
+            paddingLeft: spacing.pageHorizontal,
         },
         placeholderContainer: {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            padding: padding.large,
-            gap: padding.regular,
+            padding: spacing.large,
+            gap: spacing.medium,
         },
         footerContainer: {
             flex: 1,
-            paddingRight: padding.small,
+            paddingRight: spacing.small,
             justifyContent: "center",
             alignItems: "center",
         },

@@ -57,11 +57,11 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
     useEffect(() => {
         if (!days.length) return;
         todayRef.current?.measure((_x, _y, _w, _h, pageX) => {
-            const x = pageX - theme.padding.regular;
+            const x = pageX - theme.spacing.medium;
 
             listRef.current?.scrollTo({ x, animated: false });
         });
-    }, [days, theme.padding.regular]);
+    }, [days, theme.spacing.medium]);
 
     return (
         <ScrollView
@@ -118,24 +118,24 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         calendarContainer: {
-            paddingLeft: padding.pageHorizontal,
-            paddingBlock: padding.regular,
+            paddingLeft: spacing.pageHorizontal,
+            paddingBlock: spacing.medium,
             alignItems: "center",
             minHeight: 160,
         },
         dayContainer: {
-            marginHorizontal: padding.small,
+            marginHorizontal: spacing.small,
         },
         dayMarker: {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: color.foreground,
             borderColor: color.primary,
-            borderWidth: 2,
-            padding: padding.small,
+            borderWidth: border.width.regular,
+            padding: spacing.small,
             minHeight: 48,
             width: "100%",
             minWidth: 48,
@@ -147,21 +147,21 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
         },
         posterContainer: {
             flexDirection: "row",
-            gap: padding.tiny,
-            marginHorizontal: padding.tiny,
-            marginVertical: padding.tiny,
+            gap: spacing.tiny,
+            marginHorizontal: spacing.tiny,
+            marginVertical: spacing.tiny,
         },
         trail: {
             backgroundColor: color.foreground,
             width: 8,
             height: 8,
-            borderRadius: 4,
+            borderRadius: border.radius.tight,
             borderColor: color.primary,
-            borderWidth: 2,
-            marginHorizontal: padding.regular,
+            borderWidth: border.width.regular,
+            marginHorizontal: spacing.medium,
         },
         trailContainer: {
-            marginHorizontal: padding.small,
+            marginHorizontal: spacing.small,
             flexDirection: "row",
             alignItems: "center",
         },
@@ -169,8 +169,8 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             backgroundColor: color.foreground,
             width: 16,
             height: 16,
-            borderRadius: 8,
+            borderRadius: border.radius.loose,
             borderColor: color.primary,
-            borderWidth: 2,
+            borderWidth: border.width.regular,
         },
     });

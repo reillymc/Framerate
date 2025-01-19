@@ -1,7 +1,7 @@
 import { Fade, PosterCard } from "@/components";
 import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/hooks";
 import { ActiveStatuses, type ShowStatus } from "@/modules/show";
 import {
     SwipeAction,
@@ -264,10 +264,10 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingBottom: padding.large,
+            paddingBottom: spacing.large,
             backgroundColor: color.background,
         },
         sectionHeaderContainer: {
@@ -275,8 +275,8 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             justifyContent: "space-between",
             alignItems: "flex-end",
             height: SECTION_HEADER_HEIGHT,
-            paddingHorizontal: padding.pageHorizontal,
-            borderBottomWidth: 1,
+            paddingHorizontal: spacing.pageHorizontal,
+            borderBottomWidth: border.width.thin,
             borderBottomColor: color.border,
         },
         yearHeading: {
@@ -287,7 +287,7 @@ const createStyles = ({ theme: { padding, color } }: ThemedStyles) =>
             height: HEADER_HEIGHT,
         },
         header: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.large,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.large,
         },
     });

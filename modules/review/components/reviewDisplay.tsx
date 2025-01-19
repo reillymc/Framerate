@@ -74,18 +74,18 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
     );
 };
 
-const createStyles = ({ theme: { padding } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: padding.pageHorizontal,
-            paddingTop: padding.pageTop,
-            paddingBottom: padding.large,
+            paddingHorizontal: spacing.pageHorizontal,
+            paddingTop: spacing.pageTop,
+            paddingBottom: spacing.large,
         },
         ratingDisplay: {
             justifyContent: "center",
-            marginBottom: padding.large,
+            marginBottom: spacing.large,
         },
         informationSection: {
-            marginBottom: padding.large,
+            marginBottom: spacing.large,
         },
     });
