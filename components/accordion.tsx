@@ -12,7 +12,7 @@ import Animated, {
 export type AccordionProps = {
     collapsed: boolean;
     children: ReactNode;
-    style: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
 };
 
 export const Accordion: FC<AccordionProps> = ({
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     },
     animatedView: {
         overflow: "hidden",
-        flex: 1,
     },
     box: {
         height: 120,

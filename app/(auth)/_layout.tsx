@@ -37,7 +37,7 @@ const AuthenticationStack: React.FC = () => {
                         Platform.OS === "web"
                             ? "transparentModal"
                             : "formSheet",
-                    sheetAllowedDetents: [0.2],
+                    sheetAllowedDetents: [0.26], // TODO: move to fitToContents when option no longer causes modal to take up whole screen
                 }}
             />
         </Stack>

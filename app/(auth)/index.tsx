@@ -19,6 +19,11 @@ import {
     View,
     type TextInput as rnTextInput,
 } from "react-native";
+import Animated, {
+    LinearTransition,
+    ZoomInEasyUp,
+    ZoomOutEasyUp,
+} from "react-native-reanimated";
 
 const LoginScreen: FC = () => {
     const router = useRouter();
@@ -31,6 +36,8 @@ const LoginScreen: FC = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [hideLogo, setHideLogo] = useState(false);
 
     const handleLogin = useCallback(() => {
         if (!(email && password)) return;
@@ -58,67 +65,88 @@ const LoginScreen: FC = () => {
             }
         >
             <ScrollView
-                scrollEnabled={Platform.OS === "web"}
                 contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
                 keyboardShouldPersistTaps="handled"
             >
-                <Form style={styles.form}>
+                <Form>
                     <View style={styles.titleContainer}>
                         {Platform.OS === "web" ? (
                             <Text variant="title">Log In</Text>
                         ) : (
-                            <Logo withTitle />
+                            !hideLogo && (
+                                <Animated.View
+                                    exiting={ZoomOutEasyUp.springify().mass(
+                                        0.7,
+                                    )}
+                                    entering={ZoomInEasyUp.springify().mass(
+                                        0.7,
+                                    )}
+                                    layout={LinearTransition}
+                                    style={styles.logoContainer}
+                                >
+                                    <Logo withTitle />
+                                </Animated.View>
+                            )
                         )}
                     </View>
-                    <StatusIndicator error={error} />
-                    <TextInput
-                        label="Email"
-                        width="full"
-                        textContentType="username"
-                        autoCapitalize="none"
-                        clearButtonMode="while-editing"
-                        submitBehavior="submit"
-                        disabled={isSigningIn}
-                        value={email}
-                        onChangeText={setEmail}
-                        onSubmitEditing={() => passwordRef.current?.focus()}
-                    />
-                    <TextInput
-                        ref={passwordRef}
-                        label="Password"
-                        width="full"
-                        textContentType="password"
-                        clearButtonMode="while-editing"
-                        secureTextEntry
-                        disabled={isSigningIn}
-                        value={password}
-                        onChangeText={setPassword}
-                        onSubmitEditing={handleLogin}
-                    />
-                    <Button
-                        label="Login"
-                        onPress={handleLogin}
-                        style={styles.confirmButton}
-                        size="large"
-                        disabled={
-                            !(email && password) || isLoading || isSigningIn
-                        }
-                    />
-                    <View style={styles.signUpContainer}>
-                        <Text>Don't have an account? </Text>
-                        <Action
-                            onPress={() => {
-                                clearError();
-                                router.push({
-                                    pathname: "/(auth)/register",
-                                    params: { email },
-                                });
-                            }}
-                            label="Sign up"
-                            variant="primary"
+                    <Animated.View
+                        style={styles.form}
+                        layout={LinearTransition.springify().mass(0.5)}
+                    >
+                        <StatusIndicator error={error} />
+                        <TextInput
+                            label="Email"
+                            width="full"
+                            textContentType="username"
+                            autoCapitalize="none"
+                            clearButtonMode="while-editing"
+                            submitBehavior="submit"
+                            disabled={isSigningIn}
+                            value={email}
+                            onChangeText={setEmail}
+                            onFocus={() => setHideLogo(true)}
+                            onBlur={() => setHideLogo(false)}
+                            onSubmitEditing={() => passwordRef.current?.focus()}
                         />
-                    </View>
+                        <TextInput
+                            ref={passwordRef}
+                            label="Password"
+                            width="full"
+                            textContentType="password"
+                            clearButtonMode="while-editing"
+                            secureTextEntry
+                            disabled={isSigningIn}
+                            value={password}
+                            onFocus={() => setHideLogo(true)}
+                            onBlur={() => setHideLogo(false)}
+                            onChangeText={setPassword}
+                            onSubmitEditing={handleLogin}
+                        />
+                        <Button
+                            label="Login"
+                            onPress={handleLogin}
+                            style={styles.confirmButton}
+                            size="large"
+                            disabled={
+                                !(email && password) || isLoading || isSigningIn
+                            }
+                        />
+                        <View style={styles.signUpContainer}>
+                            <Text>Don't have an account? </Text>
+                            <Action
+                                onPress={() => {
+                                    clearError();
+                                    router.push({
+                                        pathname: "/(auth)/register",
+                                        params: { email },
+                                    });
+                                }}
+                                label="Sign up"
+                                variant="primary"
+                            />
+                        </View>
+                    </Animated.View>
                 </Form>
             </ScrollView>
         </ScreenLayout>
@@ -130,8 +158,11 @@ export default LoginScreen;
 const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingTop: "15%",
+            paddingTop: Platform.OS === "web" ? "15%" : undefined,
             ...WebPageLayout,
+        },
+        logoContainer: {
+            paddingTop: Platform.OS !== "web" ? "15%" : undefined,
         },
         titleContainer: {
             marginBottom: spacing.medium,
