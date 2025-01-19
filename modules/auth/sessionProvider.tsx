@@ -8,6 +8,7 @@ import {
     type RegisteringUser,
     SignalMiddleware,
 } from "@/services";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     type FC,
     type PropsWithChildren,
@@ -56,6 +57,8 @@ export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
         useStorageState("session");
     const [userId, setUserId, { loading: isLoadingUserId }] =
         useStorageState("userId");
+
+    const queryClient = useQueryClient();
 
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState(false);
@@ -134,6 +137,7 @@ export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
                 signOut: () => {
                     setSession(null);
                     setUserId(null);
+                    queryClient.clear();
                 },
                 setHost: (host) => {
                     setHost(host);

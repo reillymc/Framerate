@@ -11,7 +11,14 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import {
+    type FC,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import {
     Platform,
     StyleSheet,
@@ -19,6 +26,8 @@ import {
     type TextInput as rnTextInput,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+
+const emailValidator = /^\S+@\S+\.\S+$/;
 
 const RegisterScreen: FC = () => {
     const router = useRouter();
@@ -40,11 +49,24 @@ const RegisterScreen: FC = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
-    const handleRegister = useCallback(() => {
-        if (!(email && password)) return;
+    const [isEmailInvalid, setIsEmailInvalid] = useState<boolean>();
 
-        register({ email, password, firstName, lastName, inviteCode });
-    }, [email, password, firstName, lastName, inviteCode, register]);
+    const formValid = useMemo(
+        () => email && password && firstName && lastName && !isEmailInvalid,
+        [email, password, firstName, lastName, isEmailInvalid],
+    );
+
+    const handleRegister = useCallback(() => {
+        if (!formValid) return;
+
+        register({
+            email: email.toLocaleLowerCase(),
+            password,
+            firstName,
+            lastName,
+            inviteCode,
+        });
+    }, [email, password, firstName, lastName, inviteCode, formValid, register]);
 
     useEffect(() => {
         if (isSigningIn) {
@@ -104,7 +126,24 @@ const RegisterScreen: FC = () => {
                         keyboardType="email-address"
                         width="full"
                         value={email}
+                        hasError={isEmailInvalid}
+                        helpText={
+                            isEmailInvalid
+                                ? "Please enter a valid email address"
+                                : undefined
+                        }
                         onChangeText={setEmail}
+                        onChange={({ nativeEvent }) => {
+                            if (isEmailInvalid === undefined) return;
+                            setIsEmailInvalid(
+                                !emailValidator.test(nativeEvent.text),
+                            );
+                        }}
+                        onBlur={({ nativeEvent }) => {
+                            setIsEmailInvalid(
+                                !emailValidator.test(nativeEvent.text),
+                            );
+                        }}
                         onSubmitEditing={() => firstNameRef.current?.focus()}
                     />
                     <View style={styles.nameInputContainer}>
@@ -145,7 +184,7 @@ const RegisterScreen: FC = () => {
                         onPress={handleRegister}
                         style={styles.confirmButton}
                         size="large"
-                        disabled={!(email && password)}
+                        disabled={!formValid}
                     />
                     {Platform.OS === "web" ? (
                         <View style={styles.logInContainer}>
