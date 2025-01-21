@@ -1,4 +1,4 @@
-import { ScreenLayout, SegmentedControl } from "@/components";
+import { Accordion, ScreenLayout, SegmentedControl } from "@/components";
 import { useHealth } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import {
@@ -11,7 +11,6 @@ import { MergeConfiguration } from "@/modules/user";
 import {
     Action,
     Button,
-    CollapsibleContainer,
     IconActionV2,
     SwipeAction,
     SwipeView,
@@ -30,7 +29,6 @@ import {
     View,
     type TextInput as rnTextInput,
 } from "react-native";
-import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { version } from "@/package.json";
 
@@ -165,10 +163,7 @@ const Profile: FC = () => {
                             />
                         </View>
 
-                        <Animated.View
-                            layout={LinearTransition}
-                            style={styles.profileSection}
-                        >
+                        <View style={styles.profileSection}>
                             <Text variant="title">Customisation</Text>
                             <SegmentedControl
                                 label="Rating System"
@@ -217,9 +212,8 @@ const Profile: FC = () => {
                                     }
                                 />
                             </Pressable>
-                            <CollapsibleContainer
+                            <Accordion
                                 collapsed={venuesCollapsed}
-                                direction="up"
                                 style={styles.sectionInternalContainer}
                             >
                                 {configuration.venues.knownVenueNames.map(
@@ -260,12 +254,9 @@ const Profile: FC = () => {
                                         disabled={!venue}
                                     />
                                 </View>
-                            </CollapsibleContainer>
+                            </Accordion>
 
-                            <Animated.View
-                                layout={LinearTransition}
-                                style={styles.sectionElement}
-                            >
+                            <View style={styles.sectionElement}>
                                 <Pressable
                                     style={styles.collapsibleHeading}
                                     onPress={() =>
@@ -291,10 +282,9 @@ const Profile: FC = () => {
                                         }
                                     />
                                 </Pressable>
-                            </Animated.View>
-                            <CollapsibleContainer
+                            </View>
+                            <Accordion
                                 collapsed={friendsCollapsed}
-                                direction="up"
                                 style={styles.sectionInternalContainer}
                             >
                                 {company.map(
@@ -346,15 +336,12 @@ const Profile: FC = () => {
                                         onPress={addFriend}
                                     />
                                 </View>
-                            </CollapsibleContainer>
-                        </Animated.View>
+                            </Accordion>
+                        </View>
                     </>
                 ) : null}
 
-                <Animated.View
-                    layout={LinearTransition}
-                    style={styles.profileSection}
-                >
+                <View style={styles.profileSection}>
                     <Text variant="title">Account</Text>
                     <View style={styles.sectionContainer}>
                         <Button
@@ -377,11 +364,8 @@ const Profile: FC = () => {
                             }}
                         />
                     </View>
-                </Animated.View>
-                <Animated.View
-                    layout={LinearTransition}
-                    style={styles.sectionElement}
-                >
+                </View>
+                <View style={styles.sectionElement}>
                     <Text variant="title">Framerate</Text>
                     <View style={styles.sectionContainer}>
                         {showAdminButton && (
@@ -414,7 +398,7 @@ const Profile: FC = () => {
                             Client: {version} / Server: {serverVersion}
                         </Text>
                     </View>
-                </Animated.View>
+                </View>
             </ScrollView>
         </ScreenLayout>
     );

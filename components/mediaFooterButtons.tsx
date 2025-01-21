@@ -22,30 +22,40 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
     onToggleWatchlist,
 }) => {
     const { bottom } = useSafeAreaInsets();
-    const { width } = useWindowDimensions();
+    const { width, height } = useWindowDimensions();
     const { theme } = useTheme();
 
     const styles = useThemedStyles(createStyles, {});
+
+    const fadeBottom = bottom + 24;
 
     return (
         <>
             <Fade
                 direction="up"
                 width={width}
-                height={120}
-                fadeOffset={90 - bottom}
-                style={styles.fade}
+                height={36}
+                fadeOffset={0}
+                style={[styles.fade, { bottom: fadeBottom }]}
             />
             <View
                 style={{
+                    position: "absolute",
+                    top: height - fadeBottom,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: theme.color.background,
+                }}
+            />
+            <View
+                style={{
+                    position: "absolute",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    marginVertical: theme.spacing.large,
-                    position: "absolute",
-                    bottom: -bottom,
-                    paddingBottom: bottom + theme.spacing.medium,
+                    bottom,
+                    paddingBottom: theme.spacing.medium,
                     gap: 12,
-                    paddingTop: theme.spacing.medium,
                     paddingHorizontal: theme.spacing.pageHorizontal / 1.5,
                 }}
             >

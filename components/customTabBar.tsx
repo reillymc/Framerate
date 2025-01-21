@@ -121,7 +121,7 @@ const createStyles = (
     StyleSheet.create({
         tabBar: {
             position: "absolute",
-            bottom: props.bottom,
+            bottom: props.bottom + spacing.small,
             marginLeft: spacing.pageHorizontal / 2,
             marginRight: spacing.pageHorizontal / 2,
             zIndex: 999,

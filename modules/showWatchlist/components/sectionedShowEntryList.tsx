@@ -22,11 +22,12 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
 import type { ShowWatchlistEntry } from "../models";
 
-const HEADER_HEIGHT = 96;
+const HEADER_HEIGHT = 39;
 const ITEM_HEIGHT = 92;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
@@ -54,11 +55,13 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     onAddReview,
     onRefresh,
 }) => {
-    const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<SectionList<ShowWatchlistEntry> | null>(null);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
+    const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
+
+    const styles = useThemedStyles(createStyles, { top });
 
     const sectionData: Array<ShowEntrySection> = useMemo(() => {
         const currentlyAiringCutOff = addMonths(
@@ -172,7 +175,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             stickySectionHeadersEnabled
             keyExtractor={(item) => item.showId.toString()}
             contentInsetAdjustmentBehavior="automatic"
-            contentInset={{ top: HEADER_HEIGHT }}
+            contentInset={{ top: top + HEADER_HEIGHT }}
             contentContainerStyle={styles.container}
             getItemLayout={buildGetItemLayout}
             onLayout={scrollToCurrentSection}
@@ -264,7 +267,10 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     );
 };
 
-const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
+const createStyles = (
+    { theme: { spacing, color, border } }: ThemedStyles,
+    { top }: { top: number },
+) =>
     StyleSheet.create({
         container: {
             paddingBottom: spacing.large,
@@ -283,8 +289,8 @@ const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
             paddingBottom: 2,
         },
         headerContainer: {
-            marginTop: -HEADER_HEIGHT,
-            height: HEADER_HEIGHT,
+            marginTop: -(top + HEADER_HEIGHT),
+            height: top + HEADER_HEIGHT,
         },
         header: {
             paddingHorizontal: spacing.pageHorizontal,

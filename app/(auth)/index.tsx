@@ -10,6 +10,7 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { DeviceType, deviceType } from "expo-device";
 import { useRouter } from "expo-router";
 import { type FC, useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -44,6 +45,11 @@ const LoginScreen: FC = () => {
 
         signIn({ email, password });
     }, [email, password, signIn]);
+
+    const handleHideLogo = useCallback(() => {
+        if (deviceType !== DeviceType.PHONE) return;
+        setHideLogo(true);
+    }, []);
 
     useEffect(() => {
         if (isSigningIn) {
@@ -105,7 +111,7 @@ const LoginScreen: FC = () => {
                             disabled={isSigningIn}
                             value={email}
                             onChangeText={setEmail}
-                            onFocus={() => setHideLogo(true)}
+                            onFocus={handleHideLogo}
                             onBlur={() => setHideLogo(false)}
                             onSubmitEditing={() => passwordRef.current?.focus()}
                         />
@@ -118,7 +124,7 @@ const LoginScreen: FC = () => {
                             secureTextEntry
                             disabled={isSigningIn}
                             value={password}
-                            onFocus={() => setHideLogo(true)}
+                            onFocus={handleHideLogo}
                             onBlur={() => setHideLogo(false)}
                             onChangeText={setPassword}
                             onSubmitEditing={handleLogin}

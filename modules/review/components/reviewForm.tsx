@@ -12,7 +12,12 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { type FC, useRef } from "react";
-import { StyleSheet, View, type TextInput as rnTextInput } from "react-native";
+import {
+    StyleSheet,
+    View,
+    type TextInput as rnTextInput,
+    useWindowDimensions,
+} from "react-native";
 import { ratingToStars, starsToRating } from "../helpers";
 
 interface ReviewFormProps {
@@ -58,6 +63,12 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 
     const { theme } = useTheme();
     const styles = useThemedStyles(createStyles, {});
+    const { width } = useWindowDimensions();
+
+    const starContainerWidth =
+        width -
+        styles.reviewInputContainer.marginLeft -
+        theme.spacing.pageHorizontal * 2;
 
     return (
         <>
@@ -102,7 +113,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     rating={ratingToStars(rating, starCount)}
                     enableHalfStar
                     maxStars={starCount}
-                    starSize={240 / starCount}
+                    starSize={starContainerWidth / starCount}
                     onChange={(value) =>
                         onRatingChange(starsToRating(value, starCount))
                     }

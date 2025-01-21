@@ -19,10 +19,11 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
 
-const HEADER_HEIGHT = 96;
+const HEADER_HEIGHT = 39;
 const ITEM_HEIGHT = Platform.OS === "web" ? 116 : 102;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
@@ -86,11 +87,13 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     onPressEntry,
     onAddReview,
 }) => {
-    const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<SectionList<MovieWatchlistEntry> | null>(null);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
+    const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
+
+    const styles = useThemedStyles(createStyles, { top });
 
     const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
 
@@ -216,13 +219,16 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
             )}
             keyExtractor={(item) => item.movieId.toString()}
             contentInsetAdjustmentBehavior="automatic"
-            contentInset={{ top: HEADER_HEIGHT }}
+            contentInset={{ top: top + HEADER_HEIGHT }}
             contentContainerStyle={styles.container}
         />
     );
 };
 
-const createStyles = ({ theme: { spacing, color } }: ThemedStyles) =>
+const createStyles = (
+    { theme: { spacing, color } }: ThemedStyles,
+    { top }: { top: number },
+) =>
     StyleSheet.create({
         container: {
             paddingBottom: spacing.large,
@@ -241,8 +247,8 @@ const createStyles = ({ theme: { spacing, color } }: ThemedStyles) =>
             paddingBottom: 2,
         },
         headerContainer: {
-            marginTop: -HEADER_HEIGHT,
-            height: HEADER_HEIGHT,
+            marginTop: -(top + HEADER_HEIGHT),
+            height: top + HEADER_HEIGHT,
         },
         header: {
             paddingHorizontal: spacing.pageHorizontal,
