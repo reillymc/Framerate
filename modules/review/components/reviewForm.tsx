@@ -65,11 +65,6 @@ export const ReviewForm: FC<ReviewFormProps> = ({
     const styles = useThemedStyles(createStyles, {});
     const { width } = useWindowDimensions();
 
-    const starContainerWidth =
-        width -
-        styles.reviewInputContainer.marginLeft -
-        theme.spacing.pageHorizontal * 2;
-
     return (
         <>
             <View style={styles.dateRow}>
@@ -113,7 +108,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     rating={ratingToStars(rating, starCount)}
                     enableHalfStar
                     maxStars={starCount}
-                    starSize={starContainerWidth / starCount}
+                    starSize={width / 2 / starCount}
                     onChange={(value) =>
                         onRatingChange(starsToRating(value, starCount))
                     }

@@ -1,4 +1,4 @@
-import { Fade, PosterCard } from "@/components";
+import { Fade, PosterCard, usePosterDimensions } from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks";
@@ -13,7 +13,6 @@ import {
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
-    Platform,
     SectionList,
     StyleSheet,
     View,
@@ -23,16 +22,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
 
-const HEADER_HEIGHT = 39;
-const ITEM_HEIGHT = Platform.OS === "web" ? 116 : 102;
+const HEADER_HEIGHT = 38;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
-
-const buildGetItemLayout = getItemLayout<MovieWatchlistEntry>({
-    getItemHeight: ITEM_HEIGHT,
-    getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
-    getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
-});
 
 const now = new Date();
 
@@ -92,10 +84,19 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     const { width } = useWindowDimensions();
     const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
+    const { height } = usePosterDimensions({ size: "tiny" });
 
     const styles = useThemedStyles(createStyles, { top });
 
     const sectionData = useMemo(() => getGroupedEntries(entries), [entries]);
+
+    const getItemHeight = useMemo(() => {
+        return getItemLayout<MovieWatchlistEntry>({
+            getItemHeight: height + theme.spacing.large,
+            getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
+            getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
+        });
+    }, [height, theme.spacing.large]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
@@ -134,7 +135,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                 });
             }}
             onLayout={scrollToCurrentSection}
-            getItemLayout={buildGetItemLayout}
+            getItemLayout={getItemHeight}
             renderSectionHeader={({ section }) => (
                 <BlurView
                     intensity={scheme === "light" ? 90 : 40}
@@ -164,7 +165,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     onPress={() => onPressEntry(item)}
                     onToggleWatchlist={() => onDeleteEntry(item.movieId)}
                     onAddReview={() => onAddReview(item.movieId)}
-                    height={ITEM_HEIGHT}
+                    height={height + theme.spacing.large}
                 />
             )}
             renderSectionFooter={() => (

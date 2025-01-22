@@ -1,4 +1,4 @@
-import { Fade, PosterCard } from "@/components";
+import { Fade, PosterCard, usePosterDimensions } from "@/components";
 import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
 import { useColorScheme } from "@/hooks";
@@ -27,16 +27,9 @@ import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
 import type { ShowWatchlistEntry } from "../models";
 
-const HEADER_HEIGHT = 39;
-const ITEM_HEIGHT = 92;
+const HEADER_HEIGHT = 38;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
-
-const buildGetItemLayout = getItemLayout<ShowWatchlistEntry>({
-    getItemHeight: ITEM_HEIGHT,
-    getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
-    getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
-});
 
 interface SectionedShowEntryListProps {
     entries: ShowWatchlistEntry[];
@@ -60,8 +53,22 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     const { width } = useWindowDimensions();
     const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
+    const { height } = usePosterDimensions({ size: "tiny" });
 
     const styles = useThemedStyles(createStyles, { top });
+
+    const itemHeight = useMemo(
+        () => height + theme.spacing.large,
+        [height, theme.spacing.large],
+    );
+
+    const getItemHeight = useMemo(() => {
+        return getItemLayout<ShowWatchlistEntry>({
+            getItemHeight: itemHeight,
+            getSectionHeaderHeight: SECTION_HEADER_HEIGHT,
+            getSectionFooterHeight: SECTION_FOOTER_HEIGHT,
+        });
+    }, [itemHeight]);
 
     const sectionData: Array<ShowEntrySection> = useMemo(() => {
         const currentlyAiringCutOff = addMonths(
@@ -114,6 +121,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                               }
                               onAddReview={() => onAddReview(item.showId)}
                               onPress={() => onPressEntry(item)}
+                              height={itemHeight}
                           />
                       ),
                   } satisfies ShowEntrySection)
@@ -133,6 +141,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                               }
                               onAddReview={() => onAddReview(item.showId)}
                               onPress={() => onPressEntry(item)}
+                              height={itemHeight}
                           />
                       ),
                   } satisfies ShowEntrySection)
@@ -152,12 +161,13 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                               }
                               onAddReview={() => onAddReview(item.showId)}
                               onPress={() => onPressEntry(item)}
+                              height={itemHeight}
                           />
                       ),
                   } satisfies ShowEntrySection)
                 : undefined,
         ].filter(Undefined);
-    }, [entries, onPressEntry, onDeleteEntry, onAddReview]);
+    }, [entries, itemHeight, onPressEntry, onDeleteEntry, onAddReview]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
@@ -177,7 +187,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             contentInsetAdjustmentBehavior="automatic"
             contentInset={{ top: top + HEADER_HEIGHT }}
             contentContainerStyle={styles.container}
-            getItemLayout={buildGetItemLayout}
+            getItemLayout={getItemHeight}
             onLayout={scrollToCurrentSection}
             refreshing={false}
             onRefresh={onRefresh}
