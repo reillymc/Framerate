@@ -49,8 +49,8 @@ export function ExternalIdsFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'imdbId': json['imdb_id'] == null ? undefined : json['imdb_id'],
-        'tvdbId': json['tvdb_id'] == null ? undefined : json['tvdb_id'],
+        'imdbId': json['imdbId'] == null ? undefined : json['imdbId'],
+        'tvdbId': json['tvdbId'] == null ? undefined : json['tvdbId'],
     };
 }
 
@@ -65,8 +65,8 @@ export function ExternalIdsToJSONTyped(value?: ExternalIds | null, ignoreDiscrim
 
     return {
         
-        'imdb_id': value['imdbId'],
-        'tvdb_id': value['tvdbId'],
+        'imdbId': value['imdbId'],
+        'tvdbId': value['tvdbId'],
     };
 }
 

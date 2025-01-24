@@ -10,9 +10,10 @@ export const useShowCollection = (collectionId: string | undefined) => {
     return useQuery({
         queryKey: ShowCollectionKeys.collection(collectionId),
         enabled: !!showCollections,
-        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => showCollections!.find({ collectionId: collectionId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+            showCollections!.find({ collectionId: collectionId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<ShowCollection[]>(ShowCollectionKeys.base)
                 ?.find((d) => d.collectionId === collectionId),

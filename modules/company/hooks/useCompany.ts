@@ -9,6 +9,6 @@ export const useCompany = () => {
         queryKey: CompanyKeys.list(),
         enabled: !!company,
         // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => company!.findAll(),
+        queryFn: ({ signal }) => company!.findAll({ signal }),
     });
 };

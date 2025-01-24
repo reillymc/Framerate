@@ -11,6 +11,6 @@ export const useSearchMovies = (query: string) => {
         queryKey: MovieKeys.search(searchQuery),
         enabled: !!movies && searchQuery.length > 2,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => movies!.search({ query }),
+        queryFn: ({ signal }) => movies!.search({ query }, { signal }),
     });
 };

@@ -9,6 +9,6 @@ export const useMovieCollections = () => {
         queryKey: MovieCollectionKeys.base,
         enabled: !!movieCollections,
         // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => movieCollections!.findAll(),
+        queryFn: ({ signal }) => movieCollections!.findAll({ signal }),
     });
 };

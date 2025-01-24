@@ -8,7 +8,8 @@ export const useCollectionsForMovie = (movieId: number | undefined) => {
     return useQuery({
         queryKey: MovieCollectionKeys.byMovie(movieId),
         enabled: !!movieCollections,
-        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => movieCollections!.findByMovie({ movieId: movieId! }),
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+            movieCollections!.findByMovie({ movieId: movieId! }, { signal }),
     });
 };

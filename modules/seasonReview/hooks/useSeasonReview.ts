@@ -10,9 +10,10 @@ export const useSeasonReview = (reviewId: string | undefined) => {
     return useQuery({
         queryKey: SeasonReviewKeys.details(reviewId),
         enabled: !!seasonReviews && !!reviewId,
-        // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
-        queryFn: () => seasonReviews!.findByReviewId({ reviewId: reviewId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
+            seasonReviews!.findByReviewId({ reviewId: reviewId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<SeasonReview[]>(SeasonReviewKeys.base)
                 ?.find((seasonReview) => seasonReview.reviewId === reviewId),

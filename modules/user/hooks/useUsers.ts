@@ -9,6 +9,6 @@ export const useUsers = () => {
         queryKey: UserKeys.list(),
         enabled: !!users,
         // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => users!.findAll(),
+        queryFn: ({ signal }) => users!.findAll({ signal }),
     });
 };

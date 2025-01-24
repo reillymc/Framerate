@@ -9,6 +9,6 @@ export const useMovieWatchlist = () => {
         queryKey: MovieWatchlistKeys.base,
         enabled: !!movieWatchlist,
         // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
-        queryFn: () => movieWatchlist!.find(),
+        queryFn: ({ signal }) => movieWatchlist!.find({ signal }),
     });
 };

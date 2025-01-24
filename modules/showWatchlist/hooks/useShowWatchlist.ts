@@ -9,6 +9,6 @@ export const useShowWatchlist = () => {
         queryKey: ShowWatchlistKeys.base,
         enabled: !!showWatchlist,
         // biome-ignore lint/style/noNonNullAssertion: service should never be called without authentication
-        queryFn: () => showWatchlist!.find(),
+        queryFn: ({ signal }) => showWatchlist!.find({ signal }),
     });
 };

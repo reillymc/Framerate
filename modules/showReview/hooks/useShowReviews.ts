@@ -16,12 +16,19 @@ export const useShowReviews = (
     return useInfiniteQuery({
         queryKey: ShowReviewKeys.list(params),
         enabled: !!showReviews,
-        queryFn: ({ pageParam = 1 }) =>
+        queryFn: ({ pageParam = 1, signal }) =>
             "showId" in params
                 ? // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-                  showReviews!.findByShowId({ showId: params.showId! })
+                  showReviews!.findByShowId(
+                      // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                      { showId: params.showId! },
+                      { signal },
+                  )
                 : // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-                  showReviews!.findAll({ ...params, page: pageParam }),
+                  showReviews!.findAll(
+                      { ...params, page: pageParam },
+                      { signal },
+                  ),
         initialPageParam: 1,
         getNextPageParam: (lastPage, _, lastPageParam) => {
             if (lastPage?.length === 0) return;

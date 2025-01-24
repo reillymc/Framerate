@@ -10,9 +10,10 @@ export const useMovieWatchlistEntry = (movieId: number | undefined) => {
     return useQuery({
         queryKey: MovieWatchlistKeys.entry(movieId),
         enabled: !!movieWatchlist && !!movieId,
-        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => movieWatchlist!.findEntry({ movieId: movieId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+            movieWatchlist!.findEntry({ movieId: movieId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<MovieWatchlist>(MovieWatchlistKeys.base)
                 ?.entries?.find((d) => d.movieId === movieId),

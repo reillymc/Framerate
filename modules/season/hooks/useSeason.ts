@@ -11,8 +11,12 @@ export const useSeason = (
     return useQuery({
         queryKey: SeasonKeys.details(showId, seasonNumber),
         enabled: !!seasons && !!showId && seasonNumber !== undefined,
-        queryFn: () =>
+        queryFn: ({ signal }) =>
             // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-            seasons!.details({ showId: showId!, seasonNumber: seasonNumber! }),
+            seasons!.details(
+                // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+                { showId: showId!, seasonNumber: seasonNumber! },
+                { signal },
+            ),
     });
 };

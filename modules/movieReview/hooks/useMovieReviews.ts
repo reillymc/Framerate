@@ -16,12 +16,19 @@ export const useMovieReviews = (
     return useInfiniteQuery({
         queryKey: MovieReviewKeys.list(params),
         enabled: !!movieReviews,
-        queryFn: ({ pageParam = 1 }) =>
+        queryFn: ({ pageParam = 1, signal }) =>
             "movieId" in params
                 ? // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-                  movieReviews!.findByMovieId({ movieId: params.movieId! })
+                  movieReviews!.findByMovieId(
+                      // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+                      { movieId: params.movieId! },
+                      { signal },
+                  )
                 : // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-                  movieReviews!.findAll({ ...params, page: pageParam }),
+                  movieReviews!.findAll(
+                      { ...params, page: pageParam },
+                      { signal },
+                  ),
         initialPageParam: 1,
         getNextPageParam: (lastPage, _, lastPageParam) => {
             if (lastPage?.length === 0) return;

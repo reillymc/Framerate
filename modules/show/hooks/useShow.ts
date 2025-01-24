@@ -9,6 +9,6 @@ export const useShow = (id: number | undefined) => {
         queryKey: ShowKeys.details(id),
         enabled: !!shows && !!id,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => shows!.details({ showId: id! }),
+        queryFn: ({ signal }) => shows!.details({ showId: id! }, { signal }),
     });
 };

@@ -10,7 +10,8 @@ export const useSearchShows = (query: string) => {
     return useQuery({
         queryKey: ShowKeys.search(searchQuery),
         enabled: !!shows && searchQuery.length > 2,
-        // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => shows!.search({ query: searchQuery }),
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
+            shows!.search({ query: searchQuery }, { signal }),
     });
 };

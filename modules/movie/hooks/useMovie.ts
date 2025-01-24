@@ -9,6 +9,6 @@ export const useMovie = (id: number | undefined) => {
         queryKey: MovieKeys.details(id),
         enabled: !!movies && !!id,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => movies!.details({ movieId: id! }),
+        queryFn: ({ signal }) => movies!.details({ movieId: id! }, { signal }),
     });
 };

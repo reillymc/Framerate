@@ -10,9 +10,10 @@ export const useMovieCollection = (collectionId: string | undefined) => {
     return useQuery({
         queryKey: MovieCollectionKeys.collection(collectionId),
         enabled: !!movieCollections,
-        // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => movieCollections!.find({ collectionId: collectionId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
+            movieCollections!.find({ collectionId: collectionId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<MovieCollection[]>(MovieCollectionKeys.base)
                 ?.find((d) => d.collectionId === collectionId),

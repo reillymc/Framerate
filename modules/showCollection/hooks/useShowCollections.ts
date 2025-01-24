@@ -9,6 +9,6 @@ export const useShowCollections = () => {
         queryKey: ShowCollectionKeys.base,
         enabled: !!showCollections,
         // biome-ignore lint/style/noNonNullAssertion: variables guaranteed to be defined by the enabled flag
-        queryFn: () => showCollections!.findAll(),
+        queryFn: ({ signal }) => showCollections!.findAll({ signal }),
     });
 };

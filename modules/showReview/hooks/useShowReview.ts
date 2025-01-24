@@ -10,9 +10,10 @@ export const useShowReview = (reviewId: string | undefined) => {
     return useQuery({
         queryKey: ShowReviewKeys.details(reviewId),
         enabled: !!showReviews && !!reviewId,
-        // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
-        queryFn: () => showReviews!.findByReviewId({ reviewId: reviewId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
+            showReviews!.findByReviewId({ reviewId: reviewId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<ShowReview[]>(ShowReviewKeys.base)
                 ?.find((showReview) => showReview.reviewId === reviewId),

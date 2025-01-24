@@ -9,6 +9,6 @@ export const usePopularShows = () => {
         queryKey: ShowKeys.popular(),
         enabled: !!shows,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => shows!.popular(),
+        queryFn: ({ signal }) => shows!.popular({ signal }),
     });
 };

@@ -10,9 +10,10 @@ export const useMovieReview = (reviewId: string | undefined) => {
     return useQuery({
         queryKey: MovieReviewKeys.details(reviewId),
         enabled: !!movieReviews && !!reviewId,
-        // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
-        queryFn: () => movieReviews!.findByReviewId({ reviewId: reviewId! }),
-        placeholderData: () =>
+        queryFn: ({ signal }) =>
+            // biome-ignore lint/style/noNonNullAssertion: reviewId is guaranteed to be defined by the enabled flag
+            movieReviews!.findByReviewId({ reviewId: reviewId! }, { signal }),
+        placeholderData: (_) =>
             queryClient
                 .getQueryData<MovieReview[]>(MovieReviewKeys.base)
                 ?.find((movieReview) => movieReview.reviewId === reviewId),

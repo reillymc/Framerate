@@ -9,6 +9,6 @@ export const usePopularMovies = () => {
         queryKey: MovieKeys.popular(),
         enabled: !!movies,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => movies!.popular(),
+        queryFn: ({ signal }) => movies!.popular({ signal }),
     });
 };

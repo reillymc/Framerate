@@ -6,7 +6,7 @@ export const useHealth = () => {
 
     return useQuery({
         queryKey: ["health"],
-        queryFn: async () => {
+        queryFn: async ({ signal }) => {
             const options = {
                 method: "GET",
                 headers: {
@@ -15,6 +15,7 @@ export const useHealth = () => {
                     // biome-ignore lint/style/useNamingConvention: unknown value
                     ...(session ? { Authorization: `Bearer ${session}` } : {}),
                 },
+                signal,
             };
 
             const url = `${host || defaultHost}/health`;

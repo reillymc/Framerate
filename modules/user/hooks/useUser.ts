@@ -10,7 +10,7 @@ export const useUser = (userId: string | undefined) => {
         queryKey: UserKeys.details(userId),
         enabled: !!users && !!userId,
         // biome-ignore lint/style/noNonNullAssertion: userId is guaranteed to be defined by the enabled flag
-        queryFn: () => users!.find({ userId: userId! }),
+        queryFn: ({ signal }) => users!.find({ userId: userId! }, { signal }),
         select: (data) => ({
             ...data,
             configuration: ParseConfiguration(data.configuration),
