@@ -72,18 +72,26 @@ const Show: FC = () => {
         [reviews],
     );
 
-    const { width: posterWidthMed, gap: posterGapMed } = usePosterDimensions({
-        size: "medium",
+    const heroPoster = usePosterDimensions({
+        size: "small",
     });
 
-    const { width: posterWidthSmall, gap: posterGapSmall } =
-        usePosterDimensions({
-            size: "small",
-        });
+    const seasonPoster = usePosterDimensions({
+        size: "large",
+        teaseSpacing: true,
+    });
+
+    const castPoster = usePosterDimensions({
+        size: "small",
+        teaseSpacing: true,
+    });
 
     const firstAirDate = displayFull(show?.firstAirDate);
 
-    const styles = useThemedStyles(createStyles, {});
+    const styles = useThemedStyles(createStyles, {
+        posterWidth: heroPoster.interval,
+        posterHeight: heroPoster.height,
+    });
 
     return (
         <ScreenLayout
@@ -169,10 +177,10 @@ const Show: FC = () => {
                             showsHorizontalScrollIndicator={false}
                             snapToAlignment="start"
                             decelerationRate="fast"
-                            snapToInterval={posterWidthMed + posterGapMed}
+                            snapToInterval={seasonPoster.interval}
                             renderItem={({ item }) => (
                                 <Poster
-                                    size="medium"
+                                    {...seasonPoster.configuration}
                                     imageUri={
                                         item.posterPath ?? show.posterPath
                                     }
@@ -251,7 +259,7 @@ const Show: FC = () => {
                             contentContainerStyle={styles.castList}
                             snapToAlignment="start"
                             decelerationRate="fast"
-                            snapToInterval={posterWidthSmall + posterGapSmall}
+                            snapToInterval={castPoster.interval}
                             showsHorizontalScrollIndicator={false}
                             renderItem={({ item }) => (
                                 <Poster
@@ -261,7 +269,7 @@ const Show: FC = () => {
                                     subHeading={item.roles
                                         ?.map((role) => role.character)
                                         .join(", ")}
-                                    size="small"
+                                    {...castPoster.configuration}
                                 />
                             )}
                         />
@@ -299,7 +307,13 @@ const Show: FC = () => {
 
 export default Show;
 
-const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
+const createStyles = (
+    { theme: { color, spacing, border } }: ThemedStyles,
+    {
+        posterWidth,
+        posterHeight,
+    }: { posterWidth: number; posterHeight: number },
+) =>
     StyleSheet.create({
         container: {
             paddingTop: spacing.pageTop,
@@ -309,7 +323,7 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
         },
         floatingPoster: {
             position: "absolute",
-            top: -95,
+            top: -(posterHeight / (7 / 4)),
             left: spacing.pageHorizontal + spacing.small,
             shadowColor: color.shadow,
             shadowOffset: {
@@ -320,14 +334,14 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingTagline: {
-            left: spacing.pageHorizontal + 140,
-            top: -10,
+            left: spacing.pageHorizontal + posterWidth + spacing.medium,
+            top: -spacing.small,
             width: "55%",
             height: 70,
             justifyContent: "center",
         },
         collections: {
-            paddingTop: spacing.medium,
+            paddingTop: spacing.large,
             paddingHorizontal: spacing.pageHorizontal,
             alignItems: "center",
         },

@@ -15,17 +15,42 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { type FC, useMemo } from "react";
+import { DeviceType, deviceType } from "expo-device";
+import { type FC, useCallback, useMemo } from "react";
 import { ContextMenu, type MenuElementConfig } from "./contextMenu";
 import { TmdbImage } from "./tmdbImage";
+
+type Size = "tiny" | "small" | "medium" | "large";
+
+const PosterCountPhone: Record<Size, number> = {
+    large: 1,
+    medium: 2,
+    small: 3,
+    tiny: 6,
+};
+
+const PosterCountTablet: Record<Size, number> = {
+    large: 3,
+    medium: 4,
+    small: 5,
+    tiny: 8,
+};
+
+const PosterWidthWeb: Record<Size, number> = {
+    large: 270,
+    medium: 180,
+    small: 140,
+    tiny: 60,
+};
 
 export interface PosterProps {
     imageUri?: string;
     heading?: string;
     subHeading?: string;
     removeMargin?: boolean;
+    teaseSpacing?: boolean;
     style?: StyleProp<ViewStyle>;
-    size?: "tiny" | "small" | "medium" | "large";
+    size?: Size;
     onWatchlist?: boolean;
     onPress?: () => void;
     onToggleWatchlist?: () => void;
@@ -39,6 +64,7 @@ export const Poster: FC<PosterProps> = ({
     style,
     imageUri,
     removeMargin = false,
+    teaseSpacing = false,
     size = "large",
     onWatchlist,
     onPress,
@@ -46,7 +72,7 @@ export const Poster: FC<PosterProps> = ({
     onOpenReview,
     onToggleWatchlist,
 }) => {
-    const { height, width, gap } = usePosterDimensions({ size });
+    const { height, width, gap } = usePosterDimensions({ size, teaseSpacing });
 
     const styles = useThemedStyles(createStyles, {
         width,
@@ -209,50 +235,90 @@ export const Poster: FC<PosterProps> = ({
     );
 };
 
-type UsePosterDimensionsParams = (
-    params: Pick<Required<PosterProps>, "size">,
-) => { width: number; height: number; gap: number };
+type PosterParams = Pick<Required<PosterProps>, "size"> &
+    Pick<PosterProps, "teaseSpacing">;
 
-export const usePosterDimensions: UsePosterDimensionsParams = ({ size }) => {
-    const { width } = useWindowDimensions();
+export type PosterProperties = {
+    width: number;
+    height: number;
+    gap: number;
+    interval: number;
+    displayCount: number | undefined;
+    configuration: PosterParams;
+};
+
+type UsePosterDimensionsParams = (params: PosterParams) => PosterProperties;
+
+export const usePosterDimensions: UsePosterDimensionsParams = ({
+    size,
+    teaseSpacing,
+}) => {
+    const { width: screenWidth } = useWindowDimensions();
     const { theme } = useTheme();
 
-    const itemWidth = useMemo(() => {
-        if (Platform.OS === "web") {
-            switch (size) {
-                case "large":
-                    return 270;
-                case "medium":
-                    return 180;
-                case "small":
-                    return 120;
-                case "tiny":
-                    return 60;
-            }
+    const gap = theme.spacing.pageHorizontal / 2;
+
+    const calcWidth = useCallback(
+        (posterCount: number) => {
+            const pageSideSpacing = theme.spacing.pageHorizontal * 2;
+
+            const posterInnerGaps =
+                (theme.spacing.pageHorizontal * posterCount - 1) / 2;
+
+            const posterFullScreenWidth =
+                screenWidth - pageSideSpacing - posterInnerGaps + gap;
+
+            const scaledPosterWidth =
+                posterFullScreenWidth *
+                (1 / (posterCount + (teaseSpacing ? 1 / 3 : 0)));
+
+            return scaledPosterWidth;
+        },
+        [screenWidth, gap, teaseSpacing, theme.spacing.pageHorizontal],
+    );
+
+    const dimensions = useMemo(() => {
+        if (Platform.OS !== "web") {
+            const itemCount =
+                deviceType === DeviceType.TABLET
+                    ? PosterCountTablet[size]
+                    : PosterCountPhone[size];
+
+            const width = calcWidth(itemCount);
+
+            return {
+                width,
+                height: width * (3 / 2),
+                gap,
+                interval: width + gap,
+                displayCount: itemCount,
+                configuration: { size, teaseSpacing },
+            };
         }
 
-        switch (size) {
-            case "large":
-                return (width - theme.spacing.pageHorizontal * 2) * (2 / 3);
-            case "medium":
-                return (
-                    (width -
-                        theme.spacing.pageHorizontal * 2 -
-                        theme.spacing.pageHorizontal / 2) *
-                    (1 / 2)
-                );
-            case "small":
-                return (width - theme.spacing.pageHorizontal * 3) * (1 / 3);
-            case "tiny":
-                return (width - theme.spacing.pageHorizontal * 4) * (1 / 6);
-        }
-    }, [size, width, theme.spacing.pageHorizontal]);
+        const width = PosterWidthWeb[size];
 
-    return {
-        width: itemWidth,
-        height: itemWidth * (3 / 2),
-        gap: theme.spacing.pageHorizontal / 2,
-    };
+        return {
+            width,
+            height: width * (3 / 2),
+            gap,
+            interval: width + gap,
+            displayCount: Math.floor(
+                (screenWidth - theme.spacing.pageHorizontal * 2) /
+                    (width + gap),
+            ),
+            configuration: { size, teaseSpacing },
+        };
+    }, [
+        calcWidth,
+        size,
+        teaseSpacing,
+        screenWidth,
+        gap,
+        theme.spacing.pageHorizontal,
+    ]);
+
+    return dimensions;
 };
 
 const createStyles = (

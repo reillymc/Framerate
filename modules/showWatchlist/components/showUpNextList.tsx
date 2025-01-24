@@ -7,7 +7,7 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { addDays, isBefore, isSameDay, subDays } from "date-fns";
-import { type FC, useEffect, useMemo, useRef } from "react";
+import { type FC, useMemo, useRef } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 
@@ -54,15 +54,6 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
         }));
     }, [watchlist?.entries]);
 
-    useEffect(() => {
-        if (!days.length) return;
-        todayRef.current?.measure((_x, _y, _w, _h, pageX) => {
-            const x = pageX - theme.spacing.medium;
-
-            listRef.current?.scrollTo({ x, animated: false });
-        });
-    }, [days, theme.spacing.medium]);
-
     return (
         <ScrollView
             contentContainerStyle={styles.calendarContainer}
@@ -70,15 +61,24 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
             showsHorizontalScrollIndicator={false}
             decelerationRate="fast"
             ref={listRef}
+            onLayout={() => {
+                todayRef.current?.measure((_x, _y, _w, _h, pageX) => {
+                    const x = pageX - theme.spacing.medium;
+                    listRef.current?.scrollTo({ x, animated: false });
+                });
+            }}
         >
             <View style={styles.trailContainer}>
                 <View style={styles.trail} />
                 <View style={styles.trailMedium} />
             </View>
             {days.map((item, index) => (
-                <View key={item.day.toDateString()} style={styles.dayContainer}>
+                <View
+                    key={item.day.toDateString()}
+                    style={styles.dayContainer}
+                    ref={index === 5 ? todayRef : undefined}
+                >
                     <View
-                        ref={index === 5 ? todayRef : undefined}
                         style={[
                             styles.dayMarker,
                             index === 5 && styles.markerToday,

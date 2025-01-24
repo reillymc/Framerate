@@ -56,9 +56,11 @@ const Movies: FC = () => {
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
-    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+    const browsePoster = usePosterDimensions({
         size: "large",
+        teaseSpacing: true,
     });
+    const watchlistPoster = usePosterDimensions({ size: "small" });
 
     const { configuration } = useCurrentUserConfig();
 
@@ -215,6 +217,7 @@ const Movies: FC = () => {
                                     style={styles.watchlistSectionItem}
                                 >
                                     <MovieEntriesSummary
+                                        posterProperties={watchlistPoster}
                                         watchlistEntries={
                                             watchlist?.entries ?? []
                                         }
@@ -271,7 +274,7 @@ const Movies: FC = () => {
                                 }
                                 scrollIndicatorInsets={{ left: 20, right: 20 }}
                                 decelerationRate="fast"
-                                snapToInterval={posterWidth + posterGap}
+                                snapToInterval={browsePoster.interval}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => {
                                     const onWatchlist =
@@ -285,7 +288,7 @@ const Movies: FC = () => {
                                             key={item.id}
                                             heading={item.title}
                                             imageUri={item.posterPath}
-                                            size="large"
+                                            {...browsePoster.configuration}
                                             onWatchlist={onWatchlist}
                                             onPress={() =>
                                                 router.push({
@@ -432,15 +435,15 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         },
         watchlistSectionContainer: {
             flexDirection: "row",
+            marginRight: spacing.pageHorizontal,
         },
         watchlistSectionItem: {
             width: "50%",
         },
         watchlistChart: {
             flex: 1,
-            height: 171,
             paddingTop: spacing.tiny,
-            marginRight: spacing.pageHorizontal,
+            paddingBottom: spacing.large - spacing.tiny,
         },
         moviesList: {
             marginBottom: spacing.small,

@@ -55,8 +55,12 @@ const Movie: FC = () => {
     }>();
 
     const movieId = idParam ? Number.parseInt(idParam, 10) : undefined;
-    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
+    const heroPoster = usePosterDimensions({
         size: "small",
+    });
+    const castPoster = usePosterDimensions({
+        size: "small",
+        teaseSpacing: true,
     });
 
     const { data: movie } = useMovie(movieId);
@@ -93,7 +97,10 @@ const Movie: FC = () => {
         .map((crew) => crew.name)
         .join(", ");
 
-    const styles = useThemedStyles(createStyles, {});
+    const styles = useThemedStyles(createStyles, {
+        posterWidth: heroPoster.interval,
+        posterHeight: heroPoster.height,
+    });
 
     return (
         <ScreenLayout
@@ -231,7 +238,7 @@ const Movie: FC = () => {
                             contentContainerStyle={styles.castList}
                             snapToAlignment="start"
                             decelerationRate="fast"
-                            snapToInterval={posterWidth + posterGap}
+                            snapToInterval={castPoster.interval}
                             showsHorizontalScrollIndicator={false}
                             renderItem={({ item }) => (
                                 <Poster
@@ -239,7 +246,7 @@ const Movie: FC = () => {
                                     imageUri={item.profilePath}
                                     heading={item.name}
                                     subHeading={item.character}
-                                    size="small"
+                                    {...castPoster.configuration}
                                 />
                             )}
                         />
@@ -276,7 +283,13 @@ const Movie: FC = () => {
 
 export default Movie;
 
-const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
+const createStyles = (
+    { theme: { color, spacing, border } }: ThemedStyles,
+    {
+        posterWidth,
+        posterHeight,
+    }: { posterWidth: number; posterHeight: number },
+) =>
     StyleSheet.create({
         container: {
             paddingTop: spacing.pageTop,
@@ -286,7 +299,7 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
         },
         floatingPoster: {
             position: "absolute",
-            top: -95,
+            top: -(posterHeight / (7 / 4)),
             left: spacing.pageHorizontal + spacing.small,
             shadowColor: color.shadow,
             shadowOffset: {
@@ -297,14 +310,14 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
             shadowRadius: 5,
         },
         floatingTagline: {
-            left: spacing.pageHorizontal + 140,
-            top: -10,
+            left: spacing.pageHorizontal + posterWidth + spacing.medium,
+            top: -spacing.small,
             width: "60%",
             height: 70,
             justifyContent: "center",
         },
         collections: {
-            paddingTop: spacing.medium,
+            paddingTop: spacing.large,
             paddingHorizontal: spacing.pageHorizontal,
             alignItems: "center",
         },

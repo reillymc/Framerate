@@ -8,13 +8,14 @@ import Animated, {
     useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { Poster, usePosterDimensions } from "@/components";
+import { Poster, type PosterProperties } from "@/components";
 import type { FC } from "react";
 import type { MovieWatchlistEntry } from "../models";
 
 export interface MovieEntryStackedPosterProps
     extends Pick<MovieWatchlistEntry, "posterPath"> {
     index?: number;
+    posterProperties: PosterProperties;
     scrollValue?: SharedValue<number>;
     onPress?: () => void;
     onAddReview?: () => void;
@@ -22,15 +23,14 @@ export interface MovieEntryStackedPosterProps
 }
 
 export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
-    posterPath,
     index,
+    posterPath,
+    posterProperties,
     scrollValue,
     onPress,
     onAddReview,
     onRemoveFromWatchlist,
 }) => {
-    const { width } = usePosterDimensions({ size: "small" });
-
     const animatedStyle = useAnimatedStyle(() => {
         if (
             scrollValue === undefined ||
@@ -39,7 +39,8 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
         )
             return {};
 
-        const getOffset = (indexOffset: number) => indexOffset * width;
+        const getOffset = (indexOffset: number) =>
+            indexOffset * posterProperties.width;
 
         const translateX = interpolate(
             scrollValue.value,
@@ -50,7 +51,13 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
                 getOffset(index),
                 getOffset(index + 1),
             ],
-            [-500, -180, -85, 0, -10],
+            [
+                -(posterProperties.width * 5),
+                -(posterProperties.width * 1.55),
+                -(posterProperties.width * 0.7),
+                0,
+                -(posterProperties.width * 0.01),
+            ],
         );
 
         const scale = interpolate(
@@ -67,6 +74,11 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
         return {
             transform: [{ translateX }, { scale }],
             zIndex: -index,
+            opacity:
+                scrollValue.value > getOffset(index - 3) &&
+                scrollValue.value < getOffset(index + 2)
+                    ? 1
+                    : 0,
         };
     });
 

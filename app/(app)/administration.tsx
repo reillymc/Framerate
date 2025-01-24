@@ -10,7 +10,7 @@ import {
 } from "@reillymc/react-native-components";
 import { setStringAsync, setUrlAsync } from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
-import { type FC, useCallback, useEffect, useState } from "react";
+import { type FC, useCallback, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import app from "../../app.json";
 
@@ -23,10 +23,6 @@ const Profile: FC = () => {
     const [status, setStatus] = useState<
         "pending" | "errored" | "success" | "loading"
     >("pending");
-
-    useEffect(() => {
-        console.log(status);
-    }, [status]);
 
     const onGenerateLink = useCallback(() => {
         if (!(administration && email)) return;

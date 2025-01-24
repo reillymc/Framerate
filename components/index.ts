@@ -6,7 +6,7 @@ export { ImdbButton } from "./imdbButton";
 export { TmdbButton } from "./tmdbButton";
 export { VidSrcButton } from "./vidSrcButton";
 export { CustomTabBar } from "./customTabBar";
-export { Poster, usePosterDimensions } from "./poster";
+export { Poster, usePosterDimensions, PosterProperties } from "./poster";
 export { PosterCard } from "./posterCard";
 export {
     ContextMenu,

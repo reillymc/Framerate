@@ -9,8 +9,14 @@ import {
     startOfMonth,
     subMonths,
 } from "date-fns";
+import { DeviceType, deviceType } from "expo-device";
 import { type FC, useCallback, useMemo } from "react";
-import { type StyleProp, View, type ViewStyle } from "react-native";
+import {
+    type StyleProp,
+    View,
+    type ViewStyle,
+    useWindowDimensions,
+} from "react-native";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
 import { MovieEntryConstants } from "../constants";
@@ -35,14 +41,15 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
     style,
     onPressDate,
 }) => {
-    const font = useFont(FontResources.bold, 12);
+    const { theme } = useTheme();
+    const font = useFont(FontResources.bold, theme.font.size.tiny);
     const scheme = useColorScheme();
+    const { width } = useWindowDimensions();
 
     const { state } = useChartPressState({
         x: 0,
         y: { count: 0 },
     });
-    const { theme } = useTheme();
 
     const chartData: ChartData[] = useMemo(() => {
         const firstMonth = startOfMonth(
@@ -109,21 +116,12 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
             <CartesianChart
                 chartPressState={state}
                 data={chartData}
-                axisOptions={{
+                padding={{ bottom: 2 }}
+                xAxis={{
                     font,
-                    labelColor: {
-                        x: theme.color.background,
-                        y: "black",
-                    },
-                    labelPosition: {
-                        x: "inset",
-                        y: "inset",
-                    },
-
-                    axisSide: {
-                        x: "bottom",
-                        y: "right",
-                    },
+                    labelColor: theme.color.background,
+                    labelPosition: "inset",
+                    axisSide: "bottom",
                     // biome-ignore lint/style/useNamingConvention: victory native prop naming
                     formatXLabel: (value) => {
                         if (!value) return "";
@@ -131,17 +129,17 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                             month: "short",
                         });
                     },
-                    tickValues: {
-                        x: chartData.map(({ date }) => date),
-                        y: [0, largestCount],
-                    },
-                    labelOffset: theme.spacing.small,
+                    tickValues: chartData.map(({ date }) => date),
+                    labelOffset:
+                        deviceType === DeviceType.PHONE
+                            ? theme.spacing.small + theme.spacing.tiny
+                            : theme.spacing.medium,
                     lineColor: "transparent",
                 }}
-                domainPadding={{
-                    left: theme.spacing.medium,
-                    right: theme.spacing.medium,
-                }}
+                yAxis={[
+                    { lineColor: "transparent", domain: [0, largestCount] },
+                ]}
+                domainPadding={{ left: width / 24, right: width / 24 }}
                 xKey="date"
                 yKeys={["count"]}
                 frame={{ lineColor: "transparent" }}
@@ -152,13 +150,13 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                         chartBounds={chartBounds}
                         animate={{ type: "spring" }}
                         barCount={totalMonthCount}
-                        innerPadding={0.16}
+                        innerPadding={0.12}
                         blendMode="color"
                         roundedCorners={{
-                            topLeft: theme.border.radius.loose,
-                            topRight: theme.border.radius.loose,
-                            bottomLeft: theme.border.radius.loose,
-                            bottomRight: theme.border.radius.loose,
+                            topLeft: 24,
+                            topRight: 24,
+                            bottomLeft: 24,
+                            bottomRight: 24,
                         }}
                     >
                         <LinearGradient

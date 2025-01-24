@@ -1,4 +1,4 @@
-import { Fade, usePosterDimensions } from "@/components";
+import { Fade, type PosterProperties } from "@/components";
 import {
     AnimatedFlatList,
     type AnimatedFlatListProps,
@@ -17,18 +17,31 @@ import {
     subDays,
     subMonths,
 } from "date-fns";
+import { DeviceType, deviceType } from "expo-device";
 import { type FC, useCallback, useMemo, useRef } from "react";
-import { type FlatList, Pressable, StyleSheet } from "react-native";
+import {
+    type CellRendererProps,
+    type FlatList,
+    type ListRenderItem,
+    Pressable,
+    StyleSheet,
+    useWindowDimensions,
+} from "react-native";
 import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
+    type StyleProps,
 } from "react-native-reanimated";
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
 import { MovieEntryStackedPoster } from "./movieEntryStackedPoster";
 
+const keyExtractor: AnimatedFlatListProps<MovieWatchlistEntry>["keyExtractor"] =
+    (item) => item.movieId.toString();
+
 interface MovieEntriesSummaryProps {
     watchlistEntries: MovieWatchlistEntry[];
+    posterProperties: PosterProperties;
     onPressEntry: (item: MovieWatchlistEntry) => void;
     onRemoveFromWatchlist: (item: MovieWatchlistEntry) => void;
     onAddReview: (item: MovieWatchlistEntry) => void;
@@ -37,16 +50,16 @@ interface MovieEntriesSummaryProps {
 
 export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
     watchlistEntries,
+    posterProperties,
     onPressEntry,
     onPress,
     onAddReview,
     onRemoveFromWatchlist,
 }) => {
-    const { width, height, gap } = usePosterDimensions({ size: "small" });
-
     const scrollValue = useSharedValue(0);
     const styles = useThemedStyles(createStyles, {});
     const listRef = useRef<FlatList | null>(null);
+    const { width } = useWindowDimensions();
 
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollValue.value = event.contentOffset.x;
@@ -86,23 +99,29 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
         });
     }, [filteredItems]);
 
-    const keyExtractor: AnimatedFlatListProps<MovieWatchlistEntry>["keyExtractor"] =
-        (item) => item.movieId.toString();
-
-    const renderItem: AnimatedFlatListProps<MovieWatchlistEntry>["renderItem"] =
+    const renderItem: ListRenderItem<MovieWatchlistEntry> = useCallback(
         ({ item, index }) => (
             <MovieEntryStackedPoster
                 index={index}
+                posterProperties={posterProperties}
                 posterPath={item.posterPath}
                 scrollValue={scrollValue}
                 onPress={() => onPressEntry(item)}
                 onAddReview={() => onAddReview(item)}
                 onRemoveFromWatchlist={() => onRemoveFromWatchlist(item)}
             />
-        );
+        ),
+        [
+            posterProperties,
+            scrollValue,
+            onPressEntry,
+            onAddReview,
+            onRemoveFromWatchlist,
+        ],
+    );
 
     const onScrollToIndexFailed: AnimatedFlatListProps<MovieWatchlistEntry>["onScrollToIndexFailed"] =
-        ({ index }) => {
+        useCallback(({ index }: { index: number }) => {
             const wait = new Promise((resolve) => setTimeout(resolve, 10));
             wait.then(() => {
                 listRef.current?.scrollToIndex({
@@ -110,19 +129,24 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
                     animated: false,
                 });
             });
-        };
+        }, []);
 
     const getItemLayout: AnimatedFlatListProps<MovieWatchlistEntry>["getItemLayout"] =
-        (_, index) => ({
-            index,
-            length: width,
-            offset: width * index,
-        });
+        useCallback(
+            (_: unknown, index: number) => ({
+                index,
+                length: posterProperties.width,
+                offset: posterProperties.width * index,
+            }),
+            [posterProperties.width],
+        );
 
-    const cellStyle: AnimatedFlatListProps<MovieWatchlistEntry>["cellStyle"] =
-        ({ index }) => ({
+    const cellStyle = useCallback(
+        ({ index }: CellRendererProps<MovieWatchlistEntry>): StyleProps => ({
             zIndex: filteredItems.length - index,
-        });
+        }),
+        [filteredItems.length],
+    );
 
     return (
         <>
@@ -134,9 +158,14 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
                 onScrollToIndexFailed={onScrollToIndexFailed}
                 getItemLayout={getItemLayout}
                 showsHorizontalScrollIndicator={false}
-                style={styles.list}
+                style={[
+                    styles.list,
+                    deviceType === DeviceType.TABLET
+                        ? { paddingLeft: "36%" }
+                        : undefined,
+                ]}
                 onScroll={scrollHandler}
-                snapToInterval={width}
+                snapToInterval={posterProperties.width}
                 snapToAlignment="start"
                 scrollEventThrottle={16}
                 decelerationRate={0}
@@ -150,7 +179,10 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
                             <Pressable
                                 style={[
                                     styles.footerContainer,
-                                    { height, width: width / 2 + gap },
+                                    {
+                                        height: posterProperties.height,
+                                        width: width / 7.3,
+                                    },
                                 ]}
                                 onPress={() =>
                                     onPress(
@@ -185,7 +217,7 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
             <Fade
                 direction="left"
                 width={16}
-                height={height}
+                height={posterProperties.height}
                 fadeOffset={12}
                 style={{ position: "absolute", bottom: 0, top: 0, right: 0 }}
             />

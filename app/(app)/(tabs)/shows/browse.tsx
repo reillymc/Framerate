@@ -1,4 +1,4 @@
-import { Poster } from "@/components/poster";
+import { Poster, usePosterDimensions } from "@/components/poster";
 import { usePopularShows } from "@/modules/show";
 import { useShowWatchlist } from "@/modules/showWatchlist";
 import {
@@ -13,6 +13,10 @@ const Browse: FC = () => {
     const router = useRouter();
     const { data: shows, refetch } = usePopularShows();
     const { data: watchlist } = useShowWatchlist();
+
+    const { displayCount, configuration } = usePosterDimensions({
+        size: "medium",
+    });
 
     const styles = useThemedStyles(createStyles, {});
 
@@ -35,7 +39,8 @@ const Browse: FC = () => {
                 refreshControl={
                     <RefreshControl refreshing={false} onRefresh={refetch} />
                 }
-                numColumns={2}
+                key={displayCount}
+                numColumns={displayCount}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
                     const onWatchlist = watchlist?.entries?.some(
@@ -46,7 +51,7 @@ const Browse: FC = () => {
                         <Poster
                             key={item.id}
                             heading={item.name}
-                            size="medium"
+                            {...configuration}
                             imageUri={item.posterPath}
                             onWatchlist={onWatchlist}
                             onPress={() =>

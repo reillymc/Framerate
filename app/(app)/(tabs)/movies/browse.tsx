@@ -1,5 +1,5 @@
 import { ScreenLayout } from "@/components";
-import { Poster } from "@/components/poster";
+import { Poster, usePosterDimensions } from "@/components/poster";
 import { usePopularMovies } from "@/modules/movie";
 import {
     useDeleteMovieWatchlistEntry,
@@ -22,6 +22,10 @@ const Browse: FC = () => {
     const { mutate: saveEntry } = useSaveMovieWatchlistEntry();
     const { mutate: deleteEntry } = useDeleteMovieWatchlistEntry();
 
+    const { displayCount, configuration } = usePosterDimensions({
+        size: "medium",
+    });
+
     const styles = useThemedStyles(createStyles, {});
 
     return (
@@ -41,7 +45,8 @@ const Browse: FC = () => {
                         {children}
                     </View>
                 )}
-                numColumns={2}
+                key={displayCount}
+                numColumns={displayCount}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
                     const onWatchlist = watchlist?.entries?.some(
@@ -52,7 +57,7 @@ const Browse: FC = () => {
                         <Poster
                             key={item.id}
                             heading={item.title}
-                            size="medium"
+                            {...configuration}
                             imageUri={item.posterPath}
                             onWatchlist={onWatchlist}
                             onPress={() =>

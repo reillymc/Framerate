@@ -42,8 +42,9 @@ const Shows: FC = () => {
 
     const styles = useThemedStyles(createStyles, {});
     const { theme } = useTheme();
-    const { width: posterWidth, gap: posterGap } = usePosterDimensions({
-        size: "large",
+    const browsePoster = usePosterDimensions({
+        size: "medium",
+        teaseSpacing: true,
     });
 
     const router = useRouter();
@@ -210,7 +211,7 @@ const Shows: FC = () => {
                                 snapToAlignment="start"
                                 showsHorizontalScrollIndicator={false}
                                 decelerationRate="fast"
-                                snapToInterval={posterWidth + posterGap}
+                                snapToInterval={browsePoster.interval}
                                 renderItem={({ item }) => {
                                     const onWatchlist =
                                         watchlist?.entries?.some(
@@ -222,7 +223,7 @@ const Shows: FC = () => {
                                             key={item.id}
                                             heading={item.name}
                                             imageUri={item.posterPath}
-                                            size="large"
+                                            {...browsePoster.configuration}
                                             onWatchlist={onWatchlist}
                                             onPress={() =>
                                                 router.push({
