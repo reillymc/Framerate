@@ -100,7 +100,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 onChange={onIncludeReviewChange}
             />
             <Accordion
-                collapsed={includeReview}
+                collapsed={!includeReview}
                 style={styles.reviewInputContainer}
             >
                 <StarRating
@@ -126,6 +126,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     numberOfLines={3}
                     containerStyle={styles.input}
                     style={styles.reviewInput}
+                    maxLength={1200}
                 />
             </Accordion>
             <DropdownInput
@@ -147,6 +148,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     value: venue,
                     label: venue,
                 }))}
+                maxLength={80}
             />
             <SelectionInput
                 label="Company"

@@ -94,8 +94,6 @@ const Profile: FC = () => {
             return;
         }
 
-        // Saves a 'non-authenticatable user' where company doesn't have a user account set up.
-        // Actual user accounts are saved to user's configuration.
         saveCompany({ firstName: trimmedFirstName, lastName: trimmedLastName });
 
         setFirstName("");
@@ -241,6 +239,7 @@ const Profile: FC = () => {
                                     <TextInput
                                         ref={venueInputRef}
                                         placeholder="Add venue"
+                                        maxLength={80}
                                         style={styles.containerisedInput}
                                         value={venue}
                                         onChange={({ nativeEvent }) =>
@@ -313,18 +312,20 @@ const Profile: FC = () => {
                                 <View style={styles.friendInputContainer}>
                                     <TextInput
                                         placeholder="First name"
+                                        returnKeyType="next"
                                         value={firstName}
+                                        maxLength={40}
                                         onChangeText={setFirstName}
                                         onSubmitEditing={() =>
                                             lastNameRef.current?.focus()
                                         }
-                                        returnKeyType="next"
                                         style={styles.containerisedInput}
                                     />
                                     <TextInput
                                         ref={lastNameRef}
                                         placeholder="Last name"
                                         value={lastName}
+                                        maxLength={40}
                                         onChange={({ nativeEvent }) =>
                                             setLastName(nativeEvent.text)
                                         }

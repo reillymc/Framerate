@@ -76,6 +76,7 @@ const EditCollection: FC = () => {
                 <TextInput
                     value={name}
                     placeholder="Name"
+                    maxLength={60}
                     onChangeText={setName}
                 />
             </ScrollView>

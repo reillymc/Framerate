@@ -23,7 +23,7 @@ export const Accordion: FC<AccordionProps> = ({
     const height = useSharedValue(0);
 
     const derivedHeight = useDerivedValue(() =>
-        withTiming(height.value * Number(collapsed), {
+        withTiming(height.value * Number(!collapsed), {
             duration: 300,
             easing: Easing.inOut(Easing.quad),
             reduceMotion: ReduceMotion.System,

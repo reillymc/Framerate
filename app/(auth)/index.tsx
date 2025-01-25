@@ -108,6 +108,7 @@ const LoginScreen: FC = () => {
                             autoCapitalize="none"
                             clearButtonMode="while-editing"
                             submitBehavior="submit"
+                            maxLength={40}
                             disabled={isSigningIn}
                             value={email}
                             onChangeText={setEmail}
@@ -121,6 +122,7 @@ const LoginScreen: FC = () => {
                             width="full"
                             textContentType="password"
                             clearButtonMode="while-editing"
+                            maxLength={40}
                             secureTextEntry
                             disabled={isSigningIn}
                             value={password}

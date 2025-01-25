@@ -125,6 +125,7 @@ const RegisterScreen: FC = () => {
                         textContentType="emailAddress"
                         keyboardType="email-address"
                         width="full"
+                        maxLength={60}
                         value={email}
                         hasError={isEmailInvalid}
                         helpText={
@@ -153,6 +154,7 @@ const RegisterScreen: FC = () => {
                             label="First Name"
                             submitBehavior="submit"
                             textContentType="givenName"
+                            maxLength={40}
                             value={firstName}
                             onChangeText={setFirstName}
                             onSubmitEditing={() => lastNameRef.current?.focus()}
@@ -163,6 +165,7 @@ const RegisterScreen: FC = () => {
                             label="Last Name"
                             submitBehavior="submit"
                             textContentType="familyName"
+                            maxLength={40}
                             value={lastName}
                             onChangeText={setLastName}
                             onSubmitEditing={() => passwordRef.current?.focus()}
@@ -174,6 +177,7 @@ const RegisterScreen: FC = () => {
                         label="Password"
                         textContentType="password"
                         width="full"
+                        maxLength={60}
                         secureTextEntry
                         value={password}
                         onChangeText={setPassword}
