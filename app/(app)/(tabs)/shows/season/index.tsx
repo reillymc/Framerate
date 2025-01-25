@@ -1,10 +1,6 @@
-import {
-    MediaFooterButtons,
-    MediaLinks,
-    TmdbImage,
-    VidSrcButton,
-} from "@/components";
+import { MediaFooterButtons, MediaLinks, TmdbImage } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
+import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useSeason } from "@/modules/season";
 import { useSeasonReviews } from "@/modules/seasonReview";
@@ -40,6 +36,7 @@ const Season: React.FC = () => {
     const { fontScale, width } = useWindowDimensions();
 
     const { configuration } = useCurrentUserConfig();
+    const { data: clientConfig } = useClientConfig();
     const { data: show } = useShow(showId);
     const { data: season } = useSeason(showId, seasonNumber);
     const { data: reviews } = useSeasonReviews({ showId, seasonNumber });
@@ -80,8 +77,12 @@ const Season: React.FC = () => {
                             </Text>
                         )}
                         <MediaLinks
+                            mediaExternalLinks={
+                                clientConfig?.mediaExternalLinks
+                            }
                             mediaType={MediaType.Season}
                             imdbId={show?.externalIds?.imdbId}
+                            tmdbId={show?.id}
                             seasonNumber={seasonNumber}
                         />
                         {!!reviewList?.length && (
@@ -167,8 +168,13 @@ const Season: React.FC = () => {
                             {item.overview && (
                                 <Text variant="caption">{item.overview}</Text>
                             )}
-                            <VidSrcButton
+                            <MediaLinks
+                                mediaExternalLinks={
+                                    clientConfig?.mediaExternalLinks
+                                }
+                                mediaType={MediaType.Episode}
                                 imdbId={show?.externalIds?.imdbId}
+                                tmdbId={show?.id}
                                 episodeNumber={item.episodeNumber}
                                 seasonNumber={seasonNumber}
                             />

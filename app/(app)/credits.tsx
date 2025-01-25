@@ -1,4 +1,3 @@
-import { TmdbButton } from "@/components";
 import {
     Action,
     Text,
@@ -8,6 +7,7 @@ import {
 import { Stack, useRouter } from "expo-router";
 import type { FC } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { SvgCssUri } from "react-native-svg/css";
 
 const Credits: FC = () => {
     const router = useRouter();
@@ -37,7 +37,13 @@ const Credits: FC = () => {
                     Film and TV Data
                 </Text>
                 <View style={styles.tmdbAttribution}>
-                    <TmdbButton width={76} />
+                    <SvgCssUri
+                        width={80}
+                        height={50}
+                        uri={
+                            "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg"
+                        }
+                    />
                     <Text style={styles.tmdbText} variant="bodyEmphasized">
                         Framerate uses the TMDB API but is not endorsed or
                         certified by TMDB.

@@ -2,6 +2,7 @@
 apis/AdministrationApi.ts
 apis/AuthenticationApi.ts
 apis/CompanyApi.ts
+apis/MetaApi.ts
 apis/MovieApi.ts
 apis/MovieCollectionApi.ts
 apis/MovieReviewApi.ts
@@ -16,13 +17,17 @@ apis/UserApi.ts
 apis/index.ts
 index.ts
 models/AuthUser.ts
+models/ClientConfig.ts
 models/Company.ts
 models/DeleteResponse.ts
 models/Episode.ts
 models/ExternalIds.ts
 models/InviteDetails.ts
 models/Job.ts
+models/LinkIcon.ts
+models/LinkRoutes.ts
 models/LoginResponse.ts
+models/MediaExternalLink.ts
 models/Movie.ts
 models/MovieCast.ts
 models/MovieCollection.ts

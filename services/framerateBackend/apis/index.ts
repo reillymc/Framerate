@@ -3,6 +3,7 @@
 export * from './AdministrationApi';
 export * from './AuthenticationApi';
 export * from './CompanyApi';
+export * from './MetaApi';
 export * from './MovieApi';
 export * from './MovieCollectionApi';
 export * from './MovieReviewApi';

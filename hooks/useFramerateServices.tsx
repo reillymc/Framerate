@@ -13,6 +13,8 @@ import {
     type CompanyApiInterface,
     Configuration,
     LoggerMiddleware,
+    MetaApi,
+    type MetaApiInterface,
     MovieApi,
     type MovieApiInterface,
     MovieCollectionApi,
@@ -41,6 +43,7 @@ import {
 type ServiceContextType = {
     administration: AdministrationApiInterface;
     company: CompanyApiInterface;
+    meta: MetaApiInterface;
     movieCollections: MovieCollectionApiInterface;
     movieReviews: MovieReviewApiInterface;
     movies: MovieApiInterface;
@@ -73,6 +76,7 @@ export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
         return {
             administration: new AdministrationApi(serviceConfiguration),
             company: new CompanyApi(serviceConfiguration),
+            meta: new MetaApi(serviceConfiguration),
             movieCollections: new MovieCollectionApi(serviceConfiguration),
             movieReviews: new MovieReviewApi(serviceConfiguration),
             movies: new MovieApi(serviceConfiguration),

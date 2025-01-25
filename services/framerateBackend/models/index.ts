@@ -1,13 +1,17 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AuthUser';
+export * from './ClientConfig';
 export * from './Company';
 export * from './DeleteResponse';
 export * from './Episode';
 export * from './ExternalIds';
 export * from './InviteDetails';
 export * from './Job';
+export * from './LinkIcon';
+export * from './LinkRoutes';
 export * from './LoginResponse';
+export * from './MediaExternalLink';
 export * from './Movie';
 export * from './MovieCast';
 export * from './MovieCollection';

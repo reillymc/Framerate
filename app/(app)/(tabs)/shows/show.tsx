@@ -20,6 +20,7 @@ import {
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { displayFull } from "@/helpers/dateHelper";
+import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import {
@@ -59,6 +60,7 @@ const Show: FC = () => {
 
     const { data: show } = useShow(showId);
     const { configuration } = useCurrentUserConfig();
+    const { data: clientConfig } = useClientConfig();
     const { data: reviews, refetch } = useShowReviews({ showId });
     const { data: watchlistEntry } = useShowWatchlistEntry(showId);
     const { mutate: deleteWatchlistEntry } = useDeleteShowWatchlistEntry();
@@ -277,6 +279,7 @@ const Show: FC = () => {
                 )}
 
                 <MediaLinks
+                    mediaExternalLinks={clientConfig?.mediaExternalLinks}
                     mediaType={MediaType.Show}
                     tmdbId={show?.id}
                     imdbId={show?.externalIds?.imdbId}

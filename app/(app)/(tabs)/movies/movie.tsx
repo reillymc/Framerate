@@ -27,8 +27,8 @@ import {
     usePosterDimensions,
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
+import { useClientConfig } from "@/modules/meta";
 import { useMovie } from "@/modules/movie";
-
 import {
     useFilteredMovieCollections,
     useSaveMovieCollectionEntry,
@@ -65,6 +65,7 @@ const Movie: FC = () => {
 
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
+    const { data: clientConfig } = useClientConfig();
     const { data: reviews, refetch } = useMovieReviews({ movieId });
     const { data: watchlistEntry } = useMovieWatchlistEntry(movieId);
     const { mutate: deleteWatchlistEntry } = useDeleteMovieWatchlistEntry();
@@ -253,6 +254,7 @@ const Movie: FC = () => {
                     </>
                 )}
                 <MediaLinks
+                    mediaExternalLinks={clientConfig?.mediaExternalLinks}
                     mediaType={MediaType.Movie}
                     tmdbId={movie?.id}
                     imdbId={movie?.imdbId}
