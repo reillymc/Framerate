@@ -9,6 +9,7 @@
         "web": "expo start --web",
         "test": "jest --watchAll",
         "build:ios": "npm ci && expo prebuild --platform=ios && cd ios && pod install && cd ..",
+        "build:android": "npm ci && expo prebuild --platform=android",
         "lint": "biome lint",
         "typecheck": "tsc --noEmit",
         "format": "biome format --write .",
