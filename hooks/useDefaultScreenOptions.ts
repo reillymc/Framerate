@@ -12,7 +12,7 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
         () => ({
             headerLargeTitleShadowVisible: false,
             headerLargeTitle: true,
-            headerTransparent: true,
+            headerTransparent: Platform.OS !== "android",
             headerShown: Platform.OS !== "web",
             headerBlurEffect: "regular",
             headerLargeTitleStyle: {

@@ -1,4 +1,4 @@
-import { ScreenLayout } from "@/components";
+import { HeaderCloseAction, ScreenLayout } from "@/components";
 import {
     useMovieCollection,
     useSaveMovieCollection,
@@ -51,11 +51,7 @@ const EditCollection: FC = () => {
                             ? "Edit Collection"
                             : "New Collection",
                         headerLeft: () => (
-                            <Action
-                                label="Close"
-                                style={styles.headerAction}
-                                onPress={router.back}
-                            />
+                            <HeaderCloseAction onClose={router.back} />
                         ),
                         headerRight: () => (
                             <Action

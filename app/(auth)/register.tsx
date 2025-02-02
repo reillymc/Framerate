@@ -1,4 +1,9 @@
-import { HostActions, ScreenLayout, StatusIndicator } from "@/components";
+import {
+    HeaderCloseAction,
+    HostActions,
+    ScreenLayout,
+    StatusIndicator,
+} from "@/components";
 import { WebPageLayout } from "@/constants/layout";
 import { useSession } from "@/modules/auth";
 import {
@@ -84,12 +89,9 @@ const RegisterScreen: FC = () => {
                     options={{
                         title: "Register Account",
                         headerLeft: () => (
-                            <Action
+                            <HeaderCloseAction
                                 label="Cancel"
-                                onPress={() => {
-                                    clearError();
-                                    router.back();
-                                }}
+                                onClose={router.back}
                             />
                         ),
                     }}
@@ -141,6 +143,8 @@ const RegisterScreen: FC = () => {
                             );
                         }}
                         onBlur={({ nativeEvent }) => {
+                            if (nativeEvent.text === undefined) return;
+
                             setIsEmailInvalid(
                                 !emailValidator.test(nativeEvent.text),
                             );

@@ -24,3 +24,4 @@ export { RecentSearchList } from "./recentSearchList";
 export { Logo } from "./logo";
 export { HostActions } from "./hostActions";
 export { StatusIndicator } from "./statusIndicator";
+export { HeaderCloseAction } from "./headerCloseAction";

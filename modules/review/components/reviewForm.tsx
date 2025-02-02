@@ -1,6 +1,9 @@
 import { Accordion, StarRating } from "@/components";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+    DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
 import {
+    Action,
     CollapsibleContainer,
     DropdownInput,
     SelectionInput,
@@ -13,6 +16,7 @@ import {
 } from "@reillymc/react-native-components";
 import { type FC, useRef } from "react";
 import {
+    Platform,
     StyleSheet,
     View,
     type TextInput as rnTextInput,
@@ -78,7 +82,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     collapsed={!includeDate}
                     direction="right"
                 >
-                    {
+                    {Platform.OS !== "android" ? (
                         <DateTimePicker
                             value={date}
                             mode="date"
@@ -90,7 +94,21 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                             }
                             accentColor={theme.color.primaryLight}
                         />
-                    }
+                    ) : (
+                        <Action
+                            label={date.toDateString() ?? "No Date"}
+                            style={styles.androidDatePicker}
+                            onPress={() =>
+                                DateTimePickerAndroid.open({
+                                    mode: "date",
+                                    maximumDate: new Date(),
+                                    value: date,
+                                    onChange: (_, newDate) =>
+                                        newDate && onDateChange(newDate),
+                                })
+                            }
+                        />
+                    )}
                 </CollapsibleContainer>
             </View>
             <ToggleInput
@@ -165,7 +183,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 ReviewForm.displayName = "ReviewForm";
 
 const createStyles = ({
-    theme: { spacing },
+    theme: { spacing, color, border },
     styles: { toggleInput },
 }: ThemedStyles) => {
     return StyleSheet.create({
@@ -173,10 +191,17 @@ const createStyles = ({
             marginBottom: spacing.medium,
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "center",
             height: 38,
         },
         dateInput: {
             flex: 1,
+        },
+        androidDatePicker: {
+            backgroundColor: color.foreground,
+            paddingVertical: spacing.tiny,
+            paddingHorizontal: spacing.small,
+            borderRadius: border.radius.regular,
         },
         input: {
             marginBottom: spacing.medium,

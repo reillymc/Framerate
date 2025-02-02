@@ -16,6 +16,7 @@ import { addMonths, isBefore } from "date-fns";
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
+    Platform,
     SectionList,
     type SectionListData,
     StyleSheet,
@@ -185,7 +186,9 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             stickySectionHeadersEnabled
             keyExtractor={(item) => item.showId.toString()}
             contentInsetAdjustmentBehavior="automatic"
-            contentInset={{ top: top + HEADER_HEIGHT }}
+            contentInset={
+                Platform.OS === "ios" ? { top: top + HEADER_HEIGHT } : undefined
+            }
             contentContainerStyle={styles.container}
             getItemLayout={getItemHeight}
             onLayout={scrollToCurrentSection}
@@ -294,6 +297,8 @@ const createStyles = (
             paddingHorizontal: spacing.pageHorizontal,
             borderBottomWidth: border.width.thin,
             borderBottomColor: color.border,
+            backgroundColor:
+                Platform.OS === "android" ? color.foreground : undefined,
         },
         yearHeading: {
             paddingBottom: 2,

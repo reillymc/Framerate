@@ -13,6 +13,7 @@ import {
 import { BlurView } from "expo-blur";
 import { type FC, useCallback, useMemo, useRef } from "react";
 import {
+    Platform,
     SectionList,
     StyleSheet,
     View,
@@ -220,7 +221,9 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
             )}
             keyExtractor={(item) => item.movieId.toString()}
             contentInsetAdjustmentBehavior="automatic"
-            contentInset={{ top: top + HEADER_HEIGHT }}
+            contentInset={
+                Platform.OS === "ios" ? { top: top + HEADER_HEIGHT } : undefined
+            }
             contentContainerStyle={styles.container}
         />
     );
@@ -243,6 +246,8 @@ const createStyles = (
             paddingHorizontal: spacing.pageHorizontal,
             borderBottomWidth: 1,
             borderBottomColor: color.border,
+            backgroundColor:
+                Platform.OS === "android" ? color.foreground : undefined,
         },
         yearHeading: {
             paddingBottom: 2,

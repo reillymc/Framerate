@@ -27,7 +27,9 @@ const AuthenticationStack: React.FC = () => {
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
                 name="register"
-                options={{ presentation: "formSheet" }}
+                options={{
+                    presentation: Platform.OS === "ios" ? "formSheet" : "modal",
+                }}
             />
             <Stack.Screen
                 name="server"

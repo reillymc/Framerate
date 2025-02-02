@@ -25,8 +25,9 @@ import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { setOptions } from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { type FC, useEffect, useMemo } from "react";
-import { Platform, StatusBar, useWindowDimensions } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { version } from "../package.json";
 
@@ -226,11 +227,8 @@ export default function RootLayout() {
                             styles={createDefaultStyles(theme)}
                         >
                             <GestureHandlerRootView>
-                                <StatusBar
-                                    barStyle="default"
-                                    animated
-                                    translucent
-                                />
+                                <StatusBar style="auto" translucent animated />
+
                                 <Slot />
                             </GestureHandlerRootView>
                         </ThemeProvider>

@@ -1,4 +1,9 @@
-import { Accordion, ScreenLayout, SegmentedControl } from "@/components";
+import {
+    Accordion,
+    HeaderCloseAction,
+    ScreenLayout,
+    SegmentedControl,
+} from "@/components";
 import { useHealth } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import {
@@ -9,7 +14,6 @@ import {
 import { useCurrentUserConfig, useSaveUser, useUser } from "@/modules/user";
 import { MergeConfiguration } from "@/modules/user";
 import {
-    Action,
     Button,
     IconActionV2,
     SwipeAction,
@@ -131,7 +135,10 @@ const Profile: FC = () => {
                             ? `${user.firstName} ${user.lastName}`
                             : "...",
                         headerLeft: () => (
-                            <Action label="Done" onPress={router.back} />
+                            <HeaderCloseAction
+                                label="Done"
+                                onClose={router.back}
+                            />
                         ),
                     }}
                 />

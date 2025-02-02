@@ -1,6 +1,7 @@
 import { useDefaultScreenOptions } from "@/hooks";
 import { Stack } from "expo-router";
 import type { FC } from "react";
+import { Platform } from "react-native";
 
 const MoviesStack: FC = () => {
     const screenOptions = useDefaultScreenOptions();
@@ -13,7 +14,9 @@ const MoviesStack: FC = () => {
             <Stack.Screen name="browse" />
             <Stack.Screen
                 name="editWatch"
-                options={{ presentation: "formSheet" }}
+                options={{
+                    presentation: Platform.OS === "ios" ? "formSheet" : "modal",
+                }}
             />
             <Stack.Screen name="watchlist" />
             <Stack.Screen name="collections" />

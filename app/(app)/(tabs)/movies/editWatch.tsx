@@ -1,3 +1,4 @@
+import { HeaderCloseAction } from "@/components";
 import { formatForSave } from "@/helpers/dateHelper";
 import { useCompany } from "@/modules/company";
 import { useMovie } from "@/modules/movie";
@@ -120,11 +121,7 @@ const EditReview: FC = () => {
                 options={{
                     title: review ? "Edit Watch" : "Add Watch",
                     headerLeft: () => (
-                        <Action
-                            label="Close"
-                            style={styles.headerAction}
-                            onPress={router.back}
-                        />
+                        <HeaderCloseAction onClose={router.back} />
                     ),
                     headerRight: () => (
                         <Action

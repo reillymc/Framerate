@@ -1,3 +1,4 @@
+import { useColorScheme } from "@/hooks";
 import {
     Text,
     type ThemedStyles,
@@ -6,8 +7,9 @@ import {
 import { BlurView } from "expo-blur";
 import type { Tabs } from "expo-router";
 import type { FC } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import Animated, {
+    LinearTransition,
     ZoomInEasyDown,
     ZoomOutEasyDown,
 } from "react-native-reanimated";
@@ -26,6 +28,7 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
     show,
 }) => {
     const { bottom } = useSafeAreaInsets();
+    const scheme = useColorScheme();
     const styles = useThemedStyles(createStyles, { bottom });
 
     if (!show) {
@@ -34,14 +37,19 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
 
     return (
         <Animated.View
-            entering={ZoomInEasyDown}
             exiting={ZoomOutEasyDown}
+            entering={ZoomInEasyDown.springify().mass(0.7)}
+            layout={LinearTransition}
             style={styles.tabBar}
         >
             <BlurView
                 style={styles.innerContainer}
-                intensity={100}
-                tint="systemThickMaterial"
+                intensity={85}
+                tint={
+                    scheme === "light"
+                        ? "systemThickMaterialLight"
+                        : "systemThickMaterialDark"
+                }
             >
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key];
@@ -144,6 +152,8 @@ const createStyles = (
             overflow: "hidden",
             paddingHorizontal: spacing.large,
             paddingVertical: spacing.small + spacing.tiny,
+            backgroundColor:
+                Platform.OS === "android" ? color.foreground : undefined,
         },
         tab: {
             justifyContent: "center",
