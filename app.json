@@ -13,12 +13,16 @@
             "bundleIdentifier": "com.reillymc.framerate",
             "config": {
                 "usesNonExemptEncryption": false
+            },
+            "icon": {
+                "light": "./assets/images/icon.png",
+                "dark": "./assets/images/icon-dark.png"
             }
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/images/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
+                "backgroundColor": "#F99224"
             },
             "package": "com.reillymc.framerate"
         },
