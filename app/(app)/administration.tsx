@@ -1,11 +1,13 @@
-import { ScreenLayout, StatusIndicator } from "@/components";
+import { Accordion, ScreenLayout, StatusIndicator } from "@/components";
 import { useFramerateServices } from "@/hooks";
+import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
 import {
     Action,
     Button,
     Text,
     TextInput,
     type ThemedStyles,
+    ToggleInput,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { setStringAsync, setUrlAsync } from "expo-clipboard";
@@ -18,6 +20,8 @@ const Profile: FC = () => {
     const router = useRouter();
     const styles = useThemedStyles(createStyles, {});
     const { administration } = useFramerateServices();
+    const { data: clientConfig } = useClientConfig();
+    const { mutate: updateClientConfig } = useSaveClientConfig();
 
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<
@@ -96,6 +100,77 @@ const Profile: FC = () => {
                         }
                     />
                 </View>
+                <Text variant="title">Media Links</Text>
+                <View style={styles.section}>
+                    <Text variant="caption">
+                        Configure external media links to display under movies,
+                        shows, seasons and episodes.
+                    </Text>
+                    <Text variant="caption">
+                        Available variable substitutions are "tmdbId", "imdbId",
+                        "seasonNumber" and "episodeNumber".
+                    </Text>
+                    <Text variant="caption">
+                        Example usage: "
+                        {"https://www.site.com/movie/{{tmdbId}}"}".
+                    </Text>
+                    {clientConfig?.mediaExternalLinks?.map((mediaLink, idx) => (
+                        <View key={mediaLink.name} style={styles.linkContainer}>
+                            <ToggleInput
+                                label={mediaLink.name}
+                                iconVariant="check"
+                                value={mediaLink.enabled}
+                                onChange={(value) => {
+                                    const newLinks = [
+                                        ...(clientConfig?.mediaExternalLinks ??
+                                            []),
+                                    ];
+
+                                    newLinks[idx] = {
+                                        ...mediaLink,
+                                        enabled: value,
+                                    };
+
+                                    return updateClientConfig({
+                                        clientConfig: {
+                                            ...clientConfig,
+                                            mediaExternalLinks: newLinks,
+                                        },
+                                    });
+                                }}
+                            />
+                            <Accordion
+                                collapsed={!mediaLink.enabled}
+                                style={styles.linkLinksContainer}
+                            >
+                                <TextInput
+                                    label="Movie"
+                                    disabled
+                                    containerStyle={styles.sectionElement}
+                                    value={mediaLink.links.movie}
+                                />
+                                <TextInput
+                                    label="Show"
+                                    disabled
+                                    containerStyle={styles.sectionElement}
+                                    value={mediaLink.links.show}
+                                />
+                                <TextInput
+                                    label="Season"
+                                    disabled
+                                    containerStyle={styles.sectionElement}
+                                    value={mediaLink.links.season}
+                                />
+                                <TextInput
+                                    label="Episode"
+                                    disabled
+                                    containerStyle={styles.sectionElement}
+                                    value={mediaLink.links.episode}
+                                />
+                            </Accordion>
+                        </View>
+                    ))}
+                </View>
             </ScrollView>
         </ScreenLayout>
     );
@@ -106,6 +181,7 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         container: {
             paddingHorizontal: spacing.pageHorizontal,
             paddingTop: spacing.pageTop,
+            paddingBottom: spacing.pageBottom,
         },
         section: {
             marginLeft: spacing.medium,
@@ -115,7 +191,14 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         },
         submitButton: {
             marginTop: spacing.large,
-            marginBottom: spacing.medium,
+            marginBottom: spacing.large * 2,
+        },
+        linkContainer: {
+            marginTop: spacing.medium,
+        },
+        linkLinksContainer: {
+            marginBottom: spacing.large,
+            marginLeft: spacing.large,
         },
     });
 

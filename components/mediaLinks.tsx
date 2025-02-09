@@ -29,9 +29,11 @@ export const MediaLinks: FC<MediaLinksProps> = ({
 
     return (
         <View style={styles.linksContainer}>
-            {mediaExternalLinks.map((link) => (
-                <MediaLink key={link.name} linkDetails={link} {...props} />
-            ))}
+            {mediaExternalLinks
+                .filter(({ enabled }) => enabled)
+                .map((link) => (
+                    <MediaLink key={link.name} linkDetails={link} {...props} />
+                ))}
         </View>
     );
 };

@@ -14,6 +14,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
+import { DeviceType, deviceType } from "expo-device";
 import { type FC, useRef } from "react";
 import {
     Platform,
@@ -68,6 +69,9 @@ export const ReviewForm: FC<ReviewFormProps> = ({
     const { theme } = useTheme();
     const styles = useThemedStyles(createStyles, {});
     const { width } = useWindowDimensions();
+
+    const containerWidth =
+        deviceType === DeviceType.PHONE ? width * 0.64 : width * 0.42;
 
     return (
         <>
@@ -126,7 +130,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     rating={ratingToStars(rating, starCount)}
                     enableHalfStar
                     maxStars={starCount}
-                    starSize={width / 2 / starCount}
+                    starSize={containerWidth / starCount}
                     onChange={(value) =>
                         onRatingChange(starsToRating(value, starCount))
                     }

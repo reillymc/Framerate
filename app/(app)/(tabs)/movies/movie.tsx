@@ -319,7 +319,7 @@ const createStyles = (
             justifyContent: "center",
         },
         collections: {
-            paddingTop: spacing.large,
+            paddingTop: posterHeight * (1 / 4),
             paddingHorizontal: spacing.pageHorizontal,
             alignItems: "center",
         },

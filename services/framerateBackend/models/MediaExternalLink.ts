@@ -35,6 +35,12 @@ import {
 export interface MediaExternalLink {
     /**
      * 
+     * @type {boolean}
+     * @memberof MediaExternalLink
+     */
+    enabled?: boolean;
+    /**
+     * 
      * @type {LinkIcon}
      * @memberof MediaExternalLink
      */
@@ -73,6 +79,7 @@ export function MediaExternalLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
+        'enabled': json['enabled'] == null ? undefined : json['enabled'],
         'icon': LinkIconFromJSON(json['icon']),
         'links': LinkRoutesFromJSON(json['links']),
         'name': json['name'],
@@ -90,6 +97,7 @@ export function MediaExternalLinkToJSONTyped(value?: MediaExternalLink | null, i
 
     return {
         
+        'enabled': value['enabled'],
         'icon': LinkIconToJSON(value['icon']),
         'links': LinkRoutesToJSON(value['links']),
         'name': value['name'],

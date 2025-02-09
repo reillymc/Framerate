@@ -63,22 +63,18 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
         const scale = interpolate(
             scrollValue.value,
             [
-                getOffset(index - 10),
+                getOffset(index - 6),
+                getOffset(index - 5),
                 getOffset(index - 1),
                 getOffset(index),
                 getOffset(index + 1),
             ],
-            [0, 0.85, 1, 0.92],
+            [0, 0, 0.85, 1, 0.92],
         );
 
         return {
             transform: [{ translateX }, { scale }],
             zIndex: -index,
-            opacity:
-                scrollValue.value > getOffset(index - 3) &&
-                scrollValue.value < getOffset(index + 2)
-                    ? 1
-                    : 0,
         };
     });
 
