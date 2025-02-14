@@ -14,12 +14,15 @@
 
 import * as runtime from '../runtime';
 import type {
+  DeleteResponse,
   NewUser,
   UpdatedUser,
   User,
   UserRead,
 } from '../models/index';
 import {
+    DeleteResponseFromJSON,
+    DeleteResponseToJSON,
     NewUserFromJSON,
     NewUserToJSON,
     UpdatedUserFromJSON,
@@ -29,6 +32,10 @@ import {
     UserReadFromJSON,
     UserReadToJSON,
 } from '../models/index';
+
+export interface UserApiDeleteRequest {
+    userId: string;
+}
 
 export interface UserApiCreateRequest {
     newUser: NewUser;
@@ -50,6 +57,19 @@ export interface UserApiUpdateRequest {
  * @interface UserApiInterface
  */
 export interface UserApiInterface {
+    /**
+     * 
+     * @param {string} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    _deleteRaw(requestParameters: UserApiDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteResponse>>;
+
+    /**
+     */
+    _delete(requestParameters: UserApiDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteResponse>;
+
     /**
      * 
      * @param {NewUser} newUser 
@@ -108,6 +128,45 @@ export interface UserApiInterface {
  * 
  */
 export class UserApi extends runtime.BaseAPI implements UserApiInterface {
+
+    /**
+     */
+    async _deleteRaw(requestParameters: UserApiDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteResponse>> {
+        if (requestParameters['userId'] == null) {
+            throw new runtime.RequiredError(
+                'userId',
+                'Required parameter "userId" was null or undefined when calling _delete().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/v1/users/{user_id}`.replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async _delete(requestParameters: UserApiDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteResponse> {
+        const response = await this._deleteRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */

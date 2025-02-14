@@ -11,7 +11,12 @@ import {
     useDeleteCompany,
     useSaveCompany,
 } from "@/modules/company";
-import { useCurrentUserConfig, useSaveUser, useUser } from "@/modules/user";
+import {
+    useCurrentUserConfig,
+    useDeleteUser,
+    useSaveUser,
+    useUser,
+} from "@/modules/user";
 import { MergeConfiguration } from "@/modules/user";
 import {
     Button,
@@ -27,6 +32,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { type FC, useCallback, useRef, useState } from "react";
 import {
+    Alert,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -49,6 +55,7 @@ const Profile: FC = () => {
     const { data: user } = useUser(userId);
     const { configuration } = useCurrentUserConfig();
     const { mutate: saveUser } = useSaveUser();
+    const { mutate: deleteUser } = useDeleteUser();
 
     const { data: company = [] } = useCompany();
     const { mutate: saveCompany } = useSaveCompany();
@@ -123,6 +130,30 @@ const Profile: FC = () => {
         },
         [saveUser, userId, configuration],
     );
+
+    const handleDeleteAccount = useCallback(() => {
+        if (!userId) return;
+
+        Alert.alert(
+            "Confirm Delete Account",
+            "This will permanently delete all watch history, reviews and other account data",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: () => {
+                        deleteUser({ userId });
+                        signOut();
+                    },
+                },
+            ],
+        );
+    }, [userId, signOut, deleteUser]);
 
     const showAdminButton = user && "isAdmin" in user && user.isAdmin;
 
@@ -371,6 +402,14 @@ const Profile: FC = () => {
                                 signOut();
                             }}
                         />
+                        <Button
+                            label="Delete Account"
+                            variant="flat"
+                            contentAlign="left"
+                            size="small"
+                            style={styles.actionButton}
+                            onPress={handleDeleteAccount}
+                        />
                     </View>
                 </View>
                 <View style={styles.sectionElement}>
@@ -466,6 +505,9 @@ const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
             marginTop: spacing.large,
             marginBottom: spacing.large,
             width: "100%",
+        },
+        destructiveButton: {
+            color: color.destructive,
         },
     });
 
