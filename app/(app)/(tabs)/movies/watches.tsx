@@ -28,6 +28,16 @@ const Reviews: FC = () => {
 
     const { configuration } = useCurrentUserConfig();
 
+    const ratingMax = useMemo(() => {
+        if (rating === undefined) return undefined;
+
+        if (rating === -1) return -1;
+
+        return (
+            rating + AbsoluteRatingScale / configuration.ratings.starCount - 1
+        );
+    }, [rating, configuration.ratings.starCount]);
+
     const {
         data: reviews,
         refetch,
@@ -35,12 +45,7 @@ const Reviews: FC = () => {
     } = useMovieReviews({
         atVenue,
         withCompany,
-        ratingMax:
-            rating !== undefined
-                ? rating +
-                  AbsoluteRatingScale / configuration.ratings.starCount -
-                  1
-                : undefined,
+        ratingMax,
         ratingMin: rating,
         sort,
         orderBy,
@@ -58,25 +63,21 @@ const Reviews: FC = () => {
         [company, withCompany],
     );
 
-    const showSortButton =
-        reviewList?.length || withCompany || atVenue || rating;
-
     return (
         <ScreenLayout
             meta={
                 <Stack.Screen
                     options={{
                         title: "My Watches",
-                        headerRight: () =>
-                            showSortButton && (
-                                <ReviewSortButton
-                                    order={orderBy}
-                                    sort={sort}
-                                    mediaType={MediaType.Movie}
-                                    onChangeOrder={setOrderBy}
-                                    onChangeSort={setSort}
-                                />
-                            ),
+                        headerRight: () => (
+                            <ReviewSortButton
+                                order={orderBy}
+                                sort={sort}
+                                mediaType={MediaType.Movie}
+                                onChangeOrder={setOrderBy}
+                                onChangeSort={setSort}
+                            />
+                        ),
                     }}
                 />
             }

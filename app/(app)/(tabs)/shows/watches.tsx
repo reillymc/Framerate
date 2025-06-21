@@ -27,6 +27,16 @@ const Reviews: FC = () => {
 
     const { configuration } = useCurrentUserConfig();
 
+    const ratingMax = useMemo(() => {
+        if (rating === undefined) return undefined;
+
+        if (rating === -1) return -1;
+
+        return (
+            rating + AbsoluteRatingScale / configuration.ratings.starCount - 1
+        );
+    }, [rating, configuration.ratings.starCount]);
+
     const {
         data: reviews,
         refetch,
@@ -34,12 +44,7 @@ const Reviews: FC = () => {
     } = useShowReviews({
         atVenue,
         withCompany,
-        ratingMax:
-            rating !== undefined
-                ? rating +
-                  AbsoluteRatingScale / configuration.ratings.starCount -
-                  1
-                : undefined,
+        ratingMax,
         ratingMin: rating,
         sort,
         orderBy,
@@ -62,19 +67,15 @@ const Reviews: FC = () => {
             <Stack.Screen
                 options={{
                     title: "My Watches",
-                    headerRight: () =>
-                        reviewList?.length ||
-                        withCompany ||
-                        atVenue ||
-                        rating ? (
-                            <ReviewSortButton
-                                order={orderBy}
-                                sort={sort}
-                                mediaType={MediaType.Show}
-                                onChangeOrder={setOrderBy}
-                                onChangeSort={setSort}
-                            />
-                        ) : undefined,
+                    headerRight: () => (
+                        <ReviewSortButton
+                            order={orderBy}
+                            sort={sort}
+                            mediaType={MediaType.Show}
+                            onChangeOrder={setOrderBy}
+                            onChangeSort={setSort}
+                        />
+                    ),
                 }}
             />
             <FilterableReviewList

@@ -7,4 +7,6 @@ export const starsToRating = (stars: number, starCount: number): number =>
     (stars * AbsoluteRatingScale) / starCount;
 
 export const getRatingLabel = (rating: number, starCount: number) =>
-    `${ratingToStars(rating, starCount)} Star${rating === AbsoluteRatingScale / starCount ? "" : "s"}`;
+    rating >= 0
+        ? `${ratingToStars(rating, starCount)} Star${rating === AbsoluteRatingScale / starCount ? "" : "s"}`
+        : "No Rating";

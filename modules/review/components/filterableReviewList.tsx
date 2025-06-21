@@ -19,6 +19,9 @@ import { AbsoluteRatingScale } from "../models";
 
 const TenStarOptions = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
+const menuState = (condition: boolean) =>
+    condition ? ("on" as const) : ("off" as const);
+
 interface FilterableReviewListProps<T> {
     reviews: T[] | undefined;
     filters: {
@@ -64,7 +67,7 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
         [starCount],
     );
 
-    if (!(reviews?.length || company || venue || rating)) {
+    if (!(reviews?.length || company || venue || rating !== undefined)) {
         return (
             <EmptyState
                 heading="No reviews here yet"
@@ -108,14 +111,21 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                         <ContextMenu
                             menuConfig={{
                                 menuTitle: "Rating",
-                                menuItems: starValueList.map((value) => ({
-                                    actionKey: value.toString(),
-                                    actionTitle: getRatingLabel(
-                                        value,
-                                        starCount,
-                                    ),
-                                    menuState: rating === value ? "on" : "off",
-                                })),
+                                menuItems: [
+                                    ...starValueList.map((value) => ({
+                                        actionKey: value.toString(),
+                                        actionTitle: getRatingLabel(
+                                            value,
+                                            starCount,
+                                        ),
+                                        menuState: menuState(rating === value),
+                                    })),
+                                    {
+                                        actionKey: "-1",
+                                        actionTitle: "No Rating",
+                                        menuState: menuState(rating === -1),
+                                    },
+                                ],
                             }}
                             onPressMenuAction={({ actionKey }) => {
                                 const value = Number.parseInt(actionKey);
@@ -142,8 +152,9 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                                         .map((name) => ({
                                             actionKey: name,
                                             actionTitle: name,
-                                            menuState:
-                                                venue === name ? "on" : "off",
+                                            menuState: menuState(
+                                                venue === name,
+                                            ),
                                         })),
                                 }}
                                 onPressMenuAction={({ actionKey }) => {
@@ -222,7 +233,7 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                 ListEmptyComponent={
                     <EmptyState
                         heading={`No reviews${
-                            rating
+                            rating !== undefined
                                 ? ` of ${getRatingLabel(rating, starCount)}`
                                 : ""
                         }${venue ? ` at ${venue}` : ""}${
