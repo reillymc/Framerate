@@ -27,7 +27,7 @@
         "@react-native-community/netinfo": "11.4.1",
         "@react-native-segmented-control/segmented-control": "2.5.4",
         "@react-navigation/native": "^7.0.0",
-        "@reillymc/react-native-components": "^0.5.13",
+        "@reillymc/react-native-components": "^0.5.15",
         "@shopify/react-native-skia": "1.5.0",
         "@tanstack/query-async-storage-persister": "^5.51.21",
         "@tanstack/react-query": "^5.51.9",

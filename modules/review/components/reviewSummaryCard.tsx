@@ -56,18 +56,12 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                     <View style={styles.headingTitleContainer}>
                         <Text
                             variant="title"
-                            compactLineHeight
                             style={styles.title}
                             numberOfLines={1}
                         >
                             {mediaTitle}
                         </Text>
-                        <Text
-                            key="date"
-                            variant="label"
-                            compactLineHeight
-                            alignLineHeightWithVariant="title"
-                        >
+                        <Text key="date" variant="label">
                             {releaseYear}
                         </Text>
                     </View>
