@@ -1,4 +1,9 @@
-import { PosterCard, RecentSearchList, SectionHeading } from "@/components";
+import {
+    PosterCard,
+    RecentSearchList,
+    ResponsiveFlatList,
+    SectionHeading,
+} from "@/components";
 import { Poster, usePosterDimensions } from "@/components/poster";
 import { displayYear } from "@/helpers/dateHelper";
 import { ReviewSummaryCard } from "@/modules/review";
@@ -166,8 +171,9 @@ const Shows: FC = () => {
                 />
             )}
             {!isSearching && (
-                <FlatList
+                <ResponsiveFlatList
                     contentInsetAdjustmentBehavior="automatic"
+                    minColumnWidth={380}
                     ListHeaderComponent={
                         <>
                             <SectionHeading

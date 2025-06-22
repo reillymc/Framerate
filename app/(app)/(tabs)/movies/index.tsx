@@ -1,6 +1,7 @@
 import {
     PosterCard,
     RecentSearchList,
+    ResponsiveFlatList,
     ScreenLayout,
     ScreenSection,
     SectionHeading,
@@ -197,8 +198,9 @@ const Movies: FC = () => {
                 )
             }
         >
-            <FlatList
+            <ResponsiveFlatList
                 contentInsetAdjustmentBehavior="automatic"
+                minColumnWidth={380}
                 ListHeaderComponent={
                     <>
                         <ScreenSection

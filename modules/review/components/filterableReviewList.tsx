@@ -1,4 +1,4 @@
-import { ContextMenu, EmptyState } from "@/components";
+import { ContextMenu, EmptyState, ResponsiveFlatList } from "@/components";
 import type { Company } from "@/modules/company";
 import {
     Tag,
@@ -8,7 +8,6 @@ import {
 } from "@reillymc/react-native-components";
 import { useMemo } from "react";
 import {
-    FlatList,
     type ListRenderItem,
     ScrollView,
     StyleSheet,
@@ -82,9 +81,10 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
 
     return (
         <>
-            <FlatList
+            <ResponsiveFlatList
                 data={reviews}
                 contentInsetAdjustmentBehavior="automatic"
+                minColumnWidth={380}
                 CellRendererComponent={({ children, cellKey, onLayout }) => (
                     <View
                         key={cellKey}

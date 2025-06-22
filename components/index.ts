@@ -25,3 +25,4 @@ export { Logo } from "./logo";
 export { HostActions } from "./hostActions";
 export { StatusIndicator } from "./statusIndicator";
 export { HeaderCloseAction } from "./headerCloseAction";
+export { ResponsiveFlatList } from "./responsiveFlatList";
