@@ -91,6 +91,11 @@ const Reviews: FC = () => {
                     onChangeRating: setRating,
                     onChangeVenue: setAtVenue,
                 }}
+                order={orderBy}
+                sort={sort}
+                onChangeOrder={setOrderBy}
+                mediaType={MediaType.Movie}
+                onChangeSort={setSort}
                 onRefresh={refetch}
                 onFetchNextPage={() => fetchNextPage()}
                 renderItem={({ item }) => (

@@ -1,4 +1,17 @@
-import { ContextMenu, EmptyState, ResponsiveFlatList } from "@/components";
+import {
+    BlurIconAction,
+    ContextMenu,
+    EmptyState,
+    ResponsiveFlatList,
+} from "@/components";
+import {
+    DropdownButton,
+    MenuDecorator,
+    MenuOption,
+    MenuOptionContentToggle,
+    WebDropdownMenu,
+} from "@/components/webDropdown";
+import { MediaType } from "@/constants/mediaTypes";
 import type { Company } from "@/modules/company";
 import {
     Tag,
@@ -9,12 +22,17 @@ import {
 import { useMemo } from "react";
 import {
     type ListRenderItem,
+    Platform,
     ScrollView,
     StyleSheet,
     View,
 } from "react-native";
 import { getRatingLabel } from "../helpers";
-import { AbsoluteRatingScale } from "../models";
+import {
+    AbsoluteRatingScale,
+    type ReviewOrder,
+    type ReviewSort,
+} from "../models";
 
 const TenStarOptions = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 
@@ -23,6 +41,10 @@ const menuState = (condition: boolean) =>
 
 interface FilterableReviewListProps<T> {
     reviews: T[] | undefined;
+    mediaType: MediaType;
+    order: ReviewOrder;
+    sort: ReviewSort;
+    starCount: number;
     filters: {
         rating: number | undefined;
         venue: string | undefined;
@@ -33,7 +55,8 @@ interface FilterableReviewListProps<T> {
     };
     companyOptions: Company[];
     venueOptions: string[];
-    starCount: number;
+    onChangeOrder: (order: ReviewOrder) => void;
+    onChangeSort: (sort: ReviewSort) => void;
     onRefresh: () => void;
     onFetchNextPage: () => void;
     renderItem: ListRenderItem<T>;
@@ -41,6 +64,8 @@ interface FilterableReviewListProps<T> {
 
 export const FilterableReviewList = <T extends { reviewId: string }>({
     reviews,
+    mediaType,
+    starCount,
     filters: {
         company,
         venue,
@@ -49,9 +74,12 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
         onChangeRating,
         onChangeVenue,
     },
+    order,
+    sort,
     companyOptions,
     venueOptions,
-    starCount,
+    onChangeOrder,
+    onChangeSort,
     onRefresh,
     onFetchNextPage,
     renderItem,
@@ -65,6 +93,27 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
             ),
         [starCount],
     );
+
+    const SortOptions: { value: ReviewSort; label: string }[] = [
+        { value: "asc", label: "Ascending" },
+        { value: "desc", label: "Descending" },
+    ];
+
+    const OrderOptions: { value: ReviewOrder; label: string }[] = [
+        { value: "date", label: "Review Date" },
+        { value: "rating", label: "Review Rating" },
+        {
+            value: "mediaTitle",
+            label: mediaType === MediaType.Movie ? "Movie Title" : "Show Title",
+        },
+        {
+            value: "mediaReleaseDate",
+            label:
+                mediaType === MediaType.Movie
+                    ? "Movie Release Date"
+                    : "Show Air Date",
+        },
+    ];
 
     if (!(reviews?.length || company || venue || rating !== undefined)) {
         return (
@@ -100,82 +149,225 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                 refreshing={false}
                 contentContainerStyle={styles.list}
                 ListHeaderComponent={
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={[
-                            styles.pageElement,
-                            styles.filterList,
-                        ]}
-                    >
-                        <ContextMenu
-                            menuConfig={{
-                                menuTitle: "Rating",
-                                menuItems: [
-                                    ...starValueList.map((value) => ({
-                                        actionKey: value.toString(),
-                                        actionTitle: getRatingLabel(
-                                            value,
-                                            starCount,
-                                        ),
-                                        menuState: menuState(rating === value),
-                                    })),
-                                    {
-                                        actionKey: "-1",
-                                        actionTitle: "No Rating",
-                                        menuState: menuState(rating === -1),
-                                    },
-                                ],
-                            }}
-                            onPressMenuAction={({ actionKey }) => {
-                                const value = Number.parseInt(actionKey);
-                                onChangeRating(
-                                    rating !== value ? value : undefined,
-                                );
-                            }}
+                    Platform.OS !== "web" ? (
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={[
+                                styles.pageElement,
+                                styles.filterList,
+                            ]}
                         >
-                            <Tag
-                                label={
-                                    rating !== undefined
-                                        ? getRatingLabel(rating, starCount)
-                                        : "All Ratings"
-                                }
-                                variant="light"
-                            />
-                        </ContextMenu>
-                        {!!venueOptions.length && (
                             <ContextMenu
                                 menuConfig={{
-                                    menuTitle: "Venue",
-                                    menuItems: venueOptions
-                                        .sort((a, b) => a.localeCompare(b))
-                                        .map((name) => ({
-                                            actionKey: name,
-                                            actionTitle: name,
+                                    menuTitle: "Rating",
+                                    menuItems: [
+                                        ...starValueList.map((value) => ({
+                                            actionKey: value.toString(),
+                                            actionTitle: getRatingLabel(
+                                                value,
+                                                starCount,
+                                            ),
                                             menuState: menuState(
-                                                venue === name,
+                                                rating === value,
                                             ),
                                         })),
+                                        {
+                                            actionKey: "-1",
+                                            actionTitle: "No Rating",
+                                            menuState: menuState(rating === -1),
+                                        },
+                                    ],
                                 }}
                                 onPressMenuAction={({ actionKey }) => {
-                                    onChangeVenue(
-                                        venue !== actionKey
-                                            ? actionKey
-                                            : undefined,
+                                    const value = Number.parseInt(actionKey);
+                                    onChangeRating(
+                                        rating !== value ? value : undefined,
                                     );
                                 }}
                             >
                                 <Tag
-                                    label={venue ?? "All Venues"}
+                                    label={
+                                        rating !== undefined
+                                            ? getRatingLabel(rating, starCount)
+                                            : "All Ratings"
+                                    }
                                     variant="light"
                                 />
                             </ContextMenu>
-                        )}
-                        {!!companyOptions.length && (
-                            <ContextMenu
-                                menuConfig={{
-                                    menuTitle: "Company",
-                                    menuItems: companyOptions
+                            {!!venueOptions.length && (
+                                <ContextMenu
+                                    menuConfig={{
+                                        menuTitle: "Venue",
+                                        menuItems: venueOptions
+                                            .sort((a, b) => a.localeCompare(b))
+                                            .map((name) => ({
+                                                actionKey: name,
+                                                actionTitle: name,
+                                                menuState: menuState(
+                                                    venue === name,
+                                                ),
+                                            })),
+                                    }}
+                                    onPressMenuAction={({ actionKey }) => {
+                                        onChangeVenue(
+                                            venue !== actionKey
+                                                ? actionKey
+                                                : undefined,
+                                        );
+                                    }}
+                                >
+                                    <Tag
+                                        label={venue ?? "All Venues"}
+                                        variant="light"
+                                    />
+                                </ContextMenu>
+                            )}
+                            {!!companyOptions.length && (
+                                <ContextMenu
+                                    menuConfig={{
+                                        menuTitle: "Company",
+                                        menuItems: companyOptions
+                                            .sort((a, b) =>
+                                                a.firstName.localeCompare(
+                                                    b.firstName,
+                                                ),
+                                            )
+                                            .map(
+                                                ({
+                                                    companyId,
+                                                    firstName,
+                                                    lastName,
+                                                }) => ({
+                                                    actionKey: companyId,
+                                                    actionTitle: `${firstName} ${lastName}`,
+                                                    menuState:
+                                                        company?.companyId ===
+                                                        companyId
+                                                            ? "on"
+                                                            : "off",
+                                                }),
+                                            ),
+                                    }}
+                                    onPressMenuAction={({ actionKey }) => {
+                                        onChangeCompany(
+                                            company?.companyId !== actionKey
+                                                ? actionKey
+                                                : undefined,
+                                        );
+                                    }}
+                                >
+                                    <Tag
+                                        label={
+                                            company
+                                                ? `${company.firstName} ${company.lastName}`
+                                                : "All Company"
+                                        }
+                                        variant="light"
+                                    />
+                                </ContextMenu>
+                            )}
+                        </ScrollView>
+                    ) : (
+                        <View
+                            style={[
+                                styles.pageElement,
+                                styles.filterList,
+                                styles.webListHeader,
+                            ]}
+                        >
+                            <View style={styles.webFilterButtons}>
+                                <WebDropdownMenu
+                                    trigger={
+                                        <DropdownButton
+                                            label={
+                                                rating !== undefined
+                                                    ? getRatingLabel(
+                                                          rating,
+                                                          starCount,
+                                                      )
+                                                    : "All Ratings"
+                                            }
+                                        />
+                                    }
+                                >
+                                    {[
+                                        ...starValueList.map((value) => (
+                                            <MenuOption
+                                                key={value}
+                                                onSelect={() =>
+                                                    onChangeRating(
+                                                        rating !== value
+                                                            ? value
+                                                            : undefined,
+                                                    )
+                                                }
+                                            >
+                                                <MenuOptionContentToggle
+                                                    title={getRatingLabel(
+                                                        value,
+                                                        starCount,
+                                                    )}
+                                                    selected={rating === value}
+                                                />
+                                            </MenuOption>
+                                        )),
+                                        <MenuOption
+                                            key="-1"
+                                            onSelect={() =>
+                                                onChangeRating(
+                                                    rating !== -1
+                                                        ? -1
+                                                        : undefined,
+                                                )
+                                            }
+                                        >
+                                            <MenuOptionContentToggle
+                                                title="No Rating"
+                                                selected={rating === -1}
+                                            />
+                                        </MenuOption>,
+                                    ]}
+                                </WebDropdownMenu>
+                                <WebDropdownMenu
+                                    trigger={
+                                        <DropdownButton
+                                            label={venue ?? "All Venues"}
+                                        />
+                                    }
+                                >
+                                    {venueOptions
+                                        .sort((a, b) => a.localeCompare(b))
+                                        .map((value) => (
+                                            <MenuOption
+                                                key={value}
+                                                onSelect={() =>
+                                                    onChangeVenue(
+                                                        venue !== value
+                                                            ? value
+                                                            : undefined,
+                                                    )
+                                                }
+                                            >
+                                                <MenuOptionContentToggle
+                                                    title={value}
+                                                    selected={venue === value}
+                                                />
+                                            </MenuOption>
+                                        ))}
+                                </WebDropdownMenu>
+                                <WebDropdownMenu
+                                    trigger={
+                                        <DropdownButton
+                                            label={
+                                                company
+                                                    ? `${company.firstName} ${company.lastName}`
+                                                    : "All Company"
+                                            }
+                                        />
+                                    }
+                                >
+                                    {companyOptions
                                         .sort((a, b) =>
                                             a.firstName.localeCompare(
                                                 b.firstName,
@@ -186,42 +378,90 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                                                 companyId,
                                                 firstName,
                                                 lastName,
-                                            }) => ({
-                                                actionKey: companyId,
-                                                actionTitle: `${firstName} ${lastName}`,
-                                                menuState:
-                                                    company?.companyId ===
-                                                    companyId
-                                                        ? "on"
-                                                        : "off",
-                                            }),
-                                        ),
-                                }}
-                                onPressMenuAction={({ actionKey }) => {
-                                    onChangeCompany(
-                                        company?.companyId !== actionKey
-                                            ? actionKey
-                                            : undefined,
-                                    );
-                                }}
+                                            }) => (
+                                                <MenuOption
+                                                    key={companyId}
+                                                    onSelect={() =>
+                                                        onChangeCompany(
+                                                            company?.companyId !==
+                                                                companyId
+                                                                ? companyId
+                                                                : undefined,
+                                                        )
+                                                    }
+                                                >
+                                                    <MenuOptionContentToggle
+                                                        title={`${firstName} ${lastName}`}
+                                                        selected={
+                                                            company?.companyId ===
+                                                            companyId
+                                                        }
+                                                    />
+                                                </MenuOption>
+                                            ),
+                                        )}
+                                </WebDropdownMenu>
+                            </View>
+                            <WebDropdownMenu
+                                trigger={
+                                    <BlurIconAction
+                                        iconName="arrow-switch"
+                                        variant="flat"
+                                        style={[
+                                            styles.sortIcon,
+                                            {
+                                                borderRadius: 8,
+                                                padding: 20,
+                                            },
+                                        ]}
+                                    />
+                                }
                             >
-                                <Tag
-                                    label={
-                                        company
-                                            ? `${company.firstName} ${company.lastName}`
-                                            : "All Company"
-                                    }
-                                    variant="light"
-                                />
-                            </ContextMenu>
-                        )}
-                    </ScrollView>
+                                {[
+                                    ...OrderOptions.map(({ value, label }) => (
+                                        <MenuOption
+                                            key={value}
+                                            onSelect={() =>
+                                                onChangeOrder(value)
+                                            }
+                                        >
+                                            <MenuOptionContentToggle
+                                                title={label}
+                                                selected={order === value}
+                                            />
+                                        </MenuOption>
+                                    )),
+                                    <MenuDecorator key="separator">
+                                        <View
+                                            style={{
+                                                height: 4,
+                                                width: "100%",
+                                                borderRadius: 4,
+                                                backgroundColor: "#ddd",
+                                            }}
+                                        />
+                                    </MenuDecorator>,
+                                    ...SortOptions.map(({ value, label }) => (
+                                        <MenuOption
+                                            key={value}
+                                            onSelect={() => onChangeSort(value)}
+                                        >
+                                            <MenuOptionContentToggle
+                                                title={label}
+                                                selected={sort === value}
+                                            />
+                                        </MenuOption>
+                                    )),
+                                ]}
+                            </WebDropdownMenu>
+                        </View>
+                    )
                 }
                 ListFooterComponent={
                     reviews?.length ? (
                         <Text style={styles.pageElement}>
-                            {reviews?.length} review
-                            {reviews?.length === 1 ? "" : "s"}
+                            {reviews?.length} watch
+                            {reviews?.length === 1 ? "" : "es"}
                             {rating !== undefined &&
                                 ` of ${getRatingLabel(rating, starCount)}`}
                             {venue && ` at ${venue}`}
@@ -232,7 +472,7 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                 }
                 ListEmptyComponent={
                     <EmptyState
-                        heading={`No reviews${
+                        heading={`No watches${
                             rating !== undefined
                                 ? ` of ${getRatingLabel(rating, starCount)}`
                                 : ""
@@ -260,6 +500,15 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         },
         filterList: {
             paddingBottom: spacing.medium,
+        },
+        webListHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+        },
+        webFilterButtons: {
+            flexDirection: "row",
+            justifyContent: "space-between",
         },
         sortIcon: {
             transform: [{ rotateZ: "90deg" }],
