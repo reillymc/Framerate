@@ -1,11 +1,13 @@
-import { Poster, StarRatingDisplay, usePosterDimensions } from "@/components";
+import type { FC } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import {
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+
+import { Poster, StarRatingDisplay, usePosterDimensions } from "@/components";
+
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 

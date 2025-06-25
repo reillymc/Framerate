@@ -1,6 +1,7 @@
-import { Text, useTheme } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import { Pressable, View } from "react-native";
+import { Text, useTheme } from "@reillymc/react-native-components";
+
 import { Poster, type PosterProps } from "./poster";
 
 interface PosterCardProps

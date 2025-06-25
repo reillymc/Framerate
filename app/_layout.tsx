@@ -1,8 +1,16 @@
 import "react-native-reanimated";
-import { Font, FontResources } from "@/assets/fonts";
-import { useColorScheme } from "@/hooks";
-import { ServiceProvider } from "@/hooks/useFramerateServices";
-import { SessionProvider } from "@/modules/auth";
+
+import { type FC, useEffect, useMemo } from "react";
+import { Platform, useWindowDimensions } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useFonts } from "expo-font";
+import { Slot } from "expo-router";
+import {
+    hideAsync,
+    preventAutoHideAsync,
+    setOptions,
+} from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import {
@@ -10,25 +18,23 @@ import {
     ThemeProvider as RnThemeProvider,
 } from "@react-navigation/native";
 import {
+    createDefaultStyles,
     type DeepPartial,
     DefaultTheme,
     MergeTheme,
+    scaleFont,
     type Theme,
     ThemeProvider,
-    createDefaultStyles,
-    scaleFont,
 } from "@reillymc/react-native-components";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient, onlineManager } from "@tanstack/react-query";
+import { onlineManager, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
-import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
-import { setOptions } from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import { type FC, useEffect, useMemo } from "react";
-import { Platform, useWindowDimensions } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { SessionProvider } from "@/modules/auth";
+
+import { Font, FontResources } from "@/assets/fonts";
+import { ServiceProvider, useColorScheme } from "@/hooks";
+
 import { version } from "../package.json";
 
 setOptions({
@@ -38,7 +44,7 @@ setOptions({
 
 preventAutoHideAsync();
 
-let DevToolsBubble: FC | undefined = undefined;
+let DevToolsBubble: FC | undefined;
 if (__DEV__) {
     try {
         DevToolsBubble =

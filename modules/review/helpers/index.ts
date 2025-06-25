@@ -1,5 +1,5 @@
 export {
+    getRatingLabel,
     ratingToStars,
     starsToRating,
-    getRatingLabel,
 } from "./ratingConverter";

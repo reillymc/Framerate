@@ -1,5 +1,12 @@
-import { FontResources } from "@/assets/fonts";
-import { useColorScheme } from "@/hooks";
+import { type FC, useCallback, useMemo } from "react";
+import {
+    type StyleProp,
+    useWindowDimensions,
+    View,
+    type ViewStyle,
+} from "react-native";
+import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
+import { DeviceType, deviceType } from "expo-device";
 import { useTheme } from "@reillymc/react-native-components";
 import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
 import {
@@ -9,16 +16,11 @@ import {
     startOfMonth,
     subMonths,
 } from "date-fns";
-import { DeviceType, deviceType } from "expo-device";
-import { type FC, useCallback, useMemo } from "react";
-import {
-    type StyleProp,
-    View,
-    type ViewStyle,
-    useWindowDimensions,
-} from "react-native";
-import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
+
+import { FontResources } from "@/assets/fonts";
+import { useColorScheme } from "@/hooks";
+
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
 

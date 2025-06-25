@@ -1,3 +1,6 @@
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import {
     Action,
     DropdownItem,
@@ -5,12 +8,9 @@ import {
     Tag,
     Text,
     type ThemedStyles,
-    type ValueItem,
     useThemedStyles,
+    type ValueItem,
 } from "@reillymc/react-native-components";
-import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
-import { type FC, useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
 
 type UseSelectionModalParams<T> = Pick<
     SelectionInputProps<T>,

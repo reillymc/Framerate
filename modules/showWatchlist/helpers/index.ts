@@ -1,4 +1,5 @@
 import { isBefore } from "date-fns";
+
 import type { ShowWatchlistEntry } from "../models";
 
 export const SortEntriesByNextAirDate = (

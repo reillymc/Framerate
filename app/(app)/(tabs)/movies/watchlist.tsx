@@ -1,11 +1,13 @@
-import { EmptyState, ScreenLayout } from "@/components";
+import type { FC } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+
 import {
     SectionedMovieEntryList,
     useDeleteMovieWatchlistEntry,
     useMovieWatchlist,
 } from "@/modules/movieWatchlist";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import type { FC } from "react";
+
+import { EmptyState, ScreenLayout } from "@/components";
 
 const Watchlist: FC = () => {
     const { jumpToDate } = useLocalSearchParams<{ jumpToDate?: string }>();

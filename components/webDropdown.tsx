@@ -1,4 +1,3 @@
-import { Icon, Tag, Text } from "@reillymc/react-native-components";
 import React, {
     Children,
     type FC,
@@ -13,9 +12,10 @@ import {
     Modal,
     Pressable,
     StyleSheet,
-    View,
     useWindowDimensions,
+    View,
 } from "react-native";
+import { Icon, Tag, Text } from "@reillymc/react-native-components";
 
 interface WebDropdownMenuProps {
     trigger: ReactNode;
@@ -39,7 +39,7 @@ export const WebDropdownMenu: FC<WebDropdownMenuProps> = ({
 
     useEffect(() => {
         if (triggerRef.current && visible) {
-            triggerRef.current.measure((fx, fy, width, height, px, py) => {
+            triggerRef.current.measure((_fx, _fy, width, height, px, py) => {
                 setPosition({
                     x: px,
                     y: py + height,

@@ -1,22 +1,23 @@
+import {
+    createContext,
+    type FC,
+    type PropsWithChildren,
+    useContext,
+    useMemo,
+    useState,
+} from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useStorageState } from "@/hooks/useStorageState";
 import {
-    type AuthUser,
     AuthenticationApi,
+    type AuthUser,
     Configuration,
     LoggerMiddleware,
     type Middleware,
     type RegisteringUser,
     SignalMiddleware,
 } from "@/services";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-    type FC,
-    type PropsWithChildren,
-    createContext,
-    useContext,
-    useMemo,
-    useState,
-} from "react";
 
 const SessionContext = createContext<{
     signIn: (credentials: AuthUser) => void;

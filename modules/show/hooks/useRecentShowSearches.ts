@@ -1,6 +1,8 @@
-import { useRecentSearches } from "@/hooks";
-import { useSession } from "@/modules/auth";
 import { useMemo } from "react";
+
+import { useSession } from "@/modules/auth";
+
+import { useRecentSearches } from "@/hooks";
 
 export const useRecentShowSearches = () => {
     const { userId } = useSession();

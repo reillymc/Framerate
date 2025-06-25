@@ -1,11 +1,13 @@
-import { EmptyState, ScreenLayout } from "@/components";
+import type { FC } from "react";
+import { Stack, useRouter } from "expo-router";
+
 import {
     SectionedShowEntryList,
     useDeleteShowWatchlistEntry,
     useShowWatchlist,
 } from "@/modules/showWatchlist";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
+
+import { EmptyState, ScreenLayout } from "@/components";
 
 const Watchlist: FC = () => {
     const router = useRouter();

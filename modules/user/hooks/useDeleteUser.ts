@@ -1,6 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useFramerateServices } from "@/hooks";
 import type { DeleteResponse, UserApiDeleteRequest } from "@/services";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import type { User } from "../models";
 import { UserKeys } from "./keys";
 

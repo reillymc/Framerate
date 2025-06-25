@@ -1,17 +1,19 @@
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
-import {
-    useDeleteMovieCollection,
-    useMovieCollections,
-} from "@/modules/movieCollection";
+import type { FC } from "react";
+import { Alert, RefreshControl } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { Stack, useRouter } from "expo-router";
 import {
     IconActionV2,
     SwipeAction,
     SwipeView,
 } from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
-import { Alert, RefreshControl } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+
+import {
+    useDeleteMovieCollection,
+    useMovieCollections,
+} from "@/modules/movieCollection";
+
+import { EmptyState, PosterCard, ScreenLayout } from "@/components";
 
 const Collections: FC = () => {
     const router = useRouter();

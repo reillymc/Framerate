@@ -1,16 +1,18 @@
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
-import {
-    useDeleteShowCollectionEntry,
-    useShowCollection,
-} from "@/modules/showCollection";
+import type { FC } from "react";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     IconActionV2,
     SwipeAction,
     SwipeView,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import type { FC } from "react";
-import { FlatList, RefreshControl } from "react-native-gesture-handler";
+
+import {
+    useDeleteShowCollectionEntry,
+    useShowCollection,
+} from "@/modules/showCollection";
+
+import { EmptyState, PosterCard, ScreenLayout } from "@/components";
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

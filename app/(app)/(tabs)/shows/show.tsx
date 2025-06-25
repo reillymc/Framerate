@@ -1,4 +1,3 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { type FC, useMemo } from "react";
 import {
     FlatList,
@@ -7,19 +6,16 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
-    ContextMenu,
-    MediaFooterButtons,
-    MediaLinks,
-    ParallaxScrollView,
-    Poster,
-    ScreenLayout,
-    TmdbImage,
-    usePosterDimensions,
-} from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
-import { displayFull } from "@/helpers/dateHelper";
+    IconAction,
+    Tag,
+    Text,
+    type ThemedStyles,
+    Undefined,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
 import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
@@ -34,14 +30,19 @@ import {
     useShowWatchlistEntry,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
+
 import {
-    IconAction,
-    Tag,
-    Text,
-    type ThemedStyles,
-    Undefined,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
+    ContextMenu,
+    MediaFooterButtons,
+    MediaLinks,
+    ParallaxScrollView,
+    Poster,
+    ScreenLayout,
+    TmdbImage,
+    usePosterDimensions,
+} from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
+import { displayFull } from "@/helpers/dateHelper";
 
 const Show: FC = () => {
     const {

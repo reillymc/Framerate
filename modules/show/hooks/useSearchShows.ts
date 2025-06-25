@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useFramerateServices } from "@/hooks";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
+
 import { ShowKeys } from "./keys";
 
 export const useSearchShows = (query: string) => {

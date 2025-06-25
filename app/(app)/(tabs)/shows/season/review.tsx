@@ -1,14 +1,15 @@
-import { ReviewDisplay, getRatingLabel } from "@/modules/review";
-import { useSeasonReview } from "@/modules/seasonReview";
-import { useCurrentUserConfig } from "@/modules/user";
+import type { FC } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     IconActionV2,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import type { FC } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+
+import { getRatingLabel, ReviewDisplay } from "@/modules/review";
+import { useSeasonReview } from "@/modules/seasonReview";
+import { useCurrentUserConfig } from "@/modules/user";
 
 const Review: FC = () => {
     const { reviewId } = useLocalSearchParams<{ reviewId: string }>();

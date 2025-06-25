@@ -1,4 +1,5 @@
 import { addYears, lastDayOfMonth, startOfMonth, subMonths } from "date-fns";
+
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
 
@@ -74,7 +75,7 @@ export const getGroupedEntries = (entries: MovieWatchlistEntry[]) => {
     for (const section of sections) {
         if (section.yearTitle) {
             if (processedYears.has(section.yearTitle)) {
-                const { yearTitle, ...rest } = section;
+                const { yearTitle: _, ...rest } = section;
                 uniqueSections.push(rest);
             } else {
                 processedYears.add(section.yearTitle);

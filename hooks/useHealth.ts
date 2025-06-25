@@ -1,5 +1,6 @@
-import { useSession } from "@/modules/auth";
 import { useQuery } from "@tanstack/react-query";
+
+import { useSession } from "@/modules/auth";
 
 export const useHealth = () => {
     const { session, host, defaultHost } = useSession();

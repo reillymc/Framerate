@@ -1,17 +1,19 @@
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
-import { displayFullNumeric } from "@/helpers/dateHelper";
-import {
-    useDeleteMovieCollectionEntry,
-    useMovieCollection,
-} from "@/modules/movieCollection";
+import type { FC } from "react";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     IconActionV2,
     SwipeAction,
     SwipeView,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import type { FC } from "react";
-import { FlatList, RefreshControl } from "react-native-gesture-handler";
+
+import {
+    useDeleteMovieCollectionEntry,
+    useMovieCollection,
+} from "@/modules/movieCollection";
+
+import { EmptyState, PosterCard, ScreenLayout } from "@/components";
+import { displayFullNumeric } from "@/helpers/dateHelper";
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

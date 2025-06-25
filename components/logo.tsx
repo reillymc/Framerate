@@ -1,11 +1,12 @@
-import { ImageResources } from "@/assets/images";
+import { type FC, useMemo } from "react";
+import { Image, Pressable, StyleSheet } from "react-native";
 import {
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { type FC, useMemo } from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+
+import { ImageResources } from "@/assets/images";
 
 interface LogoProps {
     size?: "small" | "medium" | "large";

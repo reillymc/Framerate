@@ -1,9 +1,10 @@
-import { Redirect, Stack } from "expo-router";
 import type React from "react";
+import { Platform } from "react-native";
+import { Redirect, Stack } from "expo-router";
+
+import { useSession } from "@/modules/auth";
 
 import { useDefaultScreenOptions } from "@/hooks";
-import { useSession } from "@/modules/auth";
-import { Platform } from "react-native";
 
 // biome-ignore lint/style/useNamingConvention: expo unstable naming
 export const unstable_settings = {

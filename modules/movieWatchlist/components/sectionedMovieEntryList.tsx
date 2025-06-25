@@ -1,7 +1,13 @@
-import { Fade, PosterCard, usePosterDimensions } from "@/components";
-import { displayFullNumeric } from "@/helpers/dateHelper";
-import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks";
+import { type FC, useCallback, useMemo, useRef } from "react";
+import {
+    Platform,
+    SectionList,
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
 import {
     SwipeAction,
     SwipeView,
@@ -10,16 +16,12 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { BlurView } from "expo-blur";
-import { type FC, useCallback, useMemo, useRef } from "react";
-import {
-    Platform,
-    SectionList,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { Fade, PosterCard, usePosterDimensions } from "@/components";
+import { displayFullNumeric } from "@/helpers/dateHelper";
+import { getItemLayout } from "@/helpers/getItemLayout";
+import { useColorScheme } from "@/hooks";
+
 import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
 

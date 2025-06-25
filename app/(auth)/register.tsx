@@ -1,22 +1,4 @@
 import {
-    HeaderCloseAction,
-    HostActions,
-    ScreenLayout,
-    StatusIndicator,
-} from "@/components";
-import { WebPageLayout } from "@/constants/layout";
-import { useSession } from "@/modules/auth";
-import {
-    Action,
-    Button,
-    Form,
-    Text,
-    TextInput,
-    type ThemedStyles,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import {
     type FC,
     useCallback,
     useEffect,
@@ -26,11 +8,31 @@ import {
 } from "react";
 import {
     Platform,
+    type TextInput as rnTextInput,
     StyleSheet,
     View,
-    type TextInput as rnTextInput,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+    Action,
+    Button,
+    Form,
+    Text,
+    TextInput,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
+import { useSession } from "@/modules/auth";
+
+import {
+    HeaderCloseAction,
+    HostActions,
+    ScreenLayout,
+    StatusIndicator,
+} from "@/components";
+import { WebPageLayout } from "@/constants/layout";
 
 const emailValidator = /^\S+@\S+\.\S+$/;
 

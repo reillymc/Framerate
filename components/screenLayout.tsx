@@ -1,14 +1,17 @@
-import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
-import { useSession } from "@/modules/auth";
+import type { FC, ReactNode } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { useRouter, useSegments } from "expo-router";
 import {
     IconAction,
     IconActionV2,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { useRouter, useSegments } from "expo-router";
-import type { FC, ReactNode } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+
+import { useSession } from "@/modules/auth";
+
+import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
+
 import { Logo } from "./logo";
 
 interface ScreenLayoutProps {

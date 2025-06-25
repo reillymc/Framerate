@@ -1,10 +1,42 @@
 {
     "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-    "organizeImports": {
-        "enabled": true
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": {
+                    "level": "on",
+                    "options": {
+                        "groups": [
+                            [":URL:", ":BUN:", ":NODE:"],
+                            ":BLANK_LINE:",
+                            "react*",
+                            "expo*",
+                            [
+                                ":PACKAGE:",
+                                ":PACKAGE_WITH_PROTOCOL:",
+                                "!@modules/**"
+                            ],
+                            ":BLANK_LINE:",
+                            ["@modules/**", "@/modules/**"],
+                            ":BLANK_LINE:",
+                            ["@/**"],
+                            ":BLANK_LINE:",
+                            [":PATH:"]
+                        ]
+                    }
+                }
+            }
+        }
     },
     "files": {
-        "ignore": ["*.d.ts", ".expo", "services/**"]
+        "includes": [
+            "**",
+            "!**/*.d.ts",
+            "!**/.expo",
+            "!**/services/**",
+            "!**/dist/**"
+        ]
     },
     "formatter": {
         "enabled": true,
@@ -31,10 +63,10 @@
                 "noUnusedVariables": "warn"
             },
             "performance": {
-                "noReExportAll": "warn"
+                "noReExportAll": "warn",
+                "noNamespaceImport": "warn"
             },
             "style": {
-                "noNamespaceImport": "warn",
                 "noNegationElse": "warn",
                 "useCollapsedElseIf": "warn",
                 "useFragmentSyntax": "warn",
@@ -45,17 +77,30 @@
                         "requireAscii": true
                     }
                 },
-                "noDefaultExport": "warn"
+                "noDefaultExport": "warn",
+                "noParameterAssign": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error"
             },
             "suspicious": {
                 "useAwait": "warn",
                 "noEmptyBlockStatements": "warn"
+            },
+            "nursery": {
+                "noImportCycles": "on"
             }
         }
     },
     "overrides": [
         {
-            "include": ["app/**"],
+            "includes": ["**/app/**"],
             "linter": {
                 "rules": {
                     "style": {

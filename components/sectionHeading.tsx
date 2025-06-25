@@ -1,4 +1,3 @@
-import { Icon, Text } from "@reillymc/react-native-components";
 import type { FC } from "react";
 import {
     Pressable,
@@ -6,6 +5,7 @@ import {
     StyleSheet,
     type ViewStyle,
 } from "react-native";
+import { Icon, Text } from "@reillymc/react-native-components";
 
 interface SectionHeadingProps {
     title: string | undefined;

@@ -1,6 +1,5 @@
 import type React from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
-
 import { Text } from "@reillymc/react-native-components";
 
 interface EmptyStateProps {

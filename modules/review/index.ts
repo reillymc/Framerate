@@ -5,19 +5,19 @@
  * - Company
  */
 
-export { ratingToStars, starsToRating, getRatingLabel } from "./helpers";
 export {
     FilterableReviewList,
-    ReviewTimelineItem,
+    RatingHistoryChart,
     ReviewDisplay,
     ReviewForm,
-    RatingHistoryChart,
     ReviewSortButton,
     ReviewSummaryCard,
+    ReviewTimelineItem,
 } from "./components";
+export { getRatingLabel, ratingToStars, starsToRating } from "./helpers";
 export {
-    ReviewOrder,
-    ReviewSort,
     AbsoluteRatingScale,
     Review,
+    ReviewOrder,
+    ReviewSort,
 } from "./models";

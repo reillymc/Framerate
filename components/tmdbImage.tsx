@@ -1,6 +1,6 @@
-import { Image, type ImageStyle } from "expo-image";
 import type React from "react";
 import type { StyleProp } from "react-native";
+import { Image, type ImageStyle } from "expo-image";
 
 type TmdbImageProps = {
     type: "poster" | "backdrop";

@@ -5,11 +5,11 @@
  * - Auth
  */
 
-export { User, ParseConfiguration, MergeConfiguration } from "./models";
 export {
-    useUser,
-    useSaveUser,
-    useUsers,
     useCurrentUserConfig,
     useDeleteUser,
+    useSaveUser,
+    useUser,
+    useUsers,
 } from "./hooks";
+export { MergeConfiguration, ParseConfiguration, User } from "./models";

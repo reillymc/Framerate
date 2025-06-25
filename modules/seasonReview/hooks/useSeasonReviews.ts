@@ -1,6 +1,8 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
+
 import { useFramerateServices } from "@/hooks";
 import type { SeasonReviewApiFindByShowSeasonRequest } from "@/services";
-import { useInfiniteQuery } from "@tanstack/react-query";
+
 import { SeasonReviewKeys } from "./keys";
 
 export const useSeasonReviews = ({

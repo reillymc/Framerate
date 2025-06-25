@@ -1,9 +1,10 @@
+import type { FC, ReactNode } from "react";
+import { StyleSheet } from "react-native";
 import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC, ReactNode } from "react";
-import { StyleSheet } from "react-native";
+
 import { SectionHeading } from "./sectionHeading";
 
 interface ScreenSectionProps {

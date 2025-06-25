@@ -8,7 +8,7 @@
 export {
     useMovie,
     usePopularMovies,
-    useSearchMovies,
     useRecentMovieSearches,
+    useSearchMovies,
 } from "./hooks";
 export { Movie } from "./models";

@@ -1,6 +1,7 @@
-import { ScreenLayout } from "@/components";
-import { WebPageModal } from "@/constants/layout";
-import { useSession } from "@/modules/auth";
+import type { FC } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { Stack, useRouter } from "expo-router";
 import {
     Action,
     Text,
@@ -8,10 +9,11 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+
+import { useSession } from "@/modules/auth";
+
+import { ScreenLayout } from "@/components";
+import { WebPageModal } from "@/constants/layout";
 
 const ServerScreen: FC = () => {
     const router = useRouter();

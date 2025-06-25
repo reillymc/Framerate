@@ -1,3 +1,20 @@
+import { useMemo } from "react";
+import {
+    type ListRenderItem,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
+import {
+    Tag,
+    Text,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
+import type { Company } from "@/modules/company";
+
 import {
     BlurIconAction,
     ContextMenu,
@@ -12,21 +29,7 @@ import {
     WebDropdownMenu,
 } from "@/components/webDropdown";
 import { MediaType } from "@/constants/mediaTypes";
-import type { Company } from "@/modules/company";
-import {
-    Tag,
-    Text,
-    type ThemedStyles,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { useMemo } from "react";
-import {
-    type ListRenderItem,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    View,
-} from "react-native";
+
 import { getRatingLabel } from "../helpers";
 import {
     AbsoluteRatingScale,

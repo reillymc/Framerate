@@ -1,12 +1,12 @@
+import type { FC } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
 import {
     Action,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
 import { SvgCssUri } from "react-native-svg/css";
 
 const Credits: FC = () => {

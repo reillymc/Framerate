@@ -5,6 +5,7 @@
  * - Show
  */
 
+export { SectionedShowEntryList, ShowUpNextList } from "./components";
 export {
     useDeleteShowWatchlistEntry,
     useSaveShowWatchlistEntry,
@@ -12,4 +13,3 @@ export {
     useShowWatchlistEntry,
 } from "./hooks";
 export { ShowWatchlist } from "./models";
-export { SectionedShowEntryList, ShowUpNextList } from "./components";

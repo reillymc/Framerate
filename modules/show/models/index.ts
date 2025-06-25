@@ -1,4 +1,4 @@
-export { Show, ExternalIds } from "../../../services";
+export { ExternalIds, Show } from "../../../services";
 
 export enum ShowType {
     Scripted = "Scripted",

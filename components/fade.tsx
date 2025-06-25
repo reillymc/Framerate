@@ -1,8 +1,9 @@
-import { useColorScheme } from "@/hooks";
-import { useTheme } from "@reillymc/react-native-components";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { type FC, useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
+import { useTheme } from "@reillymc/react-native-components";
+import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
+
+import { useColorScheme } from "@/hooks";
 
 type FadeProps = {
     height: number;

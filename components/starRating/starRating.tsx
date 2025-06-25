@@ -1,4 +1,3 @@
-import { useTheme } from "@reillymc/react-native-components";
 import React from "react";
 import {
     Animated,
@@ -9,6 +8,8 @@ import {
     View,
     type ViewStyle,
 } from "react-native";
+import { useTheme } from "@reillymc/react-native-components";
+
 import { getStars } from "./helpers";
 import { StarIcon } from "./starIcon";
 

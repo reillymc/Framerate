@@ -1,13 +1,15 @@
-import { Poster, usePosterDimensions } from "@/components/poster";
-import { usePopularShows } from "@/modules/show";
-import { useShowWatchlist } from "@/modules/showWatchlist";
+import type { FC } from "react";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
 import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+
+import { usePopularShows } from "@/modules/show";
+import { useShowWatchlist } from "@/modules/showWatchlist";
+
+import { Poster, usePosterDimensions } from "@/components/poster";
 
 const Browse: FC = () => {
     const router = useRouter();

@@ -1,4 +1,5 @@
-import type { RecentSearch } from "@/hooks";
+import type { FC } from "react";
+import { FlatList, Pressable, StyleSheet } from "react-native";
 import {
     SwipeAction,
     SwipeView,
@@ -6,8 +7,8 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { FlatList, Pressable, StyleSheet } from "react-native";
+
+import type { RecentSearch } from "@/hooks";
 
 type RecentSearchListProps = {
     recentSearches: RecentSearch[];

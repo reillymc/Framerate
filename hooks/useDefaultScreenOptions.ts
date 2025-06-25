@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-
-// biome-ignore lint/style/useImportType: transitive dependency
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { useTheme } from "@reillymc/react-native-components";
 import { Platform } from "react-native";
+import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
+import { useTheme } from "@reillymc/react-native-components";
 
 export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
     const { theme } = useTheme();

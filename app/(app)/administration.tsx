@@ -1,6 +1,7 @@
-import { Accordion, ScreenLayout, StatusIndicator } from "@/components";
-import { useFramerateServices } from "@/hooks";
-import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
+import { type FC, useCallback, useState } from "react";
+import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import { setStringAsync, setUrlAsync } from "expo-clipboard";
+import { Stack, useRouter } from "expo-router";
 import {
     Action,
     Button,
@@ -10,10 +11,12 @@ import {
     ToggleInput,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { setStringAsync, setUrlAsync } from "expo-clipboard";
-import { Stack, useRouter } from "expo-router";
-import { type FC, useCallback, useState } from "react";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+
+import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
+
+import { Accordion, ScreenLayout, StatusIndicator } from "@/components";
+import { useFramerateServices } from "@/hooks";
+
 import app from "../../app.json";
 
 const Profile: FC = () => {

@@ -1,8 +1,18 @@
-import { Fade, type PosterProperties } from "@/components";
+import { type FC, useCallback, useMemo, useRef } from "react";
 import {
-    AnimatedFlatList,
-    type AnimatedFlatListProps,
-} from "@/components/animatedFlatList";
+    type CellRendererProps,
+    type FlatList,
+    type ListRenderItem,
+    Pressable,
+    StyleSheet,
+    useWindowDimensions,
+} from "react-native";
+import Animated, {
+    type StyleProps,
+    useAnimatedScrollHandler,
+    useSharedValue,
+} from "react-native-reanimated";
+import { DeviceType, deviceType } from "expo-device";
 import {
     Icon,
     Text,
@@ -17,21 +27,13 @@ import {
     subDays,
     subMonths,
 } from "date-fns";
-import { DeviceType, deviceType } from "expo-device";
-import { type FC, useCallback, useMemo, useRef } from "react";
+
+import { Fade, type PosterProperties } from "@/components";
 import {
-    type CellRendererProps,
-    type FlatList,
-    type ListRenderItem,
-    Pressable,
-    StyleSheet,
-    useWindowDimensions,
-} from "react-native";
-import Animated, {
-    useAnimatedScrollHandler,
-    useSharedValue,
-    type StyleProps,
-} from "react-native-reanimated";
+    AnimatedFlatList,
+    type AnimatedFlatListProps,
+} from "@/components/animatedFlatList";
+
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
 import { MovieEntryStackedPoster } from "./movieEntryStackedPoster";

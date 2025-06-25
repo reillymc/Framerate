@@ -1,6 +1,7 @@
-import { CustomTabBar } from "@/components";
-import { Tabs, useSegments } from "expo-router";
 import type { FC } from "react";
+import { Tabs, useSegments } from "expo-router";
+
+import { CustomTabBar } from "@/components";
 
 const MAIN_TABS = ["movies", "shows", "browse"];
 

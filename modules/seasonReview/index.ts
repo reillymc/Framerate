@@ -8,7 +8,7 @@
  */
 
 export {
-    useSeasonReview,
     useSaveSeasonReview,
+    useSeasonReview,
     useSeasonReviews,
 } from "./hooks";
