@@ -7,7 +7,7 @@ import {
     View,
     type ViewStyle,
 } from "react-native";
-
+import { BlurView } from "expo-blur";
 import { Octicons } from "@expo/vector-icons";
 import {
     type ActionVariant,
@@ -15,7 +15,6 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { BlurView } from "expo-blur";
 
 export const getLabelColor = (
     { color }: Theme,

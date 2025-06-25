@@ -1,17 +1,19 @@
-import { HeaderCloseAction, ScreenLayout } from "@/components";
-import {
-    useSaveShowCollection,
-    useShowCollection,
-} from "@/modules/showCollection";
+import { type FC, useEffect, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     Action,
     TextInput,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { type FC, useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+
+import {
+    useSaveShowCollection,
+    useShowCollection,
+} from "@/modules/showCollection";
+
+import { HeaderCloseAction, ScreenLayout } from "@/components";
 
 const EditCollection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

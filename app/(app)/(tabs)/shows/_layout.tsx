@@ -1,7 +1,8 @@
-import { useDefaultScreenOptions } from "@/hooks";
-import { Stack } from "expo-router";
 import type { FC } from "react";
 import { Platform } from "react-native";
+import { Stack } from "expo-router";
+
+import { useDefaultScreenOptions } from "@/hooks";
 
 const ShowsStack: FC = () => {
     const screenOptions = useDefaultScreenOptions();

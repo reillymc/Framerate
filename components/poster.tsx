@@ -1,13 +1,14 @@
+import { type FC, useCallback, useMemo } from "react";
 import {
     Platform,
     Pressable,
     type StyleProp,
     StyleSheet,
+    useWindowDimensions,
     View,
     type ViewStyle,
-    useWindowDimensions,
 } from "react-native";
-
+import { DeviceType, deviceType } from "expo-device";
 import {
     Text,
     type ThemedStyles,
@@ -15,8 +16,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { DeviceType, deviceType } from "expo-device";
-import { type FC, useCallback, useMemo } from "react";
+
 import { ContextMenu, type MenuElementConfig } from "./contextMenu";
 import { TmdbImage } from "./tmdbImage";
 

@@ -6,14 +6,14 @@
  */
 
 export {
-    useDeleteMovieWatchlistEntry,
-    useSaveMovieWatchlistEntry,
-    useMovieWatchlist,
-    useMovieWatchlistEntry,
-} from "./hooks";
-export { MovieWatchlist } from "./models";
-export {
-    SectionedMovieEntryList,
     MovieEntriesChart,
     MovieEntriesSummary,
+    SectionedMovieEntryList,
 } from "./components";
+export {
+    useDeleteMovieWatchlistEntry,
+    useMovieWatchlist,
+    useMovieWatchlistEntry,
+    useSaveMovieWatchlistEntry,
+} from "./hooks";
+export { MovieWatchlist } from "./models";

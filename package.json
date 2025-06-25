@@ -10,7 +10,7 @@
         "test": "jest --watchAll",
         "build:ios": "npm ci && expo prebuild --platform=ios && cd ios && pod install && cd ..",
         "build:android": "npm ci && expo prebuild --platform=android",
-        "lint": "biome lint",
+        "lint": "biome check",
         "typecheck": "tsc --noEmit",
         "format": "biome format --write .",
         "depcruise:modules": "depcruise modules --include-only '^modules' --collapse 2 --output-type dot | dot -T svg > docs/module-dependency-graph.svg",
@@ -61,7 +61,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.20.0",
-        "@biomejs/biome": "^1.9.3",
+        "@biomejs/biome": "2.0.4",
         "@openapitools/openapi-generator-cli": "^2.15.3",
         "@types/react": "~19.0.10",
         "dependency-cruiser": "^16.8.0",

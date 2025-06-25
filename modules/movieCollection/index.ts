@@ -7,13 +7,13 @@
  */
 
 export {
-    useSaveMovieCollection,
+    useCollectionsForMovie,
+    useDeleteMovieCollection,
+    useDeleteMovieCollectionEntry,
+    useFilteredMovieCollections,
     useMovieCollection,
     useMovieCollections,
-    useCollectionsForMovie,
-    useDeleteMovieCollectionEntry,
+    useSaveMovieCollection,
     useSaveMovieCollectionEntry,
-    useDeleteMovieCollection,
-    useFilteredMovieCollections,
 } from "./hooks";
 export { MovieEntry } from "./models";

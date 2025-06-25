@@ -1,5 +1,7 @@
-import { useFramerateServices } from "@/hooks";
 import { useQuery } from "@tanstack/react-query";
+
+import { useFramerateServices } from "@/hooks";
+
 import { MovieKeys } from "./keys";
 
 export const usePopularMovies = () => {

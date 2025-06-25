@@ -1,5 +1,11 @@
-import { ScreenLayout } from "@/components";
-import { Poster, usePosterDimensions } from "@/components/poster";
+import type { FC } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import {
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
 import { usePopularMovies } from "@/modules/movie";
 import {
     useDeleteMovieWatchlistEntry,
@@ -7,13 +13,7 @@ import {
     useSaveMovieWatchlistEntry,
 } from "@/modules/movieWatchlist";
 
-import {
-    type ThemedStyles,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import type { FC } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Poster, ScreenLayout, usePosterDimensions } from "@/components";
 
 const Browse: FC = () => {
     const router = useRouter();

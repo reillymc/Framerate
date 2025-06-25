@@ -1,3 +1,5 @@
+import { type FC, useMemo } from "react";
+import { StyleSheet, View } from "react-native";
 import {
     Icon,
     Text,
@@ -5,8 +7,6 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { type FC, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
 
 interface StatusIndicatorProps {
     success?: string;

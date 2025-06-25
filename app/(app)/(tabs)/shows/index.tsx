@@ -1,11 +1,24 @@
+import { type FC, useMemo, useRef, useState } from "react";
 import {
-    PosterCard,
-    RecentSearchList,
-    ResponsiveFlatList,
-    SectionHeading,
-} from "@/components";
-import { Poster, usePosterDimensions } from "@/components/poster";
-import { displayYear } from "@/helpers/dateHelper";
+    FlatList,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
+import type { SearchBarCommands } from "react-native-screens";
+import { Stack, useRouter } from "expo-router";
+import {
+    IconAction,
+    IconActionV2,
+    Tag,
+    Text,
+    type ThemedStyles,
+    Undefined,
+    useTheme,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
 import { ReviewSummaryCard } from "@/modules/review";
 import {
     usePopularShows,
@@ -21,26 +34,16 @@ import {
     useShowWatchlist,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
+
 import {
-    IconAction,
-    IconActionV2,
-    Tag,
-    Text,
-    type ThemedStyles,
-    Undefined,
-    useTheme,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import { type FC, useMemo, useRef, useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    View,
-} from "react-native";
-import type { SearchBarCommands } from "react-native-screens";
+    Poster,
+    PosterCard,
+    RecentSearchList,
+    ResponsiveFlatList,
+    SectionHeading,
+    usePosterDimensions,
+} from "@/components";
+import { displayYear } from "@/helpers/dateHelper";
 
 const Shows: FC = () => {
     const { data: reviews } = useShowReviews();

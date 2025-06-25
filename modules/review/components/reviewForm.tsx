@@ -1,4 +1,12 @@
-import { Accordion, StarRating } from "@/components";
+import { type FC, useRef } from "react";
+import {
+    Platform,
+    type TextInput as rnTextInput,
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { DeviceType, deviceType } from "expo-device";
 import DateTimePicker, {
     DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
@@ -10,19 +18,13 @@ import {
     TextInput,
     type ThemedStyles,
     ToggleInput,
-    type ValueItem,
     useTheme,
     useThemedStyles,
+    type ValueItem,
 } from "@reillymc/react-native-components";
-import { DeviceType, deviceType } from "expo-device";
-import { type FC, useRef } from "react";
-import {
-    Platform,
-    StyleSheet,
-    View,
-    type TextInput as rnTextInput,
-    useWindowDimensions,
-} from "react-native";
+
+import { Accordion, StarRating } from "@/components";
+
 import { ratingToStars, starsToRating } from "../helpers";
 
 interface ReviewFormProps {

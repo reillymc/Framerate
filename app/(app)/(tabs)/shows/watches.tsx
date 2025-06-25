@@ -1,4 +1,7 @@
-import { MediaType } from "@/constants/mediaTypes";
+import { type FC, useMemo, useState } from "react";
+import { Stack, useRouter } from "expo-router";
+import { Undefined } from "@reillymc/react-native-components";
+
 import { useCompany } from "@/modules/company";
 import {
     AbsoluteRatingScale,
@@ -10,9 +13,8 @@ import {
 } from "@/modules/review";
 import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
-import { Undefined } from "@reillymc/react-native-components";
-import { Stack, useRouter } from "expo-router";
-import { type FC, useMemo, useState } from "react";
+
+import { MediaType } from "@/constants/mediaTypes";
 
 const Reviews: FC = () => {
     const [atVenue, setAtVenue] = useState<string | undefined>(undefined);

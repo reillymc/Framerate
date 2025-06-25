@@ -1,3 +1,5 @@
+import type { FC } from "react";
+import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import {
     Icon,
     IconActionV2,
@@ -5,8 +7,6 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 
 interface HostActionsProps {
     host: string | null;

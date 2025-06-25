@@ -1,5 +1,14 @@
-import { HeaderCloseAction } from "@/components";
-import { formatForSave } from "@/helpers/dateHelper";
+import { type FC, useEffect, useMemo, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+    Action,
+    type ThemedStyles,
+    ToggleInput,
+    Undefined,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
 import { useCompany } from "@/modules/company";
 import { ReviewForm } from "@/modules/review";
 import { useShow } from "@/modules/show";
@@ -9,16 +18,10 @@ import {
     useShowWatchlistEntry,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
-import {
-    Action,
-    type ThemedStyles,
-    ToggleInput,
-    Undefined,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { type FC, useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+
+import { HeaderCloseAction } from "@/components";
+import { formatForSave } from "@/helpers/dateHelper";
+
 import { useSelectionModal } from "../../selectionModal";
 
 const EditReview: FC = () => {

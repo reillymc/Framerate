@@ -1,6 +1,18 @@
-import { HostActions, Logo, ScreenLayout, StatusIndicator } from "@/components";
-import { WebPageLayout } from "@/constants/layout";
-import { useSession } from "@/modules/auth";
+import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import {
+    Platform,
+    type TextInput as rnTextInput,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
+import Animated, {
+    LinearTransition,
+    ZoomInEasyUp,
+    ZoomOutEasyUp,
+} from "react-native-reanimated";
+import { DeviceType, deviceType } from "expo-device";
+import { useRouter } from "expo-router";
 import {
     Action,
     Button,
@@ -10,21 +22,11 @@ import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { DeviceType, deviceType } from "expo-device";
-import { useRouter } from "expo-router";
-import { type FC, useCallback, useEffect, useRef, useState } from "react";
-import {
-    Platform,
-    ScrollView,
-    StyleSheet,
-    View,
-    type TextInput as rnTextInput,
-} from "react-native";
-import Animated, {
-    LinearTransition,
-    ZoomInEasyUp,
-    ZoomOutEasyUp,
-} from "react-native-reanimated";
+
+import { useSession } from "@/modules/auth";
+
+import { HostActions, Logo, ScreenLayout, StatusIndicator } from "@/components";
+import { WebPageLayout } from "@/constants/layout";
 
 const LoginScreen: FC = () => {
     const router = useRouter();

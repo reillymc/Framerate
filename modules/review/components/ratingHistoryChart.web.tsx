@@ -1,4 +1,5 @@
 import type { FC } from "react";
+
 import type { Review } from "../models";
 
 interface RatingHistoryChartProps {

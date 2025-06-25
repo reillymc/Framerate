@@ -1,15 +1,17 @@
-import type { MediaType } from "@/constants/mediaTypes";
-import { useColorScheme } from "@/hooks";
-import type { MediaExternalLink } from "@/modules/meta";
+import { type FC, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import { openURL } from "expo-linking";
 import {
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { openURL } from "expo-linking";
-import { type FC, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
 import { SvgCssUri } from "react-native-svg/css";
+
+import type { MediaExternalLink } from "@/modules/meta";
+
+import type { MediaType } from "@/constants/mediaTypes";
+import { useColorScheme } from "@/hooks";
 
 interface MediaLinksProps
     extends Pick<

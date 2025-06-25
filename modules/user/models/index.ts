@@ -1,4 +1,5 @@
 import type { DeepPartial } from "@reillymc/react-native-components";
+
 export { User } from "../../../services";
 
 export type Configuration = {

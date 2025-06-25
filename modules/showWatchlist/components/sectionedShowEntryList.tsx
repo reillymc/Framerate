@@ -1,8 +1,14 @@
-import { Fade, PosterCard, usePosterDimensions } from "@/components";
-import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
-import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks";
-import { ActiveStatuses, type ShowStatus } from "@/modules/show";
+import { type FC, useCallback, useMemo, useRef } from "react";
+import {
+    Platform,
+    SectionList,
+    type SectionListData,
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
 import {
     SwipeAction,
     SwipeView,
@@ -13,17 +19,14 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { addMonths, isBefore } from "date-fns";
-import { BlurView } from "expo-blur";
-import { type FC, useCallback, useMemo, useRef } from "react";
-import {
-    Platform,
-    SectionList,
-    type SectionListData,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { ActiveStatuses, type ShowStatus } from "@/modules/show";
+
+import { Fade, PosterCard, usePosterDimensions } from "@/components";
+import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
+import { getItemLayout } from "@/helpers/getItemLayout";
+import { useColorScheme } from "@/hooks";
+
 import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
 import type { ShowWatchlistEntry } from "../models";

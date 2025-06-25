@@ -1,12 +1,13 @@
-import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
+import type { FC } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import type { Tabs } from "expo-router";
 import {
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { Tabs } from "expo-router";
-import type { FC } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+
+import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
 
 type CustomTabBarProps = Parameters<
     NonNullable<Parameters<typeof Tabs>[0]["tabBar"]>

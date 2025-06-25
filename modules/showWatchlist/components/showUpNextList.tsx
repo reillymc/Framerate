@@ -1,5 +1,5 @@
-import { Poster } from "@/components/poster";
-import { ActiveStatuses, type ShowStatus } from "@/modules/show";
+import { type FC, useMemo, useRef } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
     Text,
     type ThemedStyles,
@@ -7,8 +7,11 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { addDays, isBefore, isSameDay, subDays } from "date-fns";
-import { type FC, useMemo, useRef } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+
+import { ActiveStatuses, type ShowStatus } from "@/modules/show";
+
+import { Poster } from "@/components/poster";
+
 import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 
 interface ShowUpNextListProps {

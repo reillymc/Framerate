@@ -1,5 +1,11 @@
-import { FontResources } from "@/assets/fonts";
-import { useColorScheme } from "@/hooks";
+import { type FC, useMemo } from "react";
+import { View } from "react-native";
+import {
+    runOnJS,
+    type SharedValue,
+    useDerivedValue,
+    useSharedValue,
+} from "react-native-reanimated";
 import { useTheme } from "@reillymc/react-native-components";
 import {
     Circle,
@@ -10,20 +16,16 @@ import {
     vec,
 } from "@shopify/react-native-skia";
 import { subYears } from "date-fns";
-import { type FC, useMemo } from "react";
-import { View } from "react-native";
-import {
-    type SharedValue,
-    runOnJS,
-    useDerivedValue,
-    useSharedValue,
-} from "react-native-reanimated";
 import {
     CartesianChart,
     Line,
     Scatter,
     useChartPressState,
 } from "victory-native";
+
+import { FontResources } from "@/assets/fonts";
+import { useColorScheme } from "@/hooks";
+
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 
@@ -87,7 +89,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
 
             if (!(oldestDateInList && newestDateInList))
                 return {
-                    date: new Date().getTime(),
+                    date: Date.now(),
                     rating: rating,
                     filteredRatings: undefined,
                 };
@@ -132,7 +134,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                         x: "outset",
                         y: "inset",
                     },
-                    // biome-ignore lint/style/useNamingConvention: <explanation>
+                    // biome-ignore lint/style/useNamingConvention: victory internal prop names
                     formatXLabel: (value) => {
                         if (!value) return "";
                         const date = new Date(value);

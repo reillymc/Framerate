@@ -1,10 +1,10 @@
+import type { FC } from "react";
+import { StyleSheet } from "react-native";
 import {
     IconAction,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { StyleSheet } from "react-native";
 
 interface HeaderCloseActionProps {
     onClose: () => void;

@@ -1,5 +1,7 @@
-import { useFramerateServices } from "@/hooks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useFramerateServices } from "@/hooks";
+
 import type { MovieWatchlist } from "../models";
 import { MovieWatchlistKeys } from "./keys";
 

@@ -5,11 +5,11 @@
  * - Auth
  */
 
+export { ActiveStatuses, ShowStatus } from "./constants";
 export {
-    useShow,
     usePopularShows,
-    useSearchShows,
     useRecentShowSearches,
+    useSearchShows,
+    useShow,
 } from "./hooks";
 export { Show, ShowType } from "./models";
-export { ActiveStatuses, ShowStatus } from "./constants";

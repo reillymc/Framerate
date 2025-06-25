@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useFramerateServices } from "@/hooks";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
+
 import { MovieKeys } from "./keys";
 
 export const useSearchMovies = (query: string) => {

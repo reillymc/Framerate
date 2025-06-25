@@ -1,20 +1,22 @@
-import { MediaFooterButtons, MediaLinks, TmdbImage } from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
-import { useClientConfig } from "@/modules/meta";
-import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
-import { useSeason } from "@/modules/season";
-import { useSeasonReviews } from "@/modules/seasonReview";
-import { useShow } from "@/modules/show";
-import { useCurrentUserConfig } from "@/modules/user";
+import { useMemo } from "react";
+import { FlatList, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     Text,
     type ThemedStyles,
     Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo } from "react";
-import { FlatList, StyleSheet, View, useWindowDimensions } from "react-native";
+
+import { useClientConfig } from "@/modules/meta";
+import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
+import { useSeason } from "@/modules/season";
+import { useSeasonReviews } from "@/modules/seasonReview";
+import { useShow } from "@/modules/show";
+import { useCurrentUserConfig } from "@/modules/user";
+
+import { MediaFooterButtons, MediaLinks, TmdbImage } from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
 
 const Season: React.FC = () => {
     const {

@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noExplicitAny: anys required for now in type definitions
 import { type ForwardedRef, forwardRef, useMemo } from "react";
 import {
     type CellRendererProps,
@@ -11,22 +12,17 @@ import Animated, {
 } from "react-native-reanimated";
 
 const AnimatedFlatListBase = Animated.createAnimatedComponent(
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     FlatList as any,
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 ) as any;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 interface AnimatedFlatListBaseProps extends CellRendererProps<any> {
     inverted?: boolean;
     horizontal?: boolean;
 }
 
 const createCellRenderer = (
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     itemLayoutAnimation?: any,
     cellStyle?: StyleProps,
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     cellGen?: (props: CellRendererProps<any>) => StyleProps,
 ) => {
     const cellRenderer = (props: AnimatedFlatListBaseProps) => {
@@ -53,7 +49,6 @@ export interface AnimatedFlatListProps<ItemT> extends FlatListProps<ItemT> {
  * Custom implementation of Animated.FlatList which supports CellRendererComponent styling.
  */
 export const AnimatedFlatList = forwardRef(
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     (props: AnimatedFlatListProps<any>, ref: ForwardedRef<FlatList>) => {
         const {
             itemLayoutAnimation,

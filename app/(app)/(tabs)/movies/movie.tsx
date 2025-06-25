@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { type FC, useMemo } from "react";
 import {
     FlatList,
     RefreshControl,
@@ -6,7 +6,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     IconAction,
     Tag,
@@ -16,17 +16,6 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import {
-    ContextMenu,
-    MediaFooterButtons,
-    MediaLinks,
-    ParallaxScrollView,
-    Poster,
-    ScreenLayout,
-    TmdbImage,
-    usePosterDimensions,
-} from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
 import { useClientConfig } from "@/modules/meta";
 import { useMovie } from "@/modules/movie";
 import {
@@ -41,7 +30,18 @@ import {
 } from "@/modules/movieWatchlist";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-import { type FC, useMemo } from "react";
+
+import {
+    ContextMenu,
+    MediaFooterButtons,
+    MediaLinks,
+    ParallaxScrollView,
+    Poster,
+    ScreenLayout,
+    TmdbImage,
+    usePosterDimensions,
+} from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
 
 const Movie: FC = () => {
     const {

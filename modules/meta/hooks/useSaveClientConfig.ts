@@ -1,6 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useFramerateServices } from "@/hooks";
 import type { MetaApiUpdateClientConfigRequest } from "@/services";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import type { ClientConfig } from "../models";
 import { MetaKeys } from "./keys";
 

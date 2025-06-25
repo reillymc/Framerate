@@ -1,23 +1,13 @@
+import { type FC, useCallback, useRef, useState } from "react";
 import {
-    Accordion,
-    HeaderCloseAction,
-    ScreenLayout,
-    SegmentedControl,
-} from "@/components";
-import { useHealth } from "@/hooks";
-import { useSession } from "@/modules/auth";
-import {
-    useCompany,
-    useDeleteCompany,
-    useSaveCompany,
-} from "@/modules/company";
-import {
-    useCurrentUserConfig,
-    useDeleteUser,
-    useSaveUser,
-    useUser,
-} from "@/modules/user";
-import { MergeConfiguration } from "@/modules/user";
+    Alert,
+    Pressable,
+    type TextInput as rnTextInput,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native";
+import { Stack, useRouter } from "expo-router";
 import {
     Button,
     IconActionV2,
@@ -29,17 +19,28 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { useQueryClient } from "@tanstack/react-query";
-import { Stack, useRouter } from "expo-router";
-import { type FC, useCallback, useRef, useState } from "react";
-import {
-    Alert,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    View,
-    type TextInput as rnTextInput,
-} from "react-native";
 
+import { useSession } from "@/modules/auth";
+import {
+    useCompany,
+    useDeleteCompany,
+    useSaveCompany,
+} from "@/modules/company";
+import {
+    MergeConfiguration,
+    useCurrentUserConfig,
+    useDeleteUser,
+    useSaveUser,
+    useUser,
+} from "@/modules/user";
+
+import {
+    Accordion,
+    HeaderCloseAction,
+    ScreenLayout,
+    SegmentedControl,
+} from "@/components";
+import { useHealth } from "@/hooks";
 import { version } from "@/package.json";
 
 const Profile: FC = () => {

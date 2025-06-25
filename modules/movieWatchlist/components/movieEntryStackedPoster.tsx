@@ -1,15 +1,16 @@
+import type { FC } from "react";
 import { Platform } from "react-native";
 import Animated, {
     FadeIn,
     FadeOut,
+    interpolate,
     LinearTransition,
     type SharedValue,
-    interpolate,
     useAnimatedStyle,
 } from "react-native-reanimated";
 
 import { Poster, type PosterProperties } from "@/components";
-import type { FC } from "react";
+
 import type { MovieWatchlistEntry } from "../models";
 
 export interface MovieEntryStackedPosterProps

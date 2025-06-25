@@ -1,12 +1,14 @@
-import { StarRatingDisplay } from "@/components";
-import { displayFull } from "@/helpers/dateHelper";
+import type { FC } from "react";
+import { StyleSheet } from "react-native";
 import {
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { StyleSheet } from "react-native";
+
+import { StarRatingDisplay } from "@/components";
+import { displayFull } from "@/helpers/dateHelper";
+
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 

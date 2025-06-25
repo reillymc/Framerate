@@ -1,12 +1,12 @@
+import { useMemo } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import RnSegmentedControl from "@react-native-segmented-control/segmented-control";
 import {
     BaseInput,
     type BaseInputProps,
-    type ValueItem,
     useTheme,
+    type ValueItem,
 } from "@reillymc/react-native-components";
-import { useMemo } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
 
 interface SegmentedControlProps<T extends string | number>
     extends Pick<BaseInputProps, "label"> {

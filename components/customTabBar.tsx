@@ -1,11 +1,3 @@
-import { useColorScheme } from "@/hooks";
-import {
-    Text,
-    type ThemedStyles,
-    useThemedStyles,
-} from "@reillymc/react-native-components";
-import { BlurView } from "expo-blur";
-import type { Tabs } from "expo-router";
 import type { FC } from "react";
 import { Platform, Pressable, StyleSheet } from "react-native";
 import Animated, {
@@ -14,6 +6,15 @@ import Animated, {
     ZoomOutEasyDown,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
+import type { Tabs } from "expo-router";
+import {
+    Text,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
+
+import { useColorScheme } from "@/hooks";
 
 type CustomTabBarProps = Parameters<
     NonNullable<Parameters<typeof Tabs>[0]["tabBar"]>

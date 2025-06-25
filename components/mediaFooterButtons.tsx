@@ -1,3 +1,6 @@
+import type { FC } from "react";
+import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
     IconActionV2,
     Text,
@@ -5,9 +8,7 @@ import {
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
-import type { FC } from "react";
-import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { Fade } from "./fade";
 
 interface MediaFooterButtonsProps {
