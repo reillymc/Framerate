@@ -9,10 +9,10 @@ import {
     type ViewStyle,
 } from "react-native";
 import { DeviceType, deviceType } from "expo-device";
+import { Undefined } from "@reillymc/es-utils";
 import {
     Text,
     type ThemedStyles,
-    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";

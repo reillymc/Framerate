@@ -1,4 +1,4 @@
-import type { DeepPartial } from "@reillymc/react-native-components";
+import type { DeepPartial } from "@reillymc/es-utils";
 
 export { User } from "../../../services";
 
