@@ -103,7 +103,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     ) : (
                         <Action
                             label={date.toDateString() ?? "No Date"}
-                            style={styles.androidDatePicker}
+                            containerStyle={styles.androidDatePicker}
                             onPress={() =>
                                 DateTimePickerAndroid.open({
                                     mode: "date",
@@ -142,14 +142,12 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                         scale: 1,
                     }}
                 />
-
                 <TextInput
                     value={description}
                     onChangeText={onDescriptionChange}
                     multiline
-                    numberOfLines={3}
                     containerStyle={styles.input}
-                    style={styles.reviewInput}
+                    inputStyle={styles.reviewInput}
                     maxLength={1200}
                 />
             </Accordion>
@@ -166,6 +164,9 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                         dropdownRef.current?.blur();
                     }
                 }}
+                selectedItem={
+                    venue ? { value: venue, label: venue } : undefined
+                }
                 containerStyle={styles.input}
                 clearButtonMode="while-editing"
                 items={venueOptions.map((venue) => ({
@@ -179,8 +180,8 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 selectionMode="multi"
                 selection={company}
                 items={companyOptions}
-                onAdd={onCompanyPress}
                 containerStyle={styles.input}
+                onAdd={onCompanyPress}
             />
         </>
     );
@@ -214,7 +215,7 @@ const createStyles = ({
         },
         reviewInputContainer: {
             marginLeft:
-                toggleInput.label.gap + toggleInput.indicator.size.regular,
+                toggleInput.label.gap + toggleInput.indicator.size.medium,
             marginBottom: spacing.medium,
         },
         reviewInput: {

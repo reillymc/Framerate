@@ -17,7 +17,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
     Action,
     Button,
-    Form,
+    FormContainer,
     Text,
     TextInput,
     type ThemedStyles,
@@ -114,7 +114,7 @@ const RegisterScreen: FC = () => {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.container}
             >
-                <Form style={styles.form}>
+                <FormContainer style={styles.form}>
                     {Platform.OS === "web" && (
                         <View style={styles.titleContainer}>
                             <Text variant="title">Register Account</Text>
@@ -128,7 +128,6 @@ const RegisterScreen: FC = () => {
                         submitBehavior="submit"
                         textContentType="emailAddress"
                         keyboardType="email-address"
-                        width="full"
                         maxLength={60}
                         value={email}
                         hasError={isEmailInvalid}
@@ -182,7 +181,6 @@ const RegisterScreen: FC = () => {
                         clearButtonMode="while-editing"
                         label="Password"
                         textContentType="password"
-                        width="full"
                         maxLength={60}
                         secureTextEntry
                         value={password}
@@ -191,9 +189,9 @@ const RegisterScreen: FC = () => {
                     />
                     <Button
                         label="Register"
+                        variant="primary"
                         onPress={handleRegister}
-                        style={styles.confirmButton}
-                        size="large"
+                        containerStyle={styles.confirmButton}
                         disabled={!formValid}
                     />
                     {Platform.OS === "web" ? (
@@ -217,7 +215,7 @@ const RegisterScreen: FC = () => {
                             }
                         />
                     )}
-                </Form>
+                </FormContainer>
             </ScrollView>
         </ScreenLayout>
     );
@@ -250,7 +248,6 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         nameInputContainer: {
             flexDirection: "row",
             gap: spacing.medium,
-            width: "100%",
         },
         confirmButton: {
             marginTop: spacing.large,

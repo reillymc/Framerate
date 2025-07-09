@@ -8,13 +8,14 @@ import {
 } from "react-native";
 import type { SearchBarCommands } from "react-native-screens";
 import { Stack, useRouter } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
+import { Undefined } from "@reillymc/es-utils";
 import {
     IconAction,
-    IconActionV2,
+    IconButton,
     Tag,
     Text,
     type ThemedStyles,
-    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -103,7 +104,8 @@ const Shows: FC = () => {
                             addSearch({ searchValue: nativeEvent.text }),
                     },
                     headerRight: () => (
-                        <IconActionV2
+                        <IconButton
+                            iconSet={Octicons}
                             iconName="person"
                             onPress={() =>
                                 router.push({ pathname: "/profile" })
@@ -353,10 +355,10 @@ const Shows: FC = () => {
                     ListFooterComponent={
                         reviewList.length ? (
                             <IconAction
+                                iconSet={Octicons}
                                 containerStyle={styles.reviewFooter}
-                                iconName="right"
-                                labelPosition="left"
-                                size="small"
+                                iconName="chevron-right"
+                                iconPosition="right"
                                 label="All"
                                 onPress={() =>
                                     router.navigate({

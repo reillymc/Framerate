@@ -2,17 +2,16 @@ import { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import RnSegmentedControl from "@react-native-segmented-control/segmented-control";
 import {
-    BaseInput,
-    type BaseInputProps,
+    InputScaffold,
+    type InputScaffoldProps,
     useTheme,
     type ValueItem,
 } from "@reillymc/react-native-components";
 
 interface SegmentedControlProps<T extends string | number>
-    extends Pick<BaseInputProps, "label"> {
+    extends Pick<InputScaffoldProps, "label" | "containerStyle"> {
     options: ValueItem<T>[];
     value: T;
-    style?: StyleProp<ViewStyle>;
     onChange: (e: ValueItem<T>) => void;
 }
 
@@ -20,10 +19,9 @@ export const SegmentedControl = <T extends string | number>({
     options,
     value,
     onChange,
-    style,
     ...props
 }: SegmentedControlProps<T>) => {
-    const { theme } = useTheme();
+    const { theme, styles } = useTheme();
 
     const selectedIndex = useMemo(
         () => options.findIndex((option) => option.value === value),
@@ -31,33 +29,30 @@ export const SegmentedControl = <T extends string | number>({
     );
 
     return (
-        <BaseInput
-            {...props}
-            containerStyle={style}
-            inputElement={
-                <RnSegmentedControl
-                    values={options.map((option) => option.label)}
-                    selectedIndex={selectedIndex}
-                    fontStyle={{
-                        fontFamily: theme.font.familyWeight.regular400,
-                        fontWeight: "400",
-                        color: theme.color.inputText,
-                    }}
-                    tintColor={theme.color.background}
-                    activeFontStyle={{
-                        fontFamily: theme.font.familyWeight.bold800,
-                        fontWeight: "600",
-                        color: theme.color.inputText,
-                    }}
-                    style={{
-                        borderRadius: theme.border.radius.regular,
-                    }}
-                    backgroundColor={theme.color.inputBackground}
-                    onChange={({ nativeEvent }) =>
-                        onChange(options[nativeEvent.selectedSegmentIndex])
-                    }
-                />
-            }
-        />
+        <InputScaffold {...props}>
+            <RnSegmentedControl
+                values={options.map((option) => option.label)}
+                selectedIndex={selectedIndex}
+                fontStyle={{
+                    fontFamily: styles.inputBase.text.fontFamilyWeight,
+                    color: styles.inputBase.text.color.enabled as string,
+                }}
+                tintColor={theme.color.background}
+                activeFontStyle={{
+                    fontFamily: styles.highlightedText.highlighted.body,
+                    color: styles.inputBase.text.color.enabled as string,
+                }}
+                style={{
+                    borderRadius: styles.inputBase.container.borderRadius,
+                    height: styles.inputBase.container.height,
+                }}
+                backgroundColor={
+                    styles.inputBase.container.backgroundColor.enabled as string
+                }
+                onChange={({ nativeEvent }) =>
+                    onChange(options[nativeEvent.selectedSegmentIndex])
+                }
+            />
+        </InputScaffold>
     );
 };

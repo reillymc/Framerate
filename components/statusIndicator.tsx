@@ -1,5 +1,6 @@
 import { type FC, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
     Icon,
     Text,
@@ -38,7 +39,7 @@ export const StatusIndicator: FC<StatusIndicatorProps> = ({
 
     return (
         <View style={styles.errorContainer}>
-            <Icon set="octicons" iconName={icon} style={{ color }} />
+            <Icon iconSet={Octicons} iconName={icon} style={{ color }} />
             <Text variant="bodyEmphasized" style={{ color }}>
                 {error || success}
             </Text>

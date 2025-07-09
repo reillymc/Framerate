@@ -17,12 +17,12 @@ import {
     type Theme as RnTheme,
     ThemeProvider as RnThemeProvider,
 } from "@react-navigation/native";
+import type { DeepPartial } from "@reillymc/es-utils";
 import {
     createDefaultStyles,
-    type DeepPartial,
     DefaultTheme,
+    MergeStyles,
     MergeTheme,
-    scaleFont,
     type Theme,
     ThemeProvider,
 } from "@reillymc/react-native-components";
@@ -36,6 +36,16 @@ import { Font, FontResources } from "@/assets/fonts";
 import { ServiceProvider, useColorScheme } from "@/hooks";
 
 import { version } from "../package.json";
+
+export const scaleFont = (size: number, scale: number, appScale: number) => {
+    if (appScale < 0.9) {
+        return size;
+    }
+
+    return Math.round(
+        (size / appScale) * (appScale > 1 ? Math.max(1, appScale * scale) : 1),
+    );
+};
 
 setOptions({
     duration: 250,
@@ -219,6 +229,15 @@ export default function RootLayout() {
         [colorScheme, theme],
     );
 
+    const styles = useMemo(
+        () =>
+            MergeStyles(createDefaultStyles(theme), {
+                highlightedText: { highlighted: { body: Font.SemiBold } },
+                menuItem: { paddingVertical: theme.spacing.small },
+            }),
+        [theme],
+    );
+
     return (
         <PersistQueryClientProvider
             client={queryClient}
@@ -228,10 +247,7 @@ export default function RootLayout() {
             <SessionProvider>
                 <ServiceProvider>
                     <RnThemeProvider value={navigationTheme}>
-                        <ThemeProvider
-                            theme={theme}
-                            styles={createDefaultStyles(theme)}
-                        >
+                        <ThemeProvider theme={theme} styles={styles}>
                             <GestureHandlerRootView>
                                 <StatusBar style="auto" translucent animated />
 

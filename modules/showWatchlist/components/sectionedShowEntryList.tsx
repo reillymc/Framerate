@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
+import { Octicons } from "@expo/vector-icons";
+import { Undefined } from "@reillymc/es-utils";
 import {
     SwipeAction,
-    SwipeView,
+    SwipeableContainer,
     Text,
     type ThemedStyles,
-    Undefined,
     useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -198,11 +199,12 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             refreshing={false}
             onRefresh={onRefresh}
             CellRendererComponent={({ item, children }) => (
-                <SwipeView
+                <SwipeableContainer
                     rightActions={[
                         <SwipeAction
+                            iconSet={Octicons}
                             key="delete"
-                            iconName="minus"
+                            iconName="dash"
                             onPress={() => {
                                 onDeleteEntry(item.showId);
                             }}
@@ -211,7 +213,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                     ]}
                 >
                     {children}
-                </SwipeView>
+                </SwipeableContainer>
             )}
             onScrollToIndexFailed={(info) => {
                 const wait = new Promise((resolve) => setTimeout(resolve, 100));

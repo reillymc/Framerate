@@ -58,7 +58,7 @@ const EditCollection: FC = () => {
                         headerRight: () => (
                             <Action
                                 label={collection ? "Save" : "Create"}
-                                style={styles.headerAction}
+                                containerStyle={styles.headerAction}
                                 onPress={handleSave}
                             />
                         ),

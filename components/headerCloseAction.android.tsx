@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { StyleSheet } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
     IconAction,
     type ThemedStyles,
@@ -15,7 +16,8 @@ export const HeaderCloseAction: FC<HeaderCloseActionProps> = ({ onClose }) => {
 
     return (
         <IconAction
-            iconName="close"
+            iconSet={Octicons}
+            iconName="x"
             containerStyle={styles.headerAction}
             onPress={onClose}
         />

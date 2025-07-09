@@ -47,7 +47,6 @@ const ServerScreen: FC = () => {
                     </View>
                 )}
                 <TextInput
-                    width="full"
                     textContentType="URL"
                     keyboardType="url"
                     autoFocus
@@ -57,7 +56,7 @@ const ServerScreen: FC = () => {
                     clearButtonMode="always"
                     onChangeText={setHost}
                     onSubmitEditing={router.back}
-                    style={styles.hostInput}
+                    containerStyle={styles.hostInput}
                     helpText="Enter a custom Framerate host to login with, or leave blank for default"
                 />
             </ScrollView>

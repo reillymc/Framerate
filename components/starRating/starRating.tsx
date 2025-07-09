@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type FC, useMemo, useRef, useState } from "react";
 import {
     Animated,
     Easing,
@@ -118,7 +118,7 @@ const defaultAnimationConfig: Required<AnimationConfig> = {
     delay: 300,
 };
 
-export const StarRating = ({
+export const StarRating: FC<StarRatingProps> = ({
     rating,
     maxStars = 5,
     starSize = 32,
@@ -132,13 +132,13 @@ export const StarRating = ({
     animationConfig = defaultAnimationConfig,
     style,
     starStyle,
-}: StarRatingProps) => {
+}) => {
     const { theme } = useTheme();
 
-    const width = React.useRef<number>();
-    const [isInteracting, setInteracting] = React.useState(false);
+    const width = useRef<number>(null);
+    const [isInteracting, setInteracting] = useState(false);
 
-    const panResponder = React.useMemo(() => {
+    const panResponder = useMemo(() => {
         const calculateRating = (x: number) => {
             if (!width.current) return rating;
 

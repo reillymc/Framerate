@@ -1,11 +1,11 @@
 import { type FC, useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Undefined } from "@reillymc/es-utils";
 import {
     Action,
     type ThemedStyles,
     ToggleInput,
-    Undefined,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
@@ -127,7 +127,7 @@ const EditReview: FC = () => {
                     headerRight: () => (
                         <Action
                             label={reviewId ? "Save" : "Create"}
-                            style={styles.headerAction}
+                            containerStyle={styles.headerAction}
                             onPress={handleSave}
                         />
                     ),

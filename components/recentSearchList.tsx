@@ -1,8 +1,9 @@
 import type { FC } from "react";
 import { FlatList, Pressable, StyleSheet } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
     SwipeAction,
-    SwipeView,
+    SwipeableContainer,
     Text,
     type ThemedStyles,
     useThemedStyles,
@@ -32,12 +33,13 @@ export const RecentSearchList: FC<RecentSearchListProps> = ({
             contentInsetAdjustmentBehavior="always"
             keyboardShouldPersistTaps="handled"
             renderItem={({ item, index }) => (
-                <SwipeView
+                <SwipeableContainer
                     rightActions={[
                         <SwipeAction
+                            iconSet={Octicons}
                             key="delete"
                             variant="destructive"
-                            iconName="close"
+                            iconName="x"
                             onPress={() => onDeleteSearchItem(index)}
                         />,
                     ]}
@@ -53,7 +55,7 @@ export const RecentSearchList: FC<RecentSearchListProps> = ({
                     >
                         <Text>{item.searchValue}</Text>
                     </Pressable>
-                </SwipeView>
+                </SwipeableContainer>
             )}
         />
     );

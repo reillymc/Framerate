@@ -1,10 +1,12 @@
 import type { FC, ReactNode } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useRouter, useSegments } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
 import {
-    IconAction,
-    IconActionV2,
+    IconButton,
+    IconButtonBase,
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
@@ -44,6 +46,7 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
     isSearching,
 }) => {
     const styles = useThemedStyles(createStyles, {});
+    const { theme } = useTheme();
     const router = useRouter();
     const { session } = useSession();
 
@@ -97,14 +100,26 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
                         onPress={() => router.navigate("/(app)/(tabs)/movies")}
                     />
                     {session && (
-                        <IconActionV2
+                        <IconButtonBase
+                            iconSet={Octicons}
                             iconName="person"
                             onPress={() =>
                                 router.push({ pathname: "/profile" })
                             }
                             disabled={profileActive}
-                            iconStyle={
-                                profileActive ? styles.iconSelected : undefined
+                            style={
+                                profileActive
+                                    ? {
+                                          icon: {
+                                              color: {
+                                                  disabled: theme.color.border,
+                                                  enabled: theme.color.primary,
+                                                  pressed:
+                                                      theme.color.primaryLight,
+                                              },
+                                          },
+                                      }
+                                    : undefined
                             }
                         />
                     )}
@@ -114,8 +129,9 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
                 <>
                     <View style={styles.modalBackdrop} />
                     <View style={styles.modalControlsContainer}>
-                        <IconAction
-                            iconName="closecircle"
+                        <IconButton
+                            iconSet={Octicons}
+                            iconName="x-circle"
                             containerStyle={{ margin: 20 }}
                             onPress={router.back}
                         />

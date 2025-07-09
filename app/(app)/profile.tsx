@@ -8,11 +8,12 @@ import {
     View,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
 import {
-    Button,
-    IconActionV2,
+    Action,
+    IconButton,
     SwipeAction,
-    SwipeView,
+    SwipeableContainer,
     Text,
     TextInput,
     type ThemedStyles,
@@ -211,7 +212,7 @@ const Profile: FC = () => {
                                     ] as const
                                 }
                                 value={configuration.ratings.starCount}
-                                style={styles.sectionElement}
+                                containerStyle={styles.sectionElement}
                                 onChange={({ value }) =>
                                     saveUser({
                                         userId: user.userId,
@@ -238,7 +239,8 @@ const Profile: FC = () => {
                                 >
                                     Known Venues
                                 </Text>
-                                <IconActionV2
+                                <IconButton
+                                    iconSet={Octicons}
                                     iconName={
                                         venuesCollapsed
                                             ? "chevron-down"
@@ -255,12 +257,13 @@ const Profile: FC = () => {
                             >
                                 {configuration.venues.knownVenueNames.map(
                                     (venue) => (
-                                        <SwipeView
+                                        <SwipeableContainer
                                             key={venue}
                                             rightActions={[
                                                 <SwipeAction
+                                                    iconSet={Octicons}
                                                     key="delete"
-                                                    iconName="delete"
+                                                    iconName="dash"
                                                     variant="destructive"
                                                     onPress={() =>
                                                         removeVenue(venue)
@@ -271,7 +274,7 @@ const Profile: FC = () => {
                                             <View style={styles.listItem}>
                                                 <Text>{venue}</Text>
                                             </View>
-                                        </SwipeView>
+                                        </SwipeableContainer>
                                     ),
                                 )}
                                 <View style={styles.friendInputContainer}>
@@ -279,14 +282,14 @@ const Profile: FC = () => {
                                         ref={venueInputRef}
                                         placeholder="Add venue"
                                         maxLength={80}
-                                        style={styles.containerisedInput}
                                         value={venue}
                                         onChange={({ nativeEvent }) =>
                                             setVenue(nativeEvent.text)
                                         }
                                         onSubmitEditing={addVenue}
                                     />
-                                    <IconActionV2
+                                    <IconButton
+                                        iconSet={Octicons}
                                         iconName="check"
                                         onPress={addVenue}
                                         disabled={!venue}
@@ -307,7 +310,8 @@ const Profile: FC = () => {
                                     >
                                         Saved Friends
                                     </Text>
-                                    <IconActionV2
+                                    <IconButton
+                                        iconSet={Octicons}
                                         iconName={
                                             friendsCollapsed
                                                 ? "chevron-down"
@@ -327,12 +331,13 @@ const Profile: FC = () => {
                             >
                                 {company.map(
                                     ({ companyId, firstName, lastName }) => (
-                                        <SwipeView
+                                        <SwipeableContainer
                                             key={companyId}
                                             rightActions={[
                                                 <SwipeAction
+                                                    iconSet={Octicons}
                                                     key="delete"
-                                                    iconName="delete"
+                                                    iconName="dash"
                                                     variant="destructive"
                                                     onPress={() =>
                                                         deleteCompany({
@@ -345,7 +350,7 @@ const Profile: FC = () => {
                                             <View style={styles.listItem}>
                                                 <Text>{`${firstName} ${lastName}`}</Text>
                                             </View>
-                                        </SwipeView>
+                                        </SwipeableContainer>
                                     ),
                                 )}
                                 <View style={styles.friendInputContainer}>
@@ -358,7 +363,6 @@ const Profile: FC = () => {
                                         onSubmitEditing={() =>
                                             lastNameRef.current?.focus()
                                         }
-                                        style={styles.containerisedInput}
                                     />
                                     <TextInput
                                         ref={lastNameRef}
@@ -369,10 +373,12 @@ const Profile: FC = () => {
                                             setLastName(nativeEvent.text)
                                         }
                                         onSubmitEditing={addFriend}
-                                        style={styles.containerisedInput}
                                     />
-                                    <IconActionV2
+                                    <IconButton
+                                        iconSet={Octicons}
                                         iconName="check"
+                                        variant="secondary"
+                                        disabled={!(firstName && lastName)}
                                         onPress={addFriend}
                                     />
                                 </View>
@@ -384,31 +390,16 @@ const Profile: FC = () => {
                 <View style={styles.profileSection}>
                     <Text variant="title">Account</Text>
                     <View style={styles.sectionContainer}>
-                        <Button
-                            label="Change Password"
-                            variant="flat"
-                            size="small"
-                            contentAlign="left"
-                            disabled
-                            style={styles.actionButton}
-                        />
-                        <Button
+                        <Action label="Change Password" disabled />
+                        <Action
                             label="Log Out"
-                            variant="flat"
-                            contentAlign="left"
-                            size="small"
-                            style={styles.actionButton}
                             onPress={() => {
                                 router.back();
                                 signOut();
                             }}
                         />
-                        <Button
+                        <Action
                             label="Delete Account"
-                            variant="flat"
-                            contentAlign="left"
-                            size="small"
-                            style={styles.actionButton}
                             onPress={handleDeleteAccount}
                         />
                     </View>
@@ -417,32 +408,20 @@ const Profile: FC = () => {
                     <Text variant="title">Framerate</Text>
                     <View style={styles.sectionContainer}>
                         {showAdminButton && (
-                            <Button
+                            <Action
                                 label="Administration"
-                                variant="flat"
-                                size="small"
-                                contentAlign="left"
-                                style={styles.actionButton}
                                 onPress={() => router.push("/administration")}
                             />
                         )}
-                        <Button
+                        <Action
                             label="Credits"
-                            variant="flat"
-                            size="small"
-                            contentAlign="left"
-                            style={styles.actionButton}
                             onPress={() => router.push("/credits")}
                         />
-                        <Button
+                        <Action
                             label="Clear cache"
-                            variant="flat"
-                            contentAlign="left"
-                            size="small"
-                            style={styles.actionButton}
                             onPress={() => queryClient.clear()}
                         />
-                        <Text variant="caption" style={styles.actionButton}>
+                        <Text variant="caption">
                             Client: {version} / Server: {serverVersion}
                         </Text>
                     </View>
@@ -474,9 +453,12 @@ const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
         },
         sectionContainer: {
             marginLeft: spacing.medium,
+            marginTop: spacing.large,
+            gap: spacing.large + spacing.medium,
         },
         profileSection: {
-            marginBottom: spacing.large * 2,
+            marginBottom: spacing.large,
+            gap: spacing.small,
         },
         listItem: {
             paddingVertical: spacing.small + spacing.tiny,
@@ -488,24 +470,11 @@ const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
         sectionElement: {
             marginTop: spacing.medium,
         },
-        containerisedInput: {
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-            borderBottomLeftRadius: border.radius.loose,
-            borderBottomRightRadius: border.radius.loose,
-            paddingLeft: spacing.small,
-            height: 48,
-        },
         friendInputContainer: {
             flexDirection: "row",
             alignItems: "center",
             backgroundColor: color.inputBackground,
             paddingRight: spacing.medium,
-        },
-        actionButton: {
-            marginTop: spacing.large,
-            marginBottom: spacing.large,
-            width: "100%",
         },
         destructiveButton: {
             color: color.destructive,

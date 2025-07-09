@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
+import { Octicons } from "@expo/vector-icons";
 import {
     SwipeAction,
-    SwipeView,
+    SwipeableContainer,
     Text,
     type ThemedStyles,
     useTheme,
@@ -206,11 +207,12 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                 </View>
             }
             CellRendererComponent={({ item, children }) => (
-                <SwipeView
+                <SwipeableContainer
                     rightActions={[
                         <SwipeAction
+                            iconSet={Octicons}
                             key="delete"
-                            iconName="minus"
+                            iconName="dash"
                             onPress={() => {
                                 onDeleteEntry(item.movieId);
                             }}
@@ -219,7 +221,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                     ]}
                 >
                     {children}
-                </SwipeView>
+                </SwipeableContainer>
             )}
             keyExtractor={(item) => item.movieId.toString()}
             contentInsetAdjustmentBehavior="automatic"
