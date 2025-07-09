@@ -6,7 +6,9 @@ import {
     StyleSheet,
     View,
 } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
+    IconAction,
     Tag,
     Text,
     type ThemedStyles,
@@ -15,12 +17,7 @@ import {
 
 import type { Company } from "@/modules/company";
 
-import {
-    BlurIconAction,
-    ContextMenu,
-    EmptyState,
-    ResponsiveFlatList,
-} from "@/components";
+import { ContextMenu, EmptyState, ResponsiveFlatList } from "@/components";
 import {
     DropdownButton,
     MenuDecorator,
@@ -407,10 +404,10 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
                             </View>
                             <WebDropdownMenu
                                 trigger={
-                                    <BlurIconAction
+                                    <IconAction
+                                        iconSet={Octicons}
                                         iconName="arrow-switch"
-                                        variant="flat"
-                                        style={[
+                                        containerStyle={[
                                             styles.sortIcon,
                                             {
                                                 borderRadius: 8,
@@ -503,6 +500,7 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         },
         filterList: {
             paddingBottom: spacing.medium,
+            gap: spacing.small,
         },
         webListHeader: {
             flexDirection: "row",

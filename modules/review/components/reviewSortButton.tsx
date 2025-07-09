@@ -1,11 +1,13 @@
 import type { FC } from "react";
 import { StyleSheet } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import {
+    IconButton,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { BlurIconAction, ContextMenu } from "@/components";
+import { ContextMenu } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 
 import type { ReviewOrder, ReviewSort } from "../models";
@@ -98,10 +100,12 @@ export const ReviewSortButton: FC<ReviewSortButtonProps> = ({
                 }
             }}
         >
-            <BlurIconAction
+            <IconButton
+                iconSet={Octicons}
                 iconName="arrow-switch"
                 variant="secondary"
-                style={styles.sortIcon}
+                containerStyle={styles.sortIcon}
+                onPress={() => null}
             />
         </ContextMenu>
     );

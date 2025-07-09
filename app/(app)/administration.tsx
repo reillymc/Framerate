@@ -86,9 +86,8 @@ const Profile: FC = () => {
                     <Button
                         label="Submit"
                         onPress={onGenerateLink}
-                        size="regular"
                         disabled={!email || status === "loading"}
-                        style={styles.submitButton}
+                        containerStyle={styles.submitButton}
                     />
                     <StatusIndicator
                         error={

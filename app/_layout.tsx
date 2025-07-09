@@ -21,6 +21,7 @@ import type { DeepPartial } from "@reillymc/es-utils";
 import {
     createDefaultStyles,
     DefaultTheme,
+    MergeStyles,
     MergeTheme,
     type Theme,
     ThemeProvider,
@@ -36,13 +37,13 @@ import { ServiceProvider, useColorScheme } from "@/hooks";
 
 import { version } from "../package.json";
 
-export const scaleFont = (size: number, appScale: number) => {
-    if (appScale < 1) {
+export const scaleFont = (size: number, scale: number, appScale: number) => {
+    if (appScale < 0.9) {
         return size;
     }
 
     return Math.round(
-        (size / appScale) * (appScale > 1 ? Math.max(1, appScale * 0.85) : 1),
+        (size / appScale) * (appScale > 1 ? Math.max(1, appScale * scale) : 1),
     );
 };
 
@@ -118,13 +119,13 @@ export default function RootLayout() {
                     bold800: Font.Bold,
                 },
                 size: {
-                    tiny: scaleFont(14, fontScale),
-                    small: scaleFont(16, fontScale),
-                    regular: scaleFont(18, fontScale),
-                    emphasised: scaleFont(20, fontScale),
-                    large: scaleFont(22, fontScale),
-                    xLarge: scaleFont(24, fontScale),
-                    xxLarge: scaleFont(28, fontScale),
+                    tiny: scaleFont(14, 0.9, fontScale),
+                    small: scaleFont(16, 0.88, fontScale),
+                    regular: scaleFont(20, 0.86, fontScale),
+                    emphasised: scaleFont(22, 0.84, fontScale),
+                    large: scaleFont(24, 0.84, fontScale),
+                    xLarge: scaleFont(28, 0.82, fontScale),
+                    xxLarge: scaleFont(36, 0.8, fontScale),
                 },
             },
             padding: {
@@ -228,6 +229,15 @@ export default function RootLayout() {
         [colorScheme, theme],
     );
 
+    const styles = useMemo(
+        () =>
+            MergeStyles(createDefaultStyles(theme), {
+                highlightedText: { highlighted: { body: Font.SemiBold } },
+                menuItem: { paddingVertical: theme.spacing.small },
+            }),
+        [theme],
+    );
+
     return (
         <PersistQueryClientProvider
             client={queryClient}
@@ -237,10 +247,7 @@ export default function RootLayout() {
             <SessionProvider>
                 <ServiceProvider>
                     <RnThemeProvider value={navigationTheme}>
-                        <ThemeProvider
-                            theme={theme}
-                            styles={createDefaultStyles(theme)}
-                        >
+                        <ThemeProvider theme={theme} styles={styles}>
                             <GestureHandlerRootView>
                                 <StatusBar style="auto" translucent animated />
 

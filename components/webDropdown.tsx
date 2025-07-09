@@ -15,6 +15,7 @@ import {
     useWindowDimensions,
     View,
 } from "react-native";
+import { Octicons } from "@expo/vector-icons";
 import { Icon, Tag, Text } from "@reillymc/react-native-components";
 
 interface WebDropdownMenuProps {
@@ -170,7 +171,7 @@ export const MenuOptionContentToggle: FC<MenuOptionContentToggleProps> = ({
             <Text lineBreakMode="tail" numberOfLines={1}>
                 {title}
             </Text>
-            {selected && <Icon set="octicons" iconName="check" />}
+            {selected && <Icon iconSet={Octicons} iconName="check" />}
         </View>
     );
 };

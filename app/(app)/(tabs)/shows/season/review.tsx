@@ -1,8 +1,9 @@
 import type { FC } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
 import {
-    IconActionV2,
+    IconButton,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -31,7 +32,8 @@ const Review: FC = () => {
                           )
                         : "Watched",
                     headerRight: () => (
-                        <IconActionV2
+                        <IconButton
+                            iconSet={Octicons}
                             iconName="pencil"
                             onPress={() =>
                                 router.push({

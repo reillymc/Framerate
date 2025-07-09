@@ -1,10 +1,11 @@
 import type { FC } from "react";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
 import {
-    IconActionV2,
+    IconButton,
     SwipeAction,
-    SwipeView,
+    SwipeableContainer,
 } from "@reillymc/react-native-components";
 
 import {
@@ -32,7 +33,8 @@ const Collection: FC = () => {
                     options={{
                         title: collection?.name ?? "Loading...",
                         headerRight: () => (
-                            <IconActionV2
+                            <IconButton
+                                iconSet={Octicons}
                                 iconName="pencil"
                                 onPress={() =>
                                     router.push({
@@ -60,11 +62,12 @@ const Collection: FC = () => {
                     <RefreshControl refreshing={false} onRefresh={refetch} />
                 }
                 renderItem={({ item }) => (
-                    <SwipeView
+                    <SwipeableContainer
                         rightActions={[
                             <SwipeAction
                                 key="delete"
-                                iconName="minus"
+                                iconSet={Octicons}
+                                iconName="dash"
                                 onPress={() =>
                                     deleteCollectionEntry({
                                         collectionId,
@@ -90,7 +93,7 @@ const Collection: FC = () => {
                                 })
                             }
                         />
-                    </SwipeView>
+                    </SwipeableContainer>
                 )}
             />
         </ScreenLayout>

@@ -16,7 +16,7 @@ import { useRouter } from "expo-router";
 import {
     Action,
     Button,
-    Form,
+    FormContainer,
     Text,
     TextInput,
     type ThemedStyles,
@@ -77,7 +77,7 @@ const LoginScreen: FC = () => {
                 contentContainerStyle={styles.container}
                 keyboardShouldPersistTaps="handled"
             >
-                <Form>
+                <FormContainer>
                     <View style={styles.titleContainer}>
                         {Platform.OS === "web" ? (
                             <Text variant="title">Log In</Text>
@@ -105,7 +105,6 @@ const LoginScreen: FC = () => {
                         <StatusIndicator error={error} />
                         <TextInput
                             label="Email"
-                            width="full"
                             textContentType="username"
                             autoCapitalize="none"
                             clearButtonMode="while-editing"
@@ -121,7 +120,6 @@ const LoginScreen: FC = () => {
                         <TextInput
                             ref={passwordRef}
                             label="Password"
-                            width="full"
                             textContentType="password"
                             clearButtonMode="while-editing"
                             maxLength={40}
@@ -134,9 +132,10 @@ const LoginScreen: FC = () => {
                             onSubmitEditing={handleLogin}
                         />
                         <Button
+                            variant="primary"
                             label="Login"
                             onPress={handleLogin}
-                            style={styles.confirmButton}
+                            containerStyle={styles.confirmButton}
                             size="large"
                             disabled={
                                 !(email && password) || isLoading || isSigningIn
@@ -157,7 +156,7 @@ const LoginScreen: FC = () => {
                             />
                         </View>
                     </Animated.View>
-                </Form>
+                </FormContainer>
             </ScrollView>
         </ScreenLayout>
     );

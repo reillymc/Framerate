@@ -13,6 +13,7 @@ import Animated, {
     useSharedValue,
 } from "react-native-reanimated";
 import { DeviceType, deviceType } from "expo-device";
+import { Octicons } from "@expo/vector-icons";
 import {
     Icon,
     Text,
@@ -197,7 +198,10 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
                                     )
                                 }
                             >
-                                <Icon set="octicons" iconName="arrow-right" />
+                                <Icon
+                                    iconSet={Octicons}
+                                    iconName="arrow-right"
+                                />
                                 <Text variant="bodyEmphasized">Older</Text>
                             </Pressable>
                         </Animated.View>

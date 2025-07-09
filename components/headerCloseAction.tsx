@@ -18,7 +18,11 @@ export const HeaderCloseAction: FC<HeaderCloseActionProps> = ({
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <Action label={label} style={styles.headerAction} onPress={onClose} />
+        <Action
+            label={label}
+            containerStyle={styles.headerAction}
+            onPress={onClose}
+        />
     );
 };
 

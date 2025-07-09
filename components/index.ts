@@ -1,5 +1,4 @@
 export { Accordion } from "./accordion";
-export { BlurIconAction } from "./blurIconAction";
 export {
     ContextMenu,
     MenuActionConfig,

@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
 import {
     Action,
-    DropdownItem,
+    MenuItem,
     type SelectionInputProps,
     Tag,
     Text,
@@ -167,7 +167,7 @@ const SelectionModal: FC = () => {
                     headerRight: () => (
                         <Action
                             label="Done"
-                            style={styles.headerAction}
+                            containerStyle={styles.headerAction}
                             onPress={() => router.back()}
                         />
                     ),
@@ -215,7 +215,6 @@ const SelectionModal: FC = () => {
                                 renderItem={({ item }) => (
                                     <Tag
                                         label={item.label}
-                                        style={styles.tag}
                                         variant="light"
                                         iconName="closecircle"
                                         onPress={() => handleItemPress(item)}
@@ -227,9 +226,10 @@ const SelectionModal: FC = () => {
                 }
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <DropdownItem
+                        <MenuItem
                             key={"id" in item ? item.id : item.value}
-                            item={item}
+                            label={item.label}
+                            description={item.description}
                             searchValue={
                                 selectedItems.find(
                                     (selectedItem) =>
@@ -248,7 +248,7 @@ const SelectionModal: FC = () => {
 export default SelectionModal;
 
 const createStyles = ({
-    styles: { baseInput },
+    styles: { inputBase },
     theme: { spacing, color },
 }: ThemedStyles) => {
     const styles = StyleSheet.create({
@@ -258,9 +258,7 @@ const createStyles = ({
         list: {
             paddingBottom: spacing.pageBottom,
         },
-        tag: {
-            marginVertical: 2,
-        },
+
         item: {
             paddingHorizontal: spacing.small,
         },
@@ -271,13 +269,14 @@ const createStyles = ({
             overflow: "hidden",
         },
         previewTagContainer: {
-            paddingLeft: baseInput.padding,
+            paddingLeft: inputBase.container.padding,
             paddingVertical: spacing.tiny,
             height: 48,
+            gap: spacing.small,
         },
         previewPlaceholder: {
             alignSelf: "center",
-            paddingLeft: baseInput.padding,
+            paddingLeft: inputBase.container.padding,
         },
         clearButton: {
             paddingHorizontal: spacing.medium,

@@ -7,6 +7,7 @@ import {
     View,
 } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
     IconAction,
@@ -165,6 +166,7 @@ const Movie: FC = () => {
                             }}
                         >
                             <IconAction
+                                iconSet={Octicons}
                                 iconName="book"
                                 label="Save to collection"
                             />

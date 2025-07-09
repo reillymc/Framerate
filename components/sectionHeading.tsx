@@ -5,7 +5,8 @@ import {
     StyleSheet,
     type ViewStyle,
 } from "react-native";
-import { Icon, Text } from "@reillymc/react-native-components";
+import { Octicons } from "@expo/vector-icons";
+import { Icon, Text, useTheme } from "@reillymc/react-native-components";
 
 interface SectionHeadingProps {
     title: string | undefined;
@@ -17,33 +18,35 @@ export const SectionHeading: FC<SectionHeadingProps> = ({
     title,
     onPress,
     style,
-}) => (
-    <Pressable
-        style={({ pressed }) => [
-            styles.container,
-            pressed && { opacity: 0.5 },
-            style,
-        ]}
-        onPress={onPress}
-    >
-        <Text variant="title">{title}</Text>
-        {onPress && (
-            <Icon
-                iconName="chevron-right"
-                set="octicons"
-                size={24}
-                style={{ paddingTop: 2 }}
-                color="gray"
-            />
-        )}
-    </Pressable>
-);
+}) => {
+    const { theme } = useTheme();
+    return (
+        <Pressable
+            style={({ pressed }) => [
+                styles.container,
+                pressed && { opacity: 0.5 },
+                style,
+            ]}
+            onPress={onPress}
+        >
+            <Text variant="title">{title}</Text>
+            {onPress && (
+                <Icon
+                    iconSet={Octicons}
+                    iconName="chevron-right"
+                    size="large"
+                    style={{ color: theme.color.textSecondary }}
+                />
+            )}
+        </Pressable>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         gap: 8,
-        alignItems: "center",
+        alignItems: "flex-end",
         paddingVertical: 8,
     },
 });

@@ -125,7 +125,7 @@ const EditReview: FC = () => {
                     headerRight: () => (
                         <Action
                             label={reviewId ? "Save" : "Create"}
-                            style={styles.headerAction}
+                            containerStyle={styles.headerAction}
                             onPress={handleSave}
                         />
                     ),

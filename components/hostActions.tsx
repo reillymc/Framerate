@@ -1,8 +1,9 @@
 import type { FC } from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { AntDesign, Octicons } from "@expo/vector-icons";
 import {
     Icon,
-    IconActionV2,
+    IconButton,
     Text,
     type ThemedStyles,
     useThemedStyles,
@@ -23,15 +24,15 @@ export const HostActions: FC<HostActionsProps> = ({
 
     return (
         <View style={[styles.settings, style]}>
-            <IconActionV2
+            <IconButton
+                iconSet={Octicons}
                 iconName="gear"
-                variant="flat"
-                size="large"
                 onPress={onSettingsPress}
             />
             {host && (
                 <View style={styles.hostWarningContainer}>
                     <Icon
+                        iconSet={AntDesign}
                         iconName="exclamationcircle"
                         style={styles.hostWarningIcon}
                     />

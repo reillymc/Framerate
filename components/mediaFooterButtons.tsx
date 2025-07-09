@@ -1,9 +1,9 @@
 import type { FC } from "react";
-import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Octicons } from "@expo/vector-icons";
 import {
-    IconActionV2,
-    Text,
+    IconAction,
     type ThemedStyles,
     useTheme,
     useThemedStyles,
@@ -61,65 +61,40 @@ export const MediaFooterButtons: FC<MediaFooterButtonsProps> = ({
                 }}
             >
                 {onToggleWatchlist && (
-                    <Pressable
-                        style={{
-                            backgroundColor: theme.color.primary,
+                    <IconAction // TODO move to icon button
+                        iconSet={Octicons}
+                        variant="primary"
+                        iconName={onWatchlist ? "eye-closed" : "eye"}
+                        label={onWatchlist ? "On Watchlist" : "Watchlist"}
+                        containerStyle={{
+                            backgroundColor: theme.color.foreground,
                             borderRadius: 24,
-                            paddingVertical: theme.spacing.tiny,
                             flexDirection: "row",
                             alignItems: "center",
                             flex: 1,
-                            paddingLeft: theme.spacing.small,
+                            justifyContent: "center",
+                            padding: theme.spacing.small + theme.spacing.tiny,
                         }}
                         onPress={onToggleWatchlist}
-                    >
-                        <IconActionV2
-                            size="large"
-                            iconName={onWatchlist ? "eye-closed" : "eye"}
-                            iconStyle={{ color: "white" }}
-                            containerStyle={{ backgroundColor: "transparent" }}
-                        />
-                        <Text
-                            variant="bodyEmphasized"
-                            style={{ color: "white" }}
-                        >
-                            {onWatchlist ? "On Watchlist" : "Watchlist"}
-                        </Text>
-                    </Pressable>
+                    />
                 )}
                 {onAddReview && (
-                    <Pressable
-                        style={{
-                            backgroundColor: theme.color.primary,
+                    <IconAction
+                        iconSet={Octicons}
+                        variant="primary"
+                        iconName="plus"
+                        label="Add Watch"
+                        containerStyle={{
+                            backgroundColor: theme.color.foreground,
                             borderRadius: 24,
-                            paddingVertical: theme.spacing.tiny,
                             flexDirection: "row",
                             alignItems: "center",
                             flex: 1,
-                            paddingLeft: theme.spacing.small,
+                            justifyContent: "center",
+                            padding: theme.spacing.small + theme.spacing.tiny,
                         }}
                         onPress={onAddReview}
-                    >
-                        <IconActionV2
-                            size="large"
-                            iconName="plus"
-                            iconStyle={{
-                                color: "white",
-                            }}
-                            containerStyle={{
-                                backgroundColor: "transparent",
-                            }}
-                        />
-                        <Text
-                            variant="label"
-                            style={{
-                                color: "white",
-                                marginLeft: 1,
-                            }}
-                        >
-                            Add Watch
-                        </Text>
-                    </Pressable>
+                    />
                 )}
             </View>
         </>
