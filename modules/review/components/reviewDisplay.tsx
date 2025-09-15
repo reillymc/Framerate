@@ -1,16 +1,15 @@
 import type { FC } from "react";
 import { StyleSheet } from "react-native";
 import {
+    Rating,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { StarRatingDisplay } from "@/components";
 import { displayFull } from "@/helpers/dateHelper";
 
-import { ratingToStars } from "../helpers";
-import type { Review } from "../models";
+import { AbsoluteRatingScale, type Review } from "../models";
 
 interface ReviewDisplayProps {
     review: Review;
@@ -23,19 +22,15 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
 }) => {
     const styles = useThemedStyles(createStyles, {});
 
-    const rating =
-        review.rating !== undefined
-            ? ratingToStars(review.rating, starCount)
-            : undefined;
-
     return (
         <>
-            {!!rating && (
-                <StarRatingDisplay
-                    rating={rating}
-                    style={styles.ratingDisplay}
-                    maxStars={starCount}
-                    starSize={180 / starCount}
+            {!!review.rating && (
+                <Rating
+                    value={review.rating}
+                    containerStyle={styles.ratingDisplay}
+                    scale={AbsoluteRatingScale}
+                    max={starCount}
+                    style={{ icon: { size: Math.min(220 / starCount, 28) } }}
                 />
             )}
             {!!review.title && (

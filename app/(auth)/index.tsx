@@ -136,7 +136,6 @@ const LoginScreen: FC = () => {
                             label="Login"
                             onPress={handleLogin}
                             containerStyle={styles.confirmButton}
-                            size="large"
                             disabled={
                                 !(email && password) || isLoading || isSigningIn
                             }

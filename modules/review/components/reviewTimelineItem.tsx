@@ -1,15 +1,14 @@
 import type { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import {
+    Rating,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { StarRatingDisplay } from "@/components";
-
 import { ratingToStars } from "../helpers";
-import type { Review } from "../models";
+import { AbsoluteRatingScale, type Review } from "../models";
 
 interface ReviewTimelineItemProps {
     review: Review;
@@ -25,9 +24,6 @@ export const ReviewTimelineItem: FC<ReviewTimelineItemProps> = ({
     onPress,
 }) => {
     const styles = useThemedStyles(createStyles, {});
-    const rating = review.rating
-        ? ratingToStars(review.rating, starCount)
-        : undefined;
 
     const date = review.date ? new Date(review.date) : undefined;
 
@@ -57,22 +53,27 @@ export const ReviewTimelineItem: FC<ReviewTimelineItemProps> = ({
             </View>
             <View style={styles.reviewContainer}>
                 <View style={styles.topContainer}>
-                    {!!rating && (
-                        <StarRatingDisplay
-                            rating={rating}
-                            style={styles.stars}
-                            starStyle={{ marginHorizontal: 0 }}
-                            maxStars={starCount}
-                            starSize={Math.min(220 / starCount, 28)}
+                    {!!review.rating && (
+                        <Rating
+                            value={review.rating}
+                            scale={AbsoluteRatingScale}
+                            max={starCount}
+                            style={{
+                                icon: {
+                                    size: Math.min(220 / starCount, 28),
+                                },
+                            }}
                         />
                     )}
 
                     <Text
                         variant="heading"
                         numberOfLines={1}
-                        style={rating ? styles.numericRating : undefined}
+                        style={review.rating ? styles.numericRating : undefined}
                     >
-                        {rating ? `${rating}/${starCount}` : "Watched"}
+                        {review.rating
+                            ? `${ratingToStars(review.rating, starCount)}/${starCount}`
+                            : "Watched"}
                     </Text>
                 </View>
                 <View style={styles.bodyContainer}>
@@ -138,10 +139,6 @@ const createStyles = ({
             flexDirection: "row",
             alignItems: "center",
             paddingTop: 10,
-        },
-        stars: {
-            flexDirection: "row",
-            justifyContent: "space-between",
         },
         bodyContainer: {
             marginTop: spacing.small,

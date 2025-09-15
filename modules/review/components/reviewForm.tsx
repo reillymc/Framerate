@@ -3,10 +3,8 @@ import {
     Platform,
     type TextInput as rnTextInput,
     StyleSheet,
-    useWindowDimensions,
     View,
 } from "react-native";
-import { DeviceType, deviceType } from "expo-device";
 import DateTimePicker, {
     DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
@@ -14,6 +12,7 @@ import {
     Action,
     CollapsibleContainer,
     DropdownInput,
+    RatingInput,
     SelectionInput,
     TextInput,
     type ThemedStyles,
@@ -23,9 +22,9 @@ import {
     type ValueItem,
 } from "@reillymc/react-native-components";
 
-import { Accordion, StarRating } from "@/components";
+import { Accordion } from "@/components";
 
-import { ratingToStars, starsToRating } from "../helpers";
+import { AbsoluteRatingScale } from "../models";
 
 interface ReviewFormProps {
     includeDate: boolean;
@@ -70,10 +69,6 @@ export const ReviewForm: FC<ReviewFormProps> = ({
 
     const { theme } = useTheme();
     const styles = useThemedStyles(createStyles, {});
-    const { width } = useWindowDimensions();
-
-    const containerWidth =
-        deviceType === DeviceType.PHONE ? width * 0.64 : width * 0.42;
 
     return (
         <>
@@ -127,20 +122,12 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 collapsed={!includeReview}
                 style={styles.reviewInputContainer}
             >
-                <StarRating
-                    style={styles.rating}
-                    rating={ratingToStars(rating, starCount)}
-                    enableHalfStar
-                    maxStars={starCount}
-                    starSize={containerWidth / starCount}
-                    onChange={(value) =>
-                        onRatingChange(starsToRating(value, starCount))
-                    }
-                    enableSwiping
-                    animationConfig={{
-                        duration: 0,
-                        scale: 1,
-                    }}
+                <RatingInput
+                    containerStyle={styles.rating}
+                    value={rating}
+                    scale={AbsoluteRatingScale}
+                    max={starCount}
+                    onChange={onRatingChange}
                 />
                 <TextInput
                     value={description}
@@ -155,7 +142,6 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 ref={dropdownRef}
                 label="Venue"
                 minimumSearchLength={0}
-                value={venue}
                 onChangeText={onVenueChange}
                 maxSuggestionCount={3}
                 onSelect={(e) => {
@@ -164,9 +150,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                         dropdownRef.current?.blur();
                     }
                 }}
-                selectedItem={
-                    venue ? { value: venue, label: venue } : undefined
-                }
+                selectedValue={venue}
                 containerStyle={styles.input}
                 clearButtonMode="while-editing"
                 items={venueOptions.map((venue) => ({
@@ -215,7 +199,7 @@ const createStyles = ({
         },
         reviewInputContainer: {
             marginLeft:
-                toggleInput.label.gap + toggleInput.indicator.size.medium,
+                toggleInput.label.gap + toggleInput.indicator.size.regular,
             marginBottom: spacing.medium,
         },
         reviewInput: {

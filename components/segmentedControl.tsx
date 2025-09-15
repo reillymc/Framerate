@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
 import RnSegmentedControl from "@react-native-segmented-control/segmented-control";
 import {
     InputScaffold,
@@ -44,7 +43,7 @@ export const SegmentedControl = <T extends string | number>({
                 }}
                 style={{
                     borderRadius: styles.inputBase.container.borderRadius,
-                    height: styles.inputBase.container.height,
+                    height: styles.inputBase.container.height.regular,
                 }}
                 backgroundColor={
                     styles.inputBase.container.backgroundColor.enabled as string

@@ -22,6 +22,5 @@ export { ScreenLayout } from "./screenLayout";
 export { ScreenSection } from "./screenSection";
 export { SectionHeading } from "./sectionHeading";
 export { SegmentedControl } from "./segmentedControl";
-export { StarRating, StarRatingDisplay } from "./starRating";
 export { StatusIndicator } from "./statusIndicator";
 export { TmdbImage } from "./tmdbImage";

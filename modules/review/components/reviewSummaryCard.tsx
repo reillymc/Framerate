@@ -1,15 +1,17 @@
 import type { FC } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import {
+    Rating,
     Text,
     type ThemedStyles,
+    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { Poster, StarRatingDisplay, usePosterDimensions } from "@/components";
+import { Poster, usePosterDimensions } from "@/components";
 
 import { ratingToStars } from "../helpers";
-import type { Review } from "../models";
+import { AbsoluteRatingScale, type Review } from "../models";
 
 interface ReviewSummaryCardProps {
     review: Review;
@@ -35,8 +37,9 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
         starCount,
         posterWidth: width,
     });
+    const { theme } = useTheme();
 
-    const rating = review.rating
+    const ratingDisplayValue = review.rating
         ? ratingToStars(review.rating, starCount)
         : undefined;
 
@@ -44,7 +47,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
         ? new Date(mediaDate).getFullYear()
         : undefined;
 
-    const hasRating = rating !== undefined;
+    const hasRating = ratingDisplayValue !== undefined;
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <View style={styles.topContainer}>
@@ -67,16 +70,20 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             {releaseYear}
                         </Text>
                     </View>
-                    {rating && (
-                        <StarRatingDisplay
-                            rating={rating}
-                            style={styles.stars}
-                            starStyle={{ marginHorizontal: 0 }}
-                            maxStars={starCount}
-                            starSize={24}
+                    {review.rating && (
+                        <Rating
+                            value={review.rating}
+                            style={{
+                                icon: {
+                                    size: Math.min(220 / starCount, 28),
+                                },
+                            }}
+                            containerStyle={styles.stars}
+                            max={starCount}
+                            scale={AbsoluteRatingScale}
                         />
                     )}
-                    {!(rating || review.description) && (
+                    {!(review.rating || review.description) && (
                         <View style={styles.compactInformationSection}>
                             <Text
                                 variant="caption"
@@ -101,7 +108,9 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                             numberOfLines={1}
                             style={styles.numericRating}
                         >
-                            {rating ? `${rating}/${starCount}` : "Watched"}
+                            {ratingDisplayValue
+                                ? `${ratingDisplayValue}/${starCount}`
+                                : "Watched"}
                         </Text>
                     </View>
                     <Text numberOfLines={3} style={styles.description}>
@@ -121,7 +130,9 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                                 numberOfLines={1}
                                 style={[styles.numericRating, styles.altRating]}
                             >
-                                {rating ? `${rating}/${starCount}` : "Watched"}
+                                {ratingDisplayValue
+                                    ? `${ratingDisplayValue}/${starCount}`
+                                    : "Watched"}
                             </Text>
                         </View>
                     )}
@@ -170,12 +181,9 @@ const createStyles = (
         title: {
             flexShrink: 1,
         },
-
         stars: {
             marginHorizontal: -1,
-            flexDirection: "row",
             justifyContent: starCount >= 10 ? "space-between" : "flex-start",
-            gap: starCount <= 5 ? spacing.small : 0,
         },
         body: {
             marginTop: spacing.small,
