@@ -9,6 +9,8 @@ services:
         volumes:
             - ..:/workspace
             - ~/.npmrc:/home/node/.npmrc
+            - ~/.bashrc:/home/node/.bashrc
+            - ~/.expo:/home/node/.expo
         network_mode: "host"
         env_file: .env
         command: sleep infinity

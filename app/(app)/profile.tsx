@@ -35,6 +35,7 @@ import {
     useUser,
 } from "@/modules/user";
 
+import { expo } from "@/app.json";
 import {
     Accordion,
     HeaderCloseAction,
@@ -42,7 +43,6 @@ import {
     SegmentedControl,
 } from "@/components";
 import { useHealth } from "@/hooks";
-import { version } from "@/package.json";
 
 const Profile: FC = () => {
     const router = useRouter();
@@ -422,7 +422,7 @@ const Profile: FC = () => {
                             onPress={() => queryClient.clear()}
                         />
                         <Text variant="caption">
-                            Client: {version} / Server: {serverVersion}
+                            Client: {expo.version} / Server: {serverVersion}
                         </Text>
                     </View>
                 </View>
