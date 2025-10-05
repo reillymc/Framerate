@@ -71,19 +71,16 @@ const Shows: FC = () => {
     const { recentSearches, addSearch, deleteSearch } = useRecentShowSearches();
     const { data: collections = [] } = useShowCollections();
 
-    const reviewList = useMemo(
-        () => reviews?.pages.flat().filter(Undefined) ?? [],
-        [reviews],
+    const reviewList = reviews?.pages.flat().filter(Undefined) ?? [];
+
+    const excludedMediaIds = [
+        ...(watchlist?.entries?.map(({ showId }) => showId) ?? []),
+        ...reviewList.map(({ show }) => show.id),
+    ];
+
+    const filteredPopularShows = popularShows?.filter(
+        ({ id }) => !excludedMediaIds.includes(id),
     );
-
-    const filteredPopularShows = useMemo(() => {
-        const excludedMediaIds = [
-            ...(watchlist?.entries?.map(({ showId }) => showId) ?? []),
-            ...reviewList.map(({ show }) => show.id),
-        ];
-
-        return popularShows?.filter(({ id }) => !excludedMediaIds.includes(id));
-    }, [popularShows, watchlist?.entries, reviewList]);
 
     return (
         <>

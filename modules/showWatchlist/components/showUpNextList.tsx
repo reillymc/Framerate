@@ -28,34 +28,30 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
     const listRef = useRef<ScrollView>(null);
     const todayRef = useRef<View>(null);
 
-    const days = useMemo(() => {
-        const currentlyAiringCutOff = addDays(new Date(), 7);
+    const currentlyAiringCutOff = addDays(new Date(), 7);
 
-        const entries =
-            watchlist?.entries?.filter(
-                ({ status, nextAirDate }) =>
-                    (status === undefined ||
-                        ActiveStatuses.includes(status as ShowStatus)) &&
-                    nextAirDate !== undefined &&
-                    isBefore(nextAirDate, currentlyAiringCutOff),
-            ) ?? [];
+    const entries =
+        watchlist?.entries?.filter(
+            ({ status, nextAirDate }) =>
+                (status === undefined ||
+                    ActiveStatuses.includes(status as ShowStatus)) &&
+                nextAirDate !== undefined &&
+                isBefore(nextAirDate, currentlyAiringCutOff),
+        ) ?? [];
 
-        const now = new Date();
+    const now = new Date();
 
-        const prevDays = Array.from({ length: 6 }).map((_, i) =>
-            subDays(now, i),
-        );
-        const nextDays = Array.from({ length: 6 }).map((_, i) =>
-            addDays(now, i + 1),
-        );
-        return [...prevDays.reverse(), ...nextDays].map((day) => ({
-            day,
-            entries: entries.filter(
-                (entry) =>
-                    entry.nextAirDate && isSameDay(entry.nextAirDate, day),
-            ),
-        }));
-    }, [watchlist?.entries]);
+    const prevDays = Array.from({ length: 6 }).map((_, i) => subDays(now, i));
+    const nextDays = Array.from({ length: 6 }).map((_, i) =>
+        addDays(now, i + 1),
+    );
+
+    const days = [...prevDays.reverse(), ...nextDays].map((day) => ({
+        day,
+        entries: entries.filter(
+            (entry) => entry.nextAirDate && isSameDay(entry.nextAirDate, day),
+        ),
+    }));
 
     return (
         <ScrollView

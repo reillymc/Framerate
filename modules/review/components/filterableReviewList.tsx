@@ -86,12 +86,8 @@ export const FilterableReviewList = <T extends { reviewId: string }>({
 }: FilterableReviewListProps<T>) => {
     const styles = useThemedStyles(createStyles, {});
 
-    const starValueList = useMemo(
-        () =>
-            TenStarOptions.filter(
-                (x) => x % (AbsoluteRatingScale / starCount) === 0,
-            ),
-        [starCount],
+    const starValueList = TenStarOptions.filter(
+        (x) => x % (AbsoluteRatingScale / starCount) === 0,
     );
 
     const SortOptions: { value: ReviewSort; label: string }[] = [

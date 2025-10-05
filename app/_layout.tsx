@@ -1,6 +1,6 @@
 import "react-native-reanimated";
 
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, StrictMode, useEffect } from "react";
 import { Platform, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
@@ -108,157 +108,141 @@ export default function RootLayout() {
         }
     }, [loaded, error]);
 
-    const baseTheme: DeepPartial<Theme> = useMemo(
-        () => ({
-            font: {
-                familyWeight: {
-                    light100: Font.Light,
-                    light200: Font.Light,
-                    regular400: Font.Regular,
-                    bold600: Font.SemiBold,
-                    bold800: Font.Bold,
-                },
-                size: {
-                    tiny: scaleFont(14, 0.9, fontScale),
-                    small: scaleFont(16, 0.88, fontScale),
-                    regular: scaleFont(20, 0.86, fontScale),
-                    emphasised: scaleFont(22, 0.84, fontScale),
-                    large: scaleFont(24, 0.84, fontScale),
-                    xLarge: scaleFont(28, 0.82, fontScale),
-                    xxLarge: scaleFont(36, 0.8, fontScale),
-                },
+    const baseTheme: DeepPartial<Theme> = {
+        font: {
+            familyWeight: {
+                light100: Font.Light,
+                light200: Font.Light,
+                regular400: Font.Regular,
+                bold600: Font.SemiBold,
+                bold800: Font.Bold,
             },
-            padding: {
-                screenContentTop: Platform.OS === "web" ? 64 : undefined,
-                navigationActionHorizontal:
-                    Platform.OS === "web"
-                        ? DefaultTheme.spacing.pageHorizontal
-                        : undefined,
-                pageHorizontal: 20,
+            size: {
+                tiny: scaleFont(14, 0.9, fontScale),
+                small: scaleFont(16, 0.88, fontScale),
+                regular: scaleFont(20, 0.86, fontScale),
+                emphasised: scaleFont(22, 0.84, fontScale),
+                large: scaleFont(24, 0.84, fontScale),
+                xLarge: scaleFont(28, 0.82, fontScale),
+                xxLarge: scaleFont(36, 0.8, fontScale),
             },
-        }),
-        [fontScale],
-    );
+        },
+        spacing: {
+            screenContentTop: Platform.OS === "web" ? 64 : undefined,
+            navigationActionHorizontal:
+                Platform.OS === "web"
+                    ? DefaultTheme.spacing.pageHorizontal
+                    : undefined,
+            pageHorizontal: 20,
+        },
+    };
 
-    const lightTheme = useMemo(
-        () =>
-            MergeTheme(baseTheme, {
-                color: {
-                    primary: "#F99224",
-                    primaryDark: "#F48815",
-                    primaryLight: "#F9BA77",
-                    textOnSecondary: "#F4EDEA",
-                    textOnPrimary: "#fff",
-                    border: "#d4cab455",
-                    shadow: "#000",
-                    textSecondary: "#BBB",
-                    inputBackgroundDisabled: "#00000008",
-                    red: "#d63333",
-                    green: "#4ed633",
-                    textHighlight: "#613505",
-                    background: "#FBF4EF",
-                    textPrimary: "#23292F",
-                    secondary: "#727072",
-                },
-            }),
-        [baseTheme],
-    );
+    const lightTheme = MergeTheme(baseTheme, {
+        color: {
+            primary: "#F99224",
+            primaryDark: "#F48815",
+            primaryLight: "#F9BA77",
+            textOnSecondary: "#F4EDEA",
+            textOnPrimary: "#fff",
+            border: "#d4cab455",
+            shadow: "#000",
+            textSecondary: "#BBB",
+            inputBackgroundDisabled: "#00000008",
+            red: "#d63333",
+            green: "#4ed633",
+            textHighlight: "#613505",
+            background: "#FBF4EF",
+            textPrimary: "#23292F",
+            secondary: "#727072",
+        },
+    });
 
-    const darkTheme = useMemo(
-        () =>
-            MergeTheme(baseTheme, {
-                color: {
-                    textPrimary: "#fff",
-                    textSecondary: "#737167",
-                    background: "#000",
-                    backgroundHighlight: "#20252a",
-                    foreground: "#111517",
-                    backgroundOverlay: "#242424",
-                    border: "#22222280",
-                    inputBackground: "#141210",
-                    inputBackgroundDisabled: "#FFFFFF0C",
-                    inputText: "#fff",
-                    shadow: "#000",
-                    secondary: "#908E90",
-                    secondaryHighlight: "#c1b1a1",
-                    textOnSecondary: "#12263A",
-                    textOnPrimary: "#fff",
-                    primary: "#F69F40",
-                    primaryDark: "#F48815",
-                    primaryLight: "#F9BA76",
-                },
-            }),
-        [baseTheme],
-    );
+    const darkTheme = MergeTheme(baseTheme, {
+        color: {
+            textPrimary: "#fff",
+            textSecondary: "#737167",
+            background: "#000",
+            backgroundHighlight: "#20252a",
+            foreground: "#111517",
+            backgroundOverlay: "#242424",
+            border: "#22222280",
+            inputBackground: "#141210",
+            inputBackgroundDisabled: "#FFFFFF0C",
+            inputText: "#fff",
+            shadow: "#000",
+            secondary: "#908E90",
+            secondaryHighlight: "#c1b1a1",
+            textOnSecondary: "#12263A",
+            textOnPrimary: "#fff",
+            primary: "#F69F40",
+            primaryDark: "#F48815",
+            primaryLight: "#F9BA76",
+        },
+    });
 
-    const theme = useMemo(
-        () => (colorScheme === "dark" ? darkTheme : lightTheme),
-        [colorScheme, darkTheme, lightTheme],
-    );
+    const theme = colorScheme === "dark" ? darkTheme : lightTheme;
 
-    const navigationTheme: RnTheme = useMemo(
-        () => ({
-            dark: colorScheme === "dark",
-            colors: {
-                background: theme.color.background,
-                border: theme.color.border,
-                card: theme.color.foreground,
-                notification: theme.color.primary,
-                primary: theme.color.textPrimary,
-                text: theme.color.textPrimary,
+    const navigationTheme: RnTheme = {
+        dark: colorScheme === "dark",
+        colors: {
+            background: theme.color.background,
+            border: theme.color.border,
+            card: theme.color.foreground,
+            notification: theme.color.primary,
+            primary: theme.color.textPrimary,
+            text: theme.color.textPrimary,
+        },
+        fonts: {
+            regular: {
+                fontFamily: Font.Regular,
+                fontWeight: "400",
             },
-            fonts: {
-                regular: {
-                    fontFamily: Font.Regular,
-                    fontWeight: "400",
-                },
-                bold: {
-                    fontFamily: Font.Medium,
-                    fontWeight: "500",
-                },
-                medium: {
-                    fontFamily: Font.SemiBold,
-                    fontWeight: "600",
-                },
-                heavy: {
-                    fontFamily: Font.Bold,
-                    fontWeight: "700",
-                },
+            bold: {
+                fontFamily: Font.Medium,
+                fontWeight: "500",
             },
-        }),
-        [colorScheme, theme],
-    );
+            medium: {
+                fontFamily: Font.SemiBold,
+                fontWeight: "600",
+            },
+            heavy: {
+                fontFamily: Font.Bold,
+                fontWeight: "700",
+            },
+        },
+    };
 
-    const styles = useMemo(
-        () =>
-            MergeStyles(createDefaultStyles(theme), {
-                highlightedText: { highlighted: { body: Font.SemiBold } },
-                menuItem: { paddingVertical: theme.spacing.small },
-            }),
-        [theme],
-    );
+    const styles = MergeStyles(createDefaultStyles(theme), {
+        highlightedText: { highlighted: { body: Font.SemiBold } },
+        menuItem: { paddingVertical: theme.spacing.small },
+    });
 
     return (
-        <PersistQueryClientProvider
-            client={queryClient}
-            persistOptions={{ persister }}
-            onSuccess={() => queryClient.resumePausedMutations()}
-        >
-            <SessionProvider>
-                <ServiceProvider>
-                    <RnThemeProvider value={navigationTheme}>
-                        <ThemeProvider theme={theme} styles={styles}>
-                            <GestureHandlerRootView>
-                                <StatusBar style="auto" translucent animated />
+        <StrictMode>
+            <PersistQueryClientProvider
+                client={queryClient}
+                persistOptions={{ persister }}
+                onSuccess={() => queryClient.resumePausedMutations()}
+            >
+                <SessionProvider>
+                    <ServiceProvider>
+                        <RnThemeProvider value={navigationTheme}>
+                            <ThemeProvider theme={theme} styles={styles}>
+                                <GestureHandlerRootView>
+                                    <StatusBar
+                                        style="auto"
+                                        translucent
+                                        animated
+                                    />
+                                    <Slot />
+                                </GestureHandlerRootView>
+                            </ThemeProvider>
+                        </RnThemeProvider>
+                    </ServiceProvider>
+                </SessionProvider>
 
-                                <Slot />
-                            </GestureHandlerRootView>
-                        </ThemeProvider>
-                    </RnThemeProvider>
-                </ServiceProvider>
-            </SessionProvider>
-
-            {__DEV__ && DevToolsBubble && <DevToolsBubble />}
-        </PersistQueryClientProvider>
+                {__DEV__ && DevToolsBubble && <DevToolsBubble />}
+            </PersistQueryClientProvider>
+        </StrictMode>
     );
 }

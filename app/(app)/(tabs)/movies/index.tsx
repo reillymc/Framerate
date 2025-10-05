@@ -81,21 +81,16 @@ const Movies: FC = () => {
         useRecentMovieSearches();
     const { data: collections = [] } = useMovieCollections();
 
-    const reviewList = useMemo(
-        () => reviews?.pages.flat().filter(Undefined) ?? [],
-        [reviews],
+    const reviewList = reviews?.pages.flat().filter(Undefined) ?? [];
+
+    const excludedMediaIds = [
+        ...(watchlist?.entries?.map(({ movieId }) => movieId) ?? []),
+        ...reviewList.map(({ movie }) => movie.id),
+    ];
+
+    const filteredPopularMovies = popularMovies?.filter(
+        ({ id }) => !excludedMediaIds.includes(id),
     );
-
-    const filteredPopularMovies = useMemo(() => {
-        const excludedMediaIds = [
-            ...(watchlist?.entries?.map(({ movieId }) => movieId) ?? []),
-            ...reviewList.map(({ movie }) => movie.id),
-        ];
-
-        return popularMovies?.filter(
-            ({ id }) => !excludedMediaIds.includes(id),
-        );
-    }, [popularMovies, watchlist?.entries, reviewList]);
 
     const handlePressDate = useCallback(
         (date?: Date) =>

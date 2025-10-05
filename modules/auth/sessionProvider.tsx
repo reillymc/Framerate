@@ -64,34 +64,32 @@ export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState(false);
 
-    const middleware: Middleware = useMemo(
-        () => ({
-            post: async (context) => {
-                if (!context.response?.ok) {
-                    try {
-                        const body = await context.response.json();
-                        setError(`${body.message}`);
-                    } catch {
-                        setError("An unknown error occurred");
-                    }
+    const middleware: Middleware = {
+        post: async (context) => {
+            if (!context.response?.ok) {
+                try {
+                    const body = await context.response.json();
+                    setError(`${body.message}`);
+                } catch {
+                    setError("An unknown error occurred");
                 }
-                return new Promise((resolve) => resolve(context.response));
-            },
-            onError: (context) => {
-                setError("Unable to connect to host");
-                return new Promise((resolve) => resolve(context.response));
-            },
-        }),
-        [],
-    );
+            }
+            return new Promise((resolve) => resolve(context.response));
+        },
+        onError: (context) => {
+            setError("Unable to connect to host");
+            return new Promise((resolve) => resolve(context.response));
+        },
+    };
 
-    const authenticationService = useMemo(() => {
-        const serviceConfiguration = new Configuration({
-            basePath: host || BASE_URL,
-            middleware: [LoggerMiddleware, SignalMiddleware, middleware],
-        });
-        return new AuthenticationApi(new Configuration(serviceConfiguration));
-    }, [host, middleware]);
+    const serviceConfiguration = new Configuration({
+        basePath: host || BASE_URL,
+        middleware: [LoggerMiddleware, SignalMiddleware, middleware],
+    });
+
+    const authenticationService = new AuthenticationApi(
+        new Configuration(serviceConfiguration),
+    );
 
     return (
         <SessionContext.Provider
