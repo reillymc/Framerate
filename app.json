@@ -5,12 +5,12 @@
         "version": "4.0.1",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
-        "scheme": "framerate",
+        "scheme": "framerate-dev",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.reillymc.framerate",
+            "bundleIdentifier": "com.reillymc.framerate-dev",
             "config": {
                 "usesNonExemptEncryption": false
             },
