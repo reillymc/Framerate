@@ -33,7 +33,7 @@ export const HostActions: FC<HostActionsProps> = ({
                 <View style={styles.hostWarningContainer}>
                     <Icon
                         iconSet={AntDesign}
-                        iconName="exclamationcircle"
+                        iconName="exclamation-circle"
                         style={styles.hostWarningIcon}
                     />
                     <Text

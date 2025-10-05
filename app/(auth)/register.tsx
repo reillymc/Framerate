@@ -143,7 +143,7 @@ const RegisterScreen: FC = () => {
                                 !emailValidator.test(nativeEvent.text),
                             );
                         }}
-                        onBlur={({ nativeEvent }) => {
+                        onEndEditing={({ nativeEvent }) => {
                             if (nativeEvent.text === undefined) return;
 
                             setIsEmailInvalid(

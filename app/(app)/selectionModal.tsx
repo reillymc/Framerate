@@ -216,7 +216,7 @@ const SelectionModal: FC = () => {
                                     <Tag
                                         label={item.label}
                                         variant="light"
-                                        iconName="closecircle"
+                                        iconName="close-circle"
                                         onPress={() => handleItemPress(item)}
                                     />
                                 )}
