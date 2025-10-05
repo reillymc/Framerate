@@ -24,7 +24,9 @@
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#F99224"
             },
-            "package": "com.reillymc.framerate"
+            "package": "com.reillymc.framerate",
+            "edgeToEdgeEnabled": true,
+            "predictiveBackGestureEnabled": false
         },
         "web": {
             "bundler": "metro",

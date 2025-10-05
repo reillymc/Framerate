@@ -10,6 +10,7 @@
         "test": "jest --watchAll",
         "build:ios": "npm ci && expo prebuild --platform=ios && cd ios && pod install && cd ..",
         "deploy:ios": "eas build --platform ios --profile production --auto-submit",
+        "builddev:ios": "eas build --platform ios --profile development",
         "build:android": "npm ci && expo prebuild --platform=android",
         "lint": "biome check",
         "typecheck": "tsc --noEmit",
