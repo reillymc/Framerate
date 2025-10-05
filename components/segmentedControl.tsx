@@ -42,12 +42,8 @@ export const SegmentedControl = <T extends string | number>({
                     color: styles.inputBase.text.color.enabled as string,
                 }}
                 style={{
-                    borderRadius: styles.inputBase.container.borderRadius,
                     height: styles.inputBase.container.height.regular,
                 }}
-                backgroundColor={
-                    styles.inputBase.container.backgroundColor.enabled as string
-                }
                 onChange={({ nativeEvent }) =>
                     onChange(options[nativeEvent.selectedSegmentIndex])
                 }

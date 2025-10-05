@@ -168,10 +168,7 @@ const Profile: FC = () => {
                             ? `${user.firstName} ${user.lastName}`
                             : "...",
                         headerLeft: () => (
-                            <HeaderCloseAction
-                                label="Done"
-                                onClose={router.back}
-                            />
+                            <HeaderCloseAction onClose={router.back} />
                         ),
                     }}
                 />

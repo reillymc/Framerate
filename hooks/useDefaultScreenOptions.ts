@@ -12,15 +12,11 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
             headerLargeTitle: true,
             headerTransparent: Platform.OS !== "android",
             headerShown: Platform.OS !== "web",
-            headerBlurEffect: "regular",
             headerLargeTitleStyle: {
                 color: theme.color.textPrimary,
             },
             headerLargeStyle: {
                 backgroundColor: theme.color.background,
-            },
-            headerBackTitleStyle: {
-                fontSize: theme.font.size.small,
             },
             headerTintColor: theme.color.secondary,
             headerTitleStyle: {

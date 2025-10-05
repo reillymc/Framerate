@@ -15,7 +15,7 @@ import { useSeasonReviews } from "@/modules/seasonReview";
 import { useShow } from "@/modules/show";
 import { useCurrentUserConfig } from "@/modules/user";
 
-import { MediaFooterButtons, MediaLinks, TmdbImage } from "@/components";
+import { MediaHeaderButtons, MediaLinks, TmdbImage } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 
 const Season: React.FC = () => {
@@ -60,7 +60,21 @@ const Season: React.FC = () => {
 
     return (
         <>
-            <Stack.Screen options={{ title: season?.name ?? name }} />
+            <Stack.Screen
+                options={{
+                    title: season?.name ?? name,
+                    headerRight: () => (
+                        <MediaHeaderButtons
+                            onAddReview={() =>
+                                router.push({
+                                    pathname: "/shows/season/editWatch",
+                                    params: { showId, seasonNumber },
+                                })
+                            }
+                        />
+                    ),
+                }}
+            />
             <FlatList
                 contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
@@ -183,14 +197,6 @@ const Season: React.FC = () => {
                         </View>
                     );
                 }}
-            />
-            <MediaFooterButtons
-                onAddReview={() =>
-                    router.push({
-                        pathname: "/shows/season/editWatch",
-                        params: { showId, seasonNumber },
-                    })
-                }
             />
         </>
     );

@@ -11,9 +11,7 @@ import Animated, {
     type StyleProps,
 } from "react-native-reanimated";
 
-const AnimatedFlatListBase = Animated.createAnimatedComponent(
-    FlatList as any,
-) as any;
+const AnimatedFlatListBase = Animated.createAnimatedComponent(FlatList);
 
 interface AnimatedFlatListBaseProps extends CellRendererProps<any> {
     inverted?: boolean;

@@ -3,7 +3,6 @@ import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
-    IconButton,
     SwipeAction,
     SwipeableContainer,
 } from "@reillymc/react-native-components";
@@ -13,7 +12,12 @@ import {
     useMovieCollection,
 } from "@/modules/movieCollection";
 
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
+import {
+    EmptyState,
+    HeaderIconAction,
+    PosterCard,
+    ScreenLayout,
+} from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
 
 const Collection: FC = () => {
@@ -34,7 +38,7 @@ const Collection: FC = () => {
                     options={{
                         title: collection?.name ?? "Loading...",
                         headerRight: () => (
-                            <IconButton
+                            <HeaderIconAction
                                 iconSet={Octicons}
                                 iconName="pencil"
                                 onPress={() =>

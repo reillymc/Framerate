@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
-    IconButton,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
@@ -12,7 +11,7 @@ import { useMovieReview } from "@/modules/movieReview";
 import { getRatingLabel, ReviewDisplay } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 
-import { ScreenLayout } from "@/components";
+import { HeaderIconAction, ScreenLayout } from "@/components";
 
 const Review: FC = () => {
     const { reviewId } = useLocalSearchParams<{ reviewId: string }>();
@@ -35,7 +34,7 @@ const Review: FC = () => {
                               )
                             : "Watched",
                         headerRight: () => (
-                            <IconButton
+                            <HeaderIconAction
                                 iconSet={Octicons}
                                 iconName="pencil"
                                 onPress={() =>

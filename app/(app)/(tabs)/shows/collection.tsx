@@ -3,7 +3,6 @@ import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
-    IconButton,
     SwipeAction,
     SwipeableContainer,
 } from "@reillymc/react-native-components";
@@ -13,7 +12,12 @@ import {
     useShowCollection,
 } from "@/modules/showCollection";
 
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
+import {
+    EmptyState,
+    HeaderIconAction,
+    PosterCard,
+    ScreenLayout,
+} from "@/components";
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();
@@ -33,7 +37,7 @@ const Collection: FC = () => {
                     options={{
                         title: collection?.name ?? "Loading...",
                         headerRight: () => (
-                            <IconButton
+                            <HeaderIconAction
                                 iconSet={Octicons}
                                 iconName="pencil"
                                 onPress={() =>

@@ -91,10 +91,7 @@ const RegisterScreen: FC = () => {
                     options={{
                         title: "Register Account",
                         headerLeft: () => (
-                            <HeaderCloseAction
-                                label="Cancel"
-                                onClose={router.back}
-                            />
+                            <HeaderCloseAction onClose={router.back} />
                         ),
                     }}
                 />

@@ -18,7 +18,10 @@ const Watchlist: FC = () => {
         <ScreenLayout
             meta={
                 <Stack.Screen
-                    options={{ title: watchlist?.name ?? "Loading..." }}
+                    options={{
+                        title: watchlist?.name ?? "Loading...",
+                        headerBlurEffect: "regular",
+                    }}
                 />
             }
             isLoading={isLoading}

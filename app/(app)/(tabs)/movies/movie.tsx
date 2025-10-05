@@ -34,7 +34,7 @@ import { useCurrentUserConfig } from "@/modules/user";
 
 import {
     ContextMenu,
-    MediaFooterButtons,
+    MediaHeaderButtons,
     MediaLinks,
     ParallaxScrollView,
     Poster,
@@ -106,7 +106,34 @@ const Movie: FC = () => {
 
     return (
         <ScreenLayout
-            meta={<Stack.Screen options={{ title: movie?.title ?? title }} />}
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: movie?.title ?? title,
+                        headerRight: () => (
+                            <MediaHeaderButtons
+                                onWatchlist={!!watchlistEntry}
+                                onAddReview={() =>
+                                    router.push({
+                                        pathname: "/movies/editWatch",
+                                        params: { movieId },
+                                    })
+                                }
+                                onToggleWatchlist={() => {
+                                    if (!movieId) return;
+
+                                    if (watchlistEntry) {
+                                        deleteWatchlistEntry({ movieId });
+                                        return;
+                                    }
+
+                                    saveWatchlistEntry({ movieId });
+                                }}
+                            />
+                        ),
+                    }}
+                />
+            }
         >
             <ParallaxScrollView
                 headerImage={
@@ -262,25 +289,6 @@ const Movie: FC = () => {
                     imdbId={movie?.imdbId}
                 />
             </ParallaxScrollView>
-            <MediaFooterButtons
-                onWatchlist={!!watchlistEntry}
-                onAddReview={() =>
-                    router.push({
-                        pathname: "/movies/editWatch",
-                        params: { movieId },
-                    })
-                }
-                onToggleWatchlist={() => {
-                    if (!movieId) return;
-
-                    if (watchlistEntry) {
-                        deleteWatchlistEntry({ movieId });
-                        return;
-                    }
-
-                    saveWatchlistEntry({ movieId });
-                }}
-            />
         </ScreenLayout>
     );
 };

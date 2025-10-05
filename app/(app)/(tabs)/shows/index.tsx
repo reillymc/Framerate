@@ -37,6 +37,7 @@ import {
 import { useCurrentUserConfig } from "@/modules/user";
 
 import {
+    HeaderIconAction,
     Poster,
     PosterCard,
     RecentSearchList,
@@ -101,7 +102,7 @@ const Shows: FC = () => {
                             addSearch({ searchValue: nativeEvent.text }),
                     },
                     headerRight: () => (
-                        <IconButton
+                        <HeaderIconAction
                             iconSet={Octicons}
                             iconName="person"
                             onPress={() =>

@@ -12,6 +12,8 @@ import {
     type ValueItem,
 } from "@reillymc/react-native-components";
 
+import { HeaderDoneAction } from "@/components";
+
 type UseSelectionModalParams<T> = Pick<
     SelectionInputProps<T>,
     "selectionMode" | "items"
@@ -165,11 +167,7 @@ const SelectionModal: FC = () => {
                     title: label as string,
                     headerLargeTitle: false,
                     headerRight: () => (
-                        <Action
-                            label="Done"
-                            containerStyle={styles.headerAction}
-                            onPress={() => router.back()}
-                        />
+                        <HeaderDoneAction onDone={() => router.back()} />
                     ),
                 }}
             />

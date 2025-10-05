@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Undefined } from "@reillymc/es-utils";
 import {
-    Action,
     type ThemedStyles,
     ToggleInput,
     useThemedStyles,
@@ -19,7 +18,7 @@ import {
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
 
-import { HeaderCloseAction } from "@/components";
+import { HeaderCloseAction, HeaderDoneAction } from "@/components";
 import { formatForSave } from "@/helpers/dateHelper";
 
 import { useSelectionModal } from "../../selectionModal";
@@ -124,13 +123,7 @@ const EditReview: FC = () => {
                     headerLeft: () => (
                         <HeaderCloseAction onClose={router.back} />
                     ),
-                    headerRight: () => (
-                        <Action
-                            label={reviewId ? "Save" : "Create"}
-                            containerStyle={styles.headerAction}
-                            onPress={handleSave}
-                        />
-                    ),
+                    headerRight: () => <HeaderDoneAction onDone={handleSave} />,
                 }}
             />
             <ScrollView

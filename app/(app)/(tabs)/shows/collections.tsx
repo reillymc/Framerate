@@ -4,7 +4,6 @@ import { FlatList } from "react-native-gesture-handler";
 import { Stack, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
-    IconButton,
     SwipeAction,
     SwipeableContainer,
 } from "@reillymc/react-native-components";
@@ -14,7 +13,12 @@ import {
     useShowCollections,
 } from "@/modules/showCollection";
 
-import { EmptyState, PosterCard, ScreenLayout } from "@/components";
+import {
+    EmptyState,
+    HeaderIconAction,
+    PosterCard,
+    ScreenLayout,
+} from "@/components";
 
 const Collections: FC = () => {
     const router = useRouter();
@@ -45,7 +49,7 @@ const Collections: FC = () => {
                     options={{
                         title: "Collections",
                         headerRight: () => (
-                            <IconButton
+                            <HeaderIconAction
                                 iconSet={Octicons}
                                 iconName="plus"
                                 onPress={() =>

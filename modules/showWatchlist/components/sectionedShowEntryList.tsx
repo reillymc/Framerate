@@ -32,7 +32,7 @@ import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
 import type { ShowWatchlistEntry } from "../models";
 
-const HEADER_HEIGHT = 38;
+const HEADER_HEIGHT = 48;
 const SECTION_HEADER_HEIGHT = 44;
 const SECTION_FOOTER_HEIGHT = 32;
 

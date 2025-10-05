@@ -93,7 +93,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                             onChange={(_, newDate) =>
                                 newDate && onDateChange(newDate)
                             }
-                            accentColor={theme.color.primaryLight}
+                            accentColor={theme.color.primary}
                         />
                     ) : (
                         <Action

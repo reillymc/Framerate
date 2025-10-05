@@ -44,6 +44,7 @@ import { ReviewSummaryCard } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
 
 import {
+    HeaderIconAction,
     Poster,
     PosterCard,
     RecentSearchList,
@@ -122,7 +123,7 @@ const Movies: FC = () => {
                                 addSearch({ searchValue: nativeEvent.text }),
                         },
                         headerRight: () => (
-                            <IconButton
+                            <HeaderIconAction
                                 iconSet={Octicons}
                                 iconName="person"
                                 onPress={() =>

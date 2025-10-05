@@ -2,7 +2,6 @@ import { type FC, useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
-    Action,
     TextInput,
     type ThemedStyles,
     useThemedStyles,
@@ -13,7 +12,11 @@ import {
     useSaveMovieCollection,
 } from "@/modules/movieCollection";
 
-import { HeaderCloseAction, ScreenLayout } from "@/components";
+import {
+    HeaderCloseAction,
+    HeaderDoneAction,
+    ScreenLayout,
+} from "@/components";
 
 const EditCollection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();
@@ -56,11 +59,7 @@ const EditCollection: FC = () => {
                             <HeaderCloseAction onClose={router.back} />
                         ),
                         headerRight: () => (
-                            <Action
-                                label={collection ? "Save" : "Create"}
-                                containerStyle={styles.headerAction}
-                                onPress={handleSave}
-                            />
+                            <HeaderDoneAction onDone={handleSave} />
                         ),
                     }}
                 />
