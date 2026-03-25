@@ -203,18 +203,27 @@ const Movie: FC = () => {
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
                     {director && (
-                        <Text variant="bodyEmphasized" style={styles.section}>
+                        <Text
+                            variant="body"
+                            style={[styles.section, styles.emphasis]}
+                        >
                             {`Directed by: ${director}`}
                         </Text>
                     )}
                     {screenwriter && (
-                        <Text variant="bodyEmphasized" style={styles.section}>
+                        <Text
+                            variant="body"
+                            style={[styles.section, styles.emphasis]}
+                        >
                             {`Screenplay by: ${screenwriter}`}
                         </Text>
                     )}
 
                     {releaseDate && (
-                        <Text variant="bodyEmphasized" style={styles.section}>
+                        <Text
+                            variant="body"
+                            style={[styles.section, styles.emphasis]}
+                        >
                             {`Release Date: ${releaseDate}`}
                         </Text>
                     )}
@@ -350,5 +359,8 @@ const createStyles = (
         sectionHeading: {
             marginTop: spacing.medium,
             paddingHorizontal: spacing.pageHorizontal,
+        },
+        emphasis: {
+            fontWeight: "600",
         },
     });

@@ -96,7 +96,7 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
                                 ))}
                             </View>
                         )}
-                        <Text variant="bodyEmphasized">
+                        <Text variant="body" style={{ fontWeight: 600 }}>
                             {index === 5
                                 ? "Today"
                                 : item.day.toLocaleString("default", {

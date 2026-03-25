@@ -15,7 +15,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => (
     <View style={[styles.container, style]}>
         {heading && (
-            <Text style={styles.text} variant="bodyEmphasized">
+            <Text style={styles.text} variant="body">
                 {heading}
             </Text>
         )}
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: "center",
+        fontWeight: "600",
     },
     actionContainer: {
         marginTop: 16,

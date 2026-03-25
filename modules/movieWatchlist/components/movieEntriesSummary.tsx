@@ -202,7 +202,7 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
                                     iconSet={Octicons}
                                     iconName="arrow-right"
                                 />
-                                <Text variant="bodyEmphasized">Older</Text>
+                                <Text variant="body">Older</Text>
                             </Pressable>
                         </Animated.View>
                     ) : undefined

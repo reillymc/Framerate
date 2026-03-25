@@ -41,7 +41,7 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
                     {review.description}
                 </Text>
             )}
-            <Text variant="bodyEmphasized" style={styles.informationSection}>
+            <Text variant="body" style={styles.informationSection}>
                 <Text variant="body">Watched </Text>
                 {review.date && (
                     <>
@@ -63,7 +63,7 @@ export const ReviewDisplay: FC<ReviewDisplayProps> = ({
             </Text>
             {!!review.company?.length &&
                 review.company?.map(({ companyId, firstName, lastName }) => (
-                    <Text key={companyId} variant="bodyEmphasized">
+                    <Text key={companyId} variant="body">
                         {`    - ${firstName ?? "..."} ${lastName ?? "..."}`}
                     </Text>
                 ))}

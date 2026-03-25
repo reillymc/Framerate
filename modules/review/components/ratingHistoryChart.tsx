@@ -44,7 +44,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     reviews,
     starCount,
 }) => {
-    const font = useFont(FontResources.regular, 12);
+    const font = useFont(FontResources.dosis, 12);
     const { state, isActive } = useChartPressState({
         x: 0,
         y: { rating: 0, filteredRatings: 0 },
@@ -268,8 +268,8 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
     const topOffset = 2;
     const fontSizeRegular = 10;
     const fontSizeBold = 14;
-    const fontRegular = useFont(FontResources.regular, fontSizeRegular);
-    const fontBold = useFont(FontResources.bold, fontSizeBold);
+    const fontRegular = useFont(FontResources.dosis, fontSizeRegular);
+    const fontBold = useFont(FontResources.dosis, fontSizeBold);
     const start = useDerivedValue(() => vec(xPosition.value, bottom));
     const end = useDerivedValue(() =>
         vec(

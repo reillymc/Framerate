@@ -54,13 +54,7 @@
             [
                 "expo-font",
                 {
-                    "fonts": [
-                        "./assets/fonts/Dosis-Bold.ttf",
-                        "./assets/fonts/Dosis-Light.ttf",
-                        "./assets/fonts/Dosis-Medium.ttf",
-                        "./assets/fonts/Dosis-Regular.ttf",
-                        "./assets/fonts/Dosis-SemiBold.ttf"
-                    ]
+                    "fonts": ["./assets/fonts/Dosis.ttf"]
                 }
             ],
             [

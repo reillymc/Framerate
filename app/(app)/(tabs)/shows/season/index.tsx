@@ -85,10 +85,7 @@ const Season: React.FC = () => {
                     <>
                         <Text variant="body">{season?.overview}</Text>
                         {airDate && (
-                            <Text
-                                variant="bodyEmphasized"
-                                style={styles.topMargin}
-                            >
+                            <Text variant="body" style={styles.topMargin}>
                                 {`First Aired: ${airDate}`}
                             </Text>
                         )}

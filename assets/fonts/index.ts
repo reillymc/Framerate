@@ -7,9 +7,5 @@ export enum Font {
 }
 
 export const FontResources = {
-    light: require("./Dosis-Light.ttf"),
-    regular: require("./Dosis-Regular.ttf"),
-    medium: require("./Dosis-Medium.ttf"),
-    bold: require("./Dosis-Bold.ttf"),
-    semiBold: require("./Dosis-SemiBold.ttf"),
+    dosis: require("./Dosis.ttf"),
 };

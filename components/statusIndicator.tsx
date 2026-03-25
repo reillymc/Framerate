@@ -40,7 +40,7 @@ export const StatusIndicator: FC<StatusIndicatorProps> = ({
     return (
         <View style={styles.errorContainer}>
             <Icon iconSet={Octicons} iconName={icon} style={{ color }} />
-            <Text variant="bodyEmphasized" style={{ color }}>
+            <Text variant="body" style={{ color }}>
                 {error || success}
             </Text>
         </View>

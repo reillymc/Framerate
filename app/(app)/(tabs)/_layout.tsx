@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Platform } from "react-native";
 import { Tabs, useSegments } from "expo-router";
 import { useTheme } from "@reillymc/react-native-components";
-import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 
 import { CustomTabBar } from "@/components";
 
@@ -42,12 +42,12 @@ const TabLayout: FC = () => {
     return (
         <NativeTabs iconColor={theme.color.primary}>
             <NativeTabs.Trigger name="movies">
-                <Icon sf="film" />
-                <Label>Movies</Label>
+                <NativeTabs.Trigger.Icon sf="film" />
+                <NativeTabs.Trigger.Label>Movies</NativeTabs.Trigger.Label>
             </NativeTabs.Trigger>
             <NativeTabs.Trigger name="shows">
-                <Icon sf="play.tv" />
-                <Label>Shows</Label>
+                <NativeTabs.Trigger.Icon sf="play.tv" />
+                <NativeTabs.Trigger.Label>Shows</NativeTabs.Trigger.Label>
             </NativeTabs.Trigger>
         </NativeTabs>
     );

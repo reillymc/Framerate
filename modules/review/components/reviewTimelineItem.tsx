@@ -119,15 +119,15 @@ const createStyles = ({
         },
         date: {
             color: color.primary,
-            fontFamily: font.familyWeight.bold800,
+            fontWeight: "800",
         },
         dateYear: {
             color: color.primary,
-            fontFamily: font.familyWeight.bold600,
+            fontWeight: "600",
         },
         datePlaceholder: {
             color: color.textSecondary,
-            fontFamily: font.familyWeight.bold600,
+            fontWeight: "600",
             marginTop: spacing.small,
             marginBottom: spacing.tiny,
         },

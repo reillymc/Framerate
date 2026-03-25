@@ -106,7 +106,6 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                             }}
                         >
                             <Text
-                                variant={isFocused ? "bodyEmphasized" : "body"}
                                 style={
                                     isFocused
                                         ? styles.tabLabelFocussed
@@ -162,5 +161,6 @@ const createStyles = (
         },
         tabLabelFocussed: {
             color: color.primary,
+            fontWeight: "600",
         },
     });

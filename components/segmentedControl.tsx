@@ -33,12 +33,13 @@ export const SegmentedControl = <T extends string | number>({
                 values={options.map((option) => option.label)}
                 selectedIndex={selectedIndex}
                 fontStyle={{
-                    fontFamily: styles.inputBase.text.fontFamilyWeight,
+                    fontFamily: theme.font.family.sans,
                     color: styles.inputBase.text.color.enabled as string,
                 }}
                 tintColor={theme.color.background}
                 activeFontStyle={{
-                    fontFamily: styles.highlightedText.highlighted.body,
+                    fontFamily: theme.font.family.sans,
+                    fontWeight: "600",
                     color: styles.inputBase.text.color.enabled as string,
                 }}
                 style={{

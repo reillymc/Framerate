@@ -44,7 +44,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
     onPressDate,
 }) => {
     const { theme } = useTheme();
-    const font = useFont(FontResources.bold, theme.font.size.tiny);
+    const font = useFont(FontResources.dosis, theme.font.size.tiny);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
 

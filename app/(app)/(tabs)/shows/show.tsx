@@ -235,10 +235,7 @@ const Show: FC = () => {
                         />
                     )}
                     {firstAirDate && (
-                        <Text
-                            variant="bodyEmphasized"
-                            style={[styles.section, styles.element]}
-                        >
+                        <Text style={[styles.section, styles.element]}>
                             {`First Aired: ${firstAirDate}`}
                         </Text>
                     )}

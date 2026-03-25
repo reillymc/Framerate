@@ -5,11 +5,7 @@ import { Platform, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
-import {
-    hideAsync,
-    preventAutoHideAsync,
-    setOptions,
-} from "expo-splash-screen";
+import { setOptions } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -32,7 +28,7 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 
 import { SessionProvider } from "@/modules/auth";
 
-import { Font, FontResources } from "@/assets/fonts";
+import { Dosis } from "@/assets/fonts/fonts.json";
 import { ServiceProvider, useColorScheme } from "@/hooks";
 
 import { version } from "../package.json";
@@ -51,8 +47,6 @@ setOptions({
     duration: 250,
     fade: true,
 });
-
-preventAutoHideAsync();
 
 let DevToolsBubble: FC | undefined;
 if (__DEV__) {
@@ -87,14 +81,6 @@ export default function RootLayout() {
     const colorScheme = useColorScheme();
     const { fontScale } = useWindowDimensions();
 
-    const [loaded, error] = useFonts({
-        [Font.Light]: FontResources.light,
-        [Font.Regular]: FontResources.regular,
-        [Font.Medium]: FontResources.medium,
-        [Font.SemiBold]: FontResources.semiBold,
-        [Font.Bold]: FontResources.bold,
-    });
-
     useEffect(() => {
         return NetInfo.addEventListener((state) => {
             const status = !!state.isConnected;
@@ -102,20 +88,11 @@ export default function RootLayout() {
         });
     }, []);
 
-    useEffect(() => {
-        if (loaded || error) {
-            hideAsync();
-        }
-    }, [loaded, error]);
-
     const baseTheme: DeepPartial<Theme> = {
         font: {
-            familyWeight: {
-                light100: Font.Light,
-                light200: Font.Light,
-                regular400: Font.Regular,
-                bold600: Font.SemiBold,
-                bold800: Font.Bold,
+            family: {
+                mono: Dosis,
+                sans: Dosis,
             },
             size: {
                 tiny: scaleFont(14, 0.9, fontScale),
@@ -194,26 +171,35 @@ export default function RootLayout() {
         },
         fonts: {
             regular: {
-                fontFamily: Font.Regular,
+                fontFamily: Dosis,
                 fontWeight: "400",
             },
             bold: {
-                fontFamily: Font.Medium,
+                fontFamily: Dosis,
                 fontWeight: "500",
             },
             medium: {
-                fontFamily: Font.SemiBold,
+                fontFamily: Dosis,
                 fontWeight: "600",
             },
             heavy: {
-                fontFamily: Font.Bold,
+                fontFamily: Dosis,
                 fontWeight: "700",
             },
         },
     };
 
+    if (Platform.OS === "web") {
+        // biome-ignore lint/correctness/useHookAtTopLevel: this condition won't change during runtime
+        const [loaded] = useFonts({
+            dosis: require("../assets/fonts/Dosis.ttf"),
+        });
+
+        if (!loaded) return null;
+    }
+
     const styles = MergeStyles(createDefaultStyles(theme), {
-        highlightedText: { highlighted: { body: Font.SemiBold } },
+        // highlightedText: { highlightedWeight: { body: Font.SemiBold } },
         menuItem: { paddingVertical: theme.spacing.small },
     });
 

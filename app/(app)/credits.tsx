@@ -44,7 +44,7 @@ const Credits: FC = () => {
                             "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg"
                         }
                     />
-                    <Text style={styles.tmdbText} variant="bodyEmphasized">
+                    <Text style={styles.tmdbText}>
                         Framerate uses the TMDB API but is not endorsed or
                         certified by TMDB.
                     </Text>
@@ -89,6 +89,7 @@ const createStyles = ({ theme: { spacing, color } }: ThemedStyles) =>
             flexWrap: "wrap",
             marginLeft: spacing.medium,
             flexShrink: 1,
+            fontWeight: "600",
         },
     });
 
