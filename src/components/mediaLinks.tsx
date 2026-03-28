@@ -1,6 +1,9 @@
 import { type FC, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { openURL } from "expo-linking";
+import {
+    openBrowserAsync,
+    WebBrowserPresentationStyle,
+} from "expo-web-browser";
 import {
     Text,
     type ThemedStyles,
@@ -91,7 +94,11 @@ const MediaLink: FC<MediaLinkProps> = ({
         <Pressable
             accessibilityRole="link"
             accessibilityLabel={linkDetails.name}
-            onPress={() => openURL(parsedLink)}
+            onPress={() =>
+                openBrowserAsync(parsedLink, {
+                    presentationStyle: WebBrowserPresentationStyle.PAGE_SHEET,
+                })
+            }
         >
             <SvgCssUri
                 width={60}
