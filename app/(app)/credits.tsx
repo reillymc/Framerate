@@ -2,12 +2,13 @@ import type { FC } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import {
-    Action,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 import { SvgCssUri } from "react-native-svg/css";
+
+import { HeaderCloseAction } from "@/components";
 
 const Credits: FC = () => {
     const router = useRouter();
@@ -19,7 +20,7 @@ const Credits: FC = () => {
                 options={{
                     title: "Credits",
                     headerLeft: () => (
-                        <Action label="Done" onPress={router.back} />
+                        <HeaderCloseAction onClose={router.back} />
                     ),
                 }}
             />

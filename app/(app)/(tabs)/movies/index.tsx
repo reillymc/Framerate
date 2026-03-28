@@ -1,24 +1,16 @@
-import { type FC, useCallback, useMemo, useRef, useState } from "react";
-import {
-    FlatList,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    View,
-} from "react-native";
+import { type FC, useCallback, useRef, useState } from "react";
+import { FlatList, Platform, ScrollView, StyleSheet, View } from "react-native";
 import Animated, {
     LinearTransition,
     ZoomInLeft,
     ZoomOutLeft,
 } from "react-native-reanimated";
 import type { SearchBarCommands } from "react-native-screens";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
     IconAction,
-    IconButton,
     Tag,
     Text,
     type ThemedStyles,
@@ -51,7 +43,6 @@ import {
     ResponsiveFlatList,
     ScreenLayout,
     ScreenSection,
-    SectionHeading,
     usePosterDimensions,
 } from "@/components";
 import { displayYear } from "@/helpers/dateHelper";
@@ -146,40 +137,70 @@ const Movies: FC = () => {
                             );
 
                             return (
-                                <PosterCard
-                                    heading={item.title}
-                                    subHeading={displayYear(item.releaseDate)}
-                                    imageUri={item.posterPath}
-                                    onWatchlist={onWatchlist}
+                                <Link
+                                    href={{
+                                        pathname: "/movies/movie",
+                                        params: {
+                                            id: item.id,
+                                            title: item.title,
+                                            posterPath: item.posterPath,
+                                        },
+                                    }}
                                     onPress={() => {
-                                        router.push({
-                                            pathname: "/movies/movie",
-                                            params: {
-                                                id: item.id,
-                                                title: item.title,
-                                                posterPath: item.posterPath,
-                                            },
-                                        });
                                         addSearch({
                                             searchValue: item.title,
                                         });
                                     }}
-                                    onAddReview={() =>
-                                        router.push({
-                                            pathname: "/movies/editWatch",
-                                            params: { movieId: item.id },
-                                        })
-                                    }
-                                    onToggleWatchlist={() =>
-                                        onWatchlist
-                                            ? deleteWatchlistEntry({
-                                                  movieId: item.id,
-                                              })
-                                            : saveWatchlistEntry({
-                                                  movieId: item.id,
-                                              })
-                                    }
-                                />
+                                    asChild
+                                >
+                                    <Link.Menu title={item.title}>
+                                        <Link.MenuAction
+                                            title="Add Watch"
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname:
+                                                        "/movies/editWatch",
+                                                    params: {
+                                                        movieId: item.id,
+                                                    },
+                                                })
+                                            }
+                                            icon="plus"
+                                        />
+                                        <Link.MenuAction
+                                            title={
+                                                onWatchlist
+                                                    ? "Remove from Watchlist"
+                                                    : "Add to Watchlist"
+                                            }
+                                            onPress={() =>
+                                                onWatchlist
+                                                    ? deleteWatchlistEntry({
+                                                          movieId: item.id,
+                                                      })
+                                                    : saveWatchlistEntry({
+                                                          movieId: item.id,
+                                                      })
+                                            }
+                                            icon={
+                                                onWatchlist
+                                                    ? "eye.slash"
+                                                    : "eye"
+                                            }
+                                        />
+                                    </Link.Menu>
+                                    <Link.Trigger>
+                                        <PosterCard
+                                            heading={item.title}
+                                            subHeading={displayYear(
+                                                item.releaseDate,
+                                            )}
+                                            asLink
+                                            imageUri={item.posterPath}
+                                        />
+                                    </Link.Trigger>
+                                    <Link.Preview />
+                                </Link>
                             );
                         }}
                         keyExtractor={(item) => item.id.toString()}
@@ -206,11 +227,7 @@ const Movies: FC = () => {
                     <>
                         <ScreenSection
                             title="Watchlist"
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/watchlist",
-                                })
-                            }
+                            href={{ pathname: "/movies/watchlist" }}
                         >
                             <View style={styles.watchlistSectionContainer}>
                                 <Animated.View
@@ -235,15 +252,53 @@ const Movies: FC = () => {
                                             })
                                         }
                                         onPress={handlePressDate}
-                                        onAddReview={({ movieId }) =>
-                                            router.push({
-                                                pathname: "/movies/editWatch",
-                                                params: { movieId },
-                                            })
-                                        }
-                                        onRemoveFromWatchlist={({ movieId }) =>
-                                            deleteWatchlistEntry({ movieId })
-                                        }
+                                        renderItem={({ item, children }) => (
+                                            <Link
+                                                href={{
+                                                    pathname: "/movies/movie",
+                                                    params: {
+                                                        id: item.movieId,
+                                                        title: item.title,
+                                                        posterPath:
+                                                            item.posterPath,
+                                                    },
+                                                }}
+                                                asChild
+                                            >
+                                                <Link.Menu title={item.title}>
+                                                    <Link.MenuAction
+                                                        title="Add Watch"
+                                                        onPress={() =>
+                                                            router.push({
+                                                                pathname:
+                                                                    "/movies/editWatch",
+                                                                params: {
+                                                                    movieId:
+                                                                        item.movieId,
+                                                                },
+                                                            })
+                                                        }
+                                                        icon="plus"
+                                                    />
+                                                    <Link.MenuAction
+                                                        title="Remove from Watchlist"
+                                                        onPress={() =>
+                                                            deleteWatchlistEntry(
+                                                                {
+                                                                    movieId:
+                                                                        item.movieId,
+                                                                },
+                                                            )
+                                                        }
+                                                        icon="eye.slash"
+                                                    />
+                                                </Link.Menu>
+                                                <Link.Trigger>
+                                                    {children}
+                                                </Link.Trigger>
+                                                <Link.Preview />
+                                            </Link>
+                                        )}
                                     />
                                 </Animated.View>
                                 <MovieEntriesChart
@@ -258,11 +313,7 @@ const Movies: FC = () => {
                         </ScreenSection>
                         <ScreenSection
                             title="Popular"
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/browse",
-                                })
-                            }
+                            href={{ pathname: "/movies/browse" }}
                         >
                             <FlatList
                                 data={filteredPopularMovies}
@@ -287,53 +338,78 @@ const Movies: FC = () => {
                                         );
 
                                     return (
-                                        <Poster
-                                            key={item.id}
-                                            heading={item.title}
-                                            imageUri={item.posterPath}
-                                            {...browsePoster.configuration}
-                                            onWatchlist={onWatchlist}
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname: "/movies/movie",
-                                                    params: {
-                                                        id: item.id,
-                                                        title: item.title,
-                                                        posterPath:
-                                                            item.posterPath,
-                                                    },
-                                                })
-                                            }
-                                            onAddReview={() =>
-                                                router.push({
-                                                    pathname:
-                                                        "/movies/editWatch",
-                                                    params: {
-                                                        movieId: item.id,
-                                                    },
-                                                })
-                                            }
-                                            onToggleWatchlist={() =>
-                                                onWatchlist
-                                                    ? deleteWatchlistEntry({
-                                                          movieId: item.id,
-                                                      })
-                                                    : saveWatchlistEntry({
-                                                          movieId: item.id,
-                                                      })
-                                            }
-                                        />
+                                        <Link
+                                            href={{
+                                                pathname: "/movies/movie",
+                                                params: {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    posterPath: item.posterPath,
+                                                },
+                                            }}
+                                            asChild
+                                        >
+                                            <Link.Menu title={item.title}>
+                                                <Link.MenuAction
+                                                    title="Add Watch"
+                                                    onPress={() =>
+                                                        router.push({
+                                                            pathname:
+                                                                "/movies/editWatch",
+                                                            params: {
+                                                                movieId:
+                                                                    item.id,
+                                                            },
+                                                        })
+                                                    }
+                                                    icon="plus"
+                                                />
+                                                <Link.MenuAction
+                                                    title={
+                                                        onWatchlist
+                                                            ? "Remove from Watchlist"
+                                                            : "Add to Watchlist"
+                                                    }
+                                                    onPress={() =>
+                                                        onWatchlist
+                                                            ? deleteWatchlistEntry(
+                                                                  {
+                                                                      movieId:
+                                                                          item.id,
+                                                                  },
+                                                              )
+                                                            : saveWatchlistEntry(
+                                                                  {
+                                                                      movieId:
+                                                                          item.id,
+                                                                  },
+                                                              )
+                                                    }
+                                                    icon={
+                                                        onWatchlist
+                                                            ? "eye.slash"
+                                                            : "eye"
+                                                    }
+                                                />
+                                            </Link.Menu>
+                                            <Link.Trigger>
+                                                <Poster
+                                                    key={item.id}
+                                                    heading={item.title}
+                                                    imageUri={item.posterPath}
+                                                    {...browsePoster.configuration}
+                                                    asLink
+                                                />
+                                            </Link.Trigger>
+                                            <Link.Preview />
+                                        </Link>
                                     );
                                 }}
                             />
                         </ScreenSection>
                         <ScreenSection
                             title="Collections"
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/collections",
-                                })
-                            }
+                            href={{ pathname: "/movies/collections" }}
                         >
                             <ScrollView
                                 horizontal
@@ -341,28 +417,24 @@ const Movies: FC = () => {
                                 contentContainerStyle={styles.collectionsList}
                             >
                                 {collections?.map(({ collectionId, name }) => (
-                                    <Pressable
+                                    <Link
                                         key={collectionId}
-                                        onPress={() =>
-                                            router.navigate({
-                                                pathname: "/movies/collection",
-                                                params: { collectionId },
-                                            })
-                                        }
+                                        href={{
+                                            pathname: "/movies/collection",
+                                            params: { collectionId },
+                                        }}
                                     >
-                                        <Tag label={name} variant="light" />
-                                    </Pressable>
+                                        <Link.Trigger>
+                                            <Tag label={name} variant="light" />
+                                        </Link.Trigger>
+                                        <Link.Preview />
+                                    </Link>
                                 ))}
                             </ScrollView>
                         </ScreenSection>
-                        <SectionHeading
+                        <ScreenSection
                             title="My Watches"
-                            style={styles.pageElement}
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/watches",
-                                })
-                            }
+                            href={{ pathname: "/movies/watches" }}
                         />
                     </>
                 }
@@ -377,30 +449,43 @@ const Movies: FC = () => {
                     </View>
                 )}
                 renderItem={({ item }) => (
-                    <ReviewSummaryCard
+                    <Link
                         key={item.reviewId}
-                        review={item}
-                        mediaTitle={item.movie.title}
-                        mediaDate={item.movie.releaseDate}
-                        mediaPosterPath={item.movie.posterPath}
-                        starCount={configuration.ratings.starCount}
-                        onPress={() =>
-                            router.push({
-                                pathname: "/movies/movie",
-                                params: {
-                                    id: item.movie.id,
-                                    title: item.movie.title,
-                                    posterPath: item.movie.posterPath,
-                                },
-                            })
-                        }
-                        onOpenReview={() =>
-                            router.push({
-                                pathname: "/movies/watch",
-                                params: { reviewId: item.reviewId },
-                            })
-                        }
-                    />
+                        href={{
+                            pathname: "/movies/movie",
+                            params: {
+                                id: item.movie.id,
+                                title: item.movie.title,
+                                posterPath: item.movie.posterPath,
+                            },
+                        }}
+                        asChild
+                    >
+                        <Link.Menu title={item.title}>
+                            <Link.MenuAction
+                                title="Open Watch"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/watch",
+                                        params: {
+                                            reviewId: item.reviewId,
+                                        },
+                                    })
+                                }
+                                icon="book"
+                            />
+                        </Link.Menu>
+                        <Link.Trigger>
+                            <ReviewSummaryCard
+                                review={item}
+                                mediaTitle={item.movie.title}
+                                mediaDate={item.movie.releaseDate}
+                                mediaPosterPath={item.movie.posterPath}
+                                starCount={configuration.ratings.starCount}
+                            />
+                        </Link.Trigger>
+                        <Link.Preview />
+                    </Link>
                 )}
                 ListEmptyComponent={
                     <Text style={styles.reviewsEmptyMessage}>
@@ -410,18 +495,15 @@ const Movies: FC = () => {
                 }
                 ListFooterComponent={
                     reviewList.length ? (
-                        <IconAction
-                            iconSet={Octicons}
-                            containerStyle={styles.reviewFooter}
-                            iconName="chevron-right"
-                            iconPosition="right"
-                            label="All"
-                            onPress={() =>
-                                router.navigate({
-                                    pathname: "/movies/watches",
-                                })
-                            }
-                        />
+                        <Link href={{ pathname: "/movies/watches" }} asChild>
+                            <IconAction
+                                iconSet={Octicons}
+                                containerStyle={styles.reviewFooter}
+                                iconName="chevron-right"
+                                iconPosition="right"
+                                label="All"
+                            />
+                        </Link>
                     ) : null
                 }
             />

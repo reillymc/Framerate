@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -54,34 +54,53 @@ const Browse: FC = () => {
                     );
 
                     return (
-                        <Poster
-                            key={item.id}
-                            heading={item.title}
-                            {...configuration}
-                            imageUri={item.posterPath}
-                            onWatchlist={onWatchlist}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/movies/movie",
-                                    params: {
-                                        id: item.id,
-                                        title: item.title,
-                                        posterPath: item.posterPath,
-                                    },
-                                })
-                            }
-                            onAddReview={() =>
-                                router.push({
-                                    pathname: "/movies/editWatch",
-                                    params: { movieId: item.id },
-                                })
-                            }
-                            onToggleWatchlist={() =>
-                                onWatchlist
-                                    ? deleteEntry({ movieId: item.id })
-                                    : saveEntry({ movieId: item.id })
-                            }
-                        />
+                        <Link
+                            href={{
+                                pathname: "/movies/movie",
+                                params: {
+                                    id: item.id,
+                                    title: item.title,
+                                    posterPath: item.posterPath,
+                                },
+                            }}
+                            asChild
+                        >
+                            <Link.Menu title={item.title}>
+                                <Link.MenuAction
+                                    title="Add Watch"
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/movies/editWatch",
+                                            params: { movieId: item.id },
+                                        })
+                                    }
+                                    icon="plus"
+                                />
+                                <Link.MenuAction
+                                    title={
+                                        onWatchlist
+                                            ? "Remove from Watchlist"
+                                            : "Add to Watchlist"
+                                    }
+                                    onPress={() =>
+                                        onWatchlist
+                                            ? deleteEntry({ movieId: item.id })
+                                            : saveEntry({ movieId: item.id })
+                                    }
+                                    icon={onWatchlist ? "eye.slash" : "eye"}
+                                />
+                            </Link.Menu>
+                            <Link.Trigger>
+                                <Poster
+                                    key={item.id}
+                                    heading={item.title}
+                                    {...configuration}
+                                    asLink
+                                    imageUri={item.posterPath}
+                                />
+                            </Link.Trigger>
+                            <Link.Preview />
+                        </Link>
                     );
                 }}
             />

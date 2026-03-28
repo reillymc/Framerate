@@ -1,4 +1,11 @@
-import { type FC, useCallback, useMemo, useRef } from "react";
+import {
+    type FC,
+    type ReactElement,
+    type ReactNode,
+    useCallback,
+    useMemo,
+    useRef,
+} from "react";
 import {
     type CellRendererProps,
     type FlatList,
@@ -45,9 +52,12 @@ const keyExtractor: AnimatedFlatListProps<MovieWatchlistEntry>["keyExtractor"] =
 interface MovieEntriesSummaryProps {
     watchlistEntries: MovieWatchlistEntry[];
     posterProperties: PosterProperties;
+    renderItem: (params: {
+        item: MovieWatchlistEntry;
+        children: ReactNode;
+    }) => ReactElement;
+
     onPressEntry: (item: MovieWatchlistEntry) => void;
-    onRemoveFromWatchlist: (item: MovieWatchlistEntry) => void;
-    onAddReview: (item: MovieWatchlistEntry) => void;
     onPress: (date?: Date) => void;
 }
 
@@ -56,8 +66,7 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
     posterProperties,
     onPressEntry,
     onPress,
-    onAddReview,
-    onRemoveFromWatchlist,
+    renderItem: renderItemShell,
 }) => {
     const scrollValue = useSharedValue(0);
     const styles = useThemedStyles(createStyles, {});
@@ -103,24 +112,20 @@ export const MovieEntriesSummary: FC<MovieEntriesSummaryProps> = ({
     }, [filteredItems]);
 
     const renderItem: ListRenderItem<MovieWatchlistEntry> = useCallback(
-        ({ item, index }) => (
-            <MovieEntryStackedPoster
-                index={index}
-                posterProperties={posterProperties}
-                posterPath={item.posterPath}
-                scrollValue={scrollValue}
-                onPress={() => onPressEntry(item)}
-                onAddReview={() => onAddReview(item)}
-                onRemoveFromWatchlist={() => onRemoveFromWatchlist(item)}
-            />
-        ),
-        [
-            posterProperties,
-            scrollValue,
-            onPressEntry,
-            onAddReview,
-            onRemoveFromWatchlist,
-        ],
+        ({ item, index }) =>
+            renderItemShell({
+                item,
+                children: (
+                    <MovieEntryStackedPoster
+                        index={index}
+                        posterProperties={posterProperties}
+                        posterPath={item.posterPath}
+                        scrollValue={scrollValue}
+                        onPress={() => onPressEntry(item)}
+                    />
+                ),
+            }),
+        [posterProperties, scrollValue, onPressEntry, renderItemShell],
     );
 
     const onScrollToIndexFailed: AnimatedFlatListProps<MovieWatchlistEntry>["onScrollToIndexFailed"] =

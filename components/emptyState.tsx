@@ -1,6 +1,10 @@
 import type React from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
-import { Text } from "@reillymc/react-native-components";
+import {
+    Text,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
 
 interface EmptyStateProps {
     heading?: string;
@@ -12,33 +16,37 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     heading,
     action,
     style,
-}) => (
-    <View style={[styles.container, style]}>
-        {heading && (
-            <Text style={styles.text} variant="body">
-                {heading}
-            </Text>
-        )}
+}) => {
+    const styles = useThemedStyles(createStyles, {});
 
-        {action && <View style={styles.actionContainer}>{action}</View>}
-    </View>
-);
+    return (
+        <View style={[styles.container, style]}>
+            {heading && (
+                <Text style={styles.text} variant="body">
+                    {heading}
+                </Text>
+            )}
 
-const styles = StyleSheet.create({
-    container: {
-        width: "80%",
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "center",
-        gap: 16,
-        flex: 1,
-        marginBottom: 80,
-    },
-    text: {
-        textAlign: "center",
-        fontWeight: "600",
-    },
-    actionContainer: {
-        marginTop: 16,
-    },
-});
+            {action && <View style={styles.actionContainer}>{action}</View>}
+        </View>
+    );
+};
+
+const createStyles = ({ theme: { color } }: ThemedStyles) =>
+    StyleSheet.create({
+        container: {
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
+            flex: 1,
+            paddingBottom: 80,
+            backgroundColor: color.background,
+        },
+        text: {
+            textAlign: "center",
+            fontWeight: "600",
+        },
+        actionContainer: {
+            marginTop: 16,
+        },
+    });

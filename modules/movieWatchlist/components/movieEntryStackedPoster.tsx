@@ -19,8 +19,6 @@ export interface MovieEntryStackedPosterProps
     posterProperties: PosterProperties;
     scrollValue?: SharedValue<number>;
     onPress?: () => void;
-    onAddReview?: () => void;
-    onRemoveFromWatchlist?: () => void;
 }
 
 export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
@@ -29,8 +27,6 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
     posterProperties,
     scrollValue,
     onPress,
-    onAddReview,
-    onRemoveFromWatchlist,
 }) => {
     const animatedStyle = useAnimatedStyle(() => {
         if (
@@ -90,10 +86,8 @@ export const MovieEntryStackedPoster: FC<MovieEntryStackedPosterProps> = ({
                 imageUri={posterPath}
                 size="small"
                 removeMargin
-                onWatchlist
+                asLink
                 onPress={onPress}
-                onAddReview={onAddReview}
-                onToggleWatchlist={onRemoveFromWatchlist}
             />
         </Animated.View>
     );

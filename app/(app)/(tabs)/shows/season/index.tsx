@@ -79,6 +79,7 @@ const Season: React.FC = () => {
                 contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
                 data={season?.episodes}
+                style={styles.page}
                 initialNumToRender={season?.episodes?.length} // Issue in FlatList: https://github.com/facebook/react-native/issues/36766#issuecomment-1853107471
                 keyExtractor={({ episodeNumber }) => episodeNumber.toString()}
                 ListHeaderComponent={
@@ -202,7 +203,7 @@ const Season: React.FC = () => {
 export default Season;
 
 const createStyles = (
-    { theme: { spacing, border } }: ThemedStyles,
+    { theme: { spacing, border, color } }: ThemedStyles,
     { fontScale, width }: { fontScale: number; width: number },
 ) => {
     const imageAspect = 5 / 7;
@@ -210,6 +211,9 @@ const createStyles = (
     const imageHeight = Math.floor(imageWidth * imageAspect * fontScale);
 
     return StyleSheet.create({
+        page: {
+            backgroundColor: color.background,
+        },
         container: {
             paddingBottom: 80,
             paddingHorizontal: spacing.pageHorizontal,

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import {
     SectionedMovieEntryList,
@@ -22,7 +22,9 @@ const Watchlist: FC = () => {
                 <Stack.Screen
                     options={{
                         title: watchlist?.name ?? "Loading...",
-                        headerBlurEffect: "regular",
+                        scrollEdgeEffects: {
+                            top: "hard",
+                        },
                     }}
                 />
             }
@@ -35,23 +37,46 @@ const Watchlist: FC = () => {
                 entries={watchlist?.entries ?? []}
                 jumpToDate={jumpToDate ? new Date(jumpToDate) : undefined}
                 onRefresh={refetch}
-                onPressEntry={(item) =>
-                    router.push({
-                        pathname: "/movies/movie",
-                        params: {
-                            id: item.movieId,
-                            title: item.title,
-                            posterPath: item.posterPath,
-                        },
-                    })
-                }
-                onAddReview={(movieId) =>
-                    router.push({
-                        pathname: "/movies/editWatch",
-                        params: { movieId },
-                    })
-                }
                 onDeleteEntry={(movieId) => deleteEntry({ movieId })}
+                renderItem={({ item, children }) => (
+                    <Link
+                        href={{
+                            pathname: "/movies/movie",
+                            params: {
+                                id: item.movieId,
+                                title: item.title,
+                                posterPath: item.posterPath,
+                            },
+                        }}
+                        asChild
+                    >
+                        <Link.Menu title={item.title}>
+                            <Link.MenuAction
+                                title="Add Watch"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/editWatch",
+                                        params: {
+                                            movieId: item.movieId,
+                                        },
+                                    })
+                                }
+                                icon="plus"
+                            />
+                            <Link.MenuAction
+                                title="Remove from Watchlist"
+                                onPress={() =>
+                                    deleteEntry({
+                                        movieId: item.movieId,
+                                    })
+                                }
+                                icon="eye.slash"
+                            />
+                        </Link.Menu>
+                        <Link.Trigger>{children}</Link.Trigger>
+                        <Link.Preview />
+                    </Link>
+                )}
             />
         </ScreenLayout>
     );

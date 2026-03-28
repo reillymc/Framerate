@@ -1,11 +1,12 @@
-import { type FC, useCallback, useMemo, useRef } from "react";
 import {
-    Platform,
-    SectionList,
-    StyleSheet,
-    useWindowDimensions,
-    View,
-} from "react-native";
+    type FC,
+    type ReactElement,
+    type ReactNode,
+    useCallback,
+    useMemo,
+    useRef,
+} from "react";
+import { Platform, SectionList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
 import { Octicons } from "@expo/vector-icons";
@@ -18,10 +19,9 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { Fade, PosterCard, usePosterDimensions } from "@/components";
+import { PosterCard, usePosterDimensions } from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks";
 
 import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";
@@ -69,23 +69,22 @@ const formatItemDate = (rawDate: string | undefined, isOlder?: boolean) => {
 interface SectionedMovieEntryListProps {
     entries: MovieWatchlistEntry[];
     jumpToDate?: Date;
+    renderItem: (params: {
+        item: MovieWatchlistEntry;
+        children: ReactNode;
+    }) => ReactElement;
     onRefresh: () => void;
-    onPressEntry: (item: MovieWatchlistEntry) => void;
     onDeleteEntry: (movieId: number) => void;
-    onAddReview: (movieId: number) => void;
 }
 
 export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
     entries,
     jumpToDate,
+    renderItem,
     onRefresh,
     onDeleteEntry,
-    onPressEntry,
-    onAddReview,
 }) => {
     const listRef = useRef<SectionList<MovieWatchlistEntry> | null>(null);
-    const scheme = useColorScheme();
-    const { width } = useWindowDimensions();
     const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
     const { height } = usePosterDimensions({ size: "tiny" });
@@ -142,36 +141,38 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
             getItemLayout={getItemHeight}
             renderSectionHeader={({ section }) => (
                 <BlurView
-                    intensity={scheme === "light" ? 90 : 40}
-                    tint={
-                        scheme === "light"
-                            ? "systemMaterialLight"
-                            : "systemThickMaterialDark"
-                    }
+                    intensity={50}
+                    tint="default"
                     style={styles.sectionHeaderContainer}
                 >
-                    <Text variant="title">{section.monthTitle}</Text>
+                    <View style={styles.sectionHeaderInnerContainer} />
+                    <Text variant="title" style={styles.monthHeading}>
+                        {section.monthTitle}
+                    </Text>
                     <Text variant="display" style={styles.yearHeading}>
                         {section.yearTitle}
                     </Text>
                 </BlurView>
             )}
             stickySectionHeadersEnabled
-            renderItem={({ item, section }) => (
-                <PosterCard
-                    heading={item.title}
-                    imageUri={item.posterPath}
-                    onWatchlist
-                    subHeading={formatItemDate(
-                        item.releaseDate,
-                        section.yearTitle === "Older",
-                    )}
-                    onPress={() => onPressEntry(item)}
-                    onToggleWatchlist={() => onDeleteEntry(item.movieId)}
-                    onAddReview={() => onAddReview(item.movieId)}
-                    height={height + theme.spacing.large}
-                />
-            )}
+            renderItem={({ item, section }) =>
+                // TODO: refactor
+                renderItem({
+                    item,
+                    children: (
+                        <PosterCard
+                            heading={item.title}
+                            imageUri={item.posterPath}
+                            subHeading={formatItemDate(
+                                item.releaseDate,
+                                section.yearTitle === "Older",
+                            )}
+                            asLink
+                            height={height + theme.spacing.large}
+                        />
+                    ),
+                })
+            }
             renderSectionFooter={() => (
                 <View style={{ height: SECTION_FOOTER_HEIGHT }} />
             )}
@@ -181,29 +182,6 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
                         variant="body"
                         style={styles.header}
                     >{`${entries.length} items on watchlist`}</Text>
-                    <BlurView
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 45,
-                        }}
-                        intensity={scheme === "light" ? 90 : 40}
-                        tint={
-                            scheme === "light"
-                                ? "systemMaterialLight"
-                                : "systemThickMaterialDark"
-                        }
-                    />
-                    <Fade
-                        direction="down"
-                        fadeOffset={0}
-                        height={45}
-                        width={width}
-                        style={styles.headerFade}
-                        color={theme.color.background}
-                    />
                 </View>
             }
             CellRendererComponent={({ item, children }) => (
@@ -234,7 +212,7 @@ export const SectionedMovieEntryList: FC<SectionedMovieEntryListProps> = ({
 };
 
 const createStyles = (
-    { theme: { spacing, color } }: ThemedStyles,
+    { theme: { spacing, color }, styles: { text } }: ThemedStyles,
     { top }: { top: number },
 ) =>
     StyleSheet.create({
@@ -253,12 +231,19 @@ const createStyles = (
             backgroundColor:
                 Platform.OS === "android" ? color.foreground : undefined,
         },
+        sectionHeaderInnerContainer: {
+            ...StyleSheet.absoluteFill,
+            backgroundColor: color.background,
+            opacity: 0.9,
+        },
         yearHeading: {
-            paddingBottom: 2,
+            lineHeight: text.font.display.size,
+        },
+        monthHeading: {
+            lineHeight: text.font.display.size,
         },
         headerContainer: {
             marginTop: -(top + HEADER_HEIGHT),
-            height: top + HEADER_HEIGHT,
         },
         header: {
             paddingHorizontal: spacing.pageHorizontal,

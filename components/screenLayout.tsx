@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { useRouter, useSegments } from "expo-router";
+import { Link, useRouter, useSegments } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
     IconButton,
@@ -95,10 +95,9 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
             {meta}
             {Platform.OS === "web" && !options?.web.modal && (
                 <View style={styles.navigationBar}>
-                    <Logo
-                        withTitle
-                        onPress={() => router.navigate("/(app)/(tabs)/movies")}
-                    />
+                    <Link href="/(app)/(tabs)/movies" asChild>
+                        <Logo withTitle />
+                    </Link>
                     {session && (
                         <IconButtonBase
                             iconSet={Octicons}
@@ -172,7 +171,7 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
             flex: 1,
         },
         modalBackdrop: {
-            ...StyleSheet.absoluteFillObject,
+            ...StyleSheet.absoluteFill,
             backgroundColor: "#00000055",
         },
         modalControlsContainer: {

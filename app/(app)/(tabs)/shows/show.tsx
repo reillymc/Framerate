@@ -6,7 +6,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
@@ -46,11 +46,7 @@ import { MediaType } from "@/constants/mediaTypes";
 import { displayFull } from "@/helpers/dateHelper";
 
 const Show: FC = () => {
-    const {
-        id: idParam,
-        name,
-        posterPath,
-    } = useLocalSearchParams<{
+    const { id: idParam, posterPath } = useLocalSearchParams<{
         id: string;
         name?: string;
         posterPath?: string;
@@ -102,7 +98,7 @@ const Show: FC = () => {
             meta={
                 <Stack.Screen
                     options={{
-                        title: show?.name ?? name,
+                        title: "",
                         headerRight: () => (
                             <MediaHeaderButtons
                                 onWatchlist={!!watchlistEntry}
@@ -132,20 +128,21 @@ const Show: FC = () => {
                 headerImage={
                     <TmdbImage type="backdrop" path={show?.backdropPath} />
                 }
-                contentInsetAdjustmentBehavior="always"
-                keyboardShouldPersistTaps="handled"
+                contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
-                scrollIndicatorInsets={{ top: 330, bottom: 50 }}
+                scrollIndicatorInsets={{ top: 330 }}
                 refreshControl={
                     <RefreshControl refreshing={false} onRefresh={refetch} />
                 }
             >
-                <Poster
-                    style={styles.floatingPoster}
-                    size="small"
-                    removeMargin
-                    imageUri={show?.posterPath ?? posterPath}
-                />
+                <Link.AppleZoomTarget>
+                    <Poster
+                        style={styles.floatingPoster}
+                        size="small"
+                        removeMargin
+                        imageUri={show?.posterPath ?? posterPath}
+                    />
+                </Link.AppleZoomTarget>
                 <View style={styles.floatingTagline}>
                     <Text variant="heading" numberOfLines={3}>
                         {show?.tagline}
@@ -211,26 +208,33 @@ const Show: FC = () => {
                             decelerationRate="fast"
                             snapToInterval={seasonPoster.interval}
                             renderItem={({ item }) => (
-                                <Poster
-                                    {...seasonPoster.configuration}
-                                    imageUri={
-                                        item.posterPath ?? show.posterPath
-                                    }
-                                    heading={
-                                        item.name ??
-                                        `Season ${item.seasonNumber}`
-                                    }
-                                    onPress={() =>
-                                        router.push({
-                                            pathname: "/shows/season",
-                                            params: {
-                                                showId: show.id,
-                                                seasonNumber: item.seasonNumber,
-                                                name: item.name,
-                                            },
-                                        })
-                                    }
-                                />
+                                <Link
+                                    href={{
+                                        pathname: "/shows/season",
+                                        params: {
+                                            showId: show?.id,
+                                            seasonNumber: item.seasonNumber,
+                                            name: item.name,
+                                        },
+                                    }}
+                                    asChild
+                                >
+                                    <Link.Trigger>
+                                        <Poster
+                                            {...seasonPoster.configuration}
+                                            imageUri={
+                                                item.posterPath ??
+                                                show.posterPath
+                                            }
+                                            heading={
+                                                item.name ??
+                                                `Season ${item.seasonNumber}`
+                                            }
+                                            asLink
+                                        />
+                                    </Link.Trigger>
+                                    <Link.Preview />
+                                </Link>
                             )}
                         />
                     )}

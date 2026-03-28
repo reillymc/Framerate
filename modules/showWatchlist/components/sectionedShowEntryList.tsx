@@ -1,10 +1,16 @@
-import { type FC, useCallback, useMemo, useRef } from "react";
+import {
+    type FC,
+    type ReactElement,
+    type ReactNode,
+    useCallback,
+    useMemo,
+    useRef,
+} from "react";
 import {
     Platform,
     SectionList,
     type SectionListData,
     StyleSheet,
-    useWindowDimensions,
     View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,10 +29,9 @@ import { addMonths, isBefore } from "date-fns";
 
 import { ActiveStatuses, type ShowStatus } from "@/modules/show";
 
-import { Fade, PosterCard, usePosterDimensions } from "@/components";
+import { PosterCard, usePosterDimensions } from "@/components";
 import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
-import { useColorScheme } from "@/hooks";
 
 import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";
@@ -38,24 +43,24 @@ const SECTION_FOOTER_HEIGHT = 32;
 
 interface SectionedShowEntryListProps {
     entries: ShowWatchlistEntry[];
+    renderItem: (params: {
+        item: ShowWatchlistEntry;
+        children: ReactNode;
+    }) => ReactElement;
+
     onRefresh: () => void;
-    onPressEntry: (item: ShowWatchlistEntry) => void;
     onDeleteEntry: (showId: number) => void;
-    onAddReview: (showId: number) => void;
 }
 
 type ShowEntrySection = SectionListData<ShowWatchlistEntry, { title?: string }>;
 
 export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     entries,
+    renderItem,
     onDeleteEntry,
-    onPressEntry,
-    onAddReview,
     onRefresh,
 }) => {
     const listRef = useRef<SectionList<ShowWatchlistEntry> | null>(null);
-    const scheme = useColorScheme();
-    const { width } = useWindowDimensions();
     const { top } = useSafeAreaInsets();
     const { theme } = useTheme();
     const { height } = usePosterDimensions({ size: "tiny" });
@@ -115,64 +120,63 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                 ? ({
                       data: upcomingShows,
                       title: "Upcoming",
-                      renderItem: ({ item }) => (
-                          <PosterCard
-                              heading={item.name}
-                              imageUri={item.posterPath}
-                              subHeading={displayFull(item.nextAirDate)}
-                              onWatchlist
-                              onToggleWatchlist={() =>
-                                  onDeleteEntry(item.showId)
-                              }
-                              onAddReview={() => onAddReview(item.showId)}
-                              onPress={() => onPressEntry(item)}
-                              height={itemHeight}
-                          />
-                      ),
+                      renderItem: ({ item }) =>
+                          renderItem({
+                              item,
+                              children: (
+                                  <PosterCard
+                                      asLink
+                                      heading={item.name}
+                                      imageUri={item.posterPath}
+                                      subHeading={displayFull(item.nextAirDate)}
+                                      height={itemHeight}
+                                  />
+                              ),
+                          }),
                   } satisfies ShowEntrySection)
                 : undefined,
             currentShows.length
                 ? ({
                       data: currentShows,
                       title: "Current",
-                      renderItem: ({ item }) => (
-                          <PosterCard
-                              heading={item.name}
-                              imageUri={item.posterPath}
-                              subHeading={displayWithWeek(item.nextAirDate)}
-                              onWatchlist
-                              onToggleWatchlist={() =>
-                                  onDeleteEntry(item.showId)
-                              }
-                              onAddReview={() => onAddReview(item.showId)}
-                              onPress={() => onPressEntry(item)}
-                              height={itemHeight}
-                          />
-                      ),
+                      renderItem: ({ item }) =>
+                          renderItem({
+                              item,
+                              children: (
+                                  <PosterCard
+                                      asLink
+                                      heading={item.name}
+                                      imageUri={item.posterPath}
+                                      subHeading={displayWithWeek(
+                                          item.nextAirDate,
+                                      )}
+                                      height={itemHeight}
+                                  />
+                              ),
+                          }),
                   } satisfies ShowEntrySection)
                 : undefined,
             endedShows.length
                 ? ({
                       data: endedShows,
                       title: "Concluded",
-                      renderItem: ({ item }) => (
-                          <PosterCard
-                              heading={item.name}
-                              imageUri={item.posterPath}
-                              subHeading={item.status}
-                              onWatchlist
-                              onToggleWatchlist={() =>
-                                  onDeleteEntry(item.showId)
-                              }
-                              onAddReview={() => onAddReview(item.showId)}
-                              onPress={() => onPressEntry(item)}
-                              height={itemHeight}
-                          />
-                      ),
+                      renderItem: ({ item }) =>
+                          renderItem({
+                              item,
+                              children: (
+                                  <PosterCard
+                                      asLink
+                                      heading={item.name}
+                                      imageUri={item.posterPath}
+                                      subHeading={item.status}
+                                      height={itemHeight}
+                                  />
+                              ),
+                          }),
                   } satisfies ShowEntrySection)
                 : undefined,
         ].filter(Undefined);
-    }, [entries, itemHeight, onPressEntry, onDeleteEntry, onAddReview]);
+    }, [entries, itemHeight, renderItem]);
 
     const scrollToCurrentSection = useCallback(() => {
         if (!(listRef.current && sectionData.length)) return;
@@ -228,15 +232,14 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
             }}
             renderSectionHeader={({ section }) => (
                 <BlurView
-                    intensity={scheme === "light" ? 90 : 40}
-                    tint={
-                        scheme === "light"
-                            ? "systemMaterialLight"
-                            : "systemThickMaterialDark"
-                    }
+                    intensity={50}
+                    tint="default"
                     style={styles.sectionHeaderContainer}
                 >
-                    <Text variant="title">{section.title}</Text>
+                    <View style={styles.sectionHeaderInnerContainer} />
+                    <Text variant="title" style={styles.monthHeading}>
+                        {section.monthTitle}
+                    </Text>
                     <Text variant="display" style={styles.yearHeading}>
                         {section.yearTitle}
                     </Text>
@@ -250,35 +253,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
                     <Text
                         variant="body"
                         style={styles.header}
-                    >{`${entries.length} shows on watchlist`}</Text>
-                    <BlurView
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 45,
-                        }}
-                        intensity={scheme === "light" ? 90 : 40}
-                        tint={
-                            scheme === "light"
-                                ? "systemMaterialLight"
-                                : "systemThickMaterialDark"
-                        }
-                    />
-                    <Fade
-                        direction="down"
-                        fadeOffset={0}
-                        height={45}
-                        width={width}
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                        }}
-                        color={theme.color.background}
-                    />
+                    >{`${entries.length} items on watchlist`}</Text>
                 </View>
             }
         />
@@ -286,7 +261,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
 };
 
 const createStyles = (
-    { theme: { spacing, color, border } }: ThemedStyles,
+    { theme: { spacing, color, border }, styles: { text } }: ThemedStyles,
     { top }: { top: number },
 ) =>
     StyleSheet.create({
@@ -305,8 +280,16 @@ const createStyles = (
             backgroundColor:
                 Platform.OS === "android" ? color.foreground : undefined,
         },
+        sectionHeaderInnerContainer: {
+            ...StyleSheet.absoluteFill,
+            backgroundColor: color.background,
+            opacity: 0.9,
+        },
         yearHeading: {
-            paddingBottom: 2,
+            lineHeight: text.font.display.size,
+        },
+        monthHeading: {
+            lineHeight: text.font.display.size,
         },
         headerContainer: {
             marginTop: -(top + HEADER_HEIGHT),

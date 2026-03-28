@@ -142,6 +142,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 ref={dropdownRef}
                 label="Venue"
                 minimumSearchLength={0}
+                textValue={venue}
                 onChangeText={onVenueChange}
                 maxSuggestionCount={3}
                 onSelect={(e) => {

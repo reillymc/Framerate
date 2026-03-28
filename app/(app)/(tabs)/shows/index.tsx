@@ -1,4 +1,4 @@
-import { type FC, useMemo, useRef, useState } from "react";
+import { type FC, useRef, useState } from "react";
 import {
     FlatList,
     Pressable,
@@ -7,12 +7,11 @@ import {
     View,
 } from "react-native";
 import type { SearchBarCommands } from "react-native-screens";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
     IconAction,
-    IconButton,
     Tag,
     Text,
     type ThemedStyles,
@@ -42,7 +41,7 @@ import {
     PosterCard,
     RecentSearchList,
     ResponsiveFlatList,
-    SectionHeading,
+    ScreenSection,
     usePosterDimensions,
 } from "@/components";
 import { displayYear } from "@/helpers/dateHelper";
@@ -123,38 +122,63 @@ const Shows: FC = () => {
                         );
 
                         return (
-                            <PosterCard
-                                heading={item.name}
-                                subHeading={displayYear(item.firstAirDate)}
-                                imageUri={item.posterPath}
-                                onWatchlist={onWatchlist}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: "/shows/show",
-                                        params: {
-                                            id: item.id,
-                                            name: item.name,
-                                            posterPath: item.posterPath,
-                                        },
-                                    });
-                                    addSearch({ searchValue: item.name });
+                            <Link
+                                href={{
+                                    pathname: "/shows/show",
+                                    params: {
+                                        id: item.id,
+                                        name: item.name,
+                                        posterPath: item.posterPath,
+                                    },
                                 }}
-                                onAddReview={() =>
-                                    router.push({
-                                        pathname: "/shows/editWatch",
-                                        params: { showId: item.id },
-                                    })
-                                }
-                                onToggleWatchlist={() =>
-                                    onWatchlist
-                                        ? deleteWatchlistEntry({
-                                              showId: item.id,
-                                          })
-                                        : saveWatchlistEntry({
-                                              showId: item.id,
-                                          })
-                                }
-                            />
+                                onPress={() => {
+                                    addSearch({
+                                        searchValue: item.name,
+                                    });
+                                }}
+                                asChild
+                            >
+                                <Link.Menu title={item.name}>
+                                    <Link.MenuAction
+                                        title="Add Watch"
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: "/shows/editWatch",
+                                                params: { showId: item.id },
+                                            })
+                                        }
+                                        icon="plus"
+                                    />
+                                    <Link.MenuAction
+                                        title={
+                                            onWatchlist
+                                                ? "Remove from Watchlist"
+                                                : "Add to Watchlist"
+                                        }
+                                        onPress={() =>
+                                            onWatchlist
+                                                ? deleteWatchlistEntry({
+                                                      showId: item.id,
+                                                  })
+                                                : saveWatchlistEntry({
+                                                      showId: item.id,
+                                                  })
+                                        }
+                                        icon={onWatchlist ? "eye.slash" : "eye"}
+                                    />
+                                </Link.Menu>
+                                <Link.Trigger>
+                                    <PosterCard
+                                        heading={item.name}
+                                        subHeading={displayYear(
+                                            item.firstAirDate,
+                                        )}
+                                        imageUri={item.posterPath}
+                                        asLink
+                                    />
+                                </Link.Trigger>
+                                <Link.Preview />
+                            </Link>
                         );
                     }}
                     keyExtractor={(item) => item.id.toString()}
@@ -179,36 +203,25 @@ const Shows: FC = () => {
                     minColumnWidth={380}
                     ListHeaderComponent={
                         <>
-                            <SectionHeading
+                            <ScreenSection
                                 title="Watchlist"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/shows/watchlist",
-                                    })
-                                }
+                                href={{ pathname: "/shows/watchlist" }}
                             />
                             <ShowUpNextList
                                 watchlist={watchlist}
-                                onPressShow={({ name, showId, posterPath }) =>
-                                    router.push({
-                                        pathname: "/shows/show",
+                                onAddWatch={(entry) =>
+                                    router.navigate({
+                                        pathname: "/shows/editWatch",
                                         params: {
-                                            id: showId,
-                                            name,
-                                            posterPath,
+                                            showId: entry.showId,
                                         },
                                     })
                                 }
+                                onRemoveWatchlist={deleteWatchlistEntry}
                             />
-                            <SectionHeading
+                            <ScreenSection
                                 title="Popular"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/shows/browse",
-                                    })
-                                }
+                                href={{ pathname: "/shows/browse" }}
                             />
                             <FlatList
                                 data={filteredPopularShows}
@@ -228,51 +241,74 @@ const Shows: FC = () => {
                                         );
 
                                     return (
-                                        <Poster
-                                            key={item.id}
-                                            heading={item.name}
-                                            imageUri={item.posterPath}
-                                            {...browsePoster.configuration}
-                                            onWatchlist={onWatchlist}
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname: "/shows/show",
-                                                    params: {
-                                                        id: item.id,
-                                                        name: item.name,
-                                                        posterPath:
-                                                            item.posterPath,
-                                                    },
-                                                })
-                                            }
-                                            onAddReview={() =>
-                                                router.push({
-                                                    pathname:
-                                                        "/shows/editWatch",
-                                                    params: { showId: item.id },
-                                                })
-                                            }
-                                            onToggleWatchlist={() =>
-                                                onWatchlist
-                                                    ? deleteWatchlistEntry({
-                                                          showId: item.id,
-                                                      })
-                                                    : saveWatchlistEntry({
-                                                          showId: item.id,
-                                                      })
-                                            }
-                                        />
+                                        <Link
+                                            href={{
+                                                pathname: "/shows/show",
+                                                params: {
+                                                    id: item.id,
+                                                    name: item.name,
+                                                    posterPath: item.posterPath,
+                                                },
+                                            }}
+                                            asChild
+                                        >
+                                            <Link.Menu title={item.name}>
+                                                <Link.MenuAction
+                                                    title="Add Watch"
+                                                    onPress={() =>
+                                                        router.push({
+                                                            pathname:
+                                                                "/shows/editWatch",
+                                                            params: {
+                                                                showId: item.id,
+                                                            },
+                                                        })
+                                                    }
+                                                    icon="plus"
+                                                />
+                                                <Link.MenuAction
+                                                    title={
+                                                        onWatchlist
+                                                            ? "Remove from Watchlist"
+                                                            : "Add to Watchlist"
+                                                    }
+                                                    onPress={() =>
+                                                        onWatchlist
+                                                            ? deleteWatchlistEntry(
+                                                                  {
+                                                                      showId: item.id,
+                                                                  },
+                                                              )
+                                                            : saveWatchlistEntry(
+                                                                  {
+                                                                      showId: item.id,
+                                                                  },
+                                                              )
+                                                    }
+                                                    icon={
+                                                        onWatchlist
+                                                            ? "eye.slash"
+                                                            : "eye"
+                                                    }
+                                                />
+                                            </Link.Menu>
+                                            <Link.Trigger>
+                                                <Poster
+                                                    key={item.id}
+                                                    heading={item.name}
+                                                    imageUri={item.posterPath}
+                                                    {...browsePoster.configuration}
+                                                    asLink
+                                                />
+                                            </Link.Trigger>
+                                            <Link.Preview />
+                                        </Link>
                                     );
                                 }}
                             />
-                            <SectionHeading
+                            <ScreenSection
                                 title="Collections"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/shows/collections",
-                                    })
-                                }
+                                href={{ pathname: "/shows/collections" }}
                             />
                             <ScrollView
                                 horizontal
@@ -293,14 +329,9 @@ const Shows: FC = () => {
                                     </Pressable>
                                 ))}
                             </ScrollView>
-                            <SectionHeading
+                            <ScreenSection
                                 title="My Watches"
-                                style={styles.pageElement}
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/shows/watches",
-                                    })
-                                }
+                                href={{ pathname: "/shows/watches" }}
                             />
                         </>
                     }
@@ -319,30 +350,41 @@ const Shows: FC = () => {
                         </View>
                     )}
                     renderItem={({ item }) => (
-                        <ReviewSummaryCard
+                        <Link
                             key={item.reviewId}
-                            review={item}
-                            mediaTitle={item.show.name}
-                            mediaDate={item.show.firstAirDate}
-                            mediaPosterPath={item.show.posterPath}
-                            starCount={configuration.ratings.starCount}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/shows/show",
-                                    params: {
-                                        id: item.show.id,
-                                        name: item.show.name,
-                                        posterPath: item.show.posterPath,
-                                    },
-                                })
-                            }
-                            onOpenReview={() =>
-                                router.push({
-                                    pathname: "/shows/watch",
-                                    params: { reviewId: item.reviewId },
-                                })
-                            }
-                        />
+                            href={{
+                                pathname: "/shows/show",
+                                params: {
+                                    id: item.show.id,
+                                    name: item.show.name,
+                                    posterPath: item.show.posterPath,
+                                },
+                            }}
+                            asChild
+                        >
+                            <Link.Menu title={item.show.name}>
+                                <Link.MenuAction
+                                    title="Open Watch"
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/shows/watch",
+                                            params: { reviewId: item.reviewId },
+                                        })
+                                    }
+                                    icon="book"
+                                />
+                            </Link.Menu>
+                            <Link.Trigger>
+                                <ReviewSummaryCard
+                                    review={item}
+                                    mediaTitle={item.show.name}
+                                    mediaDate={item.show.firstAirDate}
+                                    mediaPosterPath={item.show.posterPath}
+                                    starCount={configuration.ratings.starCount}
+                                />
+                            </Link.Trigger>
+                            <Link.Preview />
+                        </Link>
                     )}
                     ListEmptyComponent={
                         <Text style={styles.reviewsEmptyMessage}>
@@ -352,18 +394,15 @@ const Shows: FC = () => {
                     }
                     ListFooterComponent={
                         reviewList.length ? (
-                            <IconAction
-                                iconSet={Octicons}
-                                containerStyle={styles.reviewFooter}
-                                iconName="chevron-right"
-                                iconPosition="right"
-                                label="All"
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: "/shows/watches",
-                                    })
-                                }
-                            />
+                            <Link href={{ pathname: "/shows/watches" }} asChild>
+                                <IconAction
+                                    iconSet={Octicons}
+                                    containerStyle={styles.reviewFooter}
+                                    iconName="chevron-right"
+                                    iconPosition="right"
+                                    label="All"
+                                />
+                            </Link>
                         ) : null
                     }
                 />

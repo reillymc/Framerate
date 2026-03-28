@@ -3,7 +3,6 @@ import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { setStringAsync, setUrlAsync } from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
 import {
-    Action,
     Button,
     Text,
     TextInput,
@@ -14,7 +13,12 @@ import {
 
 import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
 
-import { Accordion, ScreenLayout, StatusIndicator } from "@/components";
+import {
+    Accordion,
+    HeaderCloseAction,
+    ScreenLayout,
+    StatusIndicator,
+} from "@/components";
 import { useFramerateServices } from "@/hooks";
 
 import app from "../../app.json";
@@ -58,7 +62,7 @@ const Profile: FC = () => {
                     options={{
                         title: "Administration",
                         headerLeft: () => (
-                            <Action label="Done" onPress={router.back} />
+                            <HeaderCloseAction onClose={router.back} />
                         ),
                     }}
                 />

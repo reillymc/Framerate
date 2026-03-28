@@ -13,15 +13,16 @@ export const useDefaultScreenOptions = (): NativeStackNavigationOptions => {
             headerTransparent: Platform.OS !== "android",
             headerShown: Platform.OS !== "web",
             headerLargeTitleStyle: {
-                color: theme.color.textPrimary,
+                fontFamily: theme.font.family.sans,
             },
-            headerLargeStyle: {
-                backgroundColor: theme.color.background,
+            headerBackTitleStyle: {
+                fontFamily: theme.font.family.sans,
+                fontWeight: "800",
+                fontSize: theme.font.size.regular,
             },
-            headerTintColor: theme.color.secondary,
             headerTitleStyle: {
-                fontWeight: "600",
-                color: theme.color.textPrimary,
+                fontFamily: theme.font.family.sans,
+                fontWeight: "800",
             },
             contentStyle: {
                 paddingTop:

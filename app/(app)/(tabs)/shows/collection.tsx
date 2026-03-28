@@ -1,10 +1,13 @@
 import type { FC } from "react";
+import { StyleSheet } from "react-native";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
     SwipeAction,
     SwipeableContainer,
+    type ThemedStyles,
+    useThemedStyles,
 } from "@reillymc/react-native-components";
 
 import {
@@ -21,6 +24,7 @@ import {
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();
+    const styles = useThemedStyles(createStyles, {});
 
     const router = useRouter();
     const {
@@ -62,6 +66,7 @@ const Collection: FC = () => {
                 contentInsetAdjustmentBehavior="automatic"
                 data={collection?.entries ?? []}
                 keyExtractor={(show) => show.showId.toString()}
+                style={styles.list}
                 refreshControl={
                     <RefreshControl refreshing={false} onRefresh={refetch} />
                 }
@@ -82,21 +87,42 @@ const Collection: FC = () => {
                             />,
                         ]}
                     >
-                        <PosterCard
-                            heading={item.name}
-                            imageUri={item.posterPath}
-                            subHeading={item.status}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/shows/show",
-                                    params: {
-                                        id: item.showId,
-                                        name: item.name,
-                                        posterPath: item.posterPath,
-                                    },
-                                })
-                            }
-                        />
+                        <Link
+                            href={{
+                                pathname: "/shows/show",
+                                params: {
+                                    id: item.showId,
+                                    name: item.name,
+                                    posterPath: item.posterPath,
+                                },
+                            }}
+                            asChild
+                        >
+                            <Link.Menu title={item.name}>
+                                <Link.MenuAction
+                                    title="Open show"
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/shows/show",
+                                            params: {
+                                                id: item.showId,
+                                                name: item.name,
+                                                posterPath: item.posterPath,
+                                            },
+                                        })
+                                    }
+                                    icon="chevron.right"
+                                />
+                            </Link.Menu>
+                            <Link.Trigger>
+                                <PosterCard
+                                    heading={item.name}
+                                    imageUri={item.posterPath}
+                                    subHeading={item.status}
+                                />
+                            </Link.Trigger>
+                            <Link.Preview />
+                        </Link>
                     </SwipeableContainer>
                 )}
             />
@@ -105,3 +131,10 @@ const Collection: FC = () => {
 };
 
 export default Collection;
+
+const createStyles = ({ theme: { color } }: ThemedStyles) =>
+    StyleSheet.create({
+        list: {
+            backgroundColor: color.background,
+        },
+    });

@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo } from "react";
+import { type FC, type PropsWithChildren, useCallback, useMemo } from "react";
 import {
     Platform,
     Pressable,
@@ -9,7 +9,7 @@ import {
     type ViewStyle,
 } from "react-native";
 import { DeviceType, deviceType } from "expo-device";
-import { Undefined } from "@reillymc/es-utils";
+import { Link } from "expo-router";
 import {
     Text,
     type ThemedStyles,
@@ -17,7 +17,6 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { ContextMenu, type MenuElementConfig } from "./contextMenu";
 import { TmdbImage } from "./tmdbImage";
 
 type Size = "tiny" | "small" | "medium" | "large";
@@ -51,11 +50,8 @@ export interface PosterProps {
     teaseSpacing?: boolean;
     style?: StyleProp<ViewStyle>;
     size?: Size;
-    onWatchlist?: boolean;
+    asLink?: boolean;
     onPress?: () => void;
-    onToggleWatchlist?: () => void;
-    onAddReview?: () => void;
-    onOpenReview?: () => void;
 }
 
 export const Poster: FC<PosterProps> = ({
@@ -66,11 +62,8 @@ export const Poster: FC<PosterProps> = ({
     removeMargin = false,
     teaseSpacing = false,
     size = "large",
-    onWatchlist,
+    asLink,
     onPress,
-    onAddReview,
-    onOpenReview,
-    onToggleWatchlist,
 }) => {
     const { height, width, gap } = usePosterDimensions({ size, teaseSpacing });
 
@@ -81,31 +74,6 @@ export const Poster: FC<PosterProps> = ({
         removeMargin,
     });
     const { theme } = useTheme();
-
-    const watchlistAction: MenuElementConfig | undefined = useMemo(() => {
-        if (!onToggleWatchlist) return undefined;
-        return onWatchlist
-            ? {
-                  actionKey: "watchlist-remove",
-                  actionTitle: "Remove from Watchlist",
-                  icon: {
-                      type: "IMAGE_SYSTEM",
-                      imageValue: {
-                          systemName: "eye.slash",
-                      },
-                  },
-              }
-            : {
-                  actionKey: "watchlist-add",
-                  actionTitle: "Add to Watchlist",
-                  icon: {
-                      type: "IMAGE_SYSTEM",
-                      imageValue: {
-                          systemName: "eye",
-                      },
-                  },
-              };
-    }, [onWatchlist, onToggleWatchlist]);
 
     return (
         <Pressable
@@ -119,59 +87,7 @@ export const Poster: FC<PosterProps> = ({
         >
             {({ pressed }) => (
                 <>
-                    <ContextMenu
-                        interaction="long-press"
-                        menuConfig={{
-                            menuTitle: "",
-                            menuItems: [
-                                onAddReview
-                                    ? ({
-                                          actionKey: "add-review",
-                                          actionTitle: "Add Watch",
-                                          icon: {
-                                              type: "IMAGE_SYSTEM",
-                                              imageValue: {
-                                                  systemName: "plus",
-                                              },
-                                          },
-                                      } satisfies MenuElementConfig)
-                                    : undefined,
-                                onOpenReview
-                                    ? ({
-                                          actionKey: "open-review",
-                                          actionTitle: "Open Watch",
-                                          icon: {
-                                              type: "IMAGE_SYSTEM",
-                                              imageValue: {
-                                                  systemName: "book.fill",
-                                              },
-                                          },
-                                      } satisfies MenuElementConfig)
-                                    : undefined,
-                                watchlistAction,
-                            ].filter(Undefined),
-                        }}
-                        onPressMenuAction={({ actionKey }) => {
-                            switch (actionKey) {
-                                case "view":
-                                    onPress?.();
-                                    break;
-                                case "add-review":
-                                    onAddReview?.();
-                                    break;
-                                case "open-review":
-                                    onOpenReview?.();
-                                    break;
-                                case "watchlist-add":
-                                    onToggleWatchlist?.();
-                                    break;
-                                case "watchlist-remove":
-                                    onToggleWatchlist?.();
-                                    break;
-                            }
-                        }}
-                        style={styles.contextMenu}
-                    >
+                    <Wrapper asLink={asLink}>
                         <TmdbImage
                             path={imageUri}
                             type="poster"
@@ -183,7 +99,7 @@ export const Poster: FC<PosterProps> = ({
                                 opacity: pressed ? 0.85 : 1,
                             }}
                         />
-                    </ContextMenu>
+                    </Wrapper>
                     {!!heading && (
                         <View>
                             <View
@@ -234,6 +150,11 @@ export const Poster: FC<PosterProps> = ({
         </Pressable>
     );
 };
+
+const Wrapper: FC<PropsWithChildren<{ asLink?: boolean }>> = ({
+    asLink,
+    children,
+}) => (asLink ? <Link.AppleZoom>{children}</Link.AppleZoom> : children);
 
 type PosterParams = Pick<Required<PosterProps>, "size"> &
     Pick<PosterProps, "teaseSpacing">;

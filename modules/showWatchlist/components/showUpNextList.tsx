@@ -1,5 +1,6 @@
-import { type FC, useMemo, useRef } from "react";
+import { type FC, useRef } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Link } from "expo-router";
 import {
     Text,
     type ThemedStyles,
@@ -16,11 +17,13 @@ import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 
 interface ShowUpNextListProps {
     watchlist: ShowWatchlist | undefined;
-    onPressShow: (entry: ShowWatchlistEntry) => void;
+    onAddWatch: (entry: ShowWatchlistEntry) => void;
+    onRemoveWatchlist: (entry: ShowWatchlistEntry) => void;
 }
 
 export const ShowUpNextList: FC<ShowUpNextListProps> = ({
-    onPressShow,
+    onAddWatch,
+    onRemoveWatchlist,
     watchlist,
 }) => {
     const styles = useThemedStyles(createStyles, {});
@@ -86,13 +89,44 @@ export const ShowUpNextList: FC<ShowUpNextListProps> = ({
                         {!!item.entries.length && (
                             <View style={styles.posterContainer}>
                                 {item.entries.map((entry) => (
-                                    <Poster
+                                    <Link
                                         key={entry.showId}
-                                        size="tiny"
-                                        imageUri={entry.posterPath}
-                                        removeMargin
-                                        onPress={() => onPressShow(entry)}
-                                    />
+                                        href={{
+                                            pathname: "/shows/show",
+                                            params: {
+                                                id: entry.showId,
+                                                name: entry.name,
+                                                posterPath: entry.posterPath,
+                                            },
+                                        }}
+                                        asChild
+                                    >
+                                        <Link.Menu title={entry.name}>
+                                            <Link.MenuAction
+                                                title="Add Watch"
+                                                onPress={() =>
+                                                    onAddWatch(entry)
+                                                }
+                                                icon="plus"
+                                            />
+                                            <Link.MenuAction
+                                                title={"Remove from Watchlist"}
+                                                onPress={() =>
+                                                    onRemoveWatchlist(entry)
+                                                }
+                                                icon={"eye.slash"}
+                                            />
+                                        </Link.Menu>
+                                        <Link.Trigger>
+                                            <Poster
+                                                size="tiny"
+                                                imageUri={entry.posterPath}
+                                                removeMargin
+                                                asLink
+                                            />
+                                        </Link.Trigger>
+                                        <Link.Preview />
+                                    </Link>
                                 ))}
                             </View>
                         )}

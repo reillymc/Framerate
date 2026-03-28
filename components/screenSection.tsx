@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from "react";
 import { StyleSheet } from "react-native";
+import { type Href, Link } from "expo-router";
 import {
     type ThemedStyles,
     useThemedStyles,
@@ -9,24 +10,22 @@ import { SectionHeading } from "./sectionHeading";
 
 interface ScreenSectionProps {
     title: string | undefined;
-    onPress?: () => void;
+    href: Href;
     children?: ReactNode;
 }
 
 export const ScreenSection: FC<ScreenSectionProps> = ({
     title,
-    onPress,
+    href,
     children,
 }) => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
         <>
-            <SectionHeading
-                title={title}
-                onPress={onPress}
-                style={styles.sectionHeading}
-            />
+            <Link href={href} asChild>
+                <SectionHeading title={title} style={styles.sectionHeading} />
+            </Link>
             {children}
         </>
     );

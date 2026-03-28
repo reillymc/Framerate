@@ -215,11 +215,7 @@ export default function RootLayout() {
                         <RnThemeProvider value={navigationTheme}>
                             <ThemeProvider theme={theme} styles={styles}>
                                 <GestureHandlerRootView>
-                                    <StatusBar
-                                        style="auto"
-                                        translucent
-                                        animated
-                                    />
+                                    <StatusBar style="auto" animated />
                                     <Slot />
                                 </GestureHandlerRootView>
                             </ThemeProvider>

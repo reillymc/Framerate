@@ -1,13 +1,17 @@
 import type { FC } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import {
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
 import { usePopularShows } from "@/modules/show";
-import { useShowWatchlist } from "@/modules/showWatchlist";
+import {
+    useDeleteShowWatchlistEntry,
+    useSaveShowWatchlistEntry,
+    useShowWatchlist,
+} from "@/modules/showWatchlist";
 
 import { Poster, usePosterDimensions } from "@/components/poster";
 
@@ -15,6 +19,8 @@ const Browse: FC = () => {
     const router = useRouter();
     const { data: shows, refetch } = usePopularShows();
     const { data: watchlist } = useShowWatchlist();
+    const { mutate: saveEntry } = useSaveShowWatchlistEntry();
+    const { mutate: deleteEntry } = useDeleteShowWatchlistEntry();
 
     const { displayCount, configuration } = usePosterDimensions({
         size: "medium",
@@ -50,23 +56,53 @@ const Browse: FC = () => {
                     );
 
                     return (
-                        <Poster
-                            key={item.id}
-                            heading={item.name}
-                            {...configuration}
-                            imageUri={item.posterPath}
-                            onWatchlist={onWatchlist}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/shows/show",
-                                    params: {
-                                        id: item.id,
-                                        name: item.name,
-                                        posterPath: item.posterPath,
-                                    },
-                                })
-                            }
-                        />
+                        <Link
+                            href={{
+                                pathname: "/shows/show",
+                                params: {
+                                    id: item.id,
+                                    name: item.name,
+                                    posterPath: item.posterPath,
+                                },
+                            }}
+                            asChild
+                        >
+                            <Link.Menu title={item.name}>
+                                <Link.MenuAction
+                                    title="Add Watch"
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/shows/editWatch",
+                                            params: { showId: item.id },
+                                        })
+                                    }
+                                    icon="plus"
+                                />
+                                <Link.MenuAction
+                                    title={
+                                        onWatchlist
+                                            ? "Remove from Watchlist"
+                                            : "Add to Watchlist"
+                                    }
+                                    onPress={() =>
+                                        onWatchlist
+                                            ? deleteEntry({ showId: item.id })
+                                            : saveEntry({ showId: item.id })
+                                    }
+                                    icon={onWatchlist ? "eye.slash" : "eye"}
+                                />
+                            </Link.Menu>
+                            <Link.Trigger>
+                                <Poster
+                                    key={item.id}
+                                    heading={item.name}
+                                    {...configuration}
+                                    asLink
+                                    imageUri={item.posterPath}
+                                />
+                            </Link.Trigger>
+                            <Link.Preview />
+                        </Link>
                     );
                 }}
             />

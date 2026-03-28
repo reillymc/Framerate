@@ -1,12 +1,6 @@
 import { type FC, useMemo } from "react";
-import {
-    FlatList,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    View,
-} from "react-native";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
@@ -45,13 +39,8 @@ import {
 import { MediaType } from "@/constants/mediaTypes";
 
 const Movie: FC = () => {
-    const {
-        id: idParam,
-        title,
-        posterPath,
-    } = useLocalSearchParams<{
+    const { id: idParam, posterPath } = useLocalSearchParams<{
         id: string;
-        title?: string;
         posterPath?: string;
     }>();
 
@@ -67,7 +56,7 @@ const Movie: FC = () => {
     const { data: movie } = useMovie(movieId);
     const { configuration } = useCurrentUserConfig();
     const { data: clientConfig } = useClientConfig();
-    const { data: reviews, refetch } = useMovieReviews({ movieId });
+    const { data: reviews } = useMovieReviews({ movieId });
     const { data: watchlistEntry } = useMovieWatchlistEntry(movieId);
     const { mutate: deleteWatchlistEntry } = useDeleteMovieWatchlistEntry();
     const { mutate: saveWatchlistEntry } = useSaveMovieWatchlistEntry();
@@ -109,7 +98,7 @@ const Movie: FC = () => {
             meta={
                 <Stack.Screen
                     options={{
-                        title: movie?.title ?? title,
+                        title: "",
                         headerRight: () => (
                             <MediaHeaderButtons
                                 onWatchlist={!!watchlistEntry}
@@ -139,20 +128,18 @@ const Movie: FC = () => {
                 headerImage={
                     <TmdbImage type="backdrop" path={movie?.backdropPath} />
                 }
-                contentInsetAdjustmentBehavior="always"
-                keyboardShouldPersistTaps="handled"
+                contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
-                scrollIndicatorInsets={{ top: 330, bottom: 50 }}
-                refreshControl={
-                    <RefreshControl refreshing={false} onRefresh={refetch} />
-                }
+                scrollIndicatorInsets={{ top: 330 }}
             >
-                <Poster
-                    style={styles.floatingPoster}
-                    size="small"
-                    removeMargin
-                    imageUri={movie?.posterPath ?? posterPath}
-                />
+                <Link.AppleZoomTarget>
+                    <Poster
+                        style={styles.floatingPoster}
+                        size="small"
+                        removeMargin
+                        imageUri={movie?.posterPath ?? posterPath}
+                    />
+                </Link.AppleZoomTarget>
                 <View style={styles.floatingTagline}>
                     <Text variant="heading" numberOfLines={3}>
                         {movie?.tagline}

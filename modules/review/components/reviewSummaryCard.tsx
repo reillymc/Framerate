@@ -4,7 +4,6 @@ import {
     Rating,
     Text,
     type ThemedStyles,
-    useTheme,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
@@ -19,8 +18,7 @@ interface ReviewSummaryCardProps {
     mediaTitle: string;
     mediaDate?: string;
     mediaPosterPath?: string;
-    onPress: () => void;
-    onOpenReview: () => void;
+    onPress?: () => void;
 }
 
 export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
@@ -30,14 +28,12 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
     mediaPosterPath,
     mediaTitle,
     onPress,
-    onOpenReview,
 }) => {
     const { width } = usePosterDimensions({ size: "tiny" });
     const styles = useThemedStyles(createStyles, {
         starCount,
         posterWidth: width,
     });
-    const { theme } = useTheme();
 
     const ratingDisplayValue = review.rating
         ? ratingToStars(review.rating, starCount)
@@ -54,8 +50,8 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                 <Poster
                     imageUri={mediaPosterPath}
                     size="tiny"
+                    asLink
                     removeMargin
-                    onOpenReview={onOpenReview}
                 />
                 <View style={styles.headingContainer}>
                     <View style={styles.headingTitleContainer}>

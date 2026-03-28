@@ -5,12 +5,10 @@ import { Text, useTheme } from "@reillymc/react-native-components";
 import { Poster, type PosterProps } from "./poster";
 
 interface PosterCardProps
-    extends Pick<PosterProps, "onAddReview" | "onPress" | "heading"> {
+    extends Pick<PosterProps, "onPress" | "heading" | "asLink"> {
     subHeading?: string;
     imageUri?: string;
     height?: number;
-    onWatchlist?: boolean;
-    onToggleWatchlist?: () => void;
 }
 
 export const PosterCard: FC<PosterCardProps> = ({
@@ -18,10 +16,8 @@ export const PosterCard: FC<PosterCardProps> = ({
     subHeading,
     imageUri,
     height,
-    onWatchlist,
+    asLink,
     onPress,
-    onAddReview,
-    onToggleWatchlist,
 }) => {
     const { theme } = useTheme();
 
@@ -36,13 +32,7 @@ export const PosterCard: FC<PosterCardProps> = ({
             }}
             onPress={onPress}
         >
-            <Poster
-                imageUri={imageUri}
-                size="tiny"
-                onWatchlist={onWatchlist}
-                onAddReview={onAddReview}
-                onToggleWatchlist={onToggleWatchlist}
-            />
+            <Poster imageUri={imageUri} size="tiny" asLink={asLink} />
             <View style={{ flexShrink: 1 }}>
                 <Text variant="heading" numberOfLines={2}>
                     {heading}

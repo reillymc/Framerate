@@ -1,5 +1,5 @@
 import { type FC, useMemo, useState } from "react";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { Undefined } from "@reillymc/es-utils";
 
 import { useCompany } from "@/modules/company";
@@ -105,30 +105,43 @@ const Reviews: FC = () => {
                 onRefresh={refetch}
                 onFetchNextPage={() => fetchNextPage()}
                 renderItem={({ item }) => (
-                    <ReviewSummaryCard
-                        key={item.reviewId}
-                        review={item}
-                        mediaTitle={item.movie.title}
-                        mediaPosterPath={item.movie.posterPath}
-                        mediaDate={item.movie.releaseDate}
-                        starCount={configuration.ratings.starCount}
-                        onPress={() =>
-                            router.push({
-                                pathname: "/movies/movie",
-                                params: {
-                                    id: item.movie.id,
-                                    title: item.movie.title,
-                                    posterPath: item.movie.posterPath,
-                                },
-                            })
-                        }
-                        onOpenReview={() =>
-                            router.push({
-                                pathname: "/movies/watch",
-                                params: { reviewId: item.reviewId },
-                            })
-                        }
-                    />
+                    <Link
+                        href={{
+                            pathname: "/movies/movie",
+                            params: {
+                                id: item.movie.id,
+                                title: item.movie.title,
+                                posterPath: item.movie.posterPath,
+                            },
+                        }}
+                        asChild
+                    >
+                        <Link.Menu title={item.title}>
+                            <Link.MenuAction
+                                title="Open Watch"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/movies/watch",
+                                        params: {
+                                            reviewId: item.reviewId,
+                                        },
+                                    })
+                                }
+                                icon="book"
+                            />
+                        </Link.Menu>
+                        <Link.Trigger>
+                            <ReviewSummaryCard
+                                key={item.reviewId}
+                                review={item}
+                                mediaTitle={item.movie.title}
+                                mediaPosterPath={item.movie.posterPath}
+                                mediaDate={item.movie.releaseDate}
+                                starCount={configuration.ratings.starCount}
+                            />
+                        </Link.Trigger>
+                        <Link.Preview />
+                    </Link>
                 )}
             />
         </ScreenLayout>

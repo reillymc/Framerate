@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { Alert, RefreshControl } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
     SwipeAction,
@@ -85,17 +85,20 @@ const Collections: FC = () => {
                             />,
                         ]}
                     >
-                        <PosterCard
-                            heading={item.name}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/movies/collection",
-                                    params: {
-                                        collectionId: item.collectionId,
-                                    },
-                                })
-                            }
-                        />
+                        <Link
+                            href={{
+                                pathname: "/movies/collection",
+                                params: {
+                                    collectionId: item.collectionId,
+                                },
+                            }}
+                            asChild
+                        >
+                            <Link.Trigger>
+                                <PosterCard heading={item.name} />
+                            </Link.Trigger>
+                            <Link.Preview />
+                        </Link>
                     </SwipeableContainer>
                 )}
                 refreshControl={

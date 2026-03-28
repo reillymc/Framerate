@@ -1,11 +1,16 @@
 import type { FC, ReactElement } from "react";
 import { type ScrollViewProps, StyleSheet, View } from "react-native";
 import Animated, {
+    Extrapolation,
     interpolate,
     useAnimatedRef,
     useAnimatedStyle,
-    useScrollViewOffset,
+    useScrollOffset,
 } from "react-native-reanimated";
+import {
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
 
 const HEADER_HEIGHT = 300;
 
@@ -19,46 +24,83 @@ export const ParallaxScrollView: FC<Props> = ({
     ...props
 }: Props) => {
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
-    const scrollOffset = useScrollViewOffset(scrollRef);
+    const scrollOffset = useScrollOffset(scrollRef);
+    const styles = useThemedStyles(createStyles, {});
 
     const headerAnimatedStyle = useAnimatedStyle(() => {
+        const minScale = 1;
+        const maxScale = 2;
+
+        const translateY = interpolate(
+            scrollOffset.value,
+            [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
+            [HEADER_HEIGHT * 0.5, 0, -HEADER_HEIGHT * 0.4],
+            Extrapolation.CLAMP,
+        );
+
+        const scale = interpolate(
+            scrollOffset.value,
+            [-HEADER_HEIGHT, 0],
+            [maxScale, minScale],
+            Extrapolation.CLAMP,
+        );
+
+        const opacity = interpolate(
+            scrollOffset.value,
+            [0, HEADER_HEIGHT / 3, HEADER_HEIGHT / 1.5],
+            [1, 1, 0],
+            Extrapolation.CLAMP,
+        );
+
         return {
-            transform: [
-                {
-                    translateY: interpolate(
-                        scrollOffset.value,
-                        [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
-                        [-HEADER_HEIGHT / 8 + 80, 0, HEADER_HEIGHT * 0.2],
-                    ),
-                },
-                {
-                    scale: interpolate(
-                        scrollOffset.value,
-                        [-HEADER_HEIGHT, 0, HEADER_HEIGHT / 2 + 80],
-                        [1.4, 1.1, 1],
-                    ),
-                },
-            ],
+            transform: [{ translateY }, { scale }],
+            opacity,
         };
     });
 
     return (
-        <Animated.ScrollView
-            ref={scrollRef}
-            scrollEventThrottle={16}
-            {...props}
-        >
-            <Animated.View style={[styles.header, headerAnimatedStyle]}>
+        <View style={styles.container}>
+            <Animated.View
+                style={[
+                    styles.header,
+                    { height: HEADER_HEIGHT },
+                    headerAnimatedStyle,
+                ]}
+            >
                 {headerImage}
             </Animated.View>
-            <View style={contentContainerStyle}>{props.children}</View>
-        </Animated.ScrollView>
+            <Animated.ScrollView
+                {...props}
+                ref={scrollRef}
+                scrollEventThrottle={16}
+                contentContainerStyle={[contentContainerStyle]}
+                style={styles.scroll}
+            >
+                {props.children}
+            </Animated.ScrollView>
+        </View>
     );
 };
 
-const styles = StyleSheet.create({
-    header: {
-        height: 300,
-        overflow: "hidden",
-    },
-});
+const createStyles = ({ theme: { color } }: ThemedStyles) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: color.background,
+        },
+        scroll: {
+            flex: 1,
+            paddingTop: 280,
+        },
+        header: {
+            ...StyleSheet.absoluteFill,
+            height: HEADER_HEIGHT,
+            zIndex: 0,
+            overflow: "hidden",
+        },
+        image: {
+            width: "100%",
+            height: "100%",
+            resizeMode: "cover",
+        },
+    });

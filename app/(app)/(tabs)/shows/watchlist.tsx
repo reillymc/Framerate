@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 
 import {
     SectionedShowEntryList,
@@ -20,7 +20,9 @@ const Watchlist: FC = () => {
                 <Stack.Screen
                     options={{
                         title: watchlist?.name ?? "Loading...",
-                        headerBlurEffect: "regular",
+                        scrollEdgeEffects: {
+                            top: "hard",
+                        },
                     }}
                 />
             }
@@ -32,22 +34,44 @@ const Watchlist: FC = () => {
             <SectionedShowEntryList
                 entries={watchlist?.entries ?? []}
                 onDeleteEntry={(showId) => deleteEntry({ showId })}
-                onPressEntry={(item) =>
-                    router.push({
-                        pathname: "/shows/show",
-                        params: {
-                            id: item.showId,
-                            name: item.name,
-                            posterPath: item.posterPath,
-                        },
-                    })
-                }
-                onAddReview={(showId) =>
-                    router.push({
-                        pathname: "/shows/editWatch",
-                        params: { showId },
-                    })
-                }
+                renderItem={({ item, children }) => (
+                    <Link
+                        href={{
+                            pathname: "/shows/show",
+                            params: {
+                                id: item.showId,
+                                name: item.name,
+                                posterPath: item.posterPath,
+                            },
+                        }}
+                        asChild
+                    >
+                        <Link.Menu title="Menu">
+                            <Link.MenuAction
+                                title="Add Watch"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/shows/editWatch",
+                                        params: {
+                                            showId: item.showId,
+                                        },
+                                    })
+                                }
+                                icon="plus"
+                            />
+                            <Link.MenuAction
+                                title="Remove from Watchlist"
+                                onPress={() =>
+                                    deleteEntry({
+                                        showId: item.showId,
+                                    })
+                                }
+                                icon="eye.slash"
+                            />
+                        </Link.Menu>
+                        <Link.Trigger>{children}</Link.Trigger>
+                    </Link>
+                )}
                 onRefresh={refetch}
             />
         </ScreenLayout>
