@@ -36,11 +36,12 @@ import {
     subMonths,
 } from "date-fns";
 
-import { Fade, type PosterProperties } from "@/components";
+import { Fade } from "@/components";
 import {
     AnimatedFlatList,
     type AnimatedFlatListProps,
 } from "@/components/animatedFlatList";
+import type { PosterProperties } from "@/hooks";
 
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";

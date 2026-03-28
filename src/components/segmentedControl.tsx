@@ -45,9 +45,12 @@ export const SegmentedControl = <T extends string | number>({
                 style={{
                     height: styles.inputBase.container.height.regular,
                 }}
-                onChange={({ nativeEvent }) =>
-                    onChange(options[nativeEvent.selectedSegmentIndex])
-                }
+                onChange={({ nativeEvent }) => {
+                    const value = options[nativeEvent.selectedSegmentIndex];
+                    if (value) {
+                        onChange(value);
+                    }
+                }}
             />
         </InputScaffold>
     );

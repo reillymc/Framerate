@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { type FC, useMemo } from "react";
 import { FlatList, StyleSheet, useWindowDimensions, View } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Undefined } from "@reillymc/es-utils";
@@ -8,6 +8,8 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { MediaHeaderButtons, MediaLinks, TmdbImage } from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
 import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useSeason } from "@/modules/season";
@@ -15,10 +17,7 @@ import { useSeasonReviews } from "@/modules/seasonReview";
 import { useShow } from "@/modules/show";
 import { useCurrentUserConfig } from "@/modules/user";
 
-import { MediaHeaderButtons, MediaLinks, TmdbImage } from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
-
-const Season: React.FC = () => {
+const Season: FC = () => {
     const {
         showId: showIdParam,
         seasonNumber: seasonNumberParam,

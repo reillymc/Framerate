@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useFramerateServices } from "@/hooks";
 import type { Show } from "@/modules/show";
 import { ShowKeys } from "@/modules/show/hooks/keys";
-
-import { useFramerateServices } from "@/hooks";
 import type { ShowWatchlistApiCreateEntryRequest } from "@/services";
 
 import type { ShowWatchlist, ShowWatchlistEntry } from "../models";

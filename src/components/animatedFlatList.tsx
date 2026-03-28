@@ -1,5 +1,5 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: anys required for now in type definitions
-import { type ForwardedRef, forwardRef, useMemo } from "react";
+import { type FC, type ForwardedRef, useMemo } from "react";
 import {
     type CellRendererProps,
     FlatList,
@@ -40,45 +40,43 @@ const createCellRenderer = (
 
 export interface AnimatedFlatListProps<ItemT> extends FlatListProps<ItemT> {
     itemLayoutAnimation?: ILayoutAnimationBuilder;
+    ref: ForwardedRef<FlatList>;
     cellStyle?: (props: CellRendererProps<ItemT>) => StyleProps;
 }
 
 /**
  * Custom implementation of Animated.FlatList which supports CellRendererComponent styling.
  */
-export const AnimatedFlatList = forwardRef(
-    (props: AnimatedFlatListProps<any>, ref: ForwardedRef<FlatList>) => {
-        const {
-            itemLayoutAnimation,
-            cellStyle: cellStyleFromProps,
-            ...restProps
-        } = props;
+export const AnimatedFlatList: FC<AnimatedFlatListProps<any>> = (props) => {
+    const {
+        itemLayoutAnimation,
+        cellStyle: cellStyleFromProps,
+        ...restProps
+    } = props;
 
-        const cellStyle = restProps?.inverted
-            ? restProps?.horizontal
-                ? styles.horizontallyInverted
-                : styles.verticallyInverted
-            : undefined;
+    const cellStyle = restProps?.inverted
+        ? restProps?.horizontal
+            ? styles.horizontallyInverted
+            : styles.verticallyInverted
+        : undefined;
 
-        const cellRenderer = useMemo(
-            () =>
-                createCellRenderer(
-                    itemLayoutAnimation,
-                    cellStyle,
-                    cellStyleFromProps,
-                ),
-            [cellStyle, cellStyleFromProps, itemLayoutAnimation],
-        );
+    const cellRenderer = useMemo(
+        () =>
+            createCellRenderer(
+                itemLayoutAnimation,
+                cellStyle,
+                cellStyleFromProps,
+            ),
+        [cellStyle, cellStyleFromProps, itemLayoutAnimation],
+    );
 
-        return (
-            <AnimatedFlatListBase
-                ref={ref}
-                {...restProps}
-                CellRendererComponent={cellRenderer}
-            />
-        );
-    },
-);
+    return (
+        <AnimatedFlatListBase
+            {...restProps}
+            CellRendererComponent={cellRenderer}
+        />
+    );
+};
 
 const styles = StyleSheet.create({
     verticallyInverted: { transform: [{ scaleY: -1 }] },

@@ -7,11 +7,10 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { HeaderIconAction } from "@/components";
 import { getRatingLabel, ReviewDisplay } from "@/modules/review";
 import { useShowReview } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import { HeaderIconAction } from "@/components";
 
 const Review: FC = () => {
     const { reviewId } = useLocalSearchParams<{ reviewId: string }>();

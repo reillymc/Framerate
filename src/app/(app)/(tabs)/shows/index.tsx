@@ -19,6 +19,16 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import {
+    HeaderIconAction,
+    Poster,
+    PosterCard,
+    RecentSearchList,
+    ResponsiveFlatList,
+    ScreenSection,
+} from "@/components";
+import { displayYear } from "@/helpers/dateHelper";
+import { usePosterDimensions } from "@/hooks";
 import { ReviewSummaryCard } from "@/modules/review";
 import {
     usePopularShows,
@@ -34,17 +44,6 @@ import {
     useShowWatchlist,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import {
-    HeaderIconAction,
-    Poster,
-    PosterCard,
-    RecentSearchList,
-    ResponsiveFlatList,
-    ScreenSection,
-    usePosterDimensions,
-} from "@/components";
-import { displayYear } from "@/helpers/dateHelper";
 
 const Shows: FC = () => {
     const { data: reviews } = useShowReviews();

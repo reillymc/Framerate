@@ -1,12 +1,13 @@
-import type React from "react";
+import type { FC } from "react";
 import {
     ContextMenuButton,
     ContextMenuView,
+    // @ts-expect-error
 } from "react-native-ios-context-menu";
 
 import type { ContextMenuProps } from "./contextMenu";
 
-export const ContextMenu: React.FunctionComponent<ContextMenuProps> = ({
+export const ContextMenu: FC<ContextMenuProps> = ({
     menuConfig,
     interaction = "press",
     style,
@@ -19,6 +20,7 @@ export const ContextMenu: React.FunctionComponent<ContextMenuProps> = ({
     return (
         <ContextMenuComponent
             isMenuPrimaryAction
+            // @ts-expect-error
             onPressMenuItem={({ nativeEvent }) =>
                 onPressMenuAction(nativeEvent)
             }

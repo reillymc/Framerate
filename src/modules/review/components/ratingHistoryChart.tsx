@@ -1,11 +1,6 @@
 import { type FC, useMemo } from "react";
 import { View } from "react-native";
-import {
-    runOnJS,
-    type SharedValue,
-    useDerivedValue,
-    useSharedValue,
-} from "react-native-reanimated";
+import { type SharedValue, useDerivedValue } from "react-native-reanimated";
 import { useTheme } from "@reillymc/react-native-components";
 import {
     Circle,
@@ -45,6 +40,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     starCount,
 }) => {
     const font = useFont(FontResources.dosis, 12);
+
     const { state, isActive } = useChartPressState({
         x: 0,
         y: { rating: 0, filteredRatings: 0 },
@@ -52,7 +48,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     const { theme } = useTheme();
 
     const hasUnknownDates = useMemo(
-        () => reviews?.some(r => !r.date),
+        () => reviews?.some((r) => !r.date),
         [reviews],
     );
 
@@ -61,7 +57,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     const chartData: ChartData[] = useMemo(() => {
         const sorted = [...(reviews ?? [])]
             .filter(({ rating }) => rating !== undefined)
-            .map(review => ({
+            .map((review) => ({
                 ...review,
                 date: review.date ? new Date(review.date) : undefined,
             }))
@@ -81,11 +77,11 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                     filteredRatings: rating,
                 };
             }
-            const oldestDateInList = sorted.find(r => r.date)?.date;
+            const oldestDateInList = sorted.find((r) => r.date)?.date;
             const newestDateInList = sorted
                 .slice()
                 .reverse()
-                .find(r => r.date)?.date;
+                .find((r) => r.date)?.date;
 
             if (!(oldestDateInList && newestDateInList))
                 return {
@@ -135,7 +131,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                         y: "inset",
                     },
                     // biome-ignore lint/style/useNamingConvention: victory internal prop names
-                    formatXLabel: value => {
+                    formatXLabel: (value) => {
                         if (!value) return "";
                         const date = new Date(value);
 
@@ -267,9 +263,14 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
 }) => {
     const topOffset = 2;
     const fontSizeRegular = 10;
-    const fontSizeBold = 14;
+    const fontSizeBold = 16;
     const fontRegular = useFont(FontResources.dosis, fontSizeRegular);
     const fontBold = useFont(FontResources.dosis, fontSizeBold);
+    // @ts-expect-error Skia seems to expect bool but errors unless number is set
+    fontRegular?.setEmbolden(600);
+    // @ts-expect-error Skia seems to expect bool but errors unless number is set
+    fontBold?.setEmbolden(800);
+
     const start = useDerivedValue(() => vec(xPosition.value, bottom));
     const end = useDerivedValue(() =>
         vec(
@@ -278,14 +279,10 @@ const ActiveValueIndicator: FC<ActiveValueIndicatorProps> = ({
         ),
     );
 
-    const activeValueDisplay = useSharedValue("");
-
-    const wrapper = (rating: number, stars: number) => {
-        activeValueDisplay.value = ratingToStars(rating, stars).toString();
-    };
-
-    useDerivedValue(() => {
-        runOnJS(wrapper)(activeValue.value, starCount);
+    const activeValueDisplay = useDerivedValue(() => {
+        return filteredValue.value
+            ? ratingToStars(activeValue.value, starCount).toString()
+            : "";
     });
 
     const activeValueWidth = useDerivedValue(

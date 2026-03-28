@@ -7,7 +7,8 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { Poster, usePosterDimensions } from "@/components";
+import { Poster } from "@/components";
+import { usePosterDimensions } from "@/hooks";
 
 import { ratingToStars } from "../helpers";
 import { AbsoluteRatingScale, type Review } from "../models";

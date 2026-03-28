@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useFramerateServices } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import type { Show } from "@/modules/show";
 import { ShowKeys } from "@/modules/show/hooks/keys";
-
-import { useFramerateServices } from "@/hooks";
 import type { ShowCollectionApiCreateEntryRequest } from "@/services";
 
 import type { ShowCollection, ShowEntry } from "../models";

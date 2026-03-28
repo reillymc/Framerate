@@ -1,17 +1,17 @@
-import type React from "react";
+import type { FC } from "react";
 import { Platform } from "react-native";
 import { Redirect, Stack } from "expo-router";
 
+import { useDefaultScreenOptions } from "@/hooks";
 import { useSession } from "@/modules/auth";
 
-import { useDefaultScreenOptions } from "@/hooks";
-
 // biome-ignore lint/style/useNamingConvention: expo unstable naming
+// biome-ignore lint/style/useComponentExportOnlyModules: expo convention
 export const unstable_settings = {
     initialRouteName: "index",
 };
 
-const AuthenticationStack: React.FC = () => {
+const AuthenticationStack: FC = () => {
     const screenOptions = useDefaultScreenOptions();
     const { session, userId, isLoading, isSigningIn } = useSession();
 

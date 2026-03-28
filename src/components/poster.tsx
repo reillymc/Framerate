@@ -1,14 +1,11 @@
-import { type FC, type PropsWithChildren, useCallback, useMemo } from "react";
+import type { FC, PropsWithChildren } from "react";
 import {
-    Platform,
     Pressable,
     type StyleProp,
     StyleSheet,
-    useWindowDimensions,
     View,
     type ViewStyle,
 } from "react-native";
-import { DeviceType, deviceType } from "expo-device";
 import { Link } from "expo-router";
 import {
     Text,
@@ -17,30 +14,9 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { type PosterSize, usePosterDimensions } from "@/hooks";
+
 import { TmdbImage } from "./tmdbImage";
-
-type Size = "tiny" | "small" | "medium" | "large";
-
-const PosterCountPhone: Record<Size, number> = {
-    large: 1,
-    medium: 2,
-    small: 3,
-    tiny: 6,
-};
-
-const PosterCountTablet: Record<Size, number> = {
-    large: 3,
-    medium: 4,
-    small: 5,
-    tiny: 8,
-};
-
-const PosterWidthWeb: Record<Size, number> = {
-    large: 270,
-    medium: 180,
-    small: 140,
-    tiny: 60,
-};
 
 export interface PosterProps {
     imageUri?: string;
@@ -49,7 +25,7 @@ export interface PosterProps {
     removeMargin?: boolean;
     teaseSpacing?: boolean;
     style?: StyleProp<ViewStyle>;
-    size?: Size;
+    size?: PosterSize;
     asLink?: boolean;
     onPress?: () => void;
 }
@@ -155,92 +131,6 @@ const Wrapper: FC<PropsWithChildren<{ asLink?: boolean }>> = ({
     asLink,
     children,
 }) => (asLink ? <Link.AppleZoom>{children}</Link.AppleZoom> : children);
-
-type PosterParams = Pick<Required<PosterProps>, "size"> &
-    Pick<PosterProps, "teaseSpacing">;
-
-export type PosterProperties = {
-    width: number;
-    height: number;
-    gap: number;
-    interval: number;
-    displayCount: number | undefined;
-    configuration: PosterParams;
-};
-
-type UsePosterDimensionsParams = (params: PosterParams) => PosterProperties;
-
-export const usePosterDimensions: UsePosterDimensionsParams = ({
-    size,
-    teaseSpacing,
-}) => {
-    const { width: screenWidth } = useWindowDimensions();
-    const { theme } = useTheme();
-
-    const gap = theme.spacing.pageHorizontal / 2;
-
-    const calcWidth = useCallback(
-        (posterCount: number) => {
-            const pageSideSpacing = theme.spacing.pageHorizontal * 2;
-
-            const posterInnerGaps =
-                (theme.spacing.pageHorizontal * posterCount - 1) / 2;
-
-            const posterFullScreenWidth =
-                screenWidth - pageSideSpacing - posterInnerGaps + gap;
-
-            const scaledPosterWidth =
-                posterFullScreenWidth *
-                (1 / (posterCount + (teaseSpacing ? 1 / 3 : 0)));
-
-            return scaledPosterWidth;
-        },
-        [screenWidth, gap, teaseSpacing, theme.spacing.pageHorizontal],
-    );
-
-    const dimensions = useMemo(() => {
-        if (Platform.OS !== "web") {
-            const itemCount =
-                deviceType === DeviceType.TABLET
-                    ? PosterCountTablet[size]
-                    : PosterCountPhone[size];
-
-            const width = calcWidth(itemCount);
-
-            return {
-                width,
-                height: width * (3 / 2),
-                gap,
-                interval: width + gap,
-                displayCount: itemCount,
-                configuration: { size, teaseSpacing },
-            };
-        }
-
-        const width = PosterWidthWeb[size];
-
-        return {
-            width,
-            height: width * (3 / 2),
-            gap,
-            interval: width + gap,
-            displayCount: Math.floor(
-                (screenWidth - theme.spacing.pageHorizontal * 2) /
-                    (width + gap),
-            ),
-            configuration: { size, teaseSpacing },
-        };
-    }, [
-        calcWidth,
-        size,
-        teaseSpacing,
-        screenWidth,
-        gap,
-        theme.spacing.pageHorizontal,
-    ]);
-
-    return dimensions;
-};
 
 const createStyles = (
     { styles: { listItem }, theme: { spacing, color, border } }: ThemedStyles,

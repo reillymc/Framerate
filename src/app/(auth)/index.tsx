@@ -23,10 +23,9 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { useSession } from "@/modules/auth";
-
 import { HostActions, Logo, ScreenLayout, StatusIndicator } from "@/components";
 import { WebPageLayout } from "@/constants/layout";
+import { useSession } from "@/modules/auth";
 
 const LoginScreen: FC = () => {
     const router = useRouter();

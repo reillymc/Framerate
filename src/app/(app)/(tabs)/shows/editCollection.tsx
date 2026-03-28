@@ -8,15 +8,14 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
-    useSaveShowCollection,
-    useShowCollection,
-} from "@/modules/showCollection";
-
-import {
     HeaderCloseAction,
     HeaderDoneAction,
     ScreenLayout,
 } from "@/components";
+import {
+    useSaveShowCollection,
+    useShowCollection,
+} from "@/modules/showCollection";
 
 const EditCollection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 
-import { useSession } from "@/modules/auth";
-
 import { useRecentSearches } from "@/hooks";
+import { useSession } from "@/modules/auth";
 
 export const useRecentMovieSearches = () => {
     const { userId } = useSession();

@@ -1,9 +1,8 @@
 import { DeviceType, deviceType } from "expo-device";
 import { Redirect, Stack } from "expo-router";
 
-import { useSession } from "@/modules/auth";
-
 import { useDefaultScreenOptions } from "@/hooks";
+import { useSession } from "@/modules/auth";
 
 const RootLayoutNavigator = () => {
     const { session, userId, isLoading } = useSession();

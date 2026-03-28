@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Platform } from "react-native";
+// biome-ignore lint/correctness/noUndeclaredDependencies: type only import via expo router
 import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { useTheme } from "@reillymc/react-native-components";
 

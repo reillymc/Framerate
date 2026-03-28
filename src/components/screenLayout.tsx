@@ -10,9 +10,8 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { useSession } from "@/modules/auth";
-
 import { NAVIGATION_BAR_HEIGHT } from "@/constants/layout";
+import { useSession } from "@/modules/auth";
 
 import { Logo } from "./logo";
 

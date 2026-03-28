@@ -9,10 +9,9 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { useSession } from "@/modules/auth";
-
 import { HeaderDoneAction, ScreenLayout } from "@/components";
 import { WebPageModal } from "@/constants/layout";
+import { useSession } from "@/modules/auth";
 
 const ServerScreen: FC = () => {
     const router = useRouter();

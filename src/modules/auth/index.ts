@@ -4,4 +4,5 @@
  * No dependencies
  */
 
-export { SessionProvider, useSession } from "./sessionProvider";
+export { SessionProvider } from "./components";
+export { useSession } from "./hooks";

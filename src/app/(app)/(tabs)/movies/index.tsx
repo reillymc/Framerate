@@ -19,6 +19,17 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
+    HeaderIconAction,
+    Poster,
+    PosterCard,
+    RecentSearchList,
+    ResponsiveFlatList,
+    ScreenLayout,
+    ScreenSection,
+} from "@/components";
+import { displayYear } from "@/helpers/dateHelper";
+import { usePosterDimensions } from "@/hooks";
+import {
     usePopularMovies,
     useRecentMovieSearches,
     useSearchMovies,
@@ -34,18 +45,6 @@ import {
 } from "@/modules/movieWatchlist";
 import { ReviewSummaryCard } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import {
-    HeaderIconAction,
-    Poster,
-    PosterCard,
-    RecentSearchList,
-    ResponsiveFlatList,
-    ScreenLayout,
-    ScreenSection,
-    usePosterDimensions,
-} from "@/components";
-import { displayYear } from "@/helpers/dateHelper";
 
 const Movies: FC = () => {
     const router = useRouter();

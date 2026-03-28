@@ -9,7 +9,8 @@ import Animated, {
     useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { Poster, type PosterProperties } from "@/components";
+import { Poster } from "@/components";
+import type { PosterProperties } from "@/hooks";
 
 import type { MovieWatchlistEntry } from "../models";
 

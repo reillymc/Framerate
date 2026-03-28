@@ -9,9 +9,8 @@ import {
 } from "@reillymc/react-native-components";
 import { addDays, isBefore, isSameDay, subDays } from "date-fns";
 
-import { ActiveStatuses, type ShowStatus } from "@/modules/show";
-
 import { Poster } from "@/components/poster";
+import { ActiveStatuses, type ShowStatus } from "@/modules/show";
 
 import type { ShowWatchlist, ShowWatchlistEntry } from "../models";
 

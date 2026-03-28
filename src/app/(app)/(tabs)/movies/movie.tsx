@@ -11,6 +11,17 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import {
+    ContextMenu,
+    MediaHeaderButtons,
+    MediaLinks,
+    ParallaxScrollView,
+    Poster,
+    ScreenLayout,
+    TmdbImage,
+} from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
+import { usePosterDimensions } from "@/hooks";
 import { useClientConfig } from "@/modules/meta";
 import { useMovie } from "@/modules/movie";
 import {
@@ -25,18 +36,6 @@ import {
 } from "@/modules/movieWatchlist";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import {
-    ContextMenu,
-    MediaHeaderButtons,
-    MediaLinks,
-    ParallaxScrollView,
-    Poster,
-    ScreenLayout,
-    TmdbImage,
-    usePosterDimensions,
-} from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
 
 const Movie: FC = () => {
     const { id: idParam, posterPath } = useLocalSearchParams<{

@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useFramerateServices } from "@/hooks";
 import type { Movie } from "@/modules/movie";
 import { MovieKeys } from "@/modules/movie/hooks/keys";
-
-import { useFramerateServices } from "@/hooks";
 import type { MovieWatchlistApiCreateEntryRequest } from "@/services";
 
 import type { MovieWatchlist, MovieWatchlistEntry } from "../models";

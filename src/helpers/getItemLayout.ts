@@ -73,15 +73,23 @@ export const getItemLayout =
             // Add the height of the top section separator after the section header.
             offset += currentSectionSeparatorHeight;
 
+            const sectionData = data[sectionIndex]?.data ?? [];
+
             // Iterate through each item within the current section.
             for (
                 let itemIndex = 0;
-                itemIndex < data[sectionIndex].data.length;
+                itemIndex < sectionData.length;
                 itemIndex++
             ) {
+                const sectionItem = sectionData[itemIndex];
+
+                if (sectionItem == null) {
+                    continue;
+                }
+
                 const currentItemHeight = resolveValue(
                     getItemHeight,
-                    data[sectionIndex].data[itemIndex],
+                    sectionItem,
                     sectionIndex,
                     itemIndex,
                 );
@@ -95,7 +103,7 @@ export const getItemLayout =
                 globalIndex++;
 
                 // If not the last item in the section, add the item separator's height.
-                if (itemIndex < data[sectionIndex].data.length - 1) {
+                if (itemIndex < sectionData.length - 1) {
                     offset += resolveValue(
                         getItemSeparatorHeight,
                         sectionIndex,

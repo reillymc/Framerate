@@ -1,4 +1,4 @@
-import type React from "react";
+import type { FC, ReactNode } from "react";
 import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
 import {
     Text,
@@ -8,15 +8,11 @@ import {
 
 interface EmptyStateProps {
     heading?: string;
-    action?: React.ReactNode;
+    action?: ReactNode;
     style?: StyleProp<ViewStyle>;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
-    heading,
-    action,
-    style,
-}) => {
+export const EmptyState: FC<EmptyStateProps> = ({ heading, action, style }) => {
     const styles = useThemedStyles(createStyles, {});
 
     return (

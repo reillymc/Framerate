@@ -8,10 +8,9 @@ import {
 } from "@reillymc/react-native-components";
 import { SvgCssUri } from "react-native-svg/css";
 
-import type { MediaExternalLink } from "@/modules/meta";
-
 import type { MediaType } from "@/constants/mediaTypes";
 import { useColorScheme } from "@/hooks";
+import type { MediaExternalLink } from "@/modules/meta";
 
 interface MediaLinksProps
     extends Pick<
@@ -61,7 +60,7 @@ interface MediaLinkProps {
     episodeNumber?: number;
 }
 
-export const MediaLink: React.FunctionComponent<MediaLinkProps> = ({
+export const MediaLink: FC<MediaLinkProps> = ({
     linkDetails,
     imdbId,
     tmdbId,

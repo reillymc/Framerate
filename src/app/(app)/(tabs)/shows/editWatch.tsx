@@ -8,6 +8,9 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { HeaderCloseAction, HeaderDoneAction } from "@/components";
+import { formatForSave } from "@/helpers/dateHelper";
+import { useSelectionModal } from "@/hooks";
 import { useCompany } from "@/modules/company";
 import { ReviewForm } from "@/modules/review";
 import { useShow } from "@/modules/show";
@@ -17,11 +20,6 @@ import {
     useShowWatchlistEntry,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import { HeaderCloseAction, HeaderDoneAction } from "@/components";
-import { formatForSave } from "@/helpers/dateHelper";
-
-import { useSelectionModal } from "../../selectionModal";
 
 const EditReview: FC = () => {
     const { reviewId, showId: showIdParam } = useLocalSearchParams<{

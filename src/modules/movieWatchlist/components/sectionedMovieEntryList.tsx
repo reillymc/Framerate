@@ -19,9 +19,10 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { PosterCard, usePosterDimensions } from "@/components";
+import { PosterCard } from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
+import { usePosterDimensions } from "@/hooks";
 
 import { getGroupedEntries } from "../helpers";
 import type { MovieWatchlistEntry } from "../models";

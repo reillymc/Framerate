@@ -86,9 +86,7 @@ export const ReviewTimelineItem: FC<ReviewTimelineItemProps> = ({
     );
 };
 
-const createStyles = ({
-    theme: { spacing, color, font, border },
-}: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             flex: 1,

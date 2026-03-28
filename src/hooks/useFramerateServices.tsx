@@ -1,48 +1,23 @@
-import {
-    createContext,
-    type FC,
-    type PropsWithChildren,
-    useContext,
-    useMemo,
-} from "react";
+import { createContext, useContext } from "react";
 
-import { useSession } from "@/modules/auth";
+import type {
+    AdministrationApiInterface,
+    CompanyApiInterface,
+    MetaApiInterface,
+    MovieApiInterface,
+    MovieCollectionApiInterface,
+    MovieReviewApiInterface,
+    MovieWatchlistApiInterface,
+    SeasonApiInterface,
+    SeasonReviewApiInterface,
+    ShowApiInterface,
+    ShowCollectionApiInterface,
+    ShowReviewApiInterface,
+    ShowWatchlistApiInterface,
+    UserApiInterface,
+} from "@/services";
 
-import {
-    AdministrationApi,
-    type AdministrationApiInterface,
-    CompanyApi,
-    type CompanyApiInterface,
-    Configuration,
-    LoggerMiddleware,
-    MetaApi,
-    type MetaApiInterface,
-    MovieApi,
-    type MovieApiInterface,
-    MovieCollectionApi,
-    type MovieCollectionApiInterface,
-    MovieReviewApi,
-    type MovieReviewApiInterface,
-    MovieWatchlistApi,
-    type MovieWatchlistApiInterface,
-    SeasonApi,
-    type SeasonApiInterface,
-    SeasonReviewApi,
-    type SeasonReviewApiInterface,
-    ShowApi,
-    type ShowApiInterface,
-    ShowCollectionApi,
-    type ShowCollectionApiInterface,
-    ShowReviewApi,
-    type ShowReviewApiInterface,
-    ShowWatchlistApi,
-    type ShowWatchlistApiInterface,
-    SignalMiddleware,
-    UserApi,
-    type UserApiInterface,
-} from "../services";
-
-type ServiceContextType = {
+export type ServiceContextType = {
     administration: AdministrationApiInterface;
     company: CompanyApiInterface;
     meta: MetaApiInterface;
@@ -58,44 +33,6 @@ type ServiceContextType = {
     showWatchlist: ShowWatchlistApiInterface;
     users: UserApiInterface;
 };
-
-const ServiceContext = createContext<Partial<ServiceContextType>>({});
-
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+export const ServiceContext = createContext<Partial<ServiceContextType>>({});
 
 export const useFramerateServices = () => useContext(ServiceContext);
-
-export const ServiceProvider: FC<PropsWithChildren> = ({ children }) => {
-    const { session, host } = useSession();
-
-    const services: ServiceContextType = useMemo(() => {
-        const serviceConfiguration = new Configuration({
-            accessToken: session || undefined,
-            basePath: host || BASE_URL,
-            middleware: [LoggerMiddleware, SignalMiddleware],
-        });
-
-        return {
-            administration: new AdministrationApi(serviceConfiguration),
-            company: new CompanyApi(serviceConfiguration),
-            meta: new MetaApi(serviceConfiguration),
-            movieCollections: new MovieCollectionApi(serviceConfiguration),
-            movieReviews: new MovieReviewApi(serviceConfiguration),
-            movies: new MovieApi(serviceConfiguration),
-            movieWatchlist: new MovieWatchlistApi(serviceConfiguration),
-            seasonReviews: new SeasonReviewApi(serviceConfiguration),
-            seasons: new SeasonApi(serviceConfiguration),
-            showCollections: new ShowCollectionApi(serviceConfiguration),
-            showReviews: new ShowReviewApi(serviceConfiguration),
-            shows: new ShowApi(serviceConfiguration),
-            showWatchlist: new ShowWatchlistApi(serviceConfiguration),
-            users: new UserApi(serviceConfiguration),
-        };
-    }, [session, host]);
-
-    return (
-        <ServiceContext.Provider value={services}>
-            {children}
-        </ServiceContext.Provider>
-    );
-};

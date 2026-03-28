@@ -9,16 +9,15 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
-    useDeleteShowCollection,
-    useShowCollections,
-} from "@/modules/showCollection";
-
-import {
     EmptyState,
     HeaderIconAction,
     PosterCard,
     ScreenLayout,
 } from "@/components";
+import {
+    useDeleteShowCollection,
+    useShowCollections,
+} from "@/modules/showCollection";
 
 const Collections: FC = () => {
     const router = useRouter();

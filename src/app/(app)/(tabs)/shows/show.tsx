@@ -17,6 +17,18 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import {
+    ContextMenu,
+    MediaHeaderButtons,
+    MediaLinks,
+    ParallaxScrollView,
+    Poster,
+    ScreenLayout,
+    TmdbImage,
+} from "@/components";
+import { MediaType } from "@/constants/mediaTypes";
+import { displayFull } from "@/helpers/dateHelper";
+import { usePosterDimensions } from "@/hooks";
 import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
@@ -31,19 +43,6 @@ import {
     useShowWatchlistEntry,
 } from "@/modules/showWatchlist";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import {
-    ContextMenu,
-    MediaHeaderButtons,
-    MediaLinks,
-    ParallaxScrollView,
-    Poster,
-    ScreenLayout,
-    TmdbImage,
-    usePosterDimensions,
-} from "@/components";
-import { MediaType } from "@/constants/mediaTypes";
-import { displayFull } from "@/helpers/dateHelper";
 
 const Show: FC = () => {
     const { id: idParam, posterPath } = useLocalSearchParams<{

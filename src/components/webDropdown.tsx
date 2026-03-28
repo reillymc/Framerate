@@ -1,5 +1,6 @@
-import React, {
+import {
     Children,
+    cloneElement,
     type FC,
     type ReactElement,
     type ReactNode,
@@ -56,7 +57,7 @@ export const WebDropdownMenu: FC<WebDropdownMenuProps> = ({
                 if (!child) return undefined;
                 const props = child.props;
                 if ("onSelect" in props) {
-                    return React.cloneElement(child, {
+                    return cloneElement(child, {
                         ...props,
                         onSelect: () => {
                             setVisible(false);

@@ -6,14 +6,14 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { Poster, ScreenLayout } from "@/components";
+import { usePosterDimensions } from "@/hooks";
 import { usePopularMovies } from "@/modules/movie";
 import {
     useDeleteMovieWatchlistEntry,
     useMovieWatchlist,
     useSaveMovieWatchlistEntry,
 } from "@/modules/movieWatchlist";
-
-import { Poster, ScreenLayout, usePosterDimensions } from "@/components";
 
 const Browse: FC = () => {
     const router = useRouter();

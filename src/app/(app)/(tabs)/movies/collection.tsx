@@ -11,17 +11,16 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
-    useDeleteMovieCollectionEntry,
-    useMovieCollection,
-} from "@/modules/movieCollection";
-
-import {
     EmptyState,
     HeaderIconAction,
     PosterCard,
     ScreenLayout,
 } from "@/components";
 import { displayFullNumeric } from "@/helpers/dateHelper";
+import {
+    useDeleteMovieCollectionEntry,
+    useMovieCollection,
+} from "@/modules/movieCollection";
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

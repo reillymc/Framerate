@@ -5,7 +5,8 @@ import {
     View,
     type ViewStyle,
 } from "react-native";
-import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
+import { useAnimatedReaction } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { DeviceType, deviceType } from "expo-device";
 import { useTheme } from "@reillymc/react-native-components";
 import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
@@ -47,6 +48,8 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
     const font = useFont(FontResources.dosis, theme.font.size.tiny);
     const scheme = useColorScheme();
     const { width } = useWindowDimensions();
+    // @ts-expect-error Skia seems to expect bool but errors unless number is set
+    font?.setEmbolden(800);
 
     const { state } = useChartPressState({
         x: 0,
@@ -58,7 +61,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
             subMonths(new Date(), MovieEntryConstants.monthsBack),
         );
 
-        const transformedEntries = [...(entries ?? [])].map(review => ({
+        const transformedEntries = [...(entries ?? [])].map((review) => ({
             ...review,
             date: review.releaseDate ? new Date(review.releaseDate) : undefined,
         }));
@@ -67,7 +70,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
             length: totalMonthCount,
         }).map((_, i) => addMonths(firstMonth, i));
 
-        const data = months.map(month => {
+        const data = months.map((month) => {
             const monthStart = startOfMonth(month).getTime();
             const monthEnd = endOfMonth(month).getTime();
             const monthEntries = transformedEntries.filter(
@@ -103,9 +106,9 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
         () => {
             return state.x.value.value;
         },
-        result => {
+        (result) => {
             if (result) {
-                runOnJS(handlePressDate)(result);
+                scheduleOnRN(handlePressDate, result);
             }
         },
         [],
@@ -125,7 +128,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                     labelPosition: "inset",
                     axisSide: "bottom",
                     // biome-ignore lint/style/useNamingConvention: victory native prop naming
-                    formatXLabel: value => {
+                    formatXLabel: (value) => {
                         if (!value) return "";
                         return new Date(value).toLocaleString("default", {
                             month: "short",

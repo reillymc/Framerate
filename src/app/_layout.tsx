@@ -26,13 +26,14 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { onlineManager, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import { ServiceProvider, useColorScheme } from "@/hooks";
+import { ServiceProvider } from "@/components";
+import { useColorScheme } from "@/hooks";
 import { SessionProvider } from "@/modules/auth";
 
 import { Dosis } from "../../assets/fonts/fonts.json" with { type: "json" };
 import { version } from "../../package.json";
 
-export const scaleFont = (size: number, scale: number, appScale: number) => {
+const scaleFont = (size: number, scale: number, appScale: number) => {
     if (appScale < 0.9) {
         return size;
     }
@@ -47,7 +48,7 @@ setOptions({
     fade: true,
 });
 
-let DevToolsBubble: FC | undefined;
+let DevToolsBubble: FC<{ queryClient: QueryClient }> | undefined;
 if (__DEV__) {
     try {
         DevToolsBubble =
@@ -56,7 +57,6 @@ if (__DEV__) {
         console.debug("Unable to load React Query dev tools");
     }
 }
-
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -222,7 +222,9 @@ export default function RootLayout() {
                     </ServiceProvider>
                 </SessionProvider>
 
-                {__DEV__ && DevToolsBubble && <DevToolsBubble />}
+                {__DEV__ && DevToolsBubble && (
+                    <DevToolsBubble queryClient={queryClient} />
+                )}
             </PersistQueryClientProvider>
         </StrictMode>
     );

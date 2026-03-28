@@ -53,9 +53,9 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                 }
             >
                 {state.routes.map((route, index) => {
-                    const { options } = descriptors[route.key];
+                    const options = descriptors[route.key]?.options;
                     const label =
-                        typeof options.tabBarLabel === "string"
+                        typeof options?.tabBarLabel === "string"
                             ? options.tabBarLabel
                             : undefined;
 
@@ -90,7 +90,7 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
                                 isFocused ? { selected: true } : undefined
                             }
                             accessibilityLabel={
-                                options.tabBarAccessibilityLabel
+                                options?.tabBarAccessibilityLabel
                             }
                             onPress={onPress}
                             onLongPress={onLongPress}

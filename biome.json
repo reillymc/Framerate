@@ -9,18 +9,11 @@
                     "options": {
                         "groups": [
                             [":URL:", ":BUN:", ":NODE:"],
-                            ":BLANK_LINE:",
                             "react*",
                             "expo*",
-                            [
-                                ":PACKAGE:",
-                                ":PACKAGE_WITH_PROTOCOL:",
-                                "!@modules/**"
-                            ],
+                            [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
                             ":BLANK_LINE:",
-                            ["@modules/**", "@/modules/**"],
-                            ":BLANK_LINE:",
-                            ["@/**"],
+                            [":ALIAS:"],
                             ":BLANK_LINE:",
                             [":PATH:"]
                         ]
@@ -29,13 +22,20 @@
             }
         }
     },
+    "vcs": {
+        "enabled": false,
+        "clientKind": "git",
+        "useIgnoreFile": false
+    },
     "files": {
+        "ignoreUnknown": false,
         "includes": [
             "**",
             "!**/*.d.ts",
             "!**/.expo",
-            "!**/services/**",
-            "!**/dist/**"
+            "!**/services",
+            "!**/dist",
+            "**/*.json"
         ]
     },
     "formatter": {
@@ -43,8 +43,18 @@
         "indentStyle": "space",
         "indentWidth": 4
     },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "always"
+        }
+    },
     "linter": {
         "enabled": true,
+        "domains": {
+            "project": "all",
+            "react": "all",
+            "test": "all"
+        },
         "rules": {
             "recommended": true,
             "complexity": {
@@ -59,8 +69,13 @@
             "correctness": {
                 "useHookAtTopLevel": "error",
                 "noConstantMathMinMaxClamp": "warn",
-                "noUnusedImports": "warn",
-                "noUnusedVariables": "warn"
+                "noUnusedImports": {
+                    "fix": "safe",
+                    "level": "warn"
+                },
+                "noUnresolvedImports": "off",
+                "noUnusedVariables": "warn",
+                "useImportExtensions": "off"
             },
             "performance": {
                 "noReExportAll": "warn",
@@ -90,17 +105,15 @@
                 "noUselessElse": "error"
             },
             "suspicious": {
-                "useAwait": "warn",
-                "noEmptyBlockStatements": "warn"
-            },
-            "nursery": {
-                "noImportCycles": "on"
+                "noEmptyBlockStatements": "warn",
+                "noImportCycles": "error",
+                "useAwait": "warn"
             }
         }
     },
     "overrides": [
         {
-            "includes": ["**/app/**"],
+            "includes": ["src/app/**"],
             "linter": {
                 "rules": {
                     "style": {

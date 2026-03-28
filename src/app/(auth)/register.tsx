@@ -24,8 +24,6 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { useSession } from "@/modules/auth";
-
 import {
     HeaderCloseAction,
     HostActions,
@@ -33,6 +31,7 @@ import {
     StatusIndicator,
 } from "@/components";
 import { WebPageLayout } from "@/constants/layout";
+import { useSession } from "@/modules/auth";
 
 const emailValidator = /^\S+@\S+\.\S+$/;
 

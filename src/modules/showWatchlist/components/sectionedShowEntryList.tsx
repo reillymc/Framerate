@@ -27,11 +27,11 @@ import {
 } from "@reillymc/react-native-components";
 import { addMonths, isBefore } from "date-fns";
 
-import { ActiveStatuses, type ShowStatus } from "@/modules/show";
-
-import { PosterCard, usePosterDimensions } from "@/components";
+import { PosterCard } from "@/components";
 import { displayFull, displayWithWeek } from "@/helpers/dateHelper";
 import { getItemLayout } from "@/helpers/getItemLayout";
+import { usePosterDimensions } from "@/hooks";
+import { ActiveStatuses, type ShowStatus } from "@/modules/show";
 
 import { ShowEntryConstants } from "../../showWatchlist/constants";
 import { SortEntriesByLastAirDate, SortEntriesByNextAirDate } from "../helpers";

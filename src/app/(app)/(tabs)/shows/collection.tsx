@@ -11,16 +11,15 @@ import {
 } from "@reillymc/react-native-components";
 
 import {
-    useDeleteShowCollectionEntry,
-    useShowCollection,
-} from "@/modules/showCollection";
-
-import {
     EmptyState,
     HeaderIconAction,
     PosterCard,
     ScreenLayout,
 } from "@/components";
+import {
+    useDeleteShowCollectionEntry,
+    useShowCollection,
+} from "@/modules/showCollection";
 
 const Collection: FC = () => {
     const { collectionId } = useLocalSearchParams<{ collectionId: string }>();

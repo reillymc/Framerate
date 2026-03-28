@@ -83,19 +83,7 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                     collapsed={!includeDate}
                     direction="right"
                 >
-                    {Platform.OS !== "android" ? (
-                        <DateTimePicker
-                            value={date}
-                            mode="date"
-                            style={styles.dateInput}
-                            disabled={!includeDate}
-                            maximumDate={new Date()}
-                            onChange={(_, newDate) =>
-                                newDate && onDateChange(newDate)
-                            }
-                            accentColor={theme.color.primary}
-                        />
-                    ) : (
+                    {Platform.OS === "android" ? (
                         <Action
                             label={date.toDateString() ?? "No Date"}
                             containerStyle={styles.androidDatePicker}
@@ -108,6 +96,18 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                                         newDate && onDateChange(newDate),
                                 })
                             }
+                        />
+                    ) : (
+                        <DateTimePicker
+                            value={date}
+                            mode="date"
+                            style={styles.dateInput}
+                            disabled={!includeDate}
+                            maximumDate={new Date()}
+                            onChange={(_, newDate) =>
+                                newDate && onDateChange(newDate)
+                            }
+                            accentColor={theme.color.primary}
                         />
                     )}
                 </CollapsibleContainer>
@@ -207,8 +207,6 @@ const createStyles = ({
             minHeight: 80,
         },
         rating: {
-            flex: 1,
-            alignSelf: "center",
             marginVertical: spacing.medium,
         },
     });

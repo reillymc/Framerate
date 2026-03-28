@@ -1,56 +1,18 @@
-import {
-    createContext,
-    type FC,
-    type PropsWithChildren,
-    useContext,
-    useMemo,
-    useState,
-} from "react";
+import { type FC, type PropsWithChildren, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useStorageState } from "@/hooks/useStorageState";
 import {
     AuthenticationApi,
-    type AuthUser,
     Configuration,
     LoggerMiddleware,
     type Middleware,
-    type RegisteringUser,
     SignalMiddleware,
 } from "@/services";
 
-const SessionContext = createContext<{
-    signIn: (credentials: AuthUser) => void;
-    register: (credentials: RegisteringUser) => void;
-    signOut: () => void;
-    setHost: (host: string) => void;
-    clearError: () => void;
-    host: string | null;
-    defaultHost: string | undefined;
-    session: string | null;
-    userId: string | undefined;
-    isLoading: boolean;
-    isSigningIn: boolean;
-    error: string | undefined;
-}>({
-    signIn: () => null,
-    register: () => null,
-    signOut: () => null,
-    setHost: () => null,
-    clearError: () => null,
-    host: null,
-    defaultHost: undefined,
-    session: null,
-    userId: undefined,
-    isLoading: false,
-    isSigningIn: false,
-    error: undefined,
-});
+import { SessionContext } from "../context";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-
-// This hook can be used to access the user info.
-export const useSession = () => useContext(SessionContext);
 
 export const SessionProvider: FC<PropsWithChildren> = ({ children }) => {
     const [host, setHost, { loading: isLoadingHost }] = useStorageState("host");

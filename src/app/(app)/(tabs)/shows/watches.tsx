@@ -2,6 +2,7 @@ import { type FC, useMemo, useState } from "react";
 import { Link, Stack, useRouter } from "expo-router";
 import { Undefined } from "@reillymc/es-utils";
 
+import { MediaType } from "@/constants/mediaTypes";
 import { useCompany } from "@/modules/company";
 import {
     AbsoluteRatingScale,
@@ -13,8 +14,6 @@ import {
 } from "@/modules/review";
 import { useShowReviews } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
-
-import { MediaType } from "@/constants/mediaTypes";
 
 const Reviews: FC = () => {
     const [atVenue, setAtVenue] = useState<string | undefined>(undefined);

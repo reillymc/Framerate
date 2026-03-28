@@ -4,9 +4,11 @@ import type {
     MenuActionConfig,
     MenuConfig,
     MenuElementConfig,
+    // @ts-expect-error
 } from "react-native-ios-context-menu/build/types/MenuConfig";
 
-export type { MenuActionConfig, MenuElementConfig, MenuConfig };
+// biome-ignore lint/style/useComponentExportOnlyModules: TODO component to be removed
+export type { MenuActionConfig, MenuConfig, MenuElementConfig };
 
 export interface ContextMenuProps {
     menuConfig: MenuConfig;
