@@ -65,6 +65,7 @@
         "@babel/core": "^7.20.0",
         "@biomejs/biome": "^2.4.9",
         "@openapitools/openapi-generator-cli": "^2.15.3",
+        "@testing-library/react-native": "^13.3.3",
         "@types/jest": "29.5.14",
         "@types/react": "~19.2.10",
         "dependency-cruiser": "^16.8.0",

@@ -88,7 +88,11 @@ const MediaLink: FC<MediaLinkProps> = ({
     if (parsedLink.includes("undefined")) return null;
 
     return (
-        <Pressable onPress={() => openURL(parsedLink)}>
+        <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={linkDetails.name}
+            onPress={() => openURL(parsedLink)}
+        >
             <SvgCssUri
                 width={60}
                 height="100%"
