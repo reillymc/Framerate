@@ -4,6 +4,13 @@
         "source.organizeImports.biome": "explicit",
         "source.fixAll.biome": "explicit"
     },
-    "typescript.preferences.preferTypeOnlyAutoImports": true,
-    "cSpell.words": ["Dosis", "imdb", "Swipeable", "tanstack", "tmdb"]
+    "js/ts.preferences.preferTypeOnlyAutoImports": true,
+    "cSpell.words": [
+        "Dosis",
+        "imdb",
+        "Pressable",
+        "Swipeable",
+        "tanstack",
+        "tmdb"
+    ]
 }

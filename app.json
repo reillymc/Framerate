@@ -7,7 +7,6 @@
         "icon": "./assets/images/icon.png",
         "scheme": "framerate",
         "userInterfaceStyle": "automatic",
-        "newArchEnabled": true,
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.reillymc.framerate",
@@ -25,7 +24,6 @@
                 "backgroundColor": "#F99224"
             },
             "package": "com.reillymc.framerate",
-            "edgeToEdgeEnabled": true,
             "predictiveBackGestureEnabled": false
         },
         "web": {
@@ -56,13 +54,7 @@
             [
                 "expo-font",
                 {
-                    "fonts": [
-                        "./assets/fonts/Dosis-Bold.ttf",
-                        "./assets/fonts/Dosis-Light.ttf",
-                        "./assets/fonts/Dosis-Medium.ttf",
-                        "./assets/fonts/Dosis-Regular.ttf",
-                        "./assets/fonts/Dosis-SemiBold.ttf"
-                    ]
+                    "fonts": ["./assets/fonts/Dosis.ttf"]
                 }
             ],
             [
@@ -94,7 +86,8 @@
                         }
                     }
                 }
-            ]
+            ],
+            "expo-image"
         ],
         "experiments": {
             "typedRoutes": true,
