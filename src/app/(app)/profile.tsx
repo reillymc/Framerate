@@ -21,6 +21,13 @@ import {
 } from "@reillymc/react-native-components";
 import { useQueryClient } from "@tanstack/react-query";
 
+import {
+    Accordion,
+    HeaderCloseAction,
+    ScreenLayout,
+    SegmentedControl,
+} from "@/components";
+import { useHealth } from "@/hooks";
 import { useSession } from "@/modules/auth";
 import {
     useCompany,
@@ -35,14 +42,7 @@ import {
     useUser,
 } from "@/modules/user";
 
-import { expo } from "@/app.json";
-import {
-    Accordion,
-    HeaderCloseAction,
-    ScreenLayout,
-    SegmentedControl,
-} from "@/components";
-import { useHealth } from "@/hooks";
+import { expo } from "../../../app.json" with { type: "json" };
 
 const Profile: FC = () => {
     const router = useRouter();

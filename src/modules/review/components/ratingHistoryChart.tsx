@@ -23,9 +23,9 @@ import {
     useChartPressState,
 } from "victory-native";
 
-import { FontResources } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks";
 
+import { FontResources } from "../../../../assets/fonts";
 import { ratingToStars } from "../helpers";
 import type { Review } from "../models";
 
@@ -52,7 +52,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     const { theme } = useTheme();
 
     const hasUnknownDates = useMemo(
-        () => reviews?.some((r) => !r.date),
+        () => reviews?.some(r => !r.date),
         [reviews],
     );
 
@@ -61,7 +61,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
     const chartData: ChartData[] = useMemo(() => {
         const sorted = [...(reviews ?? [])]
             .filter(({ rating }) => rating !== undefined)
-            .map((review) => ({
+            .map(review => ({
                 ...review,
                 date: review.date ? new Date(review.date) : undefined,
             }))
@@ -81,11 +81,11 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                     filteredRatings: rating,
                 };
             }
-            const oldestDateInList = sorted.find((r) => r.date)?.date;
+            const oldestDateInList = sorted.find(r => r.date)?.date;
             const newestDateInList = sorted
                 .slice()
                 .reverse()
-                .find((r) => r.date)?.date;
+                .find(r => r.date)?.date;
 
             if (!(oldestDateInList && newestDateInList))
                 return {
@@ -135,7 +135,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                         y: "inset",
                     },
                     // biome-ignore lint/style/useNamingConvention: victory internal prop names
-                    formatXLabel: (value) => {
+                    formatXLabel: value => {
                         if (!value) return "";
                         const date = new Date(value);
 

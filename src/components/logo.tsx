@@ -6,7 +6,7 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { ImageResources } from "@/assets/images";
+import { ImageResources } from "../../assets/images";
 
 interface LogoProps {
     size?: "small" | "medium" | "large";

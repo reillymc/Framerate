@@ -26,12 +26,11 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { onlineManager, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
+import { ServiceProvider, useColorScheme } from "@/hooks";
 import { SessionProvider } from "@/modules/auth";
 
-import { Dosis } from "@/assets/fonts/fonts.json";
-import { ServiceProvider, useColorScheme } from "@/hooks";
-
-import { version } from "../package.json";
+import { Dosis } from "../../assets/fonts/fonts.json" with { type: "json" };
+import { version } from "../../package.json";
 
 export const scaleFont = (size: number, scale: number, appScale: number) => {
     if (appScale < 0.9) {
@@ -192,7 +191,7 @@ export default function RootLayout() {
     if (Platform.OS === "web") {
         // biome-ignore lint/correctness/useHookAtTopLevel: this condition won't change during runtime
         const [loaded] = useFonts({
-            dosis: require("../assets/fonts/Dosis.ttf"),
+            dosis: require("../../assets/fonts/Dosis.ttf"),
         });
 
         if (!loaded) return null;

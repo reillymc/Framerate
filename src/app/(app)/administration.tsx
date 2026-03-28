@@ -11,8 +11,6 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
-
 import {
     Accordion,
     HeaderCloseAction,
@@ -20,8 +18,9 @@ import {
     StatusIndicator,
 } from "@/components";
 import { useFramerateServices } from "@/hooks";
+import { useClientConfig, useSaveClientConfig } from "@/modules/meta";
 
-import app from "../../app.json";
+import app from "../../../app.json" with { type: "json" };
 
 const Profile: FC = () => {
     const router = useRouter();

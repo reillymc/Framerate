@@ -2,10 +2,13 @@
     "extends": "expo/tsconfig.base",
     "compilerOptions": {
         "strict": true,
+        "noUncheckedIndexedAccess": true,
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./src/*"],
+
         },
-        "jsx": "react-jsx"
+        // "erasableSyntaxOnly": true TODO: after removing react-native-ios-context-menu/utilities
+
     },
     "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

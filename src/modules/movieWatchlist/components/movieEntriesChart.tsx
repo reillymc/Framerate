@@ -18,9 +18,9 @@ import {
 } from "date-fns";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
 
-import { FontResources } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks";
 
+import { FontResources } from "../../../../assets/fonts";
 import { MovieEntryConstants } from "../constants";
 import type { MovieWatchlistEntry } from "../models";
 
@@ -58,7 +58,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
             subMonths(new Date(), MovieEntryConstants.monthsBack),
         );
 
-        const transformedEntries = [...(entries ?? [])].map((review) => ({
+        const transformedEntries = [...(entries ?? [])].map(review => ({
             ...review,
             date: review.releaseDate ? new Date(review.releaseDate) : undefined,
         }));
@@ -67,7 +67,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
             length: totalMonthCount,
         }).map((_, i) => addMonths(firstMonth, i));
 
-        const data = months.map((month) => {
+        const data = months.map(month => {
             const monthStart = startOfMonth(month).getTime();
             const monthEnd = endOfMonth(month).getTime();
             const monthEntries = transformedEntries.filter(
@@ -103,7 +103,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
         () => {
             return state.x.value.value;
         },
-        (result) => {
+        result => {
             if (result) {
                 runOnJS(handlePressDate)(result);
             }
@@ -125,7 +125,7 @@ export const MovieEntriesChart: FC<MovieEntriesChartProps> = ({
                     labelPosition: "inset",
                     axisSide: "bottom",
                     // biome-ignore lint/style/useNamingConvention: victory native prop naming
-                    formatXLabel: (value) => {
+                    formatXLabel: value => {
                         if (!value) return "";
                         return new Date(value).toLocaleString("default", {
                             month: "short",
