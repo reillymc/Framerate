@@ -20,9 +20,6 @@
         "openapi:update": "curl http://localhost:3000/api-docs/openapi.json > services/openapi.json",
         "openapi:generate": "rm -rf services/framerateBackend && openapi-generator-cli generate --generator-key typescript-fetch"
     },
-    "jest": {
-        "preset": "jest-expo"
-    },
     "dependencies": {
         "@expo/vector-icons": "^15.0.2",
         "@react-native-async-storage/async-storage": "2.2.0",

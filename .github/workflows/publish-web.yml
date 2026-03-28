@@ -80,7 +80,7 @@ jobs:
       - name: Build/export web
         run: npm run export:web
         env:
-          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
+          EXPO_PUBLIC_BASE_URL: ${{ secrets.EXPO_PUBLIC_BASE_URL }}
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v7
