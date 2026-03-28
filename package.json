@@ -10,6 +10,7 @@
         "test": "jest",
         "deploy:ios": "eas build --platform ios --profile production --auto-submit",
         "builddev:ios": "eas build --platform ios --profile development",
+        "export:web": "expo export --platform web -c",
         "lint": "biome check --error-on-warnings",
         "lint:knip": "knip",
         "typecheck": "tsc --noEmit",
