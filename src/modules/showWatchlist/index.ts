@@ -12,4 +12,3 @@ export {
     useShowWatchlist,
     useShowWatchlistEntry,
 } from "./hooks";
-export { ShowWatchlist } from "./models";

@@ -16,7 +16,7 @@ function useAsyncState<T>(
     ) as UseStateHook<T>;
 }
 
-export async function setStorageItemAsync(key: string, value: string | null) {
+async function setStorageItemAsync(key: string, value: string | null) {
     if (Platform.OS === "web") {
         try {
             if (value === null) {

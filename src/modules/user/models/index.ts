@@ -2,7 +2,7 @@ import type { DeepPartial } from "@reillymc/es-utils";
 
 export { User } from "../../../services";
 
-export type Configuration = {
+type Configuration = {
     company: {
         knownUserIds: string[];
     };

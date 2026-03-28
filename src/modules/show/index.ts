@@ -12,4 +12,4 @@ export {
     useSearchShows,
     useShow,
 } from "./hooks";
-export { Show, ShowType } from "./models";
+export { Show } from "./models";

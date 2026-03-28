@@ -11,7 +11,8 @@
             "extensions": [
                 "biomejs.biome",
                 "expo.vscode-expo-tools",
-                "msjsdiag.vscode-react-native"
+                "msjsdiag.vscode-react-native",
+                "orta.vscode-jest"
             ]
         }
     },

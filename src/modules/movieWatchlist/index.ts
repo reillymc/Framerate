@@ -16,4 +16,3 @@ export {
     useMovieWatchlistEntry,
     useSaveMovieWatchlistEntry,
 } from "./hooks";
-export { MovieWatchlist } from "./models";

@@ -9,7 +9,7 @@ import Animated, {
     withTiming,
 } from "react-native-reanimated";
 
-export type AccordionProps = {
+type AccordionProps = {
     collapsed: boolean;
     children: ReactNode;
     style?: StyleProp<ViewStyle>;

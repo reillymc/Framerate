@@ -14,10 +14,9 @@ export {
     ReviewSummaryCard,
     ReviewTimelineItem,
 } from "./components";
-export { getRatingLabel, ratingToStars, starsToRating } from "./helpers";
+export { getRatingLabel } from "./helpers";
 export {
     AbsoluteRatingScale,
-    Review,
     ReviewOrder,
     ReviewSort,
 } from "./models";

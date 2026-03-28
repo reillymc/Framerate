@@ -3,12 +3,11 @@ import type { StyleProp, ViewStyle } from "react-native";
 import type {
     MenuActionConfig,
     MenuConfig,
-    MenuElementConfig,
     // @ts-expect-error
 } from "react-native-ios-context-menu/build/types/MenuConfig";
 
 // biome-ignore lint/style/useComponentExportOnlyModules: TODO component to be removed
-export type { MenuActionConfig, MenuConfig, MenuElementConfig };
+export type { MenuActionConfig, MenuConfig };
 
 export interface ContextMenuProps {
     menuConfig: MenuConfig;

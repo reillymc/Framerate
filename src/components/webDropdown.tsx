@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export type MenuOptionProps = {
+type MenuOptionProps = {
     onSelect: () => void;
     children: ReactNode;
 };
@@ -145,13 +145,13 @@ export const MenuOption: FC<MenuOptionProps> = ({ onSelect, children }) => {
     );
 };
 
-export type MenuDecoratorProps = {
+type MenuDecoratorProps = {
     children: ReactNode;
 };
 
 export const MenuDecorator: FC<MenuDecoratorProps> = ({ children }) => children;
 
-export type MenuOptionContentToggleProps = {
+type MenuOptionContentToggleProps = {
     title: string;
     selected?: boolean;
 };
@@ -177,7 +177,7 @@ export const MenuOptionContentToggle: FC<MenuOptionContentToggleProps> = ({
     );
 };
 
-export type DropdownButtonProps = {
+type DropdownButtonProps = {
     label: string;
 };
 

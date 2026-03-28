@@ -60,7 +60,7 @@ interface MediaLinkProps {
     episodeNumber?: number;
 }
 
-export const MediaLink: FC<MediaLinkProps> = ({
+const MediaLink: FC<MediaLinkProps> = ({
     linkDetails,
     imdbId,
     tmdbId,

@@ -15,7 +15,7 @@ import type { ReviewOrder, ReviewSort } from "../models";
 const menuState = (condition: boolean) =>
     condition ? ("on" as const) : ("off" as const);
 
-export interface FilterableReviewListHeaderProps {
+interface FilterableReviewListHeaderProps {
     mediaType: MediaType;
     starValueList: number[];
     rating: number | undefined;

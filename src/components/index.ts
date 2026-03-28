@@ -1,10 +1,5 @@
 export { Accordion } from "./accordion";
-export {
-    ContextMenu,
-    MenuActionConfig,
-    MenuConfig,
-    MenuElementConfig,
-} from "./contextMenu";
+export { ContextMenu } from "./contextMenu";
 export { CustomTabBar } from "./customTabBar";
 export { EmptyState } from "./emptyState";
 export { Fade } from "./fade";
@@ -22,7 +17,6 @@ export { RecentSearchList } from "./recentSearchList";
 export { ResponsiveFlatList } from "./responsiveFlatList";
 export { ScreenLayout } from "./screenLayout";
 export { ScreenSection } from "./screenSection";
-export { SectionHeading } from "./sectionHeading";
 export { SegmentedControl } from "./segmentedControl";
 export { ServiceProvider } from "./serviceProvider";
 export { StatusIndicator } from "./statusIndicator";

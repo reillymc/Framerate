@@ -14,7 +14,7 @@ import type { PosterProperties } from "@/hooks";
 
 import type { MovieWatchlistEntry } from "../models";
 
-export interface MovieEntryStackedPosterProps
+interface MovieEntryStackedPosterProps
     extends Pick<MovieWatchlistEntry, "posterPath"> {
     index?: number;
     posterProperties: PosterProperties;

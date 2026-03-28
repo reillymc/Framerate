@@ -10,6 +10,5 @@ export {
     useDeleteUser,
     useSaveUser,
     useUser,
-    useUsers,
 } from "./hooks";
-export { MergeConfiguration, ParseConfiguration, User } from "./models";
+export { MergeConfiguration } from "./models";

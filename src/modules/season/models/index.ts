@@ -1,1 +1,1 @@
-export { Episode, Season } from "../../../services";
+export { Season } from "../../../services";

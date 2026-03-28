@@ -1,4 +1,3 @@
-export { useCollectionsForShow } from "./useCollectionsForShow";
 export { useDeleteShowCollection } from "./useDeleteShowCollection";
 export { useDeleteShowCollectionEntry } from "./useDeleteShowCollectionEntry";
 export { useFilteredShowCollections } from "./useFilteredShowCollections";

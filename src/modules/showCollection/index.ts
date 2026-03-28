@@ -7,7 +7,6 @@
  */
 
 export {
-    useCollectionsForShow,
     useDeleteShowCollection,
     useDeleteShowCollectionEntry,
     useFilteredShowCollections,
@@ -16,4 +15,3 @@ export {
     useShowCollection,
     useShowCollections,
 } from "./hooks";
-export { ShowEntry } from "./models";

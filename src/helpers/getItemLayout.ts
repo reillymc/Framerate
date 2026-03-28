@@ -1,6 +1,6 @@
 import type { SectionListData } from "react-native";
 
-export type GetItemLayoutParams<T> = {
+type GetItemLayoutParams<T> = {
     getItemHeight:
         | number
         | ((item: T, sectionIndex: number, itemIndex: number) => number);
@@ -13,7 +13,7 @@ export type GetItemLayoutParams<T> = {
     getSectionSeparatorHeight?: number | ((sectionIndex: number) => number);
 };
 
-export type GetItemLayoutShape = {
+type GetItemLayoutShape = {
     length: number;
     offset: number;
     index: number;

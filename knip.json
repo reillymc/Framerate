@@ -1,0 +1,11 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "tags": ["-lintignore"],
+    "ignore": ["src/services/framerateBackend/**"],
+    "ignoreDependencies": [
+        "expo-updates",
+        "@react-navigation/native-stack",
+        "@react-navigation/elements"
+    ],
+    "ignoreBinaries": ["eas", "dot"]
+}
