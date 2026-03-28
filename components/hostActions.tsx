@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { type StyleProp, StyleSheet, View, type ViewStyle } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { AntDesign, Octicons } from "@expo/vector-icons";
 import {
     Icon,
@@ -11,19 +11,17 @@ import {
 
 interface HostActionsProps {
     host: string | null;
-    style?: StyleProp<ViewStyle>;
     onSettingsPress?: () => void;
 }
 
 export const HostActions: FC<HostActionsProps> = ({
     host,
-    style,
     onSettingsPress,
 }) => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <View style={[styles.settings, style]}>
+        <View style={styles.settings}>
             <IconButton
                 iconSet={Octicons}
                 iconName="gear"
@@ -57,6 +55,10 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
             alignItems: "center",
             justifyContent: "space-between",
             gap: spacing.large,
+            position: "absolute",
+            bottom: Platform.OS === "web" ? 32 : 48,
+            right: Platform.OS === "web" ? 32 : 48,
+            left: Platform.OS === "web" ? 32 : 48,
         },
         hostWarningContainer: {
             flexDirection: "row",

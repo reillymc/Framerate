@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Stack, useRouter } from "expo-router";
 import {
-    Action,
     Text,
     TextInput,
     type ThemedStyles,
@@ -12,7 +11,7 @@ import {
 
 import { useSession } from "@/modules/auth";
 
-import { ScreenLayout } from "@/components";
+import { HeaderDoneAction, ScreenLayout } from "@/components";
 import { WebPageModal } from "@/constants/layout";
 
 const ServerScreen: FC = () => {
@@ -29,7 +28,7 @@ const ServerScreen: FC = () => {
                     options={{
                         title: "Custom Host Address",
                         headerRight: () => (
-                            <Action label="Done" onPress={router.back} />
+                            <HeaderDoneAction onDone={router.back} />
                         ),
                     }}
                 />

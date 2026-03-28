@@ -138,9 +138,7 @@ export const ScreenLayout: FC<ScreenLayoutProps> = ({
                 </>
             )}
             {Platform.OS === "web" ? (
-                <View style={styles.body}>
-                    <View style={styles.main}>{children}</View>
-                </View>
+                <View style={styles.body}>{children}</View>
             ) : (
                 children
             )}
@@ -166,9 +164,6 @@ const createStyles = ({ theme: { color, spacing, border } }: ThemedStyles) =>
             flex: 1,
             flexDirection: "row",
             justifyContent: "center",
-        },
-        main: {
-            flex: 1,
         },
         modalBackdrop: {
             ...StyleSheet.absoluteFill,

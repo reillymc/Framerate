@@ -67,7 +67,6 @@ const LoginScreen: FC = () => {
             tail={
                 <HostActions
                     host={host}
-                    style={styles.settings}
                     onSettingsPress={() => router.push("/(auth)/server")}
                 />
             }
@@ -166,11 +165,12 @@ export default LoginScreen;
 const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
-            paddingTop: Platform.OS === "web" ? "15%" : undefined,
             ...WebPageLayout,
+            justifyContent: "flex-start",
+            paddingHorizontal: spacing.large,
         },
         logoContainer: {
-            paddingTop: Platform.OS !== "web" ? "15%" : undefined,
+            paddingTop: "15%",
         },
         titleContainer: {
             marginBottom: spacing.medium,
@@ -180,22 +180,12 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
             flexDirection: "row",
             gap: spacing.tiny,
             marginTop: spacing.large,
-            width: "100%",
             alignSelf: "center",
         },
         form: {
-            alignItems: "center",
-            width: Platform.OS === "web" ? "100%" : "80%",
-            alignSelf: "center",
             gap: spacing.medium,
         },
         confirmButton: {
             marginTop: spacing.large,
-        },
-        settings: {
-            position: "absolute",
-            bottom: Platform.OS === "web" ? 32 : 64,
-            right: Platform.OS === "web" ? 64 : "10%",
-            left: Platform.OS === "web" ? 64 : "10%",
         },
     });

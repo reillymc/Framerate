@@ -97,13 +97,10 @@ const RegisterScreen: FC = () => {
                 />
             }
             tail={
-                Platform.OS === "web" && (
-                    <HostActions
-                        host={host}
-                        style={styles.settings}
-                        onSettingsPress={() => router.push("/(auth)/server")}
-                    />
-                )
+                <HostActions
+                    host={host}
+                    onSettingsPress={() => router.push("/(auth)/server")}
+                />
             }
         >
             <ScrollView
@@ -191,7 +188,7 @@ const RegisterScreen: FC = () => {
                         containerStyle={styles.confirmButton}
                         disabled={!formValid}
                     />
-                    {Platform.OS === "web" ? (
+                    {Platform.OS === "web" && (
                         <View style={styles.logInContainer}>
                             <Text>Already have an account?</Text>
                             <Action
@@ -203,14 +200,6 @@ const RegisterScreen: FC = () => {
                                 variant="primary"
                             />
                         </View>
-                    ) : (
-                        <HostActions
-                            host={host}
-                            style={styles.settings}
-                            onSettingsPress={() =>
-                                router.push("/(auth)/server")
-                            }
-                        />
                     )}
                 </FormContainer>
             </ScrollView>
@@ -224,14 +213,10 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
     StyleSheet.create({
         container: {
             paddingBottom: "100%",
+            paddingHorizontal: spacing.large,
             ...WebPageLayout,
         },
         form: {
-            alignItems: "center",
-            width: "100%",
-            paddingHorizontal:
-                Platform.OS === "web" ? undefined : spacing.pageHorizontal,
-            alignSelf: "center",
             paddingTop: Platform.OS === "web" ? undefined : spacing.medium,
             gap: spacing.medium,
         },
@@ -256,12 +241,5 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
             marginTop: spacing.large,
             width: "100%",
             alignSelf: "flex-start",
-        },
-        settings: {
-            position: Platform.OS === "web" ? "absolute" : undefined,
-            bottom: Platform.OS === "web" ? 32 : undefined,
-            right: Platform.OS === "web" ? 32 : undefined,
-            left: Platform.OS === "web" ? 32 : undefined,
-            width: Platform.OS === "web" ? undefined : "100%",
         },
     });

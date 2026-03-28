@@ -189,7 +189,7 @@ const Movie: FC = () => {
                 </ScrollView>
                 <View style={styles.pageContent}>
                     <Text variant="body">{movie?.overview}</Text>
-                    {director && (
+                    {!!director && (
                         <Text
                             variant="body"
                             style={[styles.section, styles.emphasis]}
@@ -197,7 +197,7 @@ const Movie: FC = () => {
                             {`Directed by: ${director}`}
                         </Text>
                     )}
-                    {screenwriter && (
+                    {!!screenwriter && (
                         <Text
                             variant="body"
                             style={[styles.section, styles.emphasis]}
@@ -206,7 +206,7 @@ const Movie: FC = () => {
                         </Text>
                     )}
 
-                    {releaseDate && (
+                    {!!releaseDate && (
                         <Text
                             variant="body"
                             style={[styles.section, styles.emphasis]}
