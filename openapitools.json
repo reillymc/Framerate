@@ -6,9 +6,9 @@
         "generators": {
             "typescript-fetch": {
                 "generatorName": "typescript-fetch",
-                "templateDir": "services/templates/typescript-fetch",
-                "output": "services/framerateBackend",
-                "inputSpec": "services/openapi.json",
+                "templateDir": "src/services/templates/typescript-fetch",
+                "output": "src/services/framerateBackend",
+                "inputSpec": "src/services/openapi.json",
                 "typeMappings": {
                     "DateTime": "string",
                     "Date": "string"
