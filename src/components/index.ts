@@ -1,5 +1,4 @@
 export { Accordion } from "./accordion";
-export { ContextMenu } from "./contextMenu";
 export { CustomTabBar } from "./customTabBar";
 export { EmptyState } from "./emptyState";
 export { Fade } from "./fade";

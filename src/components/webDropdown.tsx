@@ -17,7 +17,13 @@ import {
     View,
 } from "react-native";
 import { Octicons } from "@expo/vector-icons";
-import { Icon, Tag, Text } from "@reillymc/react-native-components";
+import {
+    Icon,
+    Tag,
+    Text,
+    type ThemedStyles,
+    useThemedStyles,
+} from "@reillymc/react-native-components";
 
 interface WebDropdownMenuProps {
     trigger: ReactNode;
@@ -38,6 +44,7 @@ export const WebDropdownMenu: FC<WebDropdownMenuProps> = ({
     const [visible, setVisible] = useState(false);
 
     const { width: screenWidth } = useWindowDimensions();
+    const styles = useThemedStyles(createStyles, {});
 
     useEffect(() => {
         if (triggerRef.current && visible) {
@@ -108,29 +115,32 @@ export const WebDropdownMenu: FC<WebDropdownMenuProps> = ({
     );
 };
 
-const styles = StyleSheet.create({
-    modalOverlay: {
-        flex: 1,
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-    },
-    menu: {
-        position: "absolute",
-        backgroundColor: "white",
-        borderRadius: 8,
-        padding: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        width: 280,
-        elevation: 8,
-        gap: 8,
-    },
-    menuOption: {
-        padding: 5,
-    },
-});
+const createStyles = ({ theme: { border, color, spacing } }: ThemedStyles) =>
+    StyleSheet.create({
+        modalOverlay: {
+            flex: 1,
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+        },
+        menu: {
+            position: "absolute",
+            backgroundColor: color.foreground,
+            borderRadius: border.radius.regular,
+            padding: spacing.small,
+            shadowColor: color.shadow,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+            width: 280,
+            elevation: 8,
+            gap: 8,
+            borderColor: color.border,
+            borderWidth: border.width.regular,
+        },
+        menuOption: {
+            padding: spacing.small,
+        },
+    });
 
 type MenuOptionProps = {
     onSelect: () => void;
@@ -138,6 +148,8 @@ type MenuOptionProps = {
 };
 
 export const MenuOption: FC<MenuOptionProps> = ({ onSelect, children }) => {
+    const styles = useThemedStyles(createStyles, {});
+
     return (
         <Pressable onPress={onSelect} style={styles.menuOption}>
             {children}

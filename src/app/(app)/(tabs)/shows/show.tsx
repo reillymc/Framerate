@@ -1,24 +1,14 @@
 import { type FC, useMemo } from "react";
-import {
-    FlatList,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
-    IconAction,
-    Tag,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
 import {
-    ContextMenu,
     MediaHeaderButtons,
     MediaLinks,
     ParallaxScrollView,
@@ -29,10 +19,12 @@ import {
 import { MediaType } from "@/constants/mediaTypes";
 import { displayFull } from "@/helpers/dateHelper";
 import { usePosterDimensions } from "@/hooks";
+import { CollectionAssociationList } from "@/modules/collection";
 import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
 import { useShow } from "@/modules/show";
 import {
+    useDeleteShowCollectionEntry,
     useFilteredShowCollections,
     useSaveShowCollectionEntry,
 } from "@/modules/showCollection";
@@ -63,6 +55,7 @@ const Show: FC = () => {
     const { mutate: deleteWatchlistEntry } = useDeleteShowWatchlistEntry();
     const { mutate: saveWatchlistEntry } = useSaveShowWatchlistEntry();
     const { mutate: saveCollectionEntry } = useSaveShowCollectionEntry();
+    const { mutate: removeCollectionEntry } = useDeleteShowCollectionEntry();
     const { collectionsContainingShow, collectionsNotContainingShow } =
         useFilteredShowCollections(showId);
 
@@ -147,48 +140,6 @@ const Show: FC = () => {
                         {show?.tagline}
                     </Text>
                 </View>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.collections}
-                >
-                    {collectionsContainingShow?.map(
-                        ({ name, collectionId }) => (
-                            <Tag
-                                key={collectionId}
-                                label={name}
-                                variant="light"
-                            />
-                        ),
-                    )}
-                    {!!collectionsNotContainingShow?.length && (
-                        <ContextMenu
-                            menuConfig={{
-                                menuTitle: "Select Collection",
-                                menuItems: collectionsNotContainingShow.map(
-                                    ({ collectionId, name }) => ({
-                                        actionKey: collectionId,
-                                        actionTitle: name,
-                                    }),
-                                ),
-                            }}
-                            onPressMenuAction={({ actionKey }) => {
-                                if (!show) return;
-                                saveCollectionEntry({
-                                    collectionId: actionKey,
-                                    showId: show.id,
-                                });
-                                return;
-                            }}
-                        >
-                            <IconAction
-                                iconSet={Octicons}
-                                iconName="book"
-                                label="Save to collection"
-                            />
-                        </ContextMenu>
-                    )}
-                </ScrollView>
                 <View style={styles.pageContent}>
                     <Text variant="body" style={styles.element}>
                         {show?.overview}
@@ -242,6 +193,18 @@ const Show: FC = () => {
                             {`First Aired: ${firstAirDate}`}
                         </Text>
                     )}
+                    <CollectionAssociationList
+                        associatedCollections={collectionsContainingShow}
+                        unassociatedCollections={collectionsNotContainingShow}
+                        onSaveToCollection={(collectionId) => {
+                            if (!showId) return;
+                            saveCollectionEntry({ collectionId, showId });
+                        }}
+                        onRemoveFromCollection={(collectionId) => {
+                            if (!showId) return;
+                            removeCollectionEntry({ collectionId, showId });
+                        }}
+                    />
                     {!!reviewList?.length && (
                         <View style={styles.element}>
                             <Text variant="title" style={styles.section}>

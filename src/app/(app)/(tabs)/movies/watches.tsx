@@ -11,7 +11,6 @@ import {
     FilterableReviewList,
     type ReviewOrder,
     type ReviewSort,
-    ReviewSortButton,
     ReviewSummaryCard,
 } from "@/modules/review";
 import { useCurrentUserConfig } from "@/modules/user";
@@ -70,15 +69,94 @@ const Reviews: FC = () => {
                 <Stack.Screen
                     options={{
                         title: "My Watches",
-                        headerRight: () => (
-                            <ReviewSortButton
-                                order={orderBy}
-                                sort={sort}
-                                mediaType={MediaType.Movie}
-                                onChangeOrder={setOrderBy}
-                                onChangeSort={setSort}
-                            />
-                        ),
+                        // biome-ignore lint/style/useNamingConvention: current expo naming convention
+                        unstable_headerRightItems: () => [
+                            {
+                                type: "menu" as const,
+                                label: "Sort & Filter",
+                                icon: {
+                                    type: "sfSymbol",
+                                    name: "arrow.up.arrow.down",
+                                },
+                                menu: {
+                                    title: "Sort by",
+                                    multiselectable: true,
+                                    items: [
+                                        {
+                                            type: "action" as const,
+                                            key: "date",
+                                            label: "Review Date",
+                                            state:
+                                                orderBy === "date"
+                                                    ? "on"
+                                                    : "off",
+                                            onPress: () => setOrderBy("date"),
+                                        },
+                                        {
+                                            type: "action" as const,
+                                            key: "rating",
+                                            label: "Review Rating",
+                                            state:
+                                                orderBy === "rating"
+                                                    ? "on"
+                                                    : "off",
+                                            onPress: () => setOrderBy("rating"),
+                                        },
+                                        {
+                                            type: "action" as const,
+                                            key: "mediaTitle",
+                                            label: "Movie Title",
+                                            state:
+                                                orderBy === "mediaTitle"
+                                                    ? "on"
+                                                    : "off",
+                                            onPress: () =>
+                                                setOrderBy("mediaTitle"),
+                                        },
+                                        {
+                                            type: "action" as const,
+                                            key: "mediaReleaseDate",
+                                            label: "Movie Release Date",
+                                            state:
+                                                orderBy === "mediaReleaseDate"
+                                                    ? "on"
+                                                    : "off",
+                                            onPress: () =>
+                                                setOrderBy("mediaReleaseDate"),
+                                        },
+                                        {
+                                            type: "submenu" as const,
+                                            label: "",
+                                            inline: true,
+                                            items: [
+                                                {
+                                                    type: "action" as const,
+                                                    key: "asc",
+                                                    label: "Ascending",
+                                                    state:
+                                                        sort === "asc"
+                                                            ? "on"
+                                                            : "off",
+                                                    onPress: () =>
+                                                        setSort("asc"),
+                                                },
+                                                {
+                                                    type: "action" as const,
+                                                    key: "desc",
+                                                    label: "Descending",
+                                                    state:
+                                                        sort === "desc"
+                                                            ? "on"
+                                                            : "off",
+                                                    onPress: () =>
+                                                        setSort("desc"),
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                        ],
                     }}
                 />
             }

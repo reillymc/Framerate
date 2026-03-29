@@ -1,18 +1,14 @@
 import { type FC, useMemo } from "react";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Octicons } from "@expo/vector-icons";
 import { Undefined } from "@reillymc/es-utils";
 import {
-    IconAction,
-    Tag,
     Text,
     type ThemedStyles,
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
 import {
-    ContextMenu,
     MediaHeaderButtons,
     MediaLinks,
     ParallaxScrollView,
@@ -22,9 +18,11 @@ import {
 } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { usePosterDimensions } from "@/hooks";
+import { CollectionAssociationList } from "@/modules/collection";
 import { useClientConfig } from "@/modules/meta";
 import { useMovie } from "@/modules/movie";
 import {
+    useDeleteMovieCollectionEntry,
     useFilteredMovieCollections,
     useSaveMovieCollectionEntry,
 } from "@/modules/movieCollection";
@@ -60,6 +58,7 @@ const Movie: FC = () => {
     const { mutate: deleteWatchlistEntry } = useDeleteMovieWatchlistEntry();
     const { mutate: saveWatchlistEntry } = useSaveMovieWatchlistEntry();
     const { mutate: saveCollectionEntry } = useSaveMovieCollectionEntry();
+    const { mutate: removeCollectionEntry } = useDeleteMovieCollectionEntry();
     const { collectionsContainingMovie, collectionsNotContainingMovie } =
         useFilteredMovieCollections(movieId);
     const router = useRouter();
@@ -144,49 +143,7 @@ const Movie: FC = () => {
                         {movie?.tagline}
                     </Text>
                 </View>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.collections}
-                >
-                    {collectionsContainingMovie?.map(
-                        ({ name, collectionId }) => (
-                            <Tag
-                                key={collectionId}
-                                label={name}
-                                variant="light"
-                            />
-                        ),
-                    )}
-                    {!!collectionsNotContainingMovie?.length && (
-                        <ContextMenu
-                            menuConfig={{
-                                menuTitle: "Select Collection",
-                                menuItems: collectionsNotContainingMovie.map(
-                                    ({ collectionId, name }) => ({
-                                        actionKey: collectionId,
-                                        actionTitle: name,
-                                    }),
-                                ),
-                            }}
-                            onPressMenuAction={({ actionKey }) => {
-                                if (!movie) return;
-                                saveCollectionEntry({
-                                    collectionId: actionKey,
-                                    movieId: movie.id,
-                                });
-                                return;
-                            }}
-                        >
-                            <IconAction
-                                iconSet={Octicons}
-                                iconName="book"
-                                label="Save to collection"
-                            />
-                        </ContextMenu>
-                    )}
-                </ScrollView>
-                <View style={styles.pageContent}>
+                <View style={styles.detailContent}>
                     <Text variant="body">{movie?.overview}</Text>
                     {!!director && (
                         <Text
@@ -213,45 +170,54 @@ const Movie: FC = () => {
                             {`Release Date: ${releaseDate}`}
                         </Text>
                     )}
-
-                    {!!reviewList?.length && (
-                        <>
-                            <Text variant="title" style={styles.section}>
-                                Watch History
-                            </Text>
-                            <RatingHistoryChart
-                                reviews={reviewList}
-                                starCount={configuration.ratings.starCount}
-                            />
-                            <FlatList
-                                contentInsetAdjustmentBehavior="automatic"
-                                scrollEnabled={false}
-                                data={reviewList}
-                                renderItem={({ item, index }) => (
-                                    <ReviewTimelineItem
-                                        key={item.reviewId}
-                                        starCount={
-                                            configuration.ratings.starCount
-                                        }
-                                        review={item}
-                                        hideTimeline={
-                                            index === reviewList.length - 1
-                                        }
-                                        onPress={() =>
-                                            router.push({
-                                                pathname: "/movies/watch",
-                                                params: {
-                                                    reviewId: item.reviewId,
-                                                },
-                                            })
-                                        }
-                                    />
-                                )}
-                                contentContainerStyle={styles.list}
-                            />
-                        </>
-                    )}
                 </View>
+                <CollectionAssociationList
+                    associatedCollections={collectionsContainingMovie}
+                    unassociatedCollections={collectionsNotContainingMovie}
+                    onSaveToCollection={(collectionId) => {
+                        if (!movieId) return;
+                        saveCollectionEntry({ collectionId, movieId });
+                    }}
+                    onRemoveFromCollection={(collectionId) => {
+                        if (!movieId) return;
+                        removeCollectionEntry({ collectionId, movieId });
+                    }}
+                />
+                {!!reviewList?.length && (
+                    <View style={styles.detailContent}>
+                        <Text variant="title" style={styles.section}>
+                            Watch History
+                        </Text>
+                        <RatingHistoryChart
+                            reviews={reviewList}
+                            starCount={configuration.ratings.starCount}
+                        />
+                        <FlatList
+                            contentInsetAdjustmentBehavior="automatic"
+                            scrollEnabled={false}
+                            data={reviewList}
+                            renderItem={({ item, index }) => (
+                                <ReviewTimelineItem
+                                    key={item.reviewId}
+                                    starCount={configuration.ratings.starCount}
+                                    review={item}
+                                    hideTimeline={
+                                        index === reviewList.length - 1
+                                    }
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "/movies/watch",
+                                            params: {
+                                                reviewId: item.reviewId,
+                                            },
+                                        })
+                                    }
+                                />
+                            )}
+                            contentContainerStyle={styles.list}
+                        />
+                    </View>
+                )}
                 {!!movie?.credits?.cast.length && (
                     <>
                         <Text variant="title" style={styles.sectionHeading}>
@@ -328,8 +294,7 @@ const createStyles = (
             paddingHorizontal: spacing.pageHorizontal,
             alignItems: "center",
         },
-        pageContent: {
-            marginTop: spacing.medium,
+        detailContent: {
             paddingHorizontal: spacing.pageHorizontal,
         },
         list: {

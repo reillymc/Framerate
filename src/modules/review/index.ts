@@ -10,7 +10,6 @@ export {
     RatingHistoryChart,
     ReviewDisplay,
     ReviewForm,
-    ReviewSortButton,
     ReviewSummaryCard,
     ReviewTimelineItem,
 } from "./components";

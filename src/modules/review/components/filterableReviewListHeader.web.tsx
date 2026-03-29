@@ -204,14 +204,7 @@ export const FilterableReviewListHeader = ({
                         </MenuOption>
                     )),
                     <MenuDecorator key="separator">
-                        <View
-                            style={{
-                                height: 4,
-                                width: "100%",
-                                borderRadius: 4,
-                                backgroundColor: "#ddd",
-                            }}
-                        />
+                        <View style={styles.separator} />
                     </MenuDecorator>,
                     ...SortOptions.map(({ value, label }) => (
                         <MenuOption
@@ -230,7 +223,7 @@ export const FilterableReviewListHeader = ({
     );
 };
 
-const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
+const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
     StyleSheet.create({
         pageElement: {
             paddingHorizontal: spacing.pageHorizontal,
@@ -250,5 +243,11 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         },
         sortIcon: {
             transform: [{ rotateZ: "90deg" }],
+        },
+        separator: {
+            height: 2,
+            width: "100%",
+            borderRadius: border.radius.tight,
+            backgroundColor: color.border,
         },
     });
