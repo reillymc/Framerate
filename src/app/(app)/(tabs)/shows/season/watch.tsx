@@ -8,6 +8,7 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { ScreenLayout } from "@/components";
 import { getRatingLabel, ReviewDisplay } from "@/modules/review";
 import { useSeasonReview } from "@/modules/seasonReview";
 import { useCurrentUserConfig } from "@/modules/user";
@@ -22,29 +23,32 @@ const Review: FC = () => {
     const { data: review } = useSeasonReview(reviewId);
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: review?.rating
-                        ? getRatingLabel(
-                              review.rating,
-                              configuration.ratings.starCount,
-                          )
-                        : "Watched",
-                    headerRight: () => (
-                        <IconButton
-                            iconSet={Octicons}
-                            iconName="pencil"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/shows/season/editWatch",
-                                    params: { reviewId },
-                                })
-                            }
-                        />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: review?.rating
+                            ? getRatingLabel(
+                                  review.rating,
+                                  configuration.ratings.starCount,
+                              )
+                            : "Watched",
+                        headerRight: () => (
+                            <IconButton
+                                iconSet={Octicons}
+                                iconName="pencil"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/shows/season/editWatch",
+                                        params: { reviewId },
+                                    })
+                                }
+                            />
+                        ),
+                    }}
+                />
+            }
+        >
             <ScrollView
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
@@ -57,7 +61,7 @@ const Review: FC = () => {
                     />
                 )}
             </ScrollView>
-        </>
+        </ScreenLayout>
     );
 };
 

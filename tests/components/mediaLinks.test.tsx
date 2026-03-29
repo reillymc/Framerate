@@ -1,10 +1,14 @@
-import { openBrowserAsync } from "expo-web-browser";
+import {
+    openBrowserAsync,
+    WebBrowserPresentationStyle,
+} from "expo-web-browser";
 import { fireEvent, render } from "@testing-library/react-native";
 
 import { MediaLinks } from "@/components/mediaLinks";
 import { MediaType } from "@/constants/mediaTypes";
 
 jest.mock("expo-web-browser", () => ({
+    ...jest.requireActual("expo-web-browser"),
     openBrowserAsync: jest.fn(),
 }));
 
@@ -43,6 +47,7 @@ describe("MediaLinks", () => {
         expect(openBrowserAsync).toHaveBeenCalledTimes(1);
         expect(openBrowserAsync).toHaveBeenCalledWith(
             "https://example.com/tt001122/12345/2/3",
+            { presentationStyle: WebBrowserPresentationStyle.PAGE_SHEET },
         );
     });
 

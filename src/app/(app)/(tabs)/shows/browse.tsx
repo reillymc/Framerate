@@ -6,6 +6,7 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
+import { ScreenLayout } from "@/components";
 import { Poster } from "@/components/poster";
 import { usePosterDimensions } from "@/hooks";
 import { usePopularShows } from "@/modules/show";
@@ -29,8 +30,9 @@ const Browse: FC = () => {
     const styles = useThemedStyles(createStyles, {});
 
     return (
-        <>
-            <Stack.Screen options={{ title: "Popular Shows" }} />
+        <ScreenLayout
+            meta={<Stack.Screen options={{ title: "Popular Shows" }} />}
+        >
             <FlatList
                 data={shows}
                 contentInsetAdjustmentBehavior="automatic"
@@ -106,7 +108,7 @@ const Browse: FC = () => {
                     );
                 }}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

@@ -7,7 +7,7 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { HeaderIconAction } from "@/components";
+import { HeaderIconAction, ScreenLayout } from "@/components";
 import { getRatingLabel, ReviewDisplay } from "@/modules/review";
 import { useShowReview } from "@/modules/showReview";
 import { useCurrentUserConfig } from "@/modules/user";
@@ -22,29 +22,32 @@ const Review: FC = () => {
     const { data: review } = useShowReview(reviewId);
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: review?.rating
-                        ? getRatingLabel(
-                              review.rating,
-                              configuration.ratings.starCount,
-                          )
-                        : "Watched",
-                    headerRight: () => (
-                        <HeaderIconAction
-                            iconSet={Octicons}
-                            iconName="pencil"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/shows/editWatch",
-                                    params: { reviewId },
-                                })
-                            }
-                        />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: review?.rating
+                            ? getRatingLabel(
+                                  review.rating,
+                                  configuration.ratings.starCount,
+                              )
+                            : "Watched",
+                        headerRight: () => (
+                            <HeaderIconAction
+                                iconSet={Octicons}
+                                iconName="pencil"
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/shows/editWatch",
+                                        params: { reviewId },
+                                    })
+                                }
+                            />
+                        ),
+                    }}
+                />
+            }
+        >
             <ScrollView
                 contentInsetAdjustmentBehavior="always"
                 keyboardShouldPersistTaps="handled"
@@ -57,7 +60,7 @@ const Review: FC = () => {
                     />
                 )}
             </ScrollView>
-        </>
+        </ScreenLayout>
     );
 };
 

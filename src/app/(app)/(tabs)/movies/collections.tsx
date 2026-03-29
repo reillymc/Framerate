@@ -1,19 +1,16 @@
 import type { FC } from "react";
-import { Alert, RefreshControl } from "react-native";
+import { Alert, RefreshControl, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Link, Stack, useRouter } from "expo-router";
 import { Octicons } from "@expo/vector-icons";
 import {
+    ListItem,
     SwipeAction,
-    SwipeableContainer,
+    type ThemedStyles,
+    useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import {
-    EmptyState,
-    HeaderIconAction,
-    PosterCard,
-    ScreenLayout,
-} from "@/components";
+import { EmptyState, HeaderIconAction, ScreenLayout } from "@/components";
 import {
     useDeleteMovieCollection,
     useMovieCollections,
@@ -23,6 +20,7 @@ const Collections: FC = () => {
     const router = useRouter();
     const { data: collections, isLoading, refetch } = useMovieCollections();
     const { mutate: deleteCollection } = useDeleteMovieCollection();
+    const styles = useThemedStyles(createStyles, {});
 
     const handleDeleteCollection = (collectionId: string) => {
         Alert.alert(
@@ -70,35 +68,37 @@ const Collections: FC = () => {
                 contentInsetAdjustmentBehavior="automatic"
                 data={collections ?? []}
                 keyExtractor={(collection) => collection.collectionId}
+                contentContainerStyle={styles.list}
                 renderItem={({ item }) => (
-                    <SwipeableContainer
-                        rightActions={[
-                            <SwipeAction
-                                iconSet={Octicons}
-                                key="delete"
-                                iconName="dash"
-                                onPress={() =>
-                                    handleDeleteCollection(item.collectionId)
-                                }
-                                variant="destructive"
-                            />,
-                        ]}
+                    <Link
+                        href={{
+                            pathname: "/movies/collection",
+                            params: {
+                                collectionId: item.collectionId,
+                            },
+                        }}
+                        asChild
                     >
-                        <Link
-                            href={{
-                                pathname: "/movies/collection",
-                                params: {
-                                    collectionId: item.collectionId,
-                                },
-                            }}
-                            asChild
-                        >
-                            <Link.Trigger>
-                                <PosterCard heading={item.name} />
-                            </Link.Trigger>
-                            <Link.Preview />
-                        </Link>
-                    </SwipeableContainer>
+                        <Link.Trigger>
+                            <ListItem
+                                heading={item.name}
+                                swipeActions={[
+                                    <SwipeAction
+                                        iconSet={Octicons}
+                                        key="delete"
+                                        iconName="dash"
+                                        onPress={() =>
+                                            handleDeleteCollection(
+                                                item.collectionId,
+                                            )
+                                        }
+                                        variant="destructive"
+                                    />,
+                                ]}
+                            />
+                        </Link.Trigger>
+                        <Link.Preview />
+                    </Link>
                 )}
                 refreshControl={
                     <RefreshControl refreshing={false} onRefresh={refetch} />
@@ -109,3 +109,11 @@ const Collections: FC = () => {
 };
 
 export default Collections;
+
+const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
+    StyleSheet.create({
+        list: {
+            paddingTop: spacing.small,
+            paddingHorizontal: spacing.pageHorizontal,
+        },
+    });

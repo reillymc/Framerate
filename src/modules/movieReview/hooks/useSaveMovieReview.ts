@@ -53,7 +53,7 @@ export const useSaveMovieReview = () => {
                 queryKey: MovieReviewKeys.base,
             }),
         onMutate: ({ reviewId, movieId, ...params }) => {
-            if (!reviewId) return;
+            if (!reviewId) return {};
             // Snapshot the previous value
             const previousEntry = queryClient.getQueryData<MovieReview>(
                 MovieReviewKeys.details(reviewId),

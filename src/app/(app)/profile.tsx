@@ -12,8 +12,8 @@ import { Octicons } from "@expo/vector-icons";
 import {
     Action,
     IconButton,
+    ListItem,
     SwipeAction,
-    SwipeableContainer,
     Text,
     TextInput,
     type ThemedStyles,
@@ -254,9 +254,12 @@ const Profile: FC = () => {
                             >
                                 {configuration.venues.knownVenueNames.map(
                                     (venue) => (
-                                        <SwipeableContainer
+                                        <ListItem
                                             key={venue}
-                                            rightActions={[
+                                            variant="compact"
+                                            heading={<Text>{venue}</Text>}
+                                            style={styles.listItem}
+                                            swipeActions={[
                                                 <SwipeAction
                                                     iconSet={Octicons}
                                                     key="delete"
@@ -267,11 +270,7 @@ const Profile: FC = () => {
                                                     }
                                                 />,
                                             ]}
-                                        >
-                                            <View style={styles.listItem}>
-                                                <Text>{venue}</Text>
-                                            </View>
-                                        </SwipeableContainer>
+                                        />
                                     ),
                                 )}
                                 <View style={styles.friendInputContainer}>
@@ -328,9 +327,14 @@ const Profile: FC = () => {
                             >
                                 {company.map(
                                     ({ companyId, firstName, lastName }) => (
-                                        <SwipeableContainer
+                                        <ListItem
+                                            variant="compact"
+                                            heading={
+                                                <Text>{`${firstName} ${lastName}`}</Text>
+                                            }
+                                            style={styles.listItem}
                                             key={companyId}
-                                            rightActions={[
+                                            swipeActions={[
                                                 <SwipeAction
                                                     iconSet={Octicons}
                                                     key="delete"
@@ -343,11 +347,7 @@ const Profile: FC = () => {
                                                     }
                                                 />,
                                             ]}
-                                        >
-                                            <View style={styles.listItem}>
-                                                <Text>{`${firstName} ${lastName}`}</Text>
-                                            </View>
-                                        </SwipeableContainer>
+                                        />
                                     ),
                                 )}
                                 <View style={styles.friendInputContainer}>
@@ -458,11 +458,9 @@ const createStyles = ({ theme: { spacing, color, border } }: ThemedStyles) =>
             gap: spacing.small,
         },
         listItem: {
-            paddingVertical: spacing.small + spacing.tiny,
             borderBottomWidth: 1,
             borderBottomColor: color.border,
             backgroundColor: color.inputBackground,
-            paddingLeft: spacing.small,
         },
         sectionElement: {
             marginTop: spacing.medium,

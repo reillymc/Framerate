@@ -92,7 +92,8 @@ const EditReview: FC = () => {
         const showIdValue = showId ?? review?.season.showId;
         const seasonNumberValue = seasonNumber ?? review?.season.seasonNumber;
 
-        if (!(showIdValue && seasonNumberValue)) return;
+        if (showIdValue === undefined || seasonNumberValue === undefined)
+            return;
 
         saveReview({
             ...review,

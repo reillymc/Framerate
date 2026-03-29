@@ -55,7 +55,7 @@ export const useSaveSeasonReview = () => {
                 queryKey: SeasonReviewKeys.base,
             }),
         onMutate: ({ reviewId, showId, seasonNumber, ...params }) => {
-            if (!reviewId) return;
+            if (!reviewId) return {};
             // Snapshot the previous value
             const previousEntry = queryClient.getQueryData<SeasonReview>(
                 SeasonReviewKeys.details(reviewId),

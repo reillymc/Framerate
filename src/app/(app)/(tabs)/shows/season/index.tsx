@@ -8,7 +8,12 @@ import {
     useThemedStyles,
 } from "@reillymc/react-native-components";
 
-import { MediaHeaderButtons, MediaLinks, TmdbImage } from "@/components";
+import {
+    MediaHeaderButtons,
+    MediaLinks,
+    ScreenLayout,
+    TmdbImage,
+} from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useClientConfig } from "@/modules/meta";
 import { RatingHistoryChart, ReviewTimelineItem } from "@/modules/review";
@@ -58,22 +63,25 @@ const Season: FC = () => {
     const styles = useThemedStyles(createStyles, { fontScale, width });
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: season?.name ?? name,
-                    headerRight: () => (
-                        <MediaHeaderButtons
-                            onAddReview={() =>
-                                router.push({
-                                    pathname: "/shows/season/editWatch",
-                                    params: { showId, seasonNumber },
-                                })
-                            }
-                        />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: season?.name ?? name,
+                        headerRight: () => (
+                            <MediaHeaderButtons
+                                onAddReview={() =>
+                                    router.push({
+                                        pathname: "/shows/season/editWatch",
+                                        params: { showId, seasonNumber },
+                                    })
+                                }
+                            />
+                        ),
+                    }}
+                />
+            }
+        >
             <FlatList
                 contentInsetAdjustmentBehavior="automatic"
                 contentContainerStyle={styles.container}
@@ -124,7 +132,7 @@ const Season: FC = () => {
                                             onPress={() =>
                                                 router.push({
                                                     pathname:
-                                                        "/shows/season/review",
+                                                        "/shows/season/watch",
                                                     params: {
                                                         reviewId: item.reviewId,
                                                     },
@@ -195,7 +203,7 @@ const Season: FC = () => {
                     );
                 }}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

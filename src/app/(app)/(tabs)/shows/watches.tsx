@@ -2,6 +2,7 @@ import { type FC, useMemo, useState } from "react";
 import { Link, Stack, useRouter } from "expo-router";
 import { Undefined } from "@reillymc/es-utils";
 
+import { ScreenLayout } from "@/components";
 import { MediaType } from "@/constants/mediaTypes";
 import { useCompany } from "@/modules/company";
 import {
@@ -64,21 +65,24 @@ const Reviews: FC = () => {
     );
 
     return (
-        <>
-            <Stack.Screen
-                options={{
-                    title: "My Watches",
-                    headerRight: () => (
-                        <ReviewSortButton
-                            order={orderBy}
-                            sort={sort}
-                            mediaType={MediaType.Show}
-                            onChangeOrder={setOrderBy}
-                            onChangeSort={setSort}
-                        />
-                    ),
-                }}
-            />
+        <ScreenLayout
+            meta={
+                <Stack.Screen
+                    options={{
+                        title: "My Watches",
+                        headerRight: () => (
+                            <ReviewSortButton
+                                order={orderBy}
+                                sort={sort}
+                                mediaType={MediaType.Show}
+                                onChangeOrder={setOrderBy}
+                                onChangeSort={setSort}
+                            />
+                        ),
+                    }}
+                />
+            }
+        >
             <FilterableReviewList
                 reviews={reviewList}
                 venueOptions={configuration.venues.knownVenueNames}
@@ -137,7 +141,7 @@ const Reviews: FC = () => {
                     </Link>
                 )}
             />
-        </>
+        </ScreenLayout>
     );
 };
 

@@ -115,6 +115,7 @@ const Collection: FC = () => {
                             </Link.Menu>
                             <Link.Trigger>
                                 <PosterCard
+                                    asLink
                                     heading={item.name}
                                     imageUri={item.posterPath}
                                     subHeading={item.status}
