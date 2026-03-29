@@ -200,6 +200,13 @@ export default function RootLayout() {
     const styles = MergeStyles(createDefaultStyles(theme), {
         // highlightedText: { highlightedWeight: { body: Font.SemiBold } },
         menuItem: { paddingVertical: theme.spacing.small },
+        text: {
+            font: {
+                title: {
+                    weight: "700",
+                },
+            },
+        },
     });
 
     return (

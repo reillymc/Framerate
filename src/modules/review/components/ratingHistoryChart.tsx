@@ -127,7 +127,7 @@ export const RatingHistoryChart: FC<RatingHistoryChartProps> = ({
                     font,
                     labelColor: theme.color.textPrimary,
                     labelPosition: {
-                        x: "outset",
+                        x: "inset",
                         y: "inset",
                     },
                     // biome-ignore lint/style/useNamingConvention: victory internal prop names

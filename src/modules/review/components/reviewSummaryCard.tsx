@@ -57,7 +57,7 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
                 <View style={styles.headingContainer}>
                     <View style={styles.headingTitleContainer}>
                         <Text
-                            variant="title"
+                            variant="heading"
                             style={styles.title}
                             numberOfLines={1}
                         >
