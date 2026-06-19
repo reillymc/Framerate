@@ -2,12 +2,12 @@
     "extends": "expo/tsconfig.base",
     "compilerOptions": {
         "strict": true,
+        // "erasableSyntaxOnly": true TODO: after https://github.com/OpenAPITools/openapi-generator/issues/22400 is resolved
         "noUncheckedIndexedAccess": true,
         "paths": {
             "@/*": ["./src/*"]
         },
         "types": ["jest"]
-        // "erasableSyntaxOnly": true TODO: after https://github.com/OpenAPITools/openapi-generator/issues/22400 is resolved
     },
     "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

@@ -1,15 +1,7 @@
 import { type FC, useRef } from "react";
+import { type TextInput as rnTextInput, StyleSheet, View } from "react-native";
+import DateTimePicker from "@expo/ui/community/datetime-picker";
 import {
-    Platform,
-    type TextInput as rnTextInput,
-    StyleSheet,
-    View,
-} from "react-native";
-import DateTimePicker, {
-    DateTimePickerAndroid,
-} from "@react-native-community/datetimepicker";
-import {
-    Action,
     CollapsibleContainer,
     DropdownInput,
     RatingInput,
@@ -82,34 +74,19 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 <CollapsibleContainer
                     collapsed={!includeDate}
                     direction="right"
+                    style={{ width: "30%" }} // Workaround for odd element positioning of new date time picker
                 >
-                    {Platform.OS === "android" ? (
-                        <Action
-                            label={date.toDateString() ?? "No Date"}
-                            containerStyle={styles.androidDatePicker}
-                            onPress={() =>
-                                DateTimePickerAndroid.open({
-                                    mode: "date",
-                                    maximumDate: new Date(),
-                                    value: date,
-                                    onChange: (_, newDate) =>
-                                        newDate && onDateChange(newDate),
-                                })
-                            }
-                        />
-                    ) : (
-                        <DateTimePicker
-                            value={date}
-                            mode="date"
-                            style={styles.dateInput}
-                            disabled={!includeDate}
-                            maximumDate={new Date()}
-                            onChange={(_, newDate) =>
-                                newDate && onDateChange(newDate)
-                            }
-                            accentColor={theme.color.primary}
-                        />
-                    )}
+                    <DateTimePicker
+                        value={date}
+                        mode="date"
+                        presentation="dialog"
+                        disabled={!includeDate}
+                        maximumDate={new Date()}
+                        onValueChange={(_, newDate) =>
+                            newDate && onDateChange(newDate)
+                        }
+                        accentColor={theme.color.primary}
+                    />
                 </CollapsibleContainer>
             </View>
             <ToggleInput
@@ -184,10 +161,7 @@ const createStyles = ({
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            height: 38,
-        },
-        dateInput: {
-            flex: 1,
+            height: 34,
         },
         androidDatePicker: {
             backgroundColor: color.foreground,
