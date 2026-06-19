@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { StyleSheet } from "react-native";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     SwipeAction,
     SwipeableContainer,

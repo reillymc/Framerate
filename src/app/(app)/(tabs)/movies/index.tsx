@@ -7,7 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import type { SearchBarCommands } from "react-native-screens";
 import { Link, Stack, useRouter } from "expo-router";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import { Undefined } from "@reillymc/es-utils";
 import {
     IconAction,

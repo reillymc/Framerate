@@ -16,7 +16,7 @@ import {
     useWindowDimensions,
     View,
 } from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Icon,
     Tag,

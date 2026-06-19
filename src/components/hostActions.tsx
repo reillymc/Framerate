@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { AntDesign, Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Icon,
     IconButton,
@@ -30,8 +30,8 @@ export const HostActions: FC<HostActionsProps> = ({
             {host && (
                 <View style={styles.hostWarningContainer}>
                     <Icon
-                        iconSet={AntDesign}
-                        iconName="exclamation-circle"
+                        iconSet={Octicons}
+                        iconName="alert-fill"
                         style={styles.hostWarningIcon}
                     />
                     <Text

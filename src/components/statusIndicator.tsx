@@ -1,6 +1,6 @@
 import { type FC, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Icon,
     Text,
