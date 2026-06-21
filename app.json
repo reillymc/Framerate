@@ -55,38 +55,10 @@
                     "fonts": ["./assets/fonts/Dosis.ttf"]
                 }
             ],
-            [
-                "@react-native-community/datetimepicker",
-                {
-                    "android": {
-                        "datePicker": {
-                            "colorAccent": {
-                                "light": "#F99224"
-                            },
-                            "textColor": {
-                                "light": "#000000",
-                                "dark": "#ffffff"
-                            },
-                            "textColorPrimary": {
-                                "light": "#F99224"
-                            },
-                            "textColorSecondary": {
-                                "light": "#333333",
-                                "dark": "#737167"
-                            },
-                            "colorControlActivated": {
-                                "light": "#F99224"
-                            },
-                            "windowBackground": {
-                                "light": "#ffffff",
-                                "dark": "#111517"
-                            }
-                        }
-                    }
-                }
-            ],
             "expo-image",
-            "expo-web-browser"
+            "expo-web-browser",
+            "expo-status-bar",
+            "@react-native-vector-icons/octicons"
         ],
         "experiments": {
             "typedRoutes": true,

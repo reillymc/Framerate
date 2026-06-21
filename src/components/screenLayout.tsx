@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Link, useRouter, useSegments } from "expo-router";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     IconButton,
     IconButtonBase,

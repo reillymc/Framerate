@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { FlatList, StyleSheet } from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     IconAction,
     Tag,

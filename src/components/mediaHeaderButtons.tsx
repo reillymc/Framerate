@@ -1,7 +1,6 @@
 import type { FC } from "react";
-import { Octicons } from "@expo/vector-icons";
-// biome-ignore lint/correctness/noUndeclaredDependencies: TODO: migrate to new header options
-import { HeaderButton } from "@react-navigation/elements";
+import Octicons from "@react-native-vector-icons/octicons/static";
+import { HeaderButton } from "expo-router/react-navigation";
 
 import { HeaderIconAction } from "./headerIconAction";
 

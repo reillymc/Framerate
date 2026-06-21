@@ -2,13 +2,14 @@ import type { StyleProp, ViewStyle } from "react-native";
 import {
     IconAction,
     type IconActionProps,
+    withIcon,
 } from "@reillymc/react-native-components";
 
-export const HeaderIconAction = <G extends string, Fn extends string>(
-    props: Omit<IconActionProps<G, Fn>, "containerStyle"> & {
+export const HeaderIconAction = withIcon<
+    Omit<IconActionProps, "containerStyle"> & {
         containerStyle?: StyleProp<ViewStyle>;
-    },
-) => {
+    }
+>((props) => {
     return (
         <IconAction
             {...props}
@@ -23,4 +24,4 @@ export const HeaderIconAction = <G extends string, Fn extends string>(
             ]}
         />
     );
-};
+});

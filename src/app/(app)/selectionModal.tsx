@@ -1,10 +1,12 @@
 import { type FC, useCallback, useMemo } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Stack, useGlobalSearchParams, useRouter } from "expo-router";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Action,
     MenuItem,
     Tag,
+    TagIcon,
     Text,
     type ThemedStyles,
     useThemedStyles,
@@ -134,7 +136,12 @@ const SelectionModal: FC = () => {
                                     <Tag
                                         label={item.label}
                                         variant="light"
-                                        iconName="close-circle"
+                                        icon={
+                                            <TagIcon
+                                                iconSet={Octicons}
+                                                iconName="x-circle-fill"
+                                            />
+                                        }
                                         onPress={() => handleItemPress(item)}
                                     />
                                 )}

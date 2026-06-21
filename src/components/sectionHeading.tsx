@@ -5,7 +5,7 @@ import {
     StyleSheet,
     type ViewStyle,
 } from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import { Icon, Text, useTheme } from "@reillymc/react-native-components";
 
 interface SectionHeadingProps {

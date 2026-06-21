@@ -20,7 +20,7 @@ import Animated, {
     useSharedValue,
 } from "react-native-reanimated";
 import { DeviceType, deviceType } from "expo-device";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Icon,
     Text,

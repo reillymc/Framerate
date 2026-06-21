@@ -30,7 +30,7 @@ export const CustomTabBar: FC<CustomTabBarProps> = ({
 }) => {
     const { bottom } = useSafeAreaInsets();
     const scheme = useColorScheme();
-    const styles = useThemedStyles(createStyles, { bottom });
+    const styles = useThemedStyles(createStyles, { props: { bottom } });
 
     if (!show) {
         return null;

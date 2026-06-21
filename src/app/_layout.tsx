@@ -9,10 +9,6 @@ import { setOptions } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
-import {
-    type Theme as RnTheme,
-    ThemeProvider as RnThemeProvider,
-} from "@react-navigation/native";
 import type { DeepPartial } from "@reillymc/es-utils";
 import {
     createDefaultStyles,
@@ -25,6 +21,10 @@ import {
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { onlineManager, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import {
+    type Theme as RnTheme,
+    ThemeProvider as RnThemeProvider,
+} from "expo-router/react-navigation";
 
 import { ServiceProvider } from "@/components";
 import { useColorScheme } from "@/hooks";

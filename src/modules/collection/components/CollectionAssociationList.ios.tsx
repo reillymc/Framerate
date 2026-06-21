@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Button, ContextMenu, Host } from "@expo/ui/swift-ui";
-import { Octicons } from "@expo/vector-icons";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     IconAction,
     Tag,
