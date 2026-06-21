@@ -65,7 +65,7 @@ export const SectionedShowEntryList: FC<SectionedShowEntryListProps> = ({
     const { theme } = useTheme();
     const { height } = usePosterDimensions({ size: "tiny" });
 
-    const styles = useThemedStyles(createStyles, { top });
+    const styles = useThemedStyles(createStyles, { props: { top } });
 
     const itemHeight = useMemo(
         () => height + theme.spacing.large,

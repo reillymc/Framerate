@@ -87,8 +87,10 @@ const Movie: FC = () => {
         .join(", ");
 
     const styles = useThemedStyles(createStyles, {
-        posterWidth: heroPoster.interval,
-        posterHeight: heroPoster.height,
+        props: {
+            posterWidth: heroPoster.interval,
+            posterHeight: heroPoster.height,
+        },
     });
 
     return (

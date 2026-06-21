@@ -44,10 +44,12 @@ export const Poster: FC<PosterProps> = ({
     const { height, width, gap } = usePosterDimensions({ size, teaseSpacing });
 
     const styles = useThemedStyles(createStyles, {
-        width,
-        size,
-        gap,
-        removeMargin,
+        props: {
+            width,
+            size,
+            gap,
+            removeMargin,
+        },
     });
     const { theme } = useTheme();
 

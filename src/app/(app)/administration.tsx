@@ -2,6 +2,7 @@ import { type FC, useCallback, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { setStringAsync, setUrlAsync } from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Button,
     Text,
@@ -123,7 +124,8 @@ const Profile: FC = () => {
                         <View key={mediaLink.name} style={styles.linkContainer}>
                             <ToggleInput
                                 label={mediaLink.name}
-                                iconVariant="check"
+                                iconSet={Octicons}
+                                iconName="check-circle-fill"
                                 value={mediaLink.enabled}
                                 onChange={(value) => {
                                     const newLinks = [

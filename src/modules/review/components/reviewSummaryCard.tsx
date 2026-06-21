@@ -32,8 +32,10 @@ export const ReviewSummaryCard: FC<ReviewSummaryCardProps> = ({
 }) => {
     const { width } = usePosterDimensions({ size: "tiny" });
     const styles = useThemedStyles(createStyles, {
-        starCount,
-        posterWidth: width,
+        props: {
+            starCount,
+            posterWidth: width,
+        },
     });
 
     const ratingDisplayValue = review.rating

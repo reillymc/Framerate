@@ -1,6 +1,7 @@
 import { type FC, useRef } from "react";
 import { type TextInput as rnTextInput, StyleSheet, View } from "react-native";
 import DateTimePicker from "@expo/ui/community/datetime-picker";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     CollapsibleContainer,
     DropdownInput,
@@ -68,7 +69,8 @@ export const ReviewForm: FC<ReviewFormProps> = ({
                 <ToggleInput
                     label="Date"
                     value={includeDate}
-                    iconVariant="check"
+                    iconSet={Octicons}
+                    iconName="check-circle-fill"
                     onChange={onIncludeDateChange}
                 />
                 <CollapsibleContainer
@@ -92,7 +94,8 @@ export const ReviewForm: FC<ReviewFormProps> = ({
             <ToggleInput
                 label="Review"
                 value={includeReview}
-                iconVariant="check"
+                iconSet={Octicons}
+                iconName="check-circle-fill"
                 onChange={onIncludeReviewChange}
             />
             <Accordion

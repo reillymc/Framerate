@@ -20,6 +20,7 @@ import Octicons from "@react-native-vector-icons/octicons/static";
 import {
     Icon,
     Tag,
+    TagIcon,
     Text,
     type ThemedStyles,
     useThemedStyles,
@@ -198,7 +199,7 @@ export const DropdownButton: FC<DropdownButtonProps> = ({ label }) => {
         <Tag
             label={label}
             variant="light"
-            iconName="down"
+            icon={<TagIcon iconSet={Octicons} iconName="chevron-down" />}
             style={{
                 borderRadius: 8,
                 paddingVertical: 8,

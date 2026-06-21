@@ -549,5 +549,6 @@ const createStyles = ({ theme: { spacing } }: ThemedStyles) =>
         collectionsList: {
             paddingHorizontal: spacing.pageHorizontal,
             marginBottom: spacing.medium,
+            gap: spacing.small,
         },
     });

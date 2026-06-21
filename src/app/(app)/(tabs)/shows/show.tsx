@@ -81,8 +81,10 @@ const Show: FC = () => {
     const firstAirDate = displayFull(show?.firstAirDate);
 
     const styles = useThemedStyles(createStyles, {
-        posterWidth: heroPoster.interval,
-        posterHeight: heroPoster.height,
+        props: {
+            posterWidth: heroPoster.interval,
+            posterHeight: heroPoster.height,
+        },
     });
 
     return (

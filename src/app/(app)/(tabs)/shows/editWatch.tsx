@@ -1,6 +1,7 @@
 import { type FC, useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import Octicons from "@react-native-vector-icons/octicons/static";
 import { Undefined } from "@reillymc/es-utils";
 import {
     type ThemedStyles,
@@ -151,7 +152,8 @@ const EditReview: FC = () => {
                 {!!watchlistEntry && !reviewId && (
                     <ToggleInput
                         label="Mark as watched"
-                        iconVariant="check"
+                        iconSet={Octicons}
+                        iconName="check-circle-fill"
                         value={clearWatchlistEntry}
                         onChange={setClearWatchlistEntry}
                         helpText={`${show?.name} is currently in your watchlist. ${

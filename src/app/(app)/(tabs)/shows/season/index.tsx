@@ -60,7 +60,9 @@ const Season: FC = () => {
           })
         : undefined;
 
-    const styles = useThemedStyles(createStyles, { fontScale, width });
+    const styles = useThemedStyles(createStyles, {
+        props: { fontScale, width },
+    });
 
     return (
         <ScreenLayout
